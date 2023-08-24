@@ -125,13 +125,19 @@ public class InvoiceHelper {
 		invoiceNumberDao.persist(invoiceNumber);
 		return invoiceNumber;
 	}
+	
+	@Transactional
+	public InvoiceNumber updateInvoiceNumber(InvoiceNumber invoiceNumber) {
+		invoiceNumberDao.update(invoiceNumber);
+		return invoiceNumber;
+	}
 
 //	public InvoiceDetails getInvoiceDetailsByReqObj(InvoiceDetails detailsRequest, InvoiceDetails invoiceRequest) {
 		public InvoiceDetails getInvoiceDetailsByReqObj(InvoiceDetails detailsRequest, InvoiceRequestObject invoiceRequest) {
 
 		InvoiceDetails invoiceDetails = new InvoiceDetails();
 
-		invoiceDetails.setInvoiceNo(detailsRequest.getInvoiceNo());
+		invoiceDetails.setInvoiceNo(invoiceRequest.getInvoiceNo());
 		invoiceDetails.setItemName(detailsRequest.getItemName());
 		invoiceDetails.setRate(detailsRequest.getRate());
 		invoiceDetails.setQuantity(detailsRequest.getQuantity());

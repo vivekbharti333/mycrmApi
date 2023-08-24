@@ -82,8 +82,7 @@ public class InvoiceService {
 			throws BizException, Exception {
 		
 		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-		invoiceHelper.validateInvoiceRequest(invoiceRequest);
-		
+		invoiceHelper.validateInvoiceRequest(invoiceRequest);	
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
 		logger.info("Invoice generate Request Is valid? : "+invoiceRequest.getCreatedBy()+" is " + isValid);
@@ -99,11 +98,26 @@ public class InvoiceService {
 				invoiceNumber = invoiceHelper.saveInvoiceNumber(invoiceNumber);
 				
 				// Invoice Details
+				int totalItem = 0;
+				int totalAmount = 0;
 				for (InvoiceDetails invoice : invoiceRequest.getItemDetails()) {
-
+					
+					invoice.setAmount(invoice.getRate()*invoice.getQuantity());
+					
 					InvoiceDetails invoiceDetails = invoiceHelper.getInvoiceDetailsByReqObj(invoice, invoiceRequest);
 					invoiceDetails = invoiceHelper.saveInvoiceDetails(invoiceDetails);
+					
+					logger.info("Amount : "+invoiceDetails.getAmount());
+					
+					totalItem+=1;
+					totalAmount += invoice.getAmount();
 				}
+				
+				
+				//Update InvoiceNumber
+				invoiceNumber.setTotalItem(totalItem);
+				invoiceNumber.setTotalAmount(totalAmount);
+				invoiceHelper.updateInvoiceNumber(invoiceNumber);
 				
 				//Update SrNo
 				invoiceHeader.setSerialNumber(invoiceRequest.getSerialNumber());
