@@ -1,5 +1,5 @@
 package com.spring.enums;
 
 public enum Status {
-	ACTIVE,INACTIVE,SUCCESS,DUE,PAID;
+	ACTIVE,INACTIVE,SUCCESS,DUE,PAID,NEW,OLD;
 }

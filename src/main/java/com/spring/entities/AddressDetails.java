@@ -33,11 +33,8 @@ public class AddressDetails {
 	@Column(name = "address_type", nullable = false)
 	private String addressType;
 	
-	@Column(name = "address_line_one")
-	private String addressLineOne;
-	
-	@Column(name = "address_line_two")
-	private String addressLineTwo;
+	@Column(name = "address_line")
+	private String addressLine;
 	
 	@Column(name = "landmark")
 	private String landmark;
@@ -59,9 +56,6 @@ public class AddressDetails {
 	
 	@Column(name = "superadmin_id", nullable = false)
 	private String superadminId;
-	
-	@Column(name = "created_by", nullable = false)
-	private String createdBy;
 	
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name = "created_at")
@@ -92,17 +86,12 @@ public class AddressDetails {
 	public void setAddressType(String addressType) {
 		this.addressType = addressType;
 	}
-	public String getAddressLineOne() {
-		return addressLineOne;
+	
+	public String getAddressLine() {
+		return addressLine;
 	}
-	public void setAddressLineOne(String addressLineOne) {
-		this.addressLineOne = addressLineOne;
-	}
-	public String getAddressLineTwo() {
-		return addressLineTwo;
-	}
-	public void setAddressLineTwo(String addressLineTwo) {
-		this.addressLineTwo = addressLineTwo;
+	public void setAddressLine(String addressLine) {
+		this.addressLine = addressLine;
 	}
 	public String getLandmark() {
 		return landmark;
@@ -145,12 +134,6 @@ public class AddressDetails {
 	}
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
-	}
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
 	}
 	public Date getCreatedAt() {
 		return createdAt;

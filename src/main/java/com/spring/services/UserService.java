@@ -28,7 +28,7 @@ public class UserService {
 	private UserHelper userHelper;
 
 	@Autowired
-	private AddressHelper addressHelper;
+	private AddressService addressService;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -36,13 +36,12 @@ public class UserService {
 	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
-		
-		logger.info("Login Api: "+userRequest);
 
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
 
 			if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
+				logger.info("Login Successfully: "+userRequest);
 				
 				//generate secret key.
 				String secretKey = jwtTokenUtil.generateSecretKey();
@@ -70,8 +69,11 @@ public class UserService {
 				userRequest.setRespMesg(Constant.INVALID_LOGIN);
 				return userRequest;
 			}
+		}else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg(Constant.INVALID_LOGIN);
+			return userRequest;
 		}
-		return userRequest;
 	}
 
 	@Transactional
@@ -88,7 +90,7 @@ public class UserService {
 
 		if (isValid) {
 
-			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getMobileNo());
 			if (existsUserDetails == null) {
 
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
@@ -97,10 +99,15 @@ public class UserService {
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);
 
+				logger.info("User Address : "+userRequest.getAddressList());
+				
 				// Save Address
 				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
-					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequest, userDetails);
-					addressDetails = addressHelper.saveAddressDetails(addressDetails);
+//					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
+//					addressDetails = addressHelper.saveAddressDetails(addressDetails);
+					addressRequest.setUserType(userRequest.getRoleType());
+					AddressDetails addressDetails = addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
+					
 				}
 
 				// send sms

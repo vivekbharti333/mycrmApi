@@ -20,8 +20,8 @@ public class AddressHelper {
 	@Autowired
 	private AddressDetailsDao addressDetailsDao;
 
-	public void validateUserRequest(UserRequestObject userRequestObject) throws BizException {
-		if (userRequestObject == null) {
+	public void validateAddressRequest(AddressRequestObject addressRequestObject) throws BizException {
+		if (addressRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
@@ -36,15 +36,14 @@ public class AddressHelper {
 	}
 
 	@Transactional
-	public AddressDetails getAddressDetailsByReqObj(AddressRequestObject addressRequest, UserDetails userDetails) {
+	public AddressDetails getAddressDetailsByReqObj(AddressRequestObject addressRequest, Long id, String superadminId) {
 
 		AddressDetails addressDetails = new AddressDetails();
 
-		addressDetails.setUserId(userDetails.getId());
+		addressDetails.setUserId(id);
 		addressDetails.setUserType(addressRequest.getUserType());
 		addressDetails.setAddressType(addressRequest.getAddressType());
-		addressDetails.setAddressLineOne(addressRequest.getAddressLineOne());
-		addressDetails.setAddressLineTwo(addressRequest.getAddressLineTwo());
+		addressDetails.setAddressLine(addressRequest.getAddressLine());
 		addressDetails.setLandmark(addressRequest.getLandmark());
 		addressDetails.setDistrict(addressRequest.getDistrict());
 		addressDetails.setCity(addressRequest.getCity());
@@ -53,8 +52,7 @@ public class AddressHelper {
 		addressDetails.setPincode(addressRequest.getPincode());
 
 		addressDetails.setCreatedAt(new Date());
-		addressDetails.setCreatedBy(addressRequest.getCreatedBy());
-		addressDetails.setSuperadminId(userDetails.getSuperadminId());
+		addressDetails.setSuperadminId(superadminId);
 
 		return addressDetails;
 	}

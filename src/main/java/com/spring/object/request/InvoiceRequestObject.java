@@ -3,6 +3,7 @@ package com.spring.object.request;
 import java.util.Date;
 import java.util.List;
 
+import com.spring.entities.CustomerDetails;
 import com.spring.entities.InvoiceDetails;
 
 public class InvoiceRequestObject {	
@@ -37,6 +38,10 @@ public class InvoiceRequestObject {
 	private String website;
 	private String footer;
 	private List<InvoiceDetails> itemDetails;
+	
+	//customer details;
+	private CustomerRequestObject customerRequestObject;
+	private AddressRequestObject addressRequestObject;
 	
 	private int respCode;
 	private String respMesg;
@@ -214,6 +219,18 @@ public class InvoiceRequestObject {
 	}
 	public void setItemDetails(List<InvoiceDetails> itemDetails) {
 		this.itemDetails = itemDetails;
+	}
+	public CustomerRequestObject getCustomerRequestObject() {
+		return customerRequestObject;
+	}
+	public void setCustomerRequestObject(CustomerRequestObject customerRequestObject) {
+		this.customerRequestObject = customerRequestObject;
+	}
+	public AddressRequestObject getAddressRequestObject() {
+		return addressRequestObject;
+	}
+	public void setAddressRequestObject(AddressRequestObject addressRequestObject) {
+		this.addressRequestObject = addressRequestObject;
 	}
 	public int getRespCode() {
 		return respCode;

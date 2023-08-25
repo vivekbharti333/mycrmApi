@@ -9,8 +9,7 @@ public class AddressRequestObject {
 	private String status;
 	private String userType;
 	private String addressType;
-	private String addressLineOne;
-	private String addressLineTwo;
+	private String addressLine;
 	private String landmark;
 	private String district;
 	private String city;
@@ -56,17 +55,11 @@ public class AddressRequestObject {
 	public void setAddressType(String addressType) {
 		this.addressType = addressType;
 	}
-	public String getAddressLineOne() {
-		return addressLineOne;
+	public String getAddressLine() {
+		return addressLine;
 	}
-	public void setAddressLineOne(String addressLineOne) {
-		this.addressLineOne = addressLineOne;
-	}
-	public String getAddressLineTwo() {
-		return addressLineTwo;
-	}
-	public void setAddressLineTwo(String addressLineTwo) {
-		this.addressLineTwo = addressLineTwo;
+	public void setAddressLine(String addressLine) {
+		this.addressLine = addressLine;
 	}
 	public String getLandmark() {
 		return landmark;
@@ -144,11 +137,11 @@ public class AddressRequestObject {
 	@Override
 	public String toString() {
 		return "AddressRequestObject [id=" + id + ", sessionId=" + sessionId + ", status=" + status + ", userType="
-				+ userType + ", addressType=" + addressType + ", addressLineOne=" + addressLineOne + ", addressLineTwo="
-				+ addressLineTwo + ", landmark=" + landmark + ", district=" + district + ", city=" + city + ", state="
-				+ state + ", country=" + country + ", pincode=" + pincode + ", createdAt=" + createdAt + ", updatedAt="
-				+ updatedAt + ", createdBy=" + createdBy + ", superadminId=" + superadminId + ", respCode=" + respCode
-				+ ", respMesg=" + respMesg + "]";
+				+ userType + ", addressType=" + addressType + ", addressLine=" + addressLine + ", landmark=" + landmark
+				+ ", district=" + district + ", city=" + city + ", state=" + state + ", country=" + country
+				+ ", pincode=" + pincode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy="
+				+ createdBy + ", superadminId=" + superadminId + ", respCode=" + respCode + ", respMesg=" + respMesg
+				+ "]";
 	}	
 
 }

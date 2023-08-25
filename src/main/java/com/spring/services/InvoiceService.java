@@ -7,12 +7,18 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.spring.constant.Constant;
+import com.spring.entities.AddressDetails;
+import com.spring.entities.CustomerDetails;
 import com.spring.entities.InvoiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.InvoiceNumber;
+import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
+import com.spring.helper.AddressHelper;
+import com.spring.helper.CustomerHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.jwt.JwtTokenUtil;
+import com.spring.object.request.AddressRequestObject;
 import com.spring.object.request.InvoiceRequestObject;
 import com.spring.object.request.Request;
 
@@ -24,6 +30,12 @@ public class InvoiceService {
 	
 	@Autowired
 	private InvoiceHelper invoiceHelper;
+	
+	@Autowired
+	private CustomerHelper customerHelper;
+	
+	@Autowired
+	private AddressService addressService;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -78,56 +90,62 @@ public class InvoiceService {
 	
 
 	@SuppressWarnings("unused")
-	public InvoiceRequestObject generateInvoice(Request<InvoiceRequestObject> invoiceRequestObject) 
+	public InvoiceRequestObject generateInvoice(Request<InvoiceRequestObject> invoiceRequestObject)
 			throws BizException, Exception {
-		
+
 		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-		invoiceHelper.validateInvoiceRequest(invoiceRequest);	
-		
+		invoiceHelper.validateInvoiceRequest(invoiceRequest);
+
 		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
-		logger.info("Invoice generate Request Is valid? : "+invoiceRequest.getCreatedBy()+" is " + isValid);
-		
+		logger.info("Invoice generate Request Is valid? : " + invoiceRequest.getCreatedBy() + " is " + isValid);
+
 		if (isValid) {
-			
+
 			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderByLoginId(invoiceRequest);
-			if(invoiceHeader != null) {
+			if (invoiceHeader != null) {
 				String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
-				
-				//Invoice Number
+
+				if (invoiceRequest.getRequestFor().equals(Status.NEW.name())) {
+
+					CustomerDetails customerDetails = customerHelper.getCustomerDetailsByReqObj(invoiceRequest.getCustomerRequestObject());
+					customerHelper.saveCustomerDetails(customerDetails);
+
+					AddressDetails addressDetails = addressService.saveAddressDetailsByRequest(invoiceRequest.getAddressRequestObject(), customerDetails.getId(), customerDetails.getSuperadminId());
+					
+				}
+
+				// Invoice Number
 				InvoiceNumber invoiceNumber = invoiceHelper.getInvoiceNumberByReqObj(invoiceRequest);
 				invoiceNumber = invoiceHelper.saveInvoiceNumber(invoiceNumber);
-				
+
 				// Invoice Details
 				int totalItem = 0;
 				int totalAmount = 0;
 				for (InvoiceDetails invoice : invoiceRequest.getItemDetails()) {
-					
-					invoice.setAmount(invoice.getRate()*invoice.getQuantity());
-					
+
+					invoice.setAmount(invoice.getRate() * invoice.getQuantity());
+
 					InvoiceDetails invoiceDetails = invoiceHelper.getInvoiceDetailsByReqObj(invoice, invoiceRequest);
 					invoiceDetails = invoiceHelper.saveInvoiceDetails(invoiceDetails);
-					
-					logger.info("Amount : "+invoiceDetails.getAmount());
-					
-					totalItem+=1;
+
+					totalItem += 1;
 					totalAmount += invoice.getAmount();
 				}
-				
-				
-				//Update InvoiceNumber
+
+				// Update InvoiceNumber
 				invoiceNumber.setTotalItem(totalItem);
 				invoiceNumber.setTotalAmount(totalAmount);
 				invoiceHelper.updateInvoiceNumber(invoiceNumber);
-				
-				//Update SrNo
+
+				// Update SrNo
 				invoiceHeader.setSerialNumber(invoiceRequest.getSerialNumber());
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
-				
+
 				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
 				invoiceRequest.setRespMesg(Constant.INVOICE_GEN_SUCCESS);
 				return invoiceRequest;
 
-			}else {
+			} else {
 				invoiceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				invoiceRequest.setRespMesg("Please add invoice header first");
 				return invoiceRequest;
