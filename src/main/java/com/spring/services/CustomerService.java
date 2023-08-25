@@ -1,5 +1,6 @@
 package com.spring.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
@@ -82,15 +83,15 @@ public class CustomerService {
 
 	public List<CustomerDetails> getCustomerList(Request<CustomerRequestObject> customerRequestObject) {
 		CustomerRequestObject customerRequest = customerRequestObject.getPayload();
-		List<CustomerDetails> customerList = customerHelper.getCustomerList(customerRequest);
+		Boolean isValid = jwtTokenUtil.validateJwtToken(customerRequest.getCreatedBy(), customerRequest.getToken());
+		List<CustomerDetails> customerList = new ArrayList<CustomerDetails>();
+		if (isValid) {
+			customerList = customerHelper.getCustomerList(customerRequest);
+			return customerList;
+		}
 		return customerList;
 	}
 	
 	
-//	public List<UserDetails> getUserDetails(Request<UserRequestObject> userRequestObject) {
-//		UserRequestObject userRequest = userRequestObject.getPayload();
-//		List<UserDetails> userList = userHelper.getUserDetails(userRequest);
-//		return userList;
-//	}
 
 }
