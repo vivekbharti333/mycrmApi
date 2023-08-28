@@ -3,6 +3,8 @@ package com.spring.object.request;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+
 import com.spring.entities.CustomerDetails;
 import com.spring.entities.InvoiceDetails;
 
@@ -38,6 +40,14 @@ public class InvoiceRequestObject {
 	private String website;
 	private String footer;
 	private List<InvoiceDetails> itemDetails;
+	private String gstNumber;
+	private String panNumber;
+	
+	private String accountHolderName;
+	private String accountNumber;
+	private String ifscCode;
+	private String bankName;
+	private String branchName;
 	
 	//customer details;
 	private CustomerRequestObject customerRequestObject;
@@ -219,6 +229,48 @@ public class InvoiceRequestObject {
 	}
 	public void setItemDetails(List<InvoiceDetails> itemDetails) {
 		this.itemDetails = itemDetails;
+	}
+	public String getGstNumber() {
+		return gstNumber;
+	}
+	public void setGstNumber(String gstNumber) {
+		this.gstNumber = gstNumber;
+	}
+	public String getPanNumber() {
+		return panNumber;
+	}
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
+	}
+	public String getAccountHolderName() {
+		return accountHolderName;
+	}
+	public void setAccountHolderName(String accountHolderName) {
+		this.accountHolderName = accountHolderName;
+	}
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+	public String getIfscCode() {
+		return ifscCode;
+	}
+	public void setIfscCode(String ifscCode) {
+		this.ifscCode = ifscCode;
+	}
+	public String getBankName() {
+		return bankName;
+	}
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+	public String getBranchName() {
+		return branchName;
+	}
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
 	}
 	public CustomerRequestObject getCustomerRequestObject() {
 		return customerRequestObject;

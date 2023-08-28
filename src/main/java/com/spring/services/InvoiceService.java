@@ -64,10 +64,8 @@ public class InvoiceService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
 		if (isValid) {
 			
-			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderByLoginId(invoiceRequest);
+			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest);
 			if(existsInvoiceHeader == null) {
-				
-				
 				
 				InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
 				invoiceHeaderDetails = invoiceHelper.saveInvoiceHeaderDetails(invoiceHeaderDetails);
@@ -101,7 +99,7 @@ public class InvoiceService {
 
 		if (isValid) {
 
-			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderByLoginId(invoiceRequest);
+			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest);
 			if (invoiceHeader != null) {
 				String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
 
@@ -170,6 +168,15 @@ public class InvoiceService {
 		List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsList(invoiceRequest);
 		return invoiceDetails;
 	}
+
+
+	public List<InvoiceHeaderDetails> getInvoiceHeaderList(Request<InvoiceRequestObject> invoiceRequestObject) {
+		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
+		List<InvoiceHeaderDetails> invoiceHeader = invoiceHelper.getInvoiceHeaderList(invoiceRequest);
+		return invoiceHeader;
+	}
+
+
 
 }
 

@@ -53,13 +53,12 @@ public class InvoiceHelper {
 	}
 
 	@Transactional
-	public InvoiceHeaderDetails getInvoiceHeaderByLoginId(InvoiceRequestObject invoiceRequest) {
+	public InvoiceHeaderDetails getInvoiceHeaderBySuperAdminId(InvoiceRequestObject invoiceRequest) {
 
 		CriteriaBuilder criteriaBuilder = invoiceHeaderDetailsDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<InvoiceHeaderDetails> criteriaQuery = criteriaBuilder.createQuery(InvoiceHeaderDetails.class);
 		Root<InvoiceHeaderDetails> root = criteriaQuery.from(InvoiceHeaderDetails.class);
-		Predicate restriction = criteriaBuilder.equal(root.get("loginId"), invoiceRequest.getCreatedBy());
-		restriction = criteriaBuilder.equal(root.get("superadminId"), invoiceRequest.getSuperadminId());
+		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), invoiceRequest.getSuperadminId());
 		criteriaQuery.where(restriction);
 		InvoiceHeaderDetails invoiceHeader = invoiceNumberDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return invoiceHeader;
@@ -75,10 +74,19 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setSerialNumber(0L);
 		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
 		invoiceHeaderDetails.setAddress(invoiceRequest.getAddress());
+		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setAlternateMobile(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setEmailId(invoiceRequest.getEmailId());
 		invoiceHeaderDetails.setWebsite(invoiceRequest.getWebsite());
 		invoiceHeaderDetails.setFooter(invoiceRequest.getFooter());
+		
+		invoiceHeaderDetails.setGstNumber(invoiceRequest.getGstNumber());
+		invoiceHeaderDetails.setPanNumber(invoiceRequest.getPanNumber());
+		invoiceHeaderDetails.setAccountHolderName(invoiceRequest.getAccountHolderName());
+		invoiceHeaderDetails.setAccountNumber(invoiceRequest.getAccountNumber());
+		invoiceHeaderDetails.setIfscCode(invoiceRequest.getIfscCode());
+		invoiceHeaderDetails.setBankName(invoiceRequest.getBankName());
+		invoiceHeaderDetails.setBranchName(invoiceRequest.getBranchName());
 
 		invoiceHeaderDetails.setCreatedAt(new Date());
 		invoiceHeaderDetails.setCreatedBy(invoiceRequest.getCreatedBy());
@@ -98,6 +106,16 @@ public class InvoiceHelper {
 		invoiceHeaderDetailsDao.update(invoiceHeaderDetails);
 		return invoiceHeaderDetails;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<InvoiceHeaderDetails> getInvoiceHeaderList(InvoiceRequestObject invoiceRequest) {
+			List<InvoiceHeaderDetails> results = invoiceHeaderDetailsDao.getEntityManager()
+					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.superadminId =:superadminId")
+					.setParameter("superadminId", invoiceRequest.getSuperadminId())
+					.getResultList();
+		return results;
+	}
+	
 
 	public InvoiceNumber getInvoiceNumberByReqObj(InvoiceRequestObject invoiceRequest) {
 
@@ -132,8 +150,8 @@ public class InvoiceHelper {
 		return invoiceNumber;
 	}
 
-//	public InvoiceDetails getInvoiceDetailsByReqObj(InvoiceDetails detailsRequest, InvoiceDetails invoiceRequest) {
-		public InvoiceDetails getInvoiceDetailsByReqObj(InvoiceDetails detailsRequest, InvoiceRequestObject invoiceRequest) {
+
+	public InvoiceDetails getInvoiceDetailsByReqObj(InvoiceDetails detailsRequest, InvoiceRequestObject invoiceRequest) {
 
 		InvoiceDetails invoiceDetails = new InvoiceDetails();
 
@@ -156,6 +174,8 @@ public class InvoiceHelper {
 		invoiceDetailsDao.persist(invoiceDetails);
 		return invoiceDetails;
 	}
+	
+	
 
 	@SuppressWarnings("unchecked")
 	public List<InvoiceNumber> getInvoiceNumberList(InvoiceRequestObject invoiceRequest) {
@@ -197,6 +217,8 @@ public class InvoiceHelper {
 		return null;
 
 	}
+
+	
 
 	
 

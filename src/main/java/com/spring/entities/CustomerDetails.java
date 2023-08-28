@@ -8,9 +8,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.hibernate.validator.constraints.Length;
-import org.springframework.lang.NonNull;
-
 
 @Entity
 @Table(name = "customer_details")
@@ -30,9 +27,8 @@ public class CustomerDetails {
 	@Column(name = "last_name")
 	private String lastName;
 	
-	@NonNull
-	@Length(min = 5, max = 20)
-	@Column(name = "login_id", unique=true)
+
+	@Column(name = "login_id")
 	private String loginId;
 	
 	@Column(name = "password")

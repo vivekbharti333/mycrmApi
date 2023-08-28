@@ -49,6 +49,27 @@ public class InvoiceHeaderDetails {
 	@Column(name = "website")
 	private String website;
 	
+	@Column(name = "gst_number")
+	private String gstNumber;
+	
+	@Column(name = "pan_number")
+	private String panNumber;
+	
+	@Column(name = "account_holder_name")
+	private String accountHolderName;
+	
+	@Column(name = "account_number")
+	private String accountNumber;
+	
+	@Column(name = "ifsc_code")
+	private String ifscCode;
+	
+	@Column(name = "bank_name")
+	private String bankName;
+	
+	@Column(name = "branch_name")
+	private String branchName;
+	
 	@Lob
 	@Column(name = "footer")
 	private String footer;
@@ -151,6 +172,62 @@ public class InvoiceHeaderDetails {
 
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+
+	public String getGstNumber() {
+		return gstNumber;
+	}
+
+	public void setGstNumber(String gstNumber) {
+		this.gstNumber = gstNumber;
+	}
+
+	public String getPanNumber() {
+		return panNumber;
+	}
+
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
+	}
+
+	public String getAccountHolderName() {
+		return accountHolderName;
+	}
+
+	public void setAccountHolderName(String accountHolderName) {
+		this.accountHolderName = accountHolderName;
+	}
+
+	public String getAccountNumber() {
+		return accountNumber;
+	}
+
+	public void setAccountNumber(String accountNumber) {
+		this.accountNumber = accountNumber;
+	}
+
+	public String getIfscCode() {
+		return ifscCode;
+	}
+
+	public void setIfscCode(String ifscCode) {
+		this.ifscCode = ifscCode;
+	}
+
+	public String getBankName() {
+		return bankName;
+	}
+
+	public void setBankName(String bankName) {
+		this.bankName = bankName;
+	}
+
+	public String getBranchName() {
+		return branchName;
+	}
+
+	public void setBranchName(String branchName) {
+		this.branchName = branchName;
 	}
 
 	public String getFooter() {

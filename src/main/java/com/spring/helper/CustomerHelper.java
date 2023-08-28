@@ -48,7 +48,7 @@ public class CustomerHelper {
 
 		CustomerDetails customerDetails = new CustomerDetails();
 
-		customerDetails.setLoginId(customerRequest.getLoginId().toUpperCase());
+		customerDetails.setLoginId(customerRequest.getMobileNo().toUpperCase());
 		customerDetails.setPassword(customerRequest.getPassword());
 		customerDetails.setStatus(Status.ACTIVE.name());
 		customerDetails.setRoleType(RoleType.CUSTOMER.name());

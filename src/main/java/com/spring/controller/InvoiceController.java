@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.spring.constant.Constant;
 import com.spring.entities.InvoiceDetails;
+import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.InvoiceNumber;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.InvoiceRequestObject;
@@ -40,6 +41,18 @@ public class InvoiceController {
 		} 
  		catch (Exception e) {e.printStackTrace();
 			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getInvoiceHeaderList", method = RequestMethod.POST)
+	public Response<InvoiceHeaderDetails> getInvoiceHeaderList(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
+		GenricResponse<InvoiceHeaderDetails> response = new GenricResponse<InvoiceHeaderDetails>();
+		try {
+			List<InvoiceHeaderDetails> invoiceDetails = invoiceService.getInvoiceHeaderList(invoiceRequestObject);
+			return response.createListResponse(invoiceDetails, Constant.SUCCESS_CODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
 	}
 	
