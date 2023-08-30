@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Length;
@@ -23,6 +24,10 @@ public class UserDetails {
 	
 	@Column(name = "secret_key")
 	private String secretKey;
+	
+	@Lob
+	@Column(name = "user_picture")
+	private String userPicture;
 	
 	@Column(name = "first_name")
 	private String firstName;
@@ -79,6 +84,14 @@ public class UserDetails {
 
 	public void setSecretKey(String secretKey) {
 		this.secretKey = secretKey;
+	}
+
+	public String getUserPicture() {
+		return userPicture;
+	}
+
+	public void setUserPicture(String userPicture) {
+		this.userPicture = userPicture;
 	}
 
 	public String getFirstName() {
@@ -183,6 +196,15 @@ public class UserDetails {
 
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
+	}
+
+	@Override
+	public String toString() {
+		return "UserDetails [id=" + id + ", secretKey=" + secretKey + ", userPicture=" + userPicture + ", firstName="
+				+ firstName + ", lastName=" + lastName + ", loginId=" + loginId + ", password=" + password + ", status="
+				+ status + ", roleType=" + roleType + ", mobileNo=" + mobileNo + ", alternateMobile=" + alternateMobile
+				+ ", emailId=" + emailId + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy="
+				+ createdBy + ", superadminId=" + superadminId + "]";
 	}
 
 	

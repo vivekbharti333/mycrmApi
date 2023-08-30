@@ -45,6 +45,17 @@ public class AddressService {
 		return addressDetails;
 		
 	}
+	
+	@Transactional
+	public AddressDetails updateAddressDetailsByRequest(AddressRequestObject addressRequest, AddressDetails addressDetails)
+			throws BizException {
+		addressHelper.validateAddressRequest(addressRequest);
+
+		addressHelper.getUpdatedAddressDetailsByReqObj(addressRequest, addressDetails);
+		addressHelper.updateAddressDetails(addressDetails);
+		return addressDetails;
+		
+	}
 
 
 	

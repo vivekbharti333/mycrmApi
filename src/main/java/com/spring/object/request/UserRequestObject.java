@@ -8,6 +8,7 @@ public class UserRequestObject {
 	
 	private Long id;
 	private String token;
+	private String userPicture;
 	private String loginId;
 	private String password;
 	private String status;
@@ -41,6 +42,12 @@ public class UserRequestObject {
 	}
 	public void setToken(String token) {
 		this.token = token;
+	}
+	public String getUserPicture() {
+		return userPicture;
+	}
+	public void setUserPicture(String userPicture) {
+		this.userPicture = userPicture;
 	}
 	public String getLoginId() {
 		return loginId;

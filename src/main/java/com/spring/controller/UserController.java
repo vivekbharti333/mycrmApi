@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.constant.Constant;
+import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.Request;
@@ -50,8 +51,8 @@ public class UserController {
 			HttpServletRequest request) {
 		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
 		try {
-			UserRequestObject responce = userService.doLogin(userRequestObject);
-			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+			UserRequestObject response = userService.doLogin(userRequestObject);
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		} catch (Exception e) {
@@ -111,6 +112,18 @@ public class UserController {
 		try {
 			List<UserDetails> userList = userService.getUserDetails(userRequestObject);
 			return response.createListResponse(userList, 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(400, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getAddressDetails", method = RequestMethod.POST)
+	public Response<AddressDetails> getAddressDetails(@RequestBody Request<UserRequestObject> userRequestObject) {
+		GenricResponse<AddressDetails> response = new GenricResponse<AddressDetails>();
+		try {
+			List<AddressDetails> addressList = userService.getAddressDetails(userRequestObject);
+			return response.createListResponse(addressList, 200);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

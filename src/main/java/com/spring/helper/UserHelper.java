@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.UserDetailsDao;
+import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.UserRequestObject;
@@ -63,15 +65,29 @@ public class UserHelper {
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
 	}
+	
+//	@Transactional
+//	public UserDetails getUserDetailsByLoginIdAndSuperadminId(String loginId, String superadminId) {
+//
+//		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
+//		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
+//		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
+//		Predicate restriction = criteriaBuilder.equal(root.get("emailId"), loginId);
+//		restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+//		criteriaQuery.where(restriction);
+//		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+//		return userDetails;
+//	}
 
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
 
 		UserDetails userDetails = new UserDetails();
 
-		userDetails.setLoginId(userRequest.getMobileNo().toUpperCase());
+		userDetails.setLoginId(userRequest.getEmailId());
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
 		userDetails.setRoleType(userRequest.getRoleType());
+		userDetails.setUserPicture(userRequest.getUserPicture());
 		userDetails.setFirstName(userRequest.getFirstName());
 		userDetails.setLastName(userRequest.getLastName());
 		userDetails.setMobileNo(userRequest.getMobileNo());
@@ -92,8 +108,9 @@ public class UserHelper {
 	}
 	
 
-	public UserDetails getUpdatedUserDetailsByReqObj(UserRequestObject userRequest, UserDetails userDetails) {
+	public UserDetails getUpdatedUserDetailsByReqObj(UserDetails userDetails, UserRequestObject userRequest) {
 
+		userDetails.setUserPicture(userRequest.getUserPicture());
 		userDetails.setRoleType(userRequest.getRoleType());
 		userDetails.setFirstName(userRequest.getFirstName());
 		userDetails.setLastName(userRequest.getLastName());
@@ -115,16 +132,43 @@ public class UserHelper {
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserDetails(UserRequestObject userRequest) {
 		
-		String hqlQuery = "";
-		if(userRequest.getRequestedFor().equals("ALL")) {
-			hqlQuery = "SELECT UD FROM UserDetails UD";
-		}else if(userRequest.getRequestedFor().equals("ACTIVE")) {
-			hqlQuery = "SELECT UD FROM UserDetails UD";
+		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
+			List<UserDetails> results = userDetailsDao.getEntityManager()
+					.createQuery("SELECT UD FROM UserDetails UD")
+					.getResultList();
+			return results;
+		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+			List<UserDetails> results = userDetailsDao.getEntityManager()
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId ORDER BY UD.id DESC")
+					.setParameter("superadminId", userRequest.getCreatedBy())
+					.getResultList();
+			return results;
+		}else if(userRequest.getRoleType().equals(RoleType.ADMIN.name())) {
+			List<UserDetails> results = userDetailsDao.getEntityManager()
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId ORDER BY UD.id DESC")
+					.setParameter("createdBy", userRequest.getSuperadminId())
+					.setParameter("superadminId", userRequest.getCreatedBy())
+					.getResultList();
+			return results;
 		}
-		List<UserDetails> results = userDetailsDao.getEntityManager()
-				.createQuery(hqlQuery)
-				.getResultList();
-		return results;
+		return null;
+		
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<AddressDetails> getAddressDetails(UserRequestObject userRequest) {
+		
+		System.out.println("User Id : "+userRequest.getId());
+		
+		if(userRequest.getRequestedFor().equals("ALL")) {
+			List<AddressDetails> results = userDetailsDao.getEntityManager()
+					.createQuery("SELECT AD FROM AddressDetails AD WHERE AD.userId =:userId And AD.superadminId =:superadminId ORDER BY AD.id DESC")
+					.setParameter("userId", userRequest.getId())
+					.setParameter("superadminId", userRequest.getSuperadminId())
+					.getResultList();
+			return results;
+		}
+		return null;
 	}
 
 }

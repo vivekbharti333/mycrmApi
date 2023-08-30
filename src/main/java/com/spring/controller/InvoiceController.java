@@ -44,6 +44,21 @@ public class InvoiceController {
 		}
 	}
 	
+	@RequestMapping(path = "updateInvoiceHeader", method = RequestMethod.POST)
+	public Response<InvoiceRequestObject>updateInvoiceHeader(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request)
+	{
+		GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
+		try {
+			InvoiceRequestObject responce =  invoiceService.updateInvoiceHeader(invoiceRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getInvoiceHeaderList", method = RequestMethod.POST)
 	public Response<InvoiceHeaderDetails> getInvoiceHeaderList(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
 		GenricResponse<InvoiceHeaderDetails> response = new GenricResponse<InvoiceHeaderDetails>();

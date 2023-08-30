@@ -75,8 +75,11 @@ public class InvoiceService {
 				return invoiceRequest;
 				
 			}else {
-				invoiceRequest.setRespCode(Constant.ALREADY_EXISTS);
-				invoiceRequest.setRespMesg("EXISTS");
+				existsInvoiceHeader = invoiceHelper.getUpdatedInvoiceHeaderDetailsByReqObj(invoiceRequest, existsInvoiceHeader);
+				invoiceHelper.updateInvoiceHeaderDetails(existsInvoiceHeader);
+				
+				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+				invoiceRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 				return invoiceRequest;
 			}
 		} else {
@@ -85,6 +88,37 @@ public class InvoiceService {
 			return invoiceRequest;
 		}
 	}
+	
+	public InvoiceRequestObject updateInvoiceHeader(Request<InvoiceRequestObject> invoiceRequestObject) 
+		throws BizException, Exception {
+			
+			InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
+			invoiceHelper.validateInvoiceRequest(invoiceRequest);
+			
+			Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
+			if (isValid) {
+				
+				InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest);
+				if(existsInvoiceHeader != null) {
+					
+					InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
+					invoiceHeaderDetails = invoiceHelper.saveInvoiceHeaderDetails(invoiceHeaderDetails);
+					
+					invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+					invoiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
+					return invoiceRequest;
+					
+				}else {
+					invoiceRequest.setRespCode(Constant.ALREADY_EXISTS);
+					invoiceRequest.setRespMesg("EXISTS");
+					return invoiceRequest;
+				}
+			} else {
+				invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+				invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
+				return invoiceRequest;
+			}
+		}
 	
 
 	@SuppressWarnings("unused")
@@ -103,14 +137,14 @@ public class InvoiceService {
 			if (invoiceHeader != null) {
 				String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
 
-				if (invoiceRequest.getRequestFor().equals(Status.NEW.name())) {
-
-					CustomerDetails customerDetails = customerHelper.getCustomerDetailsByReqObj(invoiceRequest.getCustomerRequestObject());
-					customerHelper.saveCustomerDetails(customerDetails);
-
-					AddressDetails addressDetails = addressService.saveAddressDetailsByRequest(invoiceRequest.getAddressRequestObject(), customerDetails.getId(), customerDetails.getSuperadminId());
-					
-				}
+//				if (invoiceRequest.getRequestFor().equals(Status.NEW.name())) {
+//
+//					CustomerDetails customerDetails = customerHelper.getCustomerDetailsByReqObj(invoiceRequest.getCustomerRequestObject());
+//					customerHelper.saveCustomerDetails(customerDetails);
+//
+//					AddressDetails addressDetails = addressService.saveAddressDetailsByRequest(invoiceRequest.getAddressRequestObject(), customerDetails.getId(), customerDetails.getSuperadminId());
+//					
+//				}
 
 				// Invoice Number
 				InvoiceNumber invoiceNumber = invoiceHelper.getInvoiceNumberByReqObj(invoiceRequest);
@@ -175,7 +209,6 @@ public class InvoiceService {
 		List<InvoiceHeaderDetails> invoiceHeader = invoiceHelper.getInvoiceHeaderList(invoiceRequest);
 		return invoiceHeader;
 	}
-
 
 
 }

@@ -29,6 +29,9 @@ public class UserService {
 
 	@Autowired
 	private AddressService addressService;
+	
+	@Autowired
+	private AddressHelper addressHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -55,6 +58,7 @@ public class UserService {
 						
 				userRequest.setLoginId(userDetails.getLoginId());
 				userRequest.setPassword(null);
+//				userRequest.setUserPicture(userDetails.getUserPicture());
 				userRequest.setFirstName(userDetails.getFirstName());
 				userRequest.setLastName(userDetails.getLastName());
 				userRequest.setRoleType(userDetails.getRoleType());
@@ -90,7 +94,7 @@ public class UserService {
 
 		if (isValid) {
 
-			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getMobileNo());
+			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getEmailId());
 			if (existsUserDetails == null) {
 
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
@@ -103,11 +107,8 @@ public class UserService {
 				
 				// Save Address
 				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
-//					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
-//					addressDetails = addressHelper.saveAddressDetails(addressDetails);
 					addressRequest.setUserType(userRequest.getRoleType());
-					AddressDetails addressDetails = addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
-					
+					addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
 				}
 
 				// send sms
@@ -133,14 +134,26 @@ public class UserService {
 			throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
+		
+		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
+		logger.info("Usere Registration Is valid? : "+userRequest.getCreatedBy()+" is " + isValid);
 
+		if (isValid) {
+			
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		logger.info("User Details : "+userDetails);
 		if (userDetails != null) {
 
-			userDetails = userHelper.getUpdatedUserDetailsByReqObj(userRequest, userDetails);
+			userDetails = userHelper.getUpdatedUserDetailsByReqObj(userDetails, userRequest);
 			userDetails = userHelper.UpdateUserDetails(userDetails);
-
-			// send sms
+			
+			for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
+				AddressDetails addressDetails = addressHelper.getAddressDetailsByUserIdAndAddressType(userDetails.getId(), addressRequest.getAddressType(), userDetails.getSuperadminId());
+				
+				if(addressDetails != null) {
+					addressService.updateAddressDetailsByRequest(addressRequest,addressDetails);
+				}
+			}
 
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
@@ -148,6 +161,11 @@ public class UserService {
 		} else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg("User Not Found");
+			return userRequest;
+		}
+		}else {
+			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+			userRequest.setRespMesg(Constant.INVALID_TOKEN);
 			return userRequest;
 		}
 	}
@@ -182,6 +200,12 @@ public class UserService {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		List<UserDetails> userList = userHelper.getUserDetails(userRequest);
 		return userList;
+	}
+
+	public List<AddressDetails> getAddressDetails(Request<UserRequestObject> userRequestObject) {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
+		return addressList;
 	}
 
 }

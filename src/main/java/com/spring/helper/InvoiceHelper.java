@@ -101,6 +101,36 @@ public class InvoiceHelper {
 		return invoiceHeaderDetails;
 	}
 	
+	
+	public InvoiceHeaderDetails getUpdatedInvoiceHeaderDetailsByReqObj(InvoiceRequestObject invoiceRequest, InvoiceHeaderDetails invoiceHeaderDetails) {
+
+
+		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
+		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
+		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
+		invoiceHeaderDetails.setAddress(invoiceRequest.getAddress());
+		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
+		invoiceHeaderDetails.setAlternateMobile(invoiceRequest.getMobileNo());
+		invoiceHeaderDetails.setEmailId(invoiceRequest.getEmailId());
+		invoiceHeaderDetails.setWebsite(invoiceRequest.getWebsite());
+		invoiceHeaderDetails.setFooter(invoiceRequest.getFooter());
+		
+		invoiceHeaderDetails.setGstNumber(invoiceRequest.getGstNumber());
+		invoiceHeaderDetails.setPanNumber(invoiceRequest.getPanNumber());
+		invoiceHeaderDetails.setAccountHolderName(invoiceRequest.getAccountHolderName());
+		invoiceHeaderDetails.setAccountNumber(invoiceRequest.getAccountNumber());
+		invoiceHeaderDetails.setIfscCode(invoiceRequest.getIfscCode());
+		invoiceHeaderDetails.setBankName(invoiceRequest.getBankName());
+		invoiceHeaderDetails.setBranchName(invoiceRequest.getBranchName());
+
+		invoiceHeaderDetails.setUpdatedAt(new Date());
+		invoiceHeaderDetails.setCreatedBy(invoiceRequest.getCreatedBy());
+		invoiceHeaderDetails.setSuperadminId(invoiceRequest.getSuperadminId());
+
+		return invoiceHeaderDetails;
+	}
+
+	
 	@Transactional
 	public InvoiceHeaderDetails updateInvoiceHeaderDetails(InvoiceHeaderDetails invoiceHeaderDetails) {
 		invoiceHeaderDetailsDao.update(invoiceHeaderDetails);
