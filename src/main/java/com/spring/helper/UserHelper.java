@@ -96,7 +96,12 @@ public class UserHelper {
 		userDetails.setCreatedBy(userRequest.getCreatedBy());
 		userDetails.setCreatedAt(new Date());
 		userDetails.setUpdatedAt(new Date());
-		userDetails.setSuperadminId(userRequest.getSuperadminId().toUpperCase());
+		if(userDetails.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+			userDetails.setSuperadminId(userDetails.getLoginId());
+		}else {
+			userDetails.setSuperadminId(userRequest.getSuperadminId().toUpperCase());
+		}
+		
 
 		return userDetails;
 	}
@@ -151,8 +156,7 @@ public class UserHelper {
 					.getResultList();
 			return results;
 		}
-		return null;
-		
+		return null;	
 	}
 
 	@SuppressWarnings("unchecked")

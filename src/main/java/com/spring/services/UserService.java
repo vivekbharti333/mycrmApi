@@ -54,11 +54,10 @@ public class UserService {
 				userHelper.UpdateUserDetails(userDetails);
 
 				String token = jwtTokenUtil.generateAccessToken(userDetails);
-				logger.info("Token : "+token);
 						
 				userRequest.setLoginId(userDetails.getLoginId());
 				userRequest.setPassword(null);
-//				userRequest.setUserPicture(userDetails.getUserPicture());
+	
 				userRequest.setFirstName(userDetails.getFirstName());
 				userRequest.setLastName(userDetails.getLastName());
 				userRequest.setRoleType(userDetails.getRoleType());
@@ -79,6 +78,23 @@ public class UserService {
 			return userRequest;
 		}
 	}
+	
+	public UserRequestObject getUserDetailsByLoginId(Request<UserRequestObject> userRequestObject) throws BizException {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+
+		logger.info("Enter ");
+		
+		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		if (userDetails != null) {
+			
+			userRequest.setFirstName(userDetails.getFirstName());
+			userRequest.setUserPicture(userDetails.getUserPicture());
+		}
+		
+		return userRequest;
+	}
+	
 
 	@Transactional
 	public UserRequestObject userRegistration(Request<UserRequestObject> userRequestObject)
@@ -96,6 +112,8 @@ public class UserService {
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getEmailId());
 			if (existsUserDetails == null) {
+				
+				userRequest.setPassword("123");
 
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
 				userRequest.setPassword(password);
@@ -207,5 +225,7 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
+
 
 }

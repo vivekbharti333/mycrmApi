@@ -60,6 +60,21 @@ public class UserController {
 			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
 	}
+	
+	@RequestMapping(path = "getUserDetailsByLoginId", method = RequestMethod.POST)
+	public Response<UserRequestObject> getUserDetailsByLoginId(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject response = userService.getUserDetailsByLoginId(userRequestObject);
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
 
 	@RequestMapping(path = "userRegistration", method = RequestMethod.POST)
 	public Response<UserRequestObject> userRegistration(@RequestBody Request<UserRequestObject> userRequestObject,
