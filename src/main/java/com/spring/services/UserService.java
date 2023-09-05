@@ -43,36 +43,45 @@ public class UserService {
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
 
-			if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
-				logger.info("Login Successfully: "+userRequest);
-				
-				//generate secret key.
-				String secretKey = jwtTokenUtil.generateSecretKey();
-				
-				//update secret key in UserDetails.
-				userDetails.setSecretKey(secretKey);
-				userHelper.UpdateUserDetails(userDetails);
+			boolean isValid = userHelper.checkValidityOfUser(userDetails.getValidityExpireOn());
 
-				String token = jwtTokenUtil.generateAccessToken(userDetails);
-						
-				userRequest.setLoginId(userDetails.getLoginId());
-				userRequest.setPassword(null);
-	
-				userRequest.setFirstName(userDetails.getFirstName());
-				userRequest.setLastName(userDetails.getLastName());
-				userRequest.setRoleType(userDetails.getRoleType());
-				userRequest.setSuperadminId(userDetails.getSuperadminId());
-				userRequest.setToken(token);
+			if (isValid) {
 
-				userRequest.setRespCode(Constant.SUCCESS_CODE);
-				userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
-				return userRequest;
+				if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
+					logger.info("Login Successfully: " + userRequest);
+
+					// generate secret key.
+					String secretKey = jwtTokenUtil.generateSecretKey();
+
+					// update secret key in UserDetails.
+					userDetails.setSecretKey(secretKey);
+					userHelper.UpdateUserDetails(userDetails);
+
+					String token = jwtTokenUtil.generateAccessToken(userDetails);
+
+					userRequest.setLoginId(userDetails.getLoginId());
+					userRequest.setPassword(null);
+
+					userRequest.setFirstName(userDetails.getFirstName());
+					userRequest.setLastName(userDetails.getLastName());
+					userRequest.setRoleType(userDetails.getRoleType());
+					userRequest.setSuperadminId(userDetails.getSuperadminId());
+					userRequest.setToken(token);
+
+					userRequest.setRespCode(Constant.SUCCESS_CODE);
+					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
+					return userRequest;
+				} else {
+					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					userRequest.setRespMesg(Constant.INVALID_LOGIN);
+					return userRequest;
+				}
 			} else {
 				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				userRequest.setRespMesg(Constant.INVALID_LOGIN);
+				userRequest.setRespMesg(Constant.EXPIRED_LOGIN);
 				return userRequest;
 			}
-		}else {
+		} else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg(Constant.INVALID_LOGIN);
 			return userRequest;
@@ -83,8 +92,6 @@ public class UserService {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
 
-		logger.info("Enter ");
-		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
 			

@@ -46,6 +46,12 @@ public class UserDetails {
 	@Column(name = "status")
 	private String status;
 	
+	@Column(name = "service")
+	private String service;
+	
+	@Column(name = "permissions")
+	private String permissions;
+	
 	@Column(name = "role_type")
 	private String roleType;
 	
@@ -57,6 +63,9 @@ public class UserDetails {
 	
 	@Column(name = "email_id")
 	private String emailId;
+	
+	@Column(name = "validity_expire_on")
+	private Date validityExpireOn;
 	
 	@Column(name = "created_at")
 	private Date createdAt;
@@ -132,6 +141,30 @@ public class UserDetails {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getService() {
+		return service;
+	}
+
+	public void setService(String service) {
+		this.service = service;
+	}
+
+	public String getPermissions() {
+		return permissions;
+	}
+
+	public void setPermissions(String permissions) {
+		this.permissions = permissions;
+	}
+
+	public Date getValidityExpireOn() {
+		return validityExpireOn;
+	}
+
+	public void setValidityExpireOn(Date validityExpireOn) {
+		this.validityExpireOn = validityExpireOn;
 	}
 
 	public String getRoleType() {

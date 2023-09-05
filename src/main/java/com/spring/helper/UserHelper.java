@@ -1,5 +1,10 @@
 package com.spring.helper;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -40,19 +45,28 @@ public class UserHelper {
 		}
 		return sb.toString();
 	}
+	
+	public boolean checkValidityOfUser(Date validityDate) {
 
-//	@Transactional
-//	public UserDetails getUserDetailsByUserIdAndPassword(UserRequestObject userRequest) {
-//
-//		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
-//		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-//		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
-//		Predicate restriction = criteriaBuilder.equal(root.get("loginId"), userRequest.getLoginId());
-////		restriction = criteriaBuilder.equal(root.get("password"), userRequest.getPassword());
-//		criteriaQuery.where(restriction);
-//		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-//		return userDetails;
-//	}
+		LocalDate nowDate = LocalDate.now();
+
+		Date utilDate = validityDate;
+
+		// Convert it to a java.time.Instant
+		Instant instant = utilDate.toInstant();
+		LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
+
+		// Calculate the difference between the two dates
+		long daysDifference = ChronoUnit.DAYS.between(nowDate, localDate);
+
+		if (daysDifference >= 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
 
 	@Transactional
 	public UserDetails getUserDetailsByLoginId(String loginId) {
@@ -98,11 +112,19 @@ public class UserHelper {
 		userDetails.setUpdatedAt(new Date());
 		if(userDetails.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			userDetails.setSuperadminId(userDetails.getLoginId());
+			
+			Date date = new Date();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.YEAR, 1);
+			Date oneYearLater = calendar.getTime();
+			
+		    userDetails.setValidityExpireOn(oneYearLater);
 		}else {
-			userDetails.setSuperadminId(userRequest.getSuperadminId().toUpperCase());
+			userDetails.setSuperadminId(userRequest.getSuperadminId());
+			userDetails.setValidityExpireOn(userRequest.getValidityExpireOn());
 		}
-		
-
+	
 		return userDetails;
 	}
 
@@ -144,8 +166,9 @@ public class UserHelper {
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId ORDER BY UD.id DESC")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType  ORDER BY UD.id DESC")
 					.setParameter("superadminId", userRequest.getCreatedBy())
+					.setParameter("roleType", RoleType.SUPERADMIN.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.ADMIN.name())) {
@@ -161,8 +184,6 @@ public class UserHelper {
 
 	@SuppressWarnings("unchecked")
 	public List<AddressDetails> getAddressDetails(UserRequestObject userRequest) {
-		
-		System.out.println("User Id : "+userRequest.getId());
 		
 		if(userRequest.getRequestedFor().equals("ALL")) {
 			List<AddressDetails> results = userDetailsDao.getEntityManager()

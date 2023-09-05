@@ -21,6 +21,7 @@ public class UserRequestObject {
 	
 	public List<AddressRequestObject> addressList;
 	
+	private Date validityExpireOn;
 	private Date createdAt;
 	private Date updatedAt;
 	private String createdBy;
@@ -108,6 +109,12 @@ public class UserRequestObject {
 	}
 	public void setAddressList(List<AddressRequestObject> addressList) {
 		this.addressList = addressList;
+	}
+	public Date getValidityExpireOn() {
+		return validityExpireOn;
+	}
+	public void setValidityExpireOn(Date validityExpireOn) {
+		this.validityExpireOn = validityExpireOn;
 	}
 	public Date getCreatedAt() {
 		return createdAt;
