@@ -64,6 +64,12 @@ public class UserDetails {
 	@Column(name = "email_id")
 	private String emailId;
 	
+	@Column(name = "aadhar_number")
+	private String aadharNumber;
+	
+	@Column(name = "pan_number")
+	private String panNumber;
+	
 	@Column(name = "validity_expire_on")
 	private Date validityExpireOn;
 	
@@ -197,6 +203,22 @@ public class UserDetails {
 
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+
+	public String getAadharNumber() {
+		return aadharNumber;
+	}
+
+	public void setAadharNumber(String aadharNumber) {
+		this.aadharNumber = aadharNumber;
+	}
+
+	public String getPanNumber() {
+		return panNumber;
+	}
+
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
 	}
 
 	public Date getCreatedAt() {

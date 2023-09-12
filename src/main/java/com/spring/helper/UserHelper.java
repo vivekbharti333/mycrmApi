@@ -107,6 +107,8 @@ public class UserHelper {
 		userDetails.setMobileNo(userRequest.getMobileNo());
 		userDetails.setAlternateMobile(userRequest.getAlternateMobile());
 		userDetails.setEmailId(userRequest.getEmailId());
+		userDetails.setAadharNumber(userRequest.getAadharNumber());
+		userDetails.setPanNumber(userRequest.getPanNumber());
 		userDetails.setCreatedBy(userRequest.getCreatedBy());
 		userDetails.setCreatedAt(new Date());
 		userDetails.setUpdatedAt(new Date());

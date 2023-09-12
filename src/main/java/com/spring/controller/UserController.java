@@ -129,7 +129,7 @@ public class UserController {
 			return response.createListResponse(userList, 200);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return response.createErrorResponse(400, e.getMessage());
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		}
 	}
 	
@@ -141,7 +141,7 @@ public class UserController {
 			return response.createListResponse(addressList, 200);
 		} catch (Exception e) {
 			e.printStackTrace();
-			return response.createErrorResponse(400, e.getMessage());
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		}
 	}
 }

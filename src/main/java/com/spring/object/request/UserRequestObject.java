@@ -3,6 +3,8 @@ package com.spring.object.request;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
+
 
 public class UserRequestObject {
 	
@@ -18,6 +20,8 @@ public class UserRequestObject {
 	private String mobileNo;
 	private String alternateMobile;
 	private String emailId;
+	private String aadharNumber;
+	private String panNumber;
 	
 	public List<AddressRequestObject> addressList;
 	
@@ -103,6 +107,18 @@ public class UserRequestObject {
 	}
 	public void setEmailId(String emailId) {
 		this.emailId = emailId;
+	}
+	public String getAadharNumber() {
+		return aadharNumber;
+	}
+	public void setAadharNumber(String aadharNumber) {
+		this.aadharNumber = aadharNumber;
+	}
+	public String getPanNumber() {
+		return panNumber;
+	}
+	public void setPanNumber(String panNumber) {
+		this.panNumber = panNumber;
 	}
 	public List<AddressRequestObject> getAddressList() {
 		return addressList;
