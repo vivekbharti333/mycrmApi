@@ -43,21 +43,27 @@ public class AddressHelper {
 	@Transactional
 	public AddressDetails getAddressDetailsByUserIdAndAddressType(Long userId, String addressType, String superadminId) {
 
-		CriteriaBuilder criteriaBuilder = addressDetailsDao.getSession().getCriteriaBuilder();
-		CriteriaQuery<AddressDetails> criteriaQuery = criteriaBuilder.createQuery(AddressDetails.class);
-		Root<AddressDetails> root = criteriaQuery.from(AddressDetails.class);
-		Predicate restriction = criteriaBuilder.equal(root.get("userId"), userId);
-		restriction = criteriaBuilder.equal(root.get("addressType"), addressType);
-//		restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-		criteriaQuery.where(restriction);
-		AddressDetails addressDetails = addressDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-		return addressDetails;
+	    CriteriaBuilder criteriaBuilder = addressDetailsDao.getSession().getCriteriaBuilder();
+	    CriteriaQuery<AddressDetails> criteriaQuery = criteriaBuilder.createQuery(AddressDetails.class);
+	    Root<AddressDetails> root = criteriaQuery.from(AddressDetails.class);
+
+	    Predicate userIdPredicate = criteriaBuilder.equal(root.get("userId"), userId);
+	    Predicate addressTypePredicate = criteriaBuilder.equal(root.get("addressType"), addressType);
+
+	    // Combine the predicates using AND
+	    Predicate restriction = criteriaBuilder.and(userIdPredicate, addressTypePredicate);
+
+	    criteriaQuery.where(restriction);
+	    AddressDetails addressDetails = addressDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+	    return addressDetails;
 	}
 
 	@Transactional
 	public AddressDetails getAddressDetailsByReqObj(AddressRequestObject addressRequest, Long id, String superadminId) {
 
 		AddressDetails addressDetails = new AddressDetails();
+		
+		System.out.println(addressRequest.getAddressType());
 
 		addressDetails.setUserId(id);
 		addressDetails.setUserType(addressRequest.getUserType());
