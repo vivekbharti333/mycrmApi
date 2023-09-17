@@ -34,7 +34,7 @@ public class DonationDetails {
 	private String address;
 	
 	@Column(name = "amount")
-	private int amount;
+	private double amount;
 	
 	@Column(name = "transaction_id")
 	private String transactionId;
@@ -118,11 +118,11 @@ public class DonationDetails {
 		this.address = address;
 	}
 
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
 	}
 

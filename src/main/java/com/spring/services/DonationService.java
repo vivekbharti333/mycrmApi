@@ -65,6 +65,17 @@ public class DonationService {
 	}
 
 
+
+	public DonationRequestObject countDonnation(Request<DonationRequestObject> donationRequestObject) 
+			throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateLeadRequest(donationRequest);
+		
+		
+		return donationRequest;
+	}
+
+
 	
 	
 

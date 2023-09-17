@@ -25,6 +25,8 @@ public class UserRequestObject {
 	
 	public List<AddressRequestObject> addressList;
 	
+	private String service;
+	private String permissions;
 	private Date validityExpireOn;
 	private Date createdAt;
 	private Date updatedAt;
@@ -125,6 +127,18 @@ public class UserRequestObject {
 	}
 	public void setAddressList(List<AddressRequestObject> addressList) {
 		this.addressList = addressList;
+	}
+	public String getService() {
+		return service;
+	}
+	public void setService(String service) {
+		this.service = service;
+	}
+	public String getPermissions() {
+		return permissions;
+	}
+	public void setPermissions(String permissions) {
+		this.permissions = permissions;
 	}
 	public Date getValidityExpireOn() {
 		return validityExpireOn;
