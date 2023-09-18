@@ -64,6 +64,7 @@ public class UserService {
 
 					userRequest.setFirstName(userDetails.getFirstName());
 					userRequest.setLastName(userDetails.getLastName());
+					userRequest.setService(userDetails.getService());
 					userRequest.setRoleType(userDetails.getRoleType());
 					userRequest.setSuperadminId(userDetails.getSuperadminId());
 					userRequest.setToken(token);

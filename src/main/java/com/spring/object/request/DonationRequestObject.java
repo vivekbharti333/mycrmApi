@@ -11,7 +11,7 @@ public class DonationRequestObject {
 	private String emailId;
 	private String panNumber;
 	private String address;
-	private int amount;
+	private double amount;
 	private String transactionId;
 	private String paymentMode;
 	private String paymentType;	
@@ -24,9 +24,18 @@ public class DonationRequestObject {
 	private String loginId;
 	private String superadminId;
 	
+	private String roleType;
 	private String requestedFor;
 	private Date firstDate;
 	private Date lastDate;
+	
+	private double todaysCount;
+	private double todaysAmount;
+	private double yesterdayCount;
+	private double yesterdayAmount;
+	private double monthCount;
+	private double monthAmount;
+	
 	
 	private int respCode;
 	private String respMesg;
@@ -74,11 +83,47 @@ public class DonationRequestObject {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public int getAmount() {
+	public double getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
+	public void setAmount(double amount) {
 		this.amount = amount;
+	}
+	public double getTodaysCount() {
+		return todaysCount;
+	}
+	public void setTodaysCount(double todaysCount) {
+		this.todaysCount = todaysCount;
+	}
+	public double getTodaysAmount() {
+		return todaysAmount;
+	}
+	public void setTodaysAmount(double todaysAmount) {
+		this.todaysAmount = todaysAmount;
+	}
+	public double getYesterdayCount() {
+		return yesterdayCount;
+	}
+	public void setYesterdayCount(double yesterdayCount) {
+		this.yesterdayCount = yesterdayCount;
+	}
+	public double getYesterdayAmount() {
+		return yesterdayAmount;
+	}
+	public void setYesterdayAmount(double yesterdayAmount) {
+		this.yesterdayAmount = yesterdayAmount;
+	}
+	public double getMonthCount() {
+		return monthCount;
+	}
+	public void setMonthCount(double monthCount) {
+		this.monthCount = monthCount;
+	}
+	public double getMonthAmount() {
+		return monthAmount;
+	}
+	public void setMonthAmount(double monthAmount) {
+		this.monthAmount = monthAmount;
 	}
 	public String getTransactionId() {
 		return transactionId;
@@ -145,6 +190,12 @@ public class DonationRequestObject {
 	}
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
+	}
+	public String getRoleType() {
+		return roleType;
+	}
+	public void setRoleType(String roleType) {
+		this.roleType = roleType;
 	}
 	public String getRequestedFor() {
 		return requestedFor;
