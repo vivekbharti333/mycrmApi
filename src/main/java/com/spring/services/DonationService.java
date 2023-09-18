@@ -1,6 +1,8 @@
 package com.spring.services;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.transaction.Transactional;
 
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.LeadDetails;
+import com.spring.enums.RequestFor;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.LeadHelper;
@@ -35,7 +38,7 @@ public class DonationService {
 	public DonationRequestObject addDonation(Request<DonationRequestObject> donationRequestObject)
 			throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-		donationHelper.validateLeadRequest(donationRequest);
+		donationHelper.validateDonationRequest(donationRequest);
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
 		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
@@ -60,19 +63,57 @@ public class DonationService {
 
 	public List<DonationDetails> getDonationListBySuperadmin(Request<DonationRequestObject> donationRequestObject) {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-		List<DonationDetails> donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+
+		List<DonationDetails> donationList = new ArrayList<>();
+		if (isValid) {
+			donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+			return donationList;
+		}
 		return donationList;
+
 	}
 
 
 
-	public DonationRequestObject countDonnation(Request<DonationRequestObject> donationRequestObject) 
+	public DonationRequestObject getCountAndSum(Request<DonationRequestObject> donationRequestObject) 
 			throws BizException, Exception {
-		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-		donationHelper.validateLeadRequest(donationRequest);
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();	
+		donationHelper.validateDonationRequest(donationRequest);
+		
+		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+		logger.info("Add Donation Is valid? : "+donationRequest.getCreatedBy()+" is " + isValid);
+
+		if (isValid) {
+			
+			//for today
+			donationRequest.setRequestedFor(RequestFor.TODAY.name());
+			int count =  donationHelper.getCountAndSum(donationRequest);
+			
+			System.out.println("1 : "+count);
+			
+			//for yesterday
+//			donationRequest.setRequestedFor(RequestFor.YESTERDAY.name());
+//			Map<String, Long> count1 =  donationHelper.getCountAndSum(donationRequest);
+//			
+//			donationRequest.setRequestedFor(RequestFor.WEEK.name());
+//			Map<String, Long> count2 =  donationHelper.getCountAndSum(donationRequest);
+//			
+//			donationRequest.setRequestedFor(RequestFor.MONTH.name());
+//			Map<String, Long> count3 =  donationHelper.getCountAndSum(donationRequest);
+			
+			System.out.println(count);
+//			System.out.println(count1);
+//			System.out.println(count2);
+//			System.out.println(count3);
+			
+			return donationRequest;
+			
+		}else {
+			return donationRequest;
+		}
 		
 		
-		return donationRequest;
 	}
 
 

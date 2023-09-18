@@ -27,6 +27,9 @@ public class UserRequestObject {
 	
 	private String service;
 	private String permissions;
+	
+	private String isPassChanged;
+	private Date dob;
 	private Date validityExpireOn;
 	private Date createdAt;
 	private Date updatedAt;
@@ -139,6 +142,18 @@ public class UserRequestObject {
 	}
 	public void setPermissions(String permissions) {
 		this.permissions = permissions;
+	}
+	public Date getDob() {
+		return dob;
+	}
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+	public String getIsPassChanged() {
+		return isPassChanged;
+	}
+	public void setIsPassChanged(String isPassChanged) {
+		this.isPassChanged = isPassChanged;
 	}
 	public Date getValidityExpireOn() {
 		return validityExpireOn;

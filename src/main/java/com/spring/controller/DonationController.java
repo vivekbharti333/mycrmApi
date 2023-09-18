@@ -55,12 +55,12 @@ public class DonationController {
 		}
 	}
 	
-	@RequestMapping(path = "countDonnation", method = RequestMethod.POST)
-	public Response<DonationRequestObject>countDonnation(@RequestBody Request<DonationRequestObject> donationRequestObject, HttpServletRequest request)
+	@RequestMapping(path = "getCountAndSum", method = RequestMethod.POST)
+	public Response<DonationRequestObject>getCountAndSum(@RequestBody Request<DonationRequestObject> donationRequestObject, HttpServletRequest request)
 	{
 		GenricResponse<DonationRequestObject> responseObj = new GenricResponse<DonationRequestObject>();
 		try {
-			DonationRequestObject responce =  donationService.countDonnation(donationRequestObject);
+			DonationRequestObject responce =  donationService.getCountAndSum(donationRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		}catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());

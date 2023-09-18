@@ -70,6 +70,12 @@ public class UserDetails {
 	@Column(name = "pan_number")
 	private String panNumber;
 	
+	@Column(name = "dob")
+	private Date dob;
+	
+	@Column(name = "is_pass_changed")
+	private String isPassChanged;
+	
 	@Column(name = "validity_expire_on")
 	private Date validityExpireOn;
 	
@@ -219,6 +225,22 @@ public class UserDetails {
 
 	public void setPanNumber(String panNumber) {
 		this.panNumber = panNumber;
+	}
+
+	public Date getDob() {
+		return dob;
+	}
+
+	public void setDob(Date dob) {
+		this.dob = dob;
+	}
+
+	public String getIsPassChanged() {
+		return isPassChanged;
+	}
+
+	public void setIsPassChanged(String isPassChanged) {
+		this.isPassChanged = isPassChanged;
 	}
 
 	public Date getCreatedAt() {

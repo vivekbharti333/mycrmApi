@@ -1,23 +1,15 @@
 package com.spring.services;
 
-import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
-import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
-import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AddressHelper;
-import com.spring.helper.CustomerHelper;
-import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.AddressRequestObject;
-import com.spring.object.request.Request;
-import com.spring.object.request.UserRequestObject;
 
 
 @Service
@@ -28,9 +20,6 @@ public class AddressService {
 
 	@Autowired
 	private AddressHelper addressHelper;
-
-	@Autowired
-	private JwtTokenUtil jwtTokenUtil;
 
 	
 	

@@ -52,11 +52,9 @@ public class UserHelper {
 
 		Date utilDate = validityDate;
 
-		// Convert it to a java.time.Instant
 		Instant instant = utilDate.toInstant();
 		LocalDate localDate = instant.atZone(ZoneId.systemDefault()).toLocalDate();
 
-		// Calculate the difference between the two dates
 		long daysDifference = ChronoUnit.DAYS.between(nowDate, localDate);
 
 		if (daysDifference >= 0) {
@@ -80,18 +78,6 @@ public class UserHelper {
 		return userDetails;
 	}
 	
-//	@Transactional
-//	public UserDetails getUserDetailsByLoginIdAndSuperadminId(String loginId, String superadminId) {
-//
-//		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
-//		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-//		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
-//		Predicate restriction = criteriaBuilder.equal(root.get("emailId"), loginId);
-//		restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-//		criteriaQuery.where(restriction);
-//		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-//		return userDetails;
-//	}
 
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
 
@@ -110,6 +96,10 @@ public class UserHelper {
 		userDetails.setAadharNumber(userRequest.getAadharNumber());
 		userDetails.setPanNumber(userRequest.getPanNumber());
 		userDetails.setCreatedBy(userRequest.getCreatedBy());
+		
+		userDetails.setDob(userRequest.getDob());
+		userDetails.setIsPassChanged("NO");
+		
 		userDetails.setCreatedAt(new Date());
 		userDetails.setUpdatedAt(new Date());
 		if(userDetails.getRoleType().equals(RoleType.SUPERADMIN.name())) {

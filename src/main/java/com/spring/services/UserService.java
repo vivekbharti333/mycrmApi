@@ -196,7 +196,7 @@ public class UserService {
 		}
 	}
 
-	
+
 	
 	public UserRequestObject changeUserStatus(Request<UserRequestObject> userRequestObject)
 			throws BizException, Exception {
