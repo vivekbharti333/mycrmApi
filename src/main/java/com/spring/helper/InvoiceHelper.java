@@ -72,6 +72,7 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setSerialNumber(0L);
+		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
 		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
 		invoiceHeaderDetails.setAddress(invoiceRequest.getAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
@@ -107,6 +108,7 @@ public class InvoiceHelper {
 
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
+		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
 		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
 		invoiceHeaderDetails.setAddress(invoiceRequest.getAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());

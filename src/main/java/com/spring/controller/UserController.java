@@ -47,8 +47,6 @@ public class UserController {
 //	@Scheduled(fixedDelay = 5000)
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String hi() throws Exception {
-
-        
 		return "Working";
 	}
 

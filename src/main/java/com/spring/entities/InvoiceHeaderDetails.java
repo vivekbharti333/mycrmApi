@@ -31,6 +31,10 @@ public class InvoiceHeaderDetails {
 	@Column(name = "serial_number")
 	private Long serialNumber;
 	
+	@Lob
+	@Column(name = "company_logo")
+	private String companyLogo;
+	
 	@Column(name = "company_name")
 	private String companyName;
 	
@@ -124,6 +128,14 @@ public class InvoiceHeaderDetails {
 
 	public void setSerialNumber(Long serialNumber) {
 		this.serialNumber = serialNumber;
+	}
+
+	public String getCompanyLogo() {
+		return companyLogo;
+	}
+
+	public void setCompanyLogo(String companyLogo) {
+		this.companyLogo = companyLogo;
 	}
 
 	public String getCompanyName() {

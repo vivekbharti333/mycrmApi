@@ -1,5 +1,6 @@
 package com.spring.helper;
 
+import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
@@ -130,13 +131,54 @@ public class DonationHelper {
 	}
 	
 	
-	@SuppressWarnings({ "unchecked", "deprecation" })
-	public int getCountAndSum(DonationRequestObject donationRequest) {
+	@SuppressWarnings("unchecked")
+	public DonationRequestObject getCountAndSum1(DonationRequestObject donationRequest) {
 		
 		Date date = new Date();
         
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
+        
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        Date firstDayOfWeek = calendar.getTime();
+        
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        Date lastDayOfWeek = calendar.getTime();
+		
+	
+		if (donationRequest.getRequestedFor().equals(RequestFor.TODAY.name())) {				
+			List<Object[]> results = donationDetailsDao.getEntityManager().createQuery(
+					"SELECT COUNT(amount) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId")
+					.setParameter("firstDate", lastDayOfWeek, TemporalType.DATE)
+					.setParameter("lastDate", firstDayOfWeek, TemporalType.DATE)
+					.setParameter("superadminId", donationRequest.getSuperadminId()).getResultList();
+			
+			System.out.println("Result : "+results.toString());
+			
+			for (Object[] result : results) {
+				
+				System.out.println("Result : "+result[0]+" , "+result[1]);
+				
+		        Long count = (Long) result[0];
+		        BigDecimal sum = (BigDecimal) result[1];
+		         System.out.println("Count & Sum : "+count+" , "+sum);
+		    }
+					   
+			return donationRequest;
+		}
+		return null;
+	}
+	
+
+	public Object[] getCountAndSum(DonationRequestObject donationRequest) {
+		
+		Date date = new Date();
+        
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        Date tomarrow = calendar.getTime();
         
         calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
         Date firstDayOfWeek = calendar.getTime();
@@ -172,27 +214,34 @@ public class DonationHelper {
         
         System.out.println("First day of the week: " + firstDayOfWeek);
         System.out.println("Last day of the week: " + lastDayOfWeek);
+        
+        Date todayDate = new Date();
+		Date nextDay = Date.from(todayDate.toInstant().plus(1, ChronoUnit.DAYS));
+        
+        
+        System.out.println(lastDayOfWeek+", "+firstDayOfWeek+"............."+date+" , "+tomarrow);
 		
 		if(donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 
 			if (donationRequest.getRequestedFor().equals(RequestFor.TODAY.name())) {				
-				int count = donationDetailsDao.getEntityManager().createQuery(
-						"SELECT COUNT(amount) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId",Long.class)
+				Object[] count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
+						"SELECT COUNT(*) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId")
 						.setParameter("firstDate", lastDayOfWeek, TemporalType.DATE)
 						.setParameter("lastDate", firstDayOfWeek, TemporalType.DATE)
-						.setParameter("superadminId", donationRequest.getSuperadminId()).getSingleResult().intValue();
+						.setParameter("superadminId", donationRequest.getSuperadminId()).getSingleResult();
+				
+				System.out.println("count : "+count[0]+" , "+count[1]);
+				
+				Object[] count1 = (Object[]) donationDetailsDao.getEntityManager().createQuery(
+						"SELECT  COUNT(*) AS count, SUM(DD.amount) AS amount FROM DonationDetails DD WHERE DD.createdAt =:firstDate AND DD.superadminId = :superadminId")
+						.setParameter("firstDate", new Date(), TemporalType.DATE)
+//						.setParameter("lastDate", nextDay, TemporalType.DATE)
+						.setParameter("superadminId", donationRequest.getSuperadminId())
+						.getSingleResult();
+				
+				System.out.println("count1 : "+count1[0]+" , "+count1[1]);
+	
 				return count;
-				
-//				Map<String, Long> resultMap = (Map<String, Long>) donationDetailsDao.getEntityManager()
-//					    .createQuery("SELECT COUNT(amount) AS count, SUM(amount) AS amount FROM DonationDetails DD where createdAt = :createdAt AND superadminId = :superadminId")
-//					    .setParameter("createdAt", date)
-//					    .setParameter("superadminId", donationRequest.getSuperadminId())
-//					    .unwrap(org.hibernate.query.Query.class)
-//					    .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
-//					    .getSingleResult();
-//
-//					return resultMap;
-				
 			}
 //			else if (donationRequest.getRequestedFor().equals(RequestFor.YESTERDAY.name())) {
 //				int count = donationDetailsDao.getEntityManager()
@@ -222,7 +271,7 @@ public class DonationHelper {
 //				return count;
 //			}
 		}
-		return 0;
+		return null;
 		
 
 	}

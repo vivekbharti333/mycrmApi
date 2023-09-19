@@ -32,6 +32,7 @@ public class InvoiceRequestObject {
 	
 	private String invoiceInitial;
 	private Long serialNumber;
+	private String companyLogo;
 	private String companyName;
 	private String address;
 	private String mobileNo;
@@ -181,6 +182,12 @@ public class InvoiceRequestObject {
 	}
 	public void setSerialNumber(Long serialNumber) {
 		this.serialNumber = serialNumber;
+	}
+	public String getCompanyLogo() {
+		return companyLogo;
+	}
+	public void setCompanyLogo(String companyLogo) {
+		this.companyLogo = companyLogo;
 	}
 	public String getCompanyName() {
 		return companyName;

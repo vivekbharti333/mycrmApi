@@ -84,13 +84,15 @@ public class DonationService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 		logger.info("Add Donation Is valid? : "+donationRequest.getCreatedBy()+" is " + isValid);
 
-		if (isValid) {
+		if (!isValid) {
 			
 			//for today
 			donationRequest.setRequestedFor(RequestFor.TODAY.name());
-			int count =  donationHelper.getCountAndSum(donationRequest);
 			
-			System.out.println("1 : "+count);
+			 donationHelper.getCountAndSum(donationRequest);
+//			int count =  donationHelper.getCountAndSum(donationRequest);
+			
+//			System.out.println("1 : "+count);
 			
 			//for yesterday
 //			donationRequest.setRequestedFor(RequestFor.YESTERDAY.name());
@@ -102,7 +104,7 @@ public class DonationService {
 //			donationRequest.setRequestedFor(RequestFor.MONTH.name());
 //			Map<String, Long> count3 =  donationHelper.getCountAndSum(donationRequest);
 			
-			System.out.println(count);
+//			System.out.println(count);
 //			System.out.println(count1);
 //			System.out.println(count2);
 //			System.out.println(count3);
