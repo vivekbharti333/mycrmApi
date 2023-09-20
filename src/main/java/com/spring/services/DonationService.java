@@ -1,23 +1,26 @@
 package com.spring.services;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
 import javax.transaction.Transactional;
-
 import org.apache.log4j.Logger;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.LeadDetails;
-import com.spring.enums.RequestFor;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
-import com.spring.helper.LeadHelper;
 import com.spring.jwt.JwtTokenUtil;
-import com.spring.object.request.ArticleRequestObject;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
 
@@ -75,49 +78,92 @@ public class DonationService {
 	}
 
 
-
 	public DonationRequestObject getCountAndSum(Request<DonationRequestObject> donationRequestObject) 
 			throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();	
 		donationHelper.validateDonationRequest(donationRequest);
 		
+		this.pdf();
+		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
-		logger.info("Add Donation Is valid? : "+donationRequest.getCreatedBy()+" is " + isValid);
-
 		if (!isValid) {
 			
-			//for today
-			donationRequest.setRequestedFor(RequestFor.TODAY.name());
+			LocalDate localDate = LocalDate.now();
+			LocalDate nextday = localDate.plus(1, ChronoUnit.DAYS);
+			LocalDate preday = localDate.minus(1, ChronoUnit.DAYS);
+			LocalDate firstDateOfMonth = localDate.withDayOfMonth(1);
+			LocalDate lastDateOfMonth = localDate.with(TemporalAdjusters.lastDayOfMonth());
 			
-			 donationHelper.getCountAndSum(donationRequest);
-//			int count =  donationHelper.getCountAndSum(donationRequest);
+			Date todayDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date tomorrowDate = Date.from(nextday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date previousDate = Date.from(preday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date firstDate = Date.from(firstDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			Date lastDate = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
 			
-//			System.out.println("1 : "+count);
+			//todays
+			Object[] todays = donationHelper.getCountAndSum(donationRequest, todayDate, tomorrowDate);
+			donationRequest.setTodaysCount((Long) todays[0]);
+			donationRequest.setTodaysAmount((double) todays[1]);
 			
-			//for yesterday
-//			donationRequest.setRequestedFor(RequestFor.YESTERDAY.name());
-//			Map<String, Long> count1 =  donationHelper.getCountAndSum(donationRequest);
-//			
-//			donationRequest.setRequestedFor(RequestFor.WEEK.name());
-//			Map<String, Long> count2 =  donationHelper.getCountAndSum(donationRequest);
-//			
-//			donationRequest.setRequestedFor(RequestFor.MONTH.name());
-//			Map<String, Long> count3 =  donationHelper.getCountAndSum(donationRequest);
+			//yesterday
+			Object[] yesterday = donationHelper.getCountAndSum(donationRequest, previousDate, todayDate);
+			donationRequest.setYesterdayCount((Long) yesterday[0]);
+			donationRequest.setYesterdayAmount((double) yesterday[1]);
 			
-//			System.out.println(count);
-//			System.out.println(count1);
-//			System.out.println(count2);
-//			System.out.println(count3);
+			//monthly
+			Object[] month = donationHelper.getCountAndSum(donationRequest, firstDate, lastDate);
+			donationRequest.setMonthCount((Long) month[0]);
+			donationRequest.setMonthAmount((double) month[1]);
 			
+			System.out.println(donationRequest);
+			
+			donationRequest.setRespCode(Constant.SUCCESS_CODE);
+			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;
 			
 		}else {
-			return donationRequest;
+			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
+			return donationRequest; 
 		}
-		
-		
 	}
+	
+	
+	public  void pdf() {
+        try {
+            // Create a new PDF document
+            PDDocument document = new PDDocument();
 
+            // Create a blank page
+            PDPage page = new PDPage();
+            document.addPage(page);
+
+            // Create a content stream for writing to the page
+            PDPageContentStream contentStream = new PDPageContentStream(document, page);
+
+            // Add text to the page
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 12);
+            contentStream.beginText();
+            contentStream.newLineAtOffset(100, 700);
+            contentStream.showText("Hello, PDFBox!");
+            contentStream.endText();
+
+            // Close the content stream
+            contentStream.close();
+
+            // Save the PDF to a file
+            document.save("D:\\sample.pdf");
+
+            // Close the PDF document
+            document.close();
+
+            System.out.println("PDF created successfully.");
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	
 	

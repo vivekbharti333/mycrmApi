@@ -29,11 +29,11 @@ public class DonationRequestObject {
 	private Date firstDate;
 	private Date lastDate;
 	
-	private double todaysCount;
+	private Long todaysCount = 0L;
 	private double todaysAmount;
-	private double yesterdayCount;
+	private Long yesterdayCount = 0L;
 	private double yesterdayAmount;
-	private double monthCount;
+	private Long monthCount = 0L;
 	private double monthAmount;
 	
 	
@@ -89,10 +89,10 @@ public class DonationRequestObject {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	public double getTodaysCount() {
+	public Long getTodaysCount() {
 		return todaysCount;
 	}
-	public void setTodaysCount(double todaysCount) {
+	public void setTodaysCount(Long todaysCount) {
 		this.todaysCount = todaysCount;
 	}
 	public double getTodaysAmount() {
@@ -101,10 +101,10 @@ public class DonationRequestObject {
 	public void setTodaysAmount(double todaysAmount) {
 		this.todaysAmount = todaysAmount;
 	}
-	public double getYesterdayCount() {
+	public Long getYesterdayCount() {
 		return yesterdayCount;
 	}
-	public void setYesterdayCount(double yesterdayCount) {
+	public void setYesterdayCount(Long yesterdayCount) {
 		this.yesterdayCount = yesterdayCount;
 	}
 	public double getYesterdayAmount() {
@@ -113,10 +113,10 @@ public class DonationRequestObject {
 	public void setYesterdayAmount(double yesterdayAmount) {
 		this.yesterdayAmount = yesterdayAmount;
 	}
-	public double getMonthCount() {
+	public Long getMonthCount() {
 		return monthCount;
 	}
-	public void setMonthCount(double monthCount) {
+	public void setMonthCount(Long monthCount) {
 		this.monthCount = monthCount;
 	}
 	public double getMonthAmount() {
@@ -227,5 +227,24 @@ public class DonationRequestObject {
 	public void setRespMesg(String respMesg) {
 		this.respMesg = respMesg;
 	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "DonationRequestObject [token=" + token + ", id=" + id + ", donorName=" + donorName + ", mobileNumber="
+				+ mobileNumber + ", emailId=" + emailId + ", panNumber=" + panNumber + ", address=" + address
+				+ ", amount=" + amount + ", transactionId=" + transactionId + ", paymentMode=" + paymentMode
+				+ ", paymentType=" + paymentType + ", notes=" + notes + ", invoiceDownloadStatus="
+				+ invoiceDownloadStatus + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
+				+ ", createdBy=" + createdBy + ", loginId=" + loginId + ", superadminId=" + superadminId + ", roleType="
+				+ roleType + ", requestedFor=" + requestedFor + ", firstDate=" + firstDate + ", lastDate=" + lastDate
+				+ ", todaysCount=" + todaysCount + ", todaysAmount=" + todaysAmount + ", yesterdayCount="
+				+ yesterdayCount + ", yesterdayAmount=" + yesterdayAmount + ", monthCount=" + monthCount
+				+ ", monthAmount=" + monthAmount + ", respCode=" + respCode + ", respMesg=" + respMesg + "]";
+	}
+	
+	
+	
 	
 }
