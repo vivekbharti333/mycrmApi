@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.common.PdfInvoice;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
@@ -32,6 +33,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	PdfInvoice pdfInvoice;
 
 	
 	@RequestMapping(value = "/")
@@ -42,6 +46,8 @@ public class UserController {
 //	@Scheduled(fixedDelay = 5000)
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String hi() throws Exception {
+		
+		pdfInvoice.pdfDonationInvoice();
 		return "Working";
 	}
 
