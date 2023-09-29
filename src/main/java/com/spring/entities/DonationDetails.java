@@ -45,6 +45,12 @@ public class DonationDetails {
 	@Column(name = "payment_type")
 	private String paymentType;
 	
+	@Column(name = "receipt_number")
+	private String receiptNumber;
+	
+	@Column(name = "invoice_number")
+	private String invoiceNumber;
+	
 	@Column(name = "invoice_download_status")
 	private String invoiceDownloadStatus;
 	
@@ -148,6 +154,22 @@ public class DonationDetails {
 
 	public void setPaymentType(String paymentType) {
 		this.paymentType = paymentType;
+	}
+
+	public String getReceiptNumber() {
+		return receiptNumber;
+	}
+
+	public void setReceiptNumber(String receiptNumber) {
+		this.receiptNumber = receiptNumber;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 
 	public String getInvoiceDownloadStatus() {

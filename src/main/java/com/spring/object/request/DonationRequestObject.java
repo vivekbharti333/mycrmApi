@@ -2,6 +2,8 @@ package com.spring.object.request;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 public class DonationRequestObject {
 	
 	private String token;
@@ -16,6 +18,7 @@ public class DonationRequestObject {
 	private String paymentMode;
 	private String paymentType;	
 	private String notes;
+	private String receiptNumber;
 	private String invoiceDownloadStatus;
 	private String status;
 	private Date createdAt;
@@ -148,6 +151,12 @@ public class DonationRequestObject {
 	}
 	public void setNotes(String notes) {
 		this.notes = notes;
+	}
+	public String getReceiptNumber() {
+		return receiptNumber;
+	}
+	public void setReceiptNumber(String receiptNumber) {
+		this.receiptNumber = receiptNumber;
 	}
 	public String getInvoiceDownloadStatus() {
 		return invoiceDownloadStatus;

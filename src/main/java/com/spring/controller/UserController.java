@@ -1,6 +1,8 @@
 package com.spring.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.PdfInvoice;
+import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
@@ -36,10 +39,21 @@ public class UserController {
 	
 	@Autowired
 	PdfInvoice pdfInvoice;
+	
+	@Autowired
+	private SmsHelper smsHelper;
 
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
+//		String resp =smsHelper.sendSms();
+		
+//		System.out.println("Resp : "+resp);
+		
+		String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+		
+		System.out.println(currentYear);
+		
 		return new ModelAndView("home");
 	}
 

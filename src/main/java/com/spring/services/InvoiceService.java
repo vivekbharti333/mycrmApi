@@ -64,7 +64,7 @@ public class InvoiceService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
 		if (isValid) {
 			
-			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest);
+			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
 			if(existsInvoiceHeader == null) {
 				
 				InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
@@ -98,7 +98,7 @@ public class InvoiceService {
 			Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
 			if (isValid) {
 				
-				InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest);
+				InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
 				if(existsInvoiceHeader != null) {
 					
 					InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
@@ -133,7 +133,7 @@ public class InvoiceService {
 
 		if (isValid) {
 
-			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest);
+			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
 			if (invoiceHeader != null) {
 				String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
 

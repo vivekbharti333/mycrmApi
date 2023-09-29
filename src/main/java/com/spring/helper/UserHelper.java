@@ -78,6 +78,19 @@ public class UserHelper {
 		return userDetails;
 	}
 	
+	@Transactional
+	public UserDetails getUserDetailsByLoginIdAndSuperadminId(String loginId, String superadminId) {
+
+		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
+		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("loginId"), loginId);
+		restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		criteriaQuery.where(restriction);
+		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return userDetails;
+	}
+	
 
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
 

@@ -1,6 +1,7 @@
 package com.spring.services;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -9,6 +10,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -16,10 +20,18 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.InvoiceHeaderDetails;
+import com.spring.entities.SmsDetails;
+import com.spring.entities.UserDetails;
+import com.spring.enums.SmsType;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
+import com.spring.helper.InvoiceHelper;
+import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
@@ -30,6 +42,15 @@ public class DonationService {
 	
 	@Autowired
 	private DonationHelper donationHelper;
+	
+	@Autowired
+	private UserHelper userHelper;
+	
+	@Autowired
+	private InvoiceHelper invoiceHelper;
+	
+	@Autowired
+	private SmsHelper smsHelper;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -47,11 +68,37 @@ public class DonationService {
 		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 
 		if (isValid) {
-			DonationDetails leadDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
-			leadDetails = donationHelper.saveDonationDetails(leadDetails);
+			
+			//Validate created By
+			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getCreatedBy(), donationRequest.getSuperadminId());
+			if(existsUserDetails == null) {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Invalid Createdby");
+				return donationRequest; 
+			}
+			
+			//Generate Receipt Number
+			InvoiceHeaderDetails headerDetails = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationRequest.getSuperadminId());
+			if(headerDetails != null) {
+				String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+				String receiptNumber = headerDetails.getInvoiceInitial().toLowerCase()+"/"+currentYear+"/"+headerDetails.getInvoiceInitial();
+				donationRequest.setReceiptNumber(receiptNumber);
+			}
+			
+			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
+			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
 			// send sms
+			SmsDetails smsDetails = smsHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
+			if(smsDetails != null) {
+				
+				String messageBody = "Aarine Foundation Recieved Donation of Rs." + donationDetails.getAmount()
+				+ " from you click to download Receipt within 10days http://103.220.223.172:9090/aarineFront/#/home/"+donationDetails.getReceiptNumber();
 
+				smsHelper.sendSms(messageBody, smsDetails);			
+			}
+			
+			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;

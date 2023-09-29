@@ -53,12 +53,12 @@ public class InvoiceHelper {
 	}
 
 	@Transactional
-	public InvoiceHeaderDetails getInvoiceHeaderBySuperAdminId(InvoiceRequestObject invoiceRequest) {
+	public InvoiceHeaderDetails getInvoiceHeaderBySuperAdminId(String superadminId) {
 
 		CriteriaBuilder criteriaBuilder = invoiceHeaderDetailsDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<InvoiceHeaderDetails> criteriaQuery = criteriaBuilder.createQuery(InvoiceHeaderDetails.class);
 		Root<InvoiceHeaderDetails> root = criteriaQuery.from(InvoiceHeaderDetails.class);
-		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), invoiceRequest.getSuperadminId());
+		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
 		criteriaQuery.where(restriction);
 		InvoiceHeaderDetails invoiceHeader = invoiceNumberDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return invoiceHeader;

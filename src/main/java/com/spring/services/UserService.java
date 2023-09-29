@@ -118,7 +118,7 @@ public class UserService {
 
 		if (isValid) {
 
-			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getEmailId());
+			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getEmailId(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
 				
 				userRequest.setPassword("123");
