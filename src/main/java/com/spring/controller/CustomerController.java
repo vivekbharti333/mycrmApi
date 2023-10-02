@@ -30,11 +30,6 @@ public class CustomerController {
 	@Autowired
 	CustomerService customerService;
 
-	
-
-
-
-
 	@RequestMapping(path = "customerRegistration", method = RequestMethod.POST)
 	public Response<CustomerRequestObject> customerRegistration(@RequestBody Request<CustomerRequestObject> customerRequestObject,
 			HttpServletRequest request) {

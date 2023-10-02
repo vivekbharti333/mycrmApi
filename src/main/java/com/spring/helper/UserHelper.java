@@ -95,7 +95,7 @@ public class UserHelper {
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
 
 		UserDetails userDetails = new UserDetails();
-
+		
 		userDetails.setLoginId(userRequest.getEmailId());
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
@@ -126,8 +126,11 @@ public class UserHelper {
 			
 		    userDetails.setValidityExpireOn(oneYearLater);
 		}else {
+			
+			UserDetails existsUserDetails = this.getUserDetailsByLoginId(userRequest.getSuperadminId());
+			
 			userDetails.setSuperadminId(userRequest.getSuperadminId());
-			userDetails.setValidityExpireOn(userRequest.getValidityExpireOn());
+			userDetails.setValidityExpireOn(existsUserDetails.getValidityExpireOn());
 		}
 	
 		return userDetails;
@@ -163,7 +166,7 @@ public class UserHelper {
 
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserDetails(UserRequestObject userRequest) {
-		
+		System.out.println(userRequest);
 		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
 					.createQuery("SELECT UD FROM UserDetails UD")

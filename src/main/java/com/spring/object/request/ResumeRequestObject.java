@@ -1,39 +1,31 @@
 package com.spring.object.request;
 
 import java.util.Date;
-import java.util.List;
 
-public class UserRequestObject {
+
+public class ResumeRequestObject {
 	
 	private Long id;
 	private String token;
-	private String userPicture;
-	private String loginId;
-	private String password;
-	private String status;
-	private String roleType;
+	private String candidatePicture;
 	private String firstName;
 	private String lastName;
+	private String status;
+	private String service;
+	private String roleType;
 	private String mobileNo;
 	private String alternateMobile;
 	private String emailId;
 	private String aadharNumber;
 	private String panNumber;
-	
-	public List<AddressRequestObject> addressList;
-	
-	private String service;
-	private String permissions;
-	
-	private String isPassChanged;
 	private Date dob;
-	private Date validityExpireOn;
+	private String address;
+	private String resume;
+	
 	private Date createdAt;
 	private Date updatedAt;
 	private String createdBy;
 	private String superadminId;
-	
-	private String requestedFor;
 	
 	private int respCode;
 	private String respMesg;
@@ -50,35 +42,11 @@ public class UserRequestObject {
 	public void setToken(String token) {
 		this.token = token;
 	}
-	public String getUserPicture() {
-		return userPicture;
+	public String getCandidatePicture() {
+		return candidatePicture;
 	}
-	public void setUserPicture(String userPicture) {
-		this.userPicture = userPicture;
-	}
-	public String getLoginId() {
-		return loginId;
-	}
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
-	}
-	public String getPassword() {
-		return password;
-	}
-	public void setPassword(String password) {
-		this.password = password;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public String getRoleType() {
-		return roleType;
-	}
-	public void setRoleType(String roleType) {
-		this.roleType = roleType;
+	public void setCandidatePicture(String candidatePicture) {
+		this.candidatePicture = candidatePicture;
 	}
 	public String getFirstName() {
 		return firstName;
@@ -91,6 +59,24 @@ public class UserRequestObject {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	public String getService() {
+		return service;
+	}
+	public void setService(String service) {
+		this.service = service;
+	}
+	public String getRoleType() {
+		return roleType;
+	}
+	public void setRoleType(String roleType) {
+		this.roleType = roleType;
 	}
 	public String getMobileNo() {
 		return mobileNo;
@@ -122,41 +108,23 @@ public class UserRequestObject {
 	public void setPanNumber(String panNumber) {
 		this.panNumber = panNumber;
 	}
-	public List<AddressRequestObject> getAddressList() {
-		return addressList;
-	}
-	public void setAddressList(List<AddressRequestObject> addressList) {
-		this.addressList = addressList;
-	}
-	public String getService() {
-		return service;
-	}
-	public void setService(String service) {
-		this.service = service;
-	}
-	public String getPermissions() {
-		return permissions;
-	}
-	public void setPermissions(String permissions) {
-		this.permissions = permissions;
-	}
 	public Date getDob() {
 		return dob;
 	}
 	public void setDob(Date dob) {
 		this.dob = dob;
 	}
-	public String getIsPassChanged() {
-		return isPassChanged;
+	public String getAddress() {
+		return address;
 	}
-	public void setIsPassChanged(String isPassChanged) {
-		this.isPassChanged = isPassChanged;
+	public void setAddress(String address) {
+		this.address = address;
 	}
-	public Date getValidityExpireOn() {
-		return validityExpireOn;
+	public String getResume() {
+		return resume;
 	}
-	public void setValidityExpireOn(Date validityExpireOn) {
-		this.validityExpireOn = validityExpireOn;
+	public void setResume(String resume) {
+		this.resume = resume;
 	}
 	public Date getCreatedAt() {
 		return createdAt;
@@ -195,21 +163,5 @@ public class UserRequestObject {
 		this.respMesg = respMesg;
 	}
 	
-	public String getRequestedFor() {
-		return requestedFor;
-	}
-	public void setRequestedFor(String requestedFor) {
-		this.requestedFor = requestedFor;
-	}
-	
-	@Override
-	public String toString() {
-		return "UserRequestObject [id=" + id + ", token=" + token + ", loginId=" + loginId + ", password=" + password
-				+ ", status=" + status + ", roleType=" + roleType + ", firstName=" + firstName + ", lastName="
-				+ lastName + ", mobileNo=" + mobileNo + ", alternateMobile=" + alternateMobile + ", emailId=" + emailId
-				+ ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy=" + createdBy
-				+ ", superadminId=" + superadminId + ", requestedFor=" + requestedFor + ", respCode=" + respCode
-				+ ", respMesg=" + respMesg + "]";
-	}	
 
 }
