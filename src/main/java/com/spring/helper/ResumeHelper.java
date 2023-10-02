@@ -11,12 +11,9 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
-import com.spring.dao.LeadDetailsDao;
 import com.spring.dao.ResumeDetailsDao;
-import com.spring.entities.LeadDetails;
 import com.spring.entities.ResumeDetails;
 import com.spring.exceptions.BizException;
-import com.spring.object.request.ArticleRequestObject;
 import com.spring.object.request.ResumeRequestObject;
 
 

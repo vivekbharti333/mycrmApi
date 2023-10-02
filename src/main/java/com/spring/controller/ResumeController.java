@@ -10,15 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.spring.constant.Constant;
-import com.spring.entities.LeadDetails;
 import com.spring.entities.ResumeDetails;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.ResumeRequestObject;
 import com.spring.object.request.Request;
-import com.spring.object.request.ResumeRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
-import com.spring.services.LeadService;
 import com.spring.services.ResumeService;
 
 
