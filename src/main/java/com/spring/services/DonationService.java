@@ -28,6 +28,7 @@ import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsDetails;
 import com.spring.entities.UserDetails;
 import com.spring.enums.SmsType;
+import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
@@ -89,15 +90,16 @@ public class DonationService {
 			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
 			// send sms
-			SmsDetails smsDetails = smsHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
-			if(smsDetails != null) {
-				
-				String messageBody = "Aarine Foundation Recieved Donation of Rs." + donationDetails.getAmount()
-				+ " from you click to download Receipt within 10days http://103.220.223.172:9090/aarineFront/#/home/"+donationDetails.getReceiptNumber();
-
-				smsHelper.sendSms(messageBody, smsDetails);			
-			}
+//			SmsDetails smsDetails = smsHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
+//			if(smsDetails != null) {
+//				
+//				String messageBody = "Aarine Foundation Recieved Donation of Rs." + donationDetails.getAmount()
+//				+ " from you click to download Receipt within 10days http://103.220.223.172:9090/aarineFront/#/home/"+donationDetails.getReceiptNumber();
+//
+//				smsHelper.sendSms(messageBody, smsDetails);			
+//			}
 			
+			System.out.println("Donation Request : "+donationRequest);
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
@@ -108,7 +110,6 @@ public class DonationService {
 			return donationRequest; 
 		}
 	}
-
 
 
 	public List<DonationDetails> getDonationListBySuperadmin(Request<DonationRequestObject> donationRequestObject) {
@@ -130,10 +131,10 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();	
 		donationHelper.validateDonationRequest(donationRequest);
 		
-		this.pdf();
+//		this.pdf();
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
-		if (!isValid) {
+		if (isValid) {
 			
 			LocalDate localDate = LocalDate.now();
 			LocalDate nextday = localDate.plus(1, ChronoUnit.DAYS);
@@ -147,28 +148,37 @@ public class DonationService {
 			Date firstDate = Date.from(firstDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 			Date lastDate = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-			
 			//todays
 			Object[] todays = donationHelper.getCountAndSum(donationRequest, todayDate, tomorrowDate);
+			
 			donationRequest.setTodaysCount((Long) todays[0]);
-			donationRequest.setTodaysAmount((double) todays[1]);
+			donationRequest.setTodaysAmount((Double) todays[1]);
 			
 			//yesterday
 			Object[] yesterday = donationHelper.getCountAndSum(donationRequest, previousDate, todayDate);
 			donationRequest.setYesterdayCount((Long) yesterday[0]);
-			donationRequest.setYesterdayAmount((double) yesterday[1]);
+			donationRequest.setYesterdayAmount((Double) yesterday[1]);
 			
 			//monthly
 			Object[] month = donationHelper.getCountAndSum(donationRequest, firstDate, lastDate);
 			donationRequest.setMonthCount((Long) month[0]);
-			donationRequest.setMonthAmount((double) month[1]);
+			donationRequest.setMonthAmount((Double) month[1]);
+			
+			//Active
+			Long activeUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(), donationRequest.getCreatedBy(), Status.ACTIVE.name());
+			
+			donationRequest.setActiveUserCount(activeUserCount);
+			
+			//Inactive
+			Long inactiveUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(), donationRequest.getCreatedBy(), Status.INACTIVE.name());
+			donationRequest.setInactiveUserCount(inactiveUserCount);
+					
 			
 			System.out.println(donationRequest);
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
-			donationRequest.setRespMesg("Successfully Register");
+			donationRequest.setRespMesg("Successfully Fetch");
 			return donationRequest;
-			
 		}else {
 			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
 			donationRequest.setRespMesg(Constant.INVALID_TOKEN);

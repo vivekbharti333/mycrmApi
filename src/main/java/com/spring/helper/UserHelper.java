@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import javax.persistence.TemporalType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -23,6 +24,7 @@ import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
+import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.UserRequestObject;
 
 @Component
@@ -85,7 +87,6 @@ public class UserHelper {
 		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("loginId"), loginId);
-		restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
 		criteriaQuery.where(restriction);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
@@ -100,6 +101,7 @@ public class UserHelper {
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
 		userDetails.setRoleType(userRequest.getRoleType());
+		userDetails.setService(userRequest.getService());
 		userDetails.setUserPicture(userRequest.getUserPicture());
 		userDetails.setFirstName(userRequest.getFirstName());
 		userDetails.setLastName(userRequest.getLastName());
@@ -202,6 +204,26 @@ public class UserHelper {
 			return results;
 		}
 		return null;
+	}
+	
+	
+	public Long getActiveAndInactiveUserCount(String roleType, String createdBy, String status) {
+		Long count = 0L;
+		if (roleType.equals(RoleType.SUPERADMIN.name())) {
+			count = (Long) userDetailsDao.getEntityManager().createQuery(
+					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND DD.superadminId = :superadminId")
+					.setParameter("status", status)
+					.setParameter("superadminId", createdBy)
+					.getSingleResult();
+			return count;
+		} else {
+			count = (Long) userDetailsDao.getEntityManager().createQuery(
+					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND DD.createdBy = :createdBy")
+					.setParameter("status", status)
+					.setParameter("createdBy", createdBy)
+					.getSingleResult();
+			return count;
+		}
 	}
 
 }

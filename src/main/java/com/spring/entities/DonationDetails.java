@@ -34,7 +34,7 @@ public class DonationDetails {
 	private String address;
 	
 	@Column(name = "amount")
-	private double amount;
+	private Double amount;
 	
 	@Column(name = "transaction_id")
 	private String transactionId;

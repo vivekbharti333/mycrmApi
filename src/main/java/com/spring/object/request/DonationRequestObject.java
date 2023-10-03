@@ -13,7 +13,7 @@ public class DonationRequestObject {
 	private String emailId;
 	private String panNumber;
 	private String address;
-	private double amount;
+	private Double amount = 0D;
 	private String transactionId;
 	private String paymentMode;
 	private String paymentType;	
@@ -32,12 +32,15 @@ public class DonationRequestObject {
 	private Date firstDate;
 	private Date lastDate;
 	
+	private Long activeUserCount;
+	private Long inactiveUserCount;
+	
 	private Long todaysCount = 0L;
-	private double todaysAmount;
+	private Double todaysAmount = 0D;
 	private Long yesterdayCount = 0L;
-	private double yesterdayAmount;
+	private Double yesterdayAmount = 0D;
 	private Long monthCount = 0L;
-	private double monthAmount;
+	private Double monthAmount = 0D;
 	
 	
 	private int respCode;
@@ -86,47 +89,11 @@ public class DonationRequestObject {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public double getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
-	public void setAmount(double amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
-	}
-	public Long getTodaysCount() {
-		return todaysCount;
-	}
-	public void setTodaysCount(Long todaysCount) {
-		this.todaysCount = todaysCount;
-	}
-	public double getTodaysAmount() {
-		return todaysAmount;
-	}
-	public void setTodaysAmount(double todaysAmount) {
-		this.todaysAmount = todaysAmount;
-	}
-	public Long getYesterdayCount() {
-		return yesterdayCount;
-	}
-	public void setYesterdayCount(Long yesterdayCount) {
-		this.yesterdayCount = yesterdayCount;
-	}
-	public double getYesterdayAmount() {
-		return yesterdayAmount;
-	}
-	public void setYesterdayAmount(double yesterdayAmount) {
-		this.yesterdayAmount = yesterdayAmount;
-	}
-	public Long getMonthCount() {
-		return monthCount;
-	}
-	public void setMonthCount(Long monthCount) {
-		this.monthCount = monthCount;
-	}
-	public double getMonthAmount() {
-		return monthAmount;
-	}
-	public void setMonthAmount(double monthAmount) {
-		this.monthAmount = monthAmount;
 	}
 	public String getTransactionId() {
 		return transactionId;
@@ -224,6 +191,54 @@ public class DonationRequestObject {
 	public void setLastDate(Date lastDate) {
 		this.lastDate = lastDate;
 	}
+	public Long getActiveUserCount() {
+		return activeUserCount;
+	}
+	public void setActiveUserCount(Long activeUserCount) {
+		this.activeUserCount = activeUserCount;
+	}
+	public Long getInactiveUserCount() {
+		return inactiveUserCount;
+	}
+	public void setInactiveUserCount(Long inactiveUserCount) {
+		this.inactiveUserCount = inactiveUserCount;
+	}
+	public Long getTodaysCount() {
+		return todaysCount;
+	}
+	public void setTodaysCount(Long todaysCount) {
+		this.todaysCount = todaysCount;
+	}
+	public Double getTodaysAmount() {
+		return todaysAmount;
+	}
+	public void setTodaysAmount(Double todaysAmount) {
+		this.todaysAmount = todaysAmount;
+	}
+	public Long getYesterdayCount() {
+		return yesterdayCount;
+	}
+	public void setYesterdayCount(Long yesterdayCount) {
+		this.yesterdayCount = yesterdayCount;
+	}
+	public Double getYesterdayAmount() {
+		return yesterdayAmount;
+	}
+	public void setYesterdayAmount(Double yesterdayAmount) {
+		this.yesterdayAmount = yesterdayAmount;
+	}
+	public Long getMonthCount() {
+		return monthCount;
+	}
+	public void setMonthCount(Long monthCount) {
+		this.monthCount = monthCount;
+	}
+	public Double getMonthAmount() {
+		return monthAmount;
+	}
+	public void setMonthAmount(Double monthAmount) {
+		this.monthAmount = monthAmount;
+	}
 	public int getRespCode() {
 		return respCode;
 	}
@@ -238,21 +253,21 @@ public class DonationRequestObject {
 	}
 	
 	
-	
 	@Override
 	public String toString() {
 		return "DonationRequestObject [token=" + token + ", id=" + id + ", donorName=" + donorName + ", mobileNumber="
 				+ mobileNumber + ", emailId=" + emailId + ", panNumber=" + panNumber + ", address=" + address
 				+ ", amount=" + amount + ", transactionId=" + transactionId + ", paymentMode=" + paymentMode
-				+ ", paymentType=" + paymentType + ", notes=" + notes + ", invoiceDownloadStatus="
-				+ invoiceDownloadStatus + ", status=" + status + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt
-				+ ", createdBy=" + createdBy + ", loginId=" + loginId + ", superadminId=" + superadminId + ", roleType="
-				+ roleType + ", requestedFor=" + requestedFor + ", firstDate=" + firstDate + ", lastDate=" + lastDate
-				+ ", todaysCount=" + todaysCount + ", todaysAmount=" + todaysAmount + ", yesterdayCount="
-				+ yesterdayCount + ", yesterdayAmount=" + yesterdayAmount + ", monthCount=" + monthCount
-				+ ", monthAmount=" + monthAmount + ", respCode=" + respCode + ", respMesg=" + respMesg + "]";
+				+ ", paymentType=" + paymentType + ", notes=" + notes + ", receiptNumber=" + receiptNumber
+				+ ", invoiceDownloadStatus=" + invoiceDownloadStatus + ", status=" + status + ", createdAt=" + createdAt
+				+ ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", loginId=" + loginId + ", superadminId="
+				+ superadminId + ", roleType=" + roleType + ", requestedFor=" + requestedFor + ", firstDate="
+				+ firstDate + ", lastDate=" + lastDate + ", activeUserCount=" + activeUserCount + ", inactiveUserCount="
+				+ inactiveUserCount + ", todaysCount=" + todaysCount + ", todaysAmount=" + todaysAmount
+				+ ", yesterdayCount=" + yesterdayCount + ", yesterdayAmount=" + yesterdayAmount + ", monthCount="
+				+ monthCount + ", monthAmount=" + monthAmount + ", respCode=" + respCode + ", respMesg=" + respMesg
+				+ "]";
 	}
-	
 	
 	
 	

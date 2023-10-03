@@ -87,7 +87,7 @@ public class DonationHelper {
 		List<DonationDetails> results = new ArrayList<>();
 		if (donationRequest.getRequestedFor().equals(RequestFor.ALL.name())) {
 			results = donationDetailsDao.getEntityManager().createQuery(
-					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId ORDER BY DD.id DESC LIMIT 0,200")
+					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId ORDER BY DD.id DESC")
 					.setParameter("superadminId", donationRequest.getSuperadminId())
 					.getResultList();
 			return results;
@@ -112,7 +112,6 @@ public class DonationHelper {
 			return results;
 		}
 		return results;
-
 	}
 	
 
