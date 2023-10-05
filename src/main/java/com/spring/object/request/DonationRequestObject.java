@@ -32,6 +32,9 @@ public class DonationRequestObject {
 	private Date firstDate;
 	private Date lastDate;
 	
+	private String programName;
+	private Double programAmount;
+	
 	private Long activeUserCount;
 	private Long inactiveUserCount;
 	
@@ -190,6 +193,18 @@ public class DonationRequestObject {
 	}
 	public void setLastDate(Date lastDate) {
 		this.lastDate = lastDate;
+	}
+	public String getProgramName() {
+		return programName;
+	}
+	public void setProgramName(String programName) {
+		this.programName = programName;
+	}
+	public Double getProgramAmount() {
+		return programAmount;
+	}
+	public void setProgramAmount(Double programAmount) {
+		this.programAmount = programAmount;
 	}
 	public Long getActiveUserCount() {
 		return activeUserCount;

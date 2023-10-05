@@ -44,7 +44,7 @@ public class DonationController {
 	}
 	
 	@RequestMapping(path = "getDonationListBySuperadmin", method = RequestMethod.POST)
-	public Response<DonationDetails> getDonationList(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+	public Response<DonationDetails> getDonationListBySuperadmin(@RequestBody Request<DonationRequestObject> donationRequestObject) {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationListBySuperadmin(donationRequestObject);
