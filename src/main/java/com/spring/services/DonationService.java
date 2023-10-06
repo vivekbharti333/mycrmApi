@@ -11,8 +11,6 @@ import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -21,13 +19,10 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
-import com.spring.entities.SmsDetails;
 import com.spring.entities.UserDetails;
-import com.spring.enums.SmsType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
@@ -49,9 +44,6 @@ public class DonationService {
 	
 	@Autowired
 	private InvoiceHelper invoiceHelper;
-	
-	@Autowired
-	private SmsHelper smsHelper;
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;

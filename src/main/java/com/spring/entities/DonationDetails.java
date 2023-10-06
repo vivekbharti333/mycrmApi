@@ -33,6 +33,9 @@ public class DonationDetails {
 	@Column(name = "address")
 	private String address;
 	
+	@Column(name = "program_name")
+	private String programName;
+	
 	@Column(name = "amount")
 	private Double amount;
 	
@@ -124,11 +127,19 @@ public class DonationDetails {
 		this.address = address;
 	}
 
-	public double getAmount() {
+	public String getProgramName() {
+		return programName;
+	}
+
+	public void setProgramName(String programName) {
+		this.programName = programName;
+	}
+
+	public Double getAmount() {
 		return amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 
@@ -235,5 +246,6 @@ public class DonationDetails {
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
 	}
+
 	
 }

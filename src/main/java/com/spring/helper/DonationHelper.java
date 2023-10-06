@@ -1,20 +1,16 @@
 package com.spring.helper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.TemporalType;
 import javax.transaction.Transactional;
 
-import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
@@ -29,9 +25,6 @@ public class DonationHelper {
 	@Autowired
 	private DonationDetailsDao donationDetailsDao;
 	
-	@Autowired
-	private UserHelper userHelper;
-	
 	
 	public void validateDonationRequest(DonationRequestObject donationRequestObject) 
 			throws BizException
@@ -42,7 +35,6 @@ public class DonationHelper {
 	}
 	
 
-	@SuppressWarnings("static-access")
 	public DonationDetails getDonationDetailsByReqObj(DonationRequestObject donationRequest) {
 		
 		DonationDetails donationDetails = new DonationDetails();
@@ -52,6 +44,7 @@ public class DonationHelper {
 		donationDetails.setEmailId(donationRequest.getEmailId());
 		donationDetails.setPanNumber(donationRequest.getPanNumber());
 		donationDetails.setAddress(donationRequest.getAddress());
+		donationDetails.setProgramName(donationRequest.getProgramName());
 		donationDetails.setAmount(donationRequest.getAmount());
 		donationDetails.setReceiptNumber(donationRequest.getReceiptNumber());
 		donationDetails.setTransactionId(donationRequest.getTransactionId());

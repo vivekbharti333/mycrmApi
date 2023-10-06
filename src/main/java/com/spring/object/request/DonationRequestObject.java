@@ -2,7 +2,6 @@ package com.spring.object.request;
 
 import java.util.Date;
 
-import javax.persistence.Column;
 
 public class DonationRequestObject {
 	
