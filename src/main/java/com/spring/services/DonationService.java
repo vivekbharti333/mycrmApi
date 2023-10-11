@@ -23,6 +23,8 @@ import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.RequestFor;
+import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
@@ -49,6 +51,18 @@ public class DonationService {
 	private JwtTokenUtil jwtTokenUtil;
 	
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
+	
+	private LocalDate localDate = LocalDate.now();
+	private LocalDate nextday = localDate.plus(1, ChronoUnit.DAYS);
+	private LocalDate preday = localDate.minus(1, ChronoUnit.DAYS);
+	private LocalDate firstDateOfMonth = localDate.withDayOfMonth(1);
+	private LocalDate lastDateOfMonth = localDate.with(TemporalAdjusters.lastDayOfMonth());
+	
+	private Date todayDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	private Date tomorrowDate = Date.from(nextday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	private Date previousDate = Date.from(preday.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	private Date firstDateMonth = Date.from(firstDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	private Date lastDateMonth = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	
 	
 	@Transactional
@@ -104,15 +118,65 @@ public class DonationService {
 	}
 
 
-	public List<DonationDetails> getDonationListBySuperadmin(Request<DonationRequestObject> donationRequestObject) {
+	public List<DonationDetails> getDonationList(Request<DonationRequestObject> donationRequestObject) {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
-
+		//Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+		
 		List<DonationDetails> donationList = new ArrayList<>();
-		if (isValid) {
-			donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
-			return donationList;
+//		if (isValid) {
+		if(donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
+			
+			if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+				donationRequest.setFirstDate(todayDate);
+				donationRequest.setLastDate(tomorrowDate);
+				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
+				donationRequest.setFirstDate(previousDate);
+				donationRequest.setLastDate(todayDate);
+				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+				donationRequest.setFirstDate(firstDateMonth);
+				donationRequest.setLastDate(lastDateMonth);
+				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
+				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+				return donationList;
+			}
+			
+		} else {
+			if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+				donationRequest.setFirstDate(todayDate);
+				donationRequest.setLastDate(tomorrowDate);
+				donationList = donationHelper.getDonationListCreatedBy(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
+				donationRequest.setFirstDate(previousDate);
+				donationRequest.setLastDate(todayDate);
+				donationList = donationHelper.getDonationListCreatedBy(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+				donationRequest.setFirstDate(firstDateMonth);
+				donationRequest.setLastDate(lastDateMonth);
+				donationList = donationHelper.getDonationListCreatedBy(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
+				donationList = donationHelper.getDonationListCreatedBy(donationRequest);
+				return donationList;
+			}
+			
 		}
+		
+			
+//		}
 		return donationList;
 
 	}
@@ -165,9 +229,6 @@ public class DonationService {
 			Long inactiveUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(), donationRequest.getCreatedBy(), Status.INACTIVE.name());
 			donationRequest.setInactiveUserCount(inactiveUserCount);
 					
-			
-			System.out.println(donationRequest);
-			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Fetch");
 			return donationRequest;

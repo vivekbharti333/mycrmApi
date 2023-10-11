@@ -43,11 +43,11 @@ public class DonationController {
 		}
 	}
 	
-	@RequestMapping(path = "getDonationListBySuperadmin", method = RequestMethod.POST)
-	public Response<DonationDetails> getDonationListBySuperadmin(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+	@RequestMapping(path = "getDonationList", method = RequestMethod.POST)
+	public Response<DonationDetails> getDonationList(@RequestBody Request<DonationRequestObject> donationRequestObject) {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
-			List<DonationDetails> donationList = donationService.getDonationListBySuperadmin(donationRequestObject);
+			List<DonationDetails> donationList = donationService.getDonationList(donationRequestObject);
 			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
 		} catch (Exception e) {
 			e.printStackTrace();

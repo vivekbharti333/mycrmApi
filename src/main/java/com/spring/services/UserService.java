@@ -114,13 +114,10 @@ public class UserService {
 //		userRequest.setPassword("test@123");
 
 		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
-		logger.info("Usere Registration Is valid? : "+userRequest.getCreatedBy()+" is " + isValid);
-
 		if (isValid) {
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getEmailId(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
-				
 				userRequest.setPassword("123");
 
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
@@ -129,8 +126,6 @@ public class UserService {
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);
 
-				logger.info("User Address : "+userRequest.getAddressList());
-				
 				// Save Address
 				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
 					addressRequest.setUserType(userRequest.getRoleType());
@@ -186,7 +181,7 @@ public class UserService {
 			return userRequest;
 		} else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			userRequest.setRespMesg("User Not Found");
+			userRequest.setRespMesg(Constant.USER_NOT_EXIST);
 			return userRequest;
 		}
 		}else {
@@ -196,6 +191,27 @@ public class UserService {
 		}
 	}
 
+	public UserRequestObject changeUserPassword(Request<UserRequestObject> userRequestObject)throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+
+		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		if (userDetails != null) {
+			String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
+			userDetails.setPassword(password);
+			userDetails.setIsPassChanged("YES");
+			userDetails = userHelper.UpdateUserDetails(userDetails);
+			
+			userRequest.setStatus(userDetails.getStatus());
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return userRequest;
+		}else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg(Constant.USER_NOT_EXIST);
+			return userRequest;
+		}
+	}
 
 	
 	public UserRequestObject changeUserStatus(Request<UserRequestObject> userRequestObject)
@@ -235,6 +251,8 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
+	
 
 
 

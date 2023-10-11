@@ -1,5 +1,9 @@
 package com.spring.helper;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -72,40 +76,66 @@ public class DonationHelper {
 		donationDetailsDao.persist(donationDetails);
 		return donationDetails;
 	}
-
-
+	
 	@SuppressWarnings("unchecked")
 	public List<DonationDetails> getDonationListBySuperadmin(DonationRequestObject donationRequest) {
-		
+
 		List<DonationDetails> results = new ArrayList<>();
-		if (donationRequest.getRequestedFor().equals(RequestFor.ALL.name())) {
-			results = donationDetailsDao.getEntityManager().createQuery(
-					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId ORDER BY DD.id DESC")
-					.setParameter("superadminId", donationRequest.getSuperadminId())
-					.getResultList();
-			return results;
-		}
-		if (donationRequest.getRequestedFor().equals(RequestFor.BYDATE.name())) {
-			results = donationDetailsDao.getEntityManager().createQuery(
-					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
-					.setParameter("superadminId", donationRequest.getSuperadminId())
-					.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
-					.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
-					.getResultList();
-			return results;
-		}
-		if (donationRequest.getRequestedFor().equals(RequestFor.CREATEDBY.name())) {
-			 results = donationDetailsDao.getEntityManager().createQuery(
-					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdBy =:createdBy AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
-					.setParameter("superadminId", donationRequest.getSuperadminId())
-					.setParameter("createdBy", donationRequest.getCreatedBy())
-					.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
-					.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
-					.getResultList();
-			return results;
-		}
+		results = donationDetailsDao.getEntityManager().createQuery(
+				"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+				.setParameter("superadminId", donationRequest.getSuperadminId())
+				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
+				.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+				.getResultList();
 		return results;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<DonationDetails> getDonationListCreatedBy(DonationRequestObject donationRequest) {
+
+		List<DonationDetails> results = new ArrayList<>();
+		results = donationDetailsDao.getEntityManager().createQuery(
+				"SELECT DD FROM DonationDetails DD WHERE DD.createdBy =:createdBy DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+				.setParameter("createdBy", donationRequest.getCreatedBy())
+				.setParameter("superadminId", donationRequest.getSuperadminId())
+				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
+				.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+				.getResultList();
+		return results;
+	}
+
+//	@SuppressWarnings("unchecked")
+//	public List<DonationDetails> getDonationListBySuperadmin(DonationRequestObject donationRequest) {
+//		
+//		List<DonationDetails> results = new ArrayList<>();
+//		if (donationRequest.getRequestedFor().equals(RequestFor.ALL.name())) {
+//			results = donationDetailsDao.getEntityManager().createQuery(
+//					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId ORDER BY DD.id DESC")
+//					.setParameter("superadminId", donationRequest.getSuperadminId())
+//					.getResultList();
+//			return results;
+//		}
+//		if (donationRequest.getRequestedFor().equals(RequestFor.BYDATE.name())) {
+//			results = donationDetailsDao.getEntityManager().createQuery(
+//					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+//					.setParameter("superadminId", donationRequest.getSuperadminId())
+//					.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
+//					.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+//					.getResultList();
+//			return results;
+//		}
+//		if (donationRequest.getRequestedFor().equals(RequestFor.CREATEDBY.name())) {
+//			 results = donationDetailsDao.getEntityManager().createQuery(
+//					"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdBy =:createdBy AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+//					.setParameter("superadminId", donationRequest.getSuperadminId())
+//					.setParameter("createdBy", donationRequest.getCreatedBy())
+//					.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
+//					.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+//					.getResultList();
+//			return results;
+//		}
+//		return results;
+//	}
 	
 
 	public Object[] getCountAndSum(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {

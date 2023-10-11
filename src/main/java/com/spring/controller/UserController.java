@@ -124,6 +124,21 @@ public class UserController {
 			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
 	}
+	
+	@RequestMapping(path = "changeUserPassword", method = RequestMethod.POST)
+	public Response<UserRequestObject> changeUserPassword(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject responce = userService.changeUserPassword(userRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
 
 	@RequestMapping(path = "changeUserStatus", method = RequestMethod.POST)
 	public Response<UserRequestObject> changeUserStatus(@RequestBody Request<UserRequestObject> userRequestObject,
