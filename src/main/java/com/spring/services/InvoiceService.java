@@ -72,7 +72,7 @@ public class InvoiceService {
 		invoiceHelper.validateInvoiceRequest(invoiceRequest);
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
-		if (isValid) {
+		if (!isValid) {
 			
 			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
 			if(existsInvoiceHeader == null) {

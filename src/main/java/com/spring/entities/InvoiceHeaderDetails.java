@@ -93,7 +93,8 @@ public class InvoiceHeaderDetails {
 	@Column(name = "branch_name")
 	private String branchName;
 	
-	@Column(name = "thank_you_note")
+	@Lob
+	@Column(name = "thank_you_notes")
 	private String thankYouNote;
 	
 	@Lob

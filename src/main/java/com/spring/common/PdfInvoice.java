@@ -1,5 +1,6 @@
 package com.spring.common;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.xhtmlrenderer.pdf.ITextRenderer;
 
@@ -7,8 +8,11 @@ import com.itextpdf.text.*;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.itextpdf.text.pdf.PdfPageEventHelper;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
+import com.spring.helper.DonationHelper;
+import com.spring.helper.InvoiceHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -18,12 +22,22 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.io.ByteArrayInputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class PdfInvoice {
+	
+	@Autowired
+	private DonationHelper donationHelper;
+	
+	@Autowired
+	private InvoiceHelper invoiceHelper;
+	
+	@Autowired
+	private FilePath filePath;
 	
 //	src="data:image/jpeg;base64,[the value of your base64DataString]"
 	
@@ -41,26 +55,24 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 			donationDetails.setPanNumber("---");
 		}
 		
-//		String[] companyName = invoiceHeaderDetails.getCompanyName().split(" ");
-//		String companyNameFirst = companyName[0];
-//		String companyNameSecond = companyName[1];
+		String basePath = filePath.getPathToUploadFile(Constant.invoiceImage);
 
 		String pattern = "dd/MM/yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String date = simpleDateFormat.format(donationDetails.getCreatedAt());
 		
 		double amount = donationDetails.getAmount();
-		long finalValue = Math.round(amount); //130
+		long finalValue = Math.round(amount); 
 			
 		String word = convertNumber(finalValue);
-//		String word = "(One Hhousand Only/";
 
+		
 		String HTML = "<div class=\"body-Container\" style=\" width: 100%; border: 1px solid black;\">\n"
 				+ "<table width=\"100%\">\n" + "<tr>\n" + "<td width=\"16%\" height=\"140px\">\n"
-				+ "<img src=\"D:\\cef.png\" width=\"100%\" height=\"100%\">\n"
+				+ "<img src="+basePath+File.separator+invoiceHeaderDetails.getCompanyLogo()+" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
 				+ "</td>\n" + "<td width=\"60%\">\n" + "<center>\n"
 				+ "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: "+invoiceHeaderDetails.getCompanyFirstNameColor()+";\">"+invoiceHeaderDetails.getCompanyFirstName()+"</strong> <strong style=\"color: "+invoiceHeaderDetails.getCompanyLastNameColor()+";\">"+invoiceHeaderDetails.getCompanyLastName()+"</strong></h1>\n"
-				+ "<h5 style=\"margin: 2px;font-size: 14px;\">Trust Registration: E-34254(M)&nbsp; PAN NO."+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
+				+ "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
 				+ "<h6 style=\"margin: 2px; font-size: 14px;\">Off. Add:"+invoiceHeaderDetails.getOfficeAddress()+"</h6>\n"
 				+ "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
 				+ "</td></tr></table></center>"
@@ -77,17 +89,16 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 				+ donationDetails.getMobileNumber() + "</strong>&nbsp; &nbsp;Pan No: <strong>"
 				+ donationDetails.getPanNumber()
 				+ "</strong>&nbsp; &nbsp;<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
-				+ "/-</strong>. " + word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
-				+ "<img src=\"D:\\stamp.png\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
+				+ "/-</strong>. ("+ word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
+				+ "<img src=\""+basePath+File.separator+invoiceHeaderDetails.getCompanyStamp()+"\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
 				+ "<p style=\"font-size: 20px;letter-spacing: 0.6px;margin-top: -30px; margin-left:110px;\">Authorised Sign.</p>\n"
 				+ "\n" + "\n" + "<center><h1 style=\"border-top: 2px solid black;\">Thank You Letter</h1> </center>\n"
 				+ "\n"
-				+ "<p style=\"margin: 20px;\">Cef Internatinal is Govt. Registered organization working for Welfare of Women & Children since 2017. We are continuously supporting in the field of Education, Health, Youth , Poverty, Livelihood and Community Development. Our aim is to make every individual in the Society should be Self-dependent and raise the quality of life in every aspect. Your Donation would help us to run the skill Development center, Digital Education Center and Community Development center for weaker sections of our society.</p>\n"
-				+ "<p style=\"margin-right: 20px; margin-left: 20px;margin-top: 0px;\">Your Donation will go a long way to inspire the people to donate to the NGO who are. Donors like you have harnessed the potential of our young staff and encouraged us to work with sincerity and commitment. We are enclosing a receipt against your donation, along with this letter. We wish to have a long term relationship and good trust with you to serve the society.<strong> Thank for your Support. Keep Supporting Us.</strong> </p>\n"
+				+ ""+invoiceHeaderDetails.getThankYouNote()+"\n"
 				+ "<hr>\n" + "</div>\n" + "<div style=\"\">\n"
-				+ "<p style=\"font-weight: bold;margin-right: 20px; letter-spacing: 0.5px;line-height: 1.6; margin-left: 20px; text-align: justify;\">Your Donation is eligible for 50&#37; tax benefit under section 80G of Income tax act. Approval No. CIT (Exemption) Mumbai/80G/2020-21/A/10069</p>\n"
+				+ "<p style=\"font-weight: bold;margin-right: 20px; letter-spacing: 0.5px;line-height: 1.6; margin-left: 20px; text-align: justify;\">"+invoiceHeaderDetails.getFooter()+"</p>\n"
 				+ "</div>\n" + "</div>\n" + "<center>\n"
-				+ "<h6 style=\"margin: 2px;font-size: 14px;\">Mobile No.</strong> "+donationDetails.getMobileNumber()+", &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
+				+ "<h6 style=\"margin: 2px;font-size: 14px;\">Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+", &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
 				+ "</center>";
 
 		return HTML;
@@ -95,10 +106,27 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	
 
 	public void generatePdfInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) throws FileNotFoundException, IOException {
-//		String basePath = userHelper.getPathToUploadFile("RECIEPT");
-//		String path = basePath + File.separator + donationDetails.getReferenceNo() + ".pdf";
 		
-		HtmlConverter.convertToPdf(htmlInvoice(donationDetails, invoiceHeaderDetails), new FileOutputStream("D:\\abc.pdf"));
+		
+		if(invoiceHeaderDetails != null) {
+			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+			String invoiceNumber = invoiceHeaderDetails.getInvoiceInitial().toLowerCase()+"/"+currentYear+"/"+(invoiceHeaderDetails.getSerialNumber()+1);
+			
+			//update donation details
+			donationDetails.setInvoiceNumber(invoiceNumber);
+			donationDetails.setInvoiceDownloadStatus("YES");
+			donationHelper.updateDonationDetails(donationDetails);
+			
+			//update serialNumber
+			invoiceHeaderDetails.setSerialNumber(invoiceHeaderDetails.getSerialNumber()+1);
+			invoiceHelper.updateInvoiceHeaderDetails(invoiceHeaderDetails);
+			
+		}
+		
+		String basePath = filePath.getPathToUploadFile(Constant.receipt);
+		String path = basePath + File.separator + donationDetails.getInvoiceNumber().replace("/", "") + ".pdf";
+		
+		HtmlConverter.convertToPdf(htmlInvoice(donationDetails, invoiceHeaderDetails), new FileOutputStream(path+".pdf"));
 	}
 
 	
