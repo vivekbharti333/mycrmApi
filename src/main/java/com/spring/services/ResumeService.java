@@ -29,6 +29,12 @@ public class ResumeService {
 		ResumeDetails existsResume = resumeHelper.getResumeDetailsByCandidateMobile(resumeRequest.getMobileNo());
 		if(existsResume == null) {
 			
+			if(resumeRequest.getResume() != null) {
+				resumeRequest.setResumeUploaded("YES");
+			}else {
+				resumeRequest.setResumeUploaded("NO");
+			}
+			
 			ResumeDetails resumeDetails = resumeHelper.getResumeDetailsByReqObj(resumeRequest);
 			resumeDetails = resumeHelper.saveResumeDetails(resumeDetails);
 			

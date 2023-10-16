@@ -6,9 +6,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import com.spring.common.PdfInvoice;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.CustomerDetails;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.InvoiceNumber;
@@ -16,6 +19,7 @@ import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AddressHelper;
 import com.spring.helper.CustomerHelper;
+import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.AddressRequestObject;
@@ -30,6 +34,12 @@ public class InvoiceService {
 	
 	@Autowired
 	private InvoiceHelper invoiceHelper;
+	
+	@Autowired
+	private PdfInvoice pdfInvoice;
+	
+	@Autowired
+	private DonationHelper donationHelper;
 	
 	@Autowired
 	private CustomerHelper customerHelper;
@@ -119,6 +129,62 @@ public class InvoiceService {
 				return invoiceRequest;
 			}
 		}
+	
+	
+	@SuppressWarnings("unused")
+	public InvoiceRequestObject generateInvoice1(Request<InvoiceRequestObject> invoiceRequestObject)
+			throws BizException, Exception {
+
+		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
+		invoiceHelper.validateInvoiceRequest(invoiceRequest);
+
+		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
+		logger.info("Invoice generate Request Is valid? : " + invoiceRequest.getCreatedBy() + " is " + isValid);
+
+
+		if (!isValid) {
+
+			DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(invoiceRequest.getId(), invoiceRequest.getSuperadminId());
+			
+			if(donationDetails != null) {
+				
+				InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
+				if (invoiceHeader != null) {
+					String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
+
+					donationDetails.setInvoiceNumber(invoiceSrNo);
+					donationHelper.updateDonationDetails(donationDetails);
+					
+					pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+
+					// Invoice Number
+//					InvoiceNumber invoiceNumber = invoiceHelper.getInvoiceNumberByReqObj(invoiceRequest);
+//					invoiceNumber = invoiceHelper.saveInvoiceNumber(invoiceNumber);   
+
+					invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+					invoiceRequest.setRespMesg(Constant.INVOICE_GEN_SUCCESS);
+					return invoiceRequest;
+
+				} else {
+					invoiceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					invoiceRequest.setRespMesg("Please add invoice header first");
+					return invoiceRequest;
+				}
+				
+			}else {
+				// not found
+			}
+			
+			
+		} else {
+			invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+			invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
+			return invoiceRequest;
+		}
+		return invoiceRequest;
+	}
+	
+	
 	
 
 	@SuppressWarnings("unused")

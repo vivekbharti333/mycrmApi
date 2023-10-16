@@ -21,6 +21,7 @@ public class ResumeRequestObject {
 	private Date dob;
 	private String address;
 	private String resume;
+	private String resumeUploaded;
 	
 	private Date createdAt;
 	private Date updatedAt;
@@ -125,6 +126,12 @@ public class ResumeRequestObject {
 	}
 	public void setResume(String resume) {
 		this.resume = resume;
+	}
+	public String getResumeUploaded() {
+		return resumeUploaded;
+	}
+	public void setResumeUploaded(String resumeUploaded) {
+		this.resumeUploaded = resumeUploaded;
 	}
 	public Date getCreatedAt() {
 		return createdAt;

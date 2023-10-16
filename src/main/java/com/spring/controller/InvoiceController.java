@@ -77,7 +77,7 @@ public class InvoiceController {
 	{
 		GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
 		try {
-			InvoiceRequestObject responce =  invoiceService.generateInvoice(invoiceRequestObject);
+			InvoiceRequestObject responce =  invoiceService.generateInvoice1(invoiceRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		}catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());

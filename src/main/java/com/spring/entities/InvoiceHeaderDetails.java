@@ -38,8 +38,11 @@ public class InvoiceHeaderDetails {
 	@Column(name = "company_name")
 	private String companyName;
 	
-	@Column(name = "address")
-	private String address;
+	@Column(name = "office_address")
+	private String officeAddress;
+	
+	@Column(name = "reg_address")
+	private String regAddress;
 	
 	@Column(name = "mobile_no")
 	private String mobileNo;
@@ -146,12 +149,20 @@ public class InvoiceHeaderDetails {
 		this.companyName = companyName;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getOfficeAddress() {
+		return officeAddress;
 	}
 
-	public void setAddress(String address) {
-		this.address = address;
+	public void setOfficeAddress(String officeAddress) {
+		this.officeAddress = officeAddress;
+	}
+
+	public String getRegAddress() {
+		return regAddress;
+	}
+
+	public void setRegAddress(String regAddress) {
+		this.regAddress = regAddress;
 	}
 
 	public String getMobileNo() {

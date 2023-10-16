@@ -8,6 +8,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.TemporalType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +19,7 @@ import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.OptionTypeDetails;
 import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
@@ -36,6 +41,19 @@ public class DonationHelper {
 		if(donationRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null"); 
 		}
+	}
+	
+	@Transactional
+	public DonationDetails getDonationDetailsByIdAndSuperadminId(Long id, String superadminId) {
+
+		CriteriaBuilder criteriaBuilder = donationDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<DonationDetails> criteriaQuery = criteriaBuilder.createQuery(DonationDetails.class);
+		Root<DonationDetails> root = criteriaQuery.from(DonationDetails.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("id"), id);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		criteriaQuery.where(restriction1,restriction2);
+		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return donationDetails;
 	}
 	
 
@@ -74,6 +92,12 @@ public class DonationHelper {
 	@Transactional
 	public DonationDetails saveDonationDetails(DonationDetails donationDetails) { 
 		donationDetailsDao.persist(donationDetails);
+		return donationDetails;
+	}
+	
+	@Transactional
+	public DonationDetails updateDonationDetails(DonationDetails donationDetails) { 
+		donationDetailsDao.update(donationDetails);
 		return donationDetails;
 	}
 	

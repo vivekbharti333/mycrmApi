@@ -74,7 +74,8 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setSerialNumber(0L);
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
 		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
-		invoiceHeaderDetails.setAddress(invoiceRequest.getAddress());
+		invoiceHeaderDetails.setRegAddress(invoiceRequest.getRegAddress());
+		invoiceHeaderDetails.setOfficeAddress(invoiceRequest.getOfficeAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setAlternateMobile(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setEmailId(invoiceRequest.getEmailId());
@@ -110,7 +111,8 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
 		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
-		invoiceHeaderDetails.setAddress(invoiceRequest.getAddress());
+		invoiceHeaderDetails.setRegAddress(invoiceRequest.getRegAddress());
+		invoiceHeaderDetails.setOfficeAddress(invoiceRequest.getOfficeAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setAlternateMobile(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setEmailId(invoiceRequest.getEmailId());

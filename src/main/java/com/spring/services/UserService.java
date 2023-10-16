@@ -3,10 +3,15 @@ package com.spring.services;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
-
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
@@ -125,7 +130,7 @@ public class UserService {
 
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);
-
+			
 				// Save Address
 				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
 					addressRequest.setUserType(userRequest.getRoleType());

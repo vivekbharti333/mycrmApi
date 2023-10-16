@@ -10,6 +10,7 @@ import com.spring.entities.InvoiceDetails;
 
 public class InvoiceRequestObject {	
 	
+	private Long id;
 	private String invoiceNo;
 	private String itemName;
 	private float rate;
@@ -34,7 +35,8 @@ public class InvoiceRequestObject {
 	private Long serialNumber;
 	private String companyLogo;
 	private String companyName;
-	private String address;
+	private String officeAddress;
+	private String regAddress;
 	private String mobileNo;
 	private String alternateMobile;
 	private String emailId;
@@ -57,6 +59,13 @@ public class InvoiceRequestObject {
 	private int respCode;
 	private String respMesg;
 	
+	
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
 	public String getInvoiceNo() {
 		return invoiceNo;
 	}
@@ -195,11 +204,17 @@ public class InvoiceRequestObject {
 	public void setCompanyName(String companyName) {
 		this.companyName = companyName;
 	}
-	public String getAddress() {
-		return address;
+	public String getOfficeAddress() {
+		return officeAddress;
 	}
-	public void setAddress(String address) {
-		this.address = address;
+	public void setOfficeAddress(String officeAddress) {
+		this.officeAddress = officeAddress;
+	}
+	public String getRegAddress() {
+		return regAddress;
+	}
+	public void setRegAddress(String regAddress) {
+		this.regAddress = regAddress;
 	}
 	public String getMobileNo() {
 		return mobileNo;

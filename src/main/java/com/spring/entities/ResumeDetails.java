@@ -64,6 +64,9 @@ public class ResumeDetails {
 	@Column(name = "resume")
 	private String resume;
 	
+	@Column(name = "resume_uploaded")
+	private String resumeUploaded;
+	
 	@Column(name = "created_at")
 	private Date createdAt;
 	
@@ -194,6 +197,14 @@ public class ResumeDetails {
 
 	public void setResume(String resume) {
 		this.resume = resume;
+	}
+
+	public String getResumeUploaded() {
+		return resumeUploaded;
+	}
+
+	public void setResumeUploaded(String resumeUploaded) {
+		this.resumeUploaded = resumeUploaded;
 	}
 
 	public Date getCreatedAt() {

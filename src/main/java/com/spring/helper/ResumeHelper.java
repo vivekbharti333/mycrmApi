@@ -64,6 +64,7 @@ public class ResumeHelper {
 		resumeDetails.setDob(resumeRequest.getDob());
 		resumeDetails.setAddress(resumeRequest.getAddress());
 		resumeDetails.setResume(resumeRequest.getResume());
+		resumeDetails.setResumeUploaded(resumeRequest.getResumeUploaded());
 		
 		resumeDetails.setCreatedBy(resumeRequest.getCreatedBy());
 		resumeDetails.setSuperadminId(resumeRequest.getSuperadminId());
