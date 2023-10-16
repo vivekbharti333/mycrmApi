@@ -2,10 +2,6 @@ package com.spring.object.request;
 
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.Column;
-
-import com.spring.entities.CustomerDetails;
 import com.spring.entities.InvoiceDetails;
 
 public class InvoiceRequestObject {	
@@ -34,13 +30,19 @@ public class InvoiceRequestObject {
 	private String invoiceInitial;
 	private Long serialNumber;
 	private String companyLogo;
-	private String companyName;
+	private String companyStamp;
+	private String companyFirstName;
+	private String companyFirstNameColor;
+	private String companyLastName;
+	private String companyLastNameColor;
+	private String backgroundColor;
 	private String officeAddress;
 	private String regAddress;
 	private String mobileNo;
 	private String alternateMobile;
 	private String emailId;
 	private String website;
+	private String thankYouNote;
 	private String footer;
 	private List<InvoiceDetails> itemDetails;
 	private String gstNumber;
@@ -198,11 +200,41 @@ public class InvoiceRequestObject {
 	public void setCompanyLogo(String companyLogo) {
 		this.companyLogo = companyLogo;
 	}
-	public String getCompanyName() {
-		return companyName;
+	public String getCompanyStamp() {
+		return companyStamp;
 	}
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setCompanyStamp(String companyStamp) {
+		this.companyStamp = companyStamp;
+	}
+	public String getCompanyFirstName() {
+		return companyFirstName;
+	}
+	public void setCompanyFirstName(String companyFirstName) {
+		this.companyFirstName = companyFirstName;
+	}
+	public String getCompanyFirstNameColor() {
+		return companyFirstNameColor;
+	}
+	public void setCompanyFirstNameColor(String companyFirstNameColor) {
+		this.companyFirstNameColor = companyFirstNameColor;
+	}
+	public String getCompanyLastName() {
+		return companyLastName;
+	}
+	public void setCompanyLastName(String companyLastName) {
+		this.companyLastName = companyLastName;
+	}
+	public String getCompanyLastNameColor() {
+		return companyLastNameColor;
+	}
+	public void setCompanyLastNameColor(String companyLastNameColor) {
+		this.companyLastNameColor = companyLastNameColor;
+	}
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 	public String getOfficeAddress() {
 		return officeAddress;
@@ -239,6 +271,12 @@ public class InvoiceRequestObject {
 	}
 	public void setWebsite(String website) {
 		this.website = website;
+	}
+	public String getThankYouNote() {
+		return thankYouNote;
+	}
+	public void setThankYouNote(String thankYouNote) {
+		this.thankYouNote = thankYouNote;
 	}
 	public String getFooter() {
 		return footer;

@@ -15,8 +15,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
-import com.spring.dao.SmsDetailsDao;
-import com.spring.entities.SmsDetails;
+import com.spring.dao.SmsTemplateDetailsDao;
+import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.DonationRequestObject;
@@ -27,24 +27,24 @@ import com.spring.object.request.DonationRequestObject;
 public class SmsHelper {
 	
 	@Autowired
-	private SmsDetailsDao smsDetailsDao;
+	private SmsTemplateDetailsDao smsDetailsDao;
 	
 	
 	@Transactional
-	public SmsDetails getSmsDetailsBySuperadminId(String superadminId, String smsType) {
+	public SmsTemplateDetails getSmsDetailsBySuperadminId(String superadminId, String smsType) {
 
 		CriteriaBuilder criteriaBuilder = smsDetailsDao.getSession().getCriteriaBuilder();
-		CriteriaQuery<SmsDetails> criteriaQuery = criteriaBuilder.createQuery(SmsDetails.class);
-		Root<SmsDetails> root = criteriaQuery.from(SmsDetails.class);
+		CriteriaQuery<SmsTemplateDetails> criteriaQuery = criteriaBuilder.createQuery(SmsTemplateDetails.class);
+		Root<SmsTemplateDetails> root = criteriaQuery.from(SmsTemplateDetails.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
 		criteriaBuilder.equal(root.get("smsType"), smsType);
 		criteriaQuery.where(restriction);
-		SmsDetails smsDetails = smsDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		SmsTemplateDetails smsDetails = smsDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return smsDetails;
 	}
 	
 
-	public String sendSms(String messageBody, SmsDetails smsDetails) {
+	public String sendSms(String messageBody, SmsTemplateDetails smsDetails) {
 		try {
 			
 //			SmsDetails smsDetails = new SmsDetails();

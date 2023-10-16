@@ -183,4 +183,14 @@ public class DonationHelper {
 			return count;
 		}
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<DonationDetails> getDonationListByReceiptNumber(DonationRequestObject donationRequest) {
+		List<DonationDetails> results = new ArrayList<>();
+		results = donationDetailsDao.getEntityManager().createQuery(
+				"SELECT DD FROM DonationDetails DD WHERE DD.receiptNumber =:receiptNumber")
+				.setParameter("receiptNumber", donationRequest.getReceiptNumber())
+				.getResultList();
+		return results;
+	}
 }

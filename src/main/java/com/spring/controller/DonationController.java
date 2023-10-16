@@ -55,6 +55,18 @@ public class DonationController {
 		}
 	}
 	
+	@RequestMapping(path = "getDonationListByReceiptNumber", method = RequestMethod.POST)
+	public Response<DonationDetails> getDonationListByReceiptNumber(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
+		try {
+			List<DonationDetails> donationList = donationService.getDonationListByReceiptNumber(donationRequestObject);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getCountAndSum", method = RequestMethod.POST)
 	public Response<DonationRequestObject>getCountAndSum(@RequestBody Request<DonationRequestObject> donationRequestObject,  HttpServletRequest request)
 	{

@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "sms_details")
-public class SmsDetails {
+@Table(name = "sms_template_details")
+public class SmsTemplateDetails {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -44,8 +44,17 @@ public class SmsDetails {
 	@Column(name = "entity_id")
 	private String entityId;
 	
+	@Column(name = "company_name")
+	private String companyName;
+	
+	@Column(name = "invoice_domain")
+	private String invoiceDomain;
+	
 	@Column(name = "superadmin_id")
 	private String superadminId;
+	
+	@Column(name = "created_at")
+	private Date createdAt;
 	
 	@Column(name = "updated_at")
 	private Date updatedAt;
@@ -126,12 +135,36 @@ public class SmsDetails {
 		this.entityId = entityId;
 	}
 
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getInvoiceDomain() {
+		return invoiceDomain;
+	}
+
+	public void setInvoiceDomain(String invoiceDomain) {
+		this.invoiceDomain = invoiceDomain;
+	}
+
 	public String getSuperadminId() {
 		return superadminId;
 	}
 
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public void setCreatedAt(Date createdAt) {
+		this.createdAt = createdAt;
 	}
 
 	public Date getUpdatedAt() {

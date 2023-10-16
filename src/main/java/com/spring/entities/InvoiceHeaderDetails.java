@@ -35,8 +35,24 @@ public class InvoiceHeaderDetails {
 	@Column(name = "company_logo")
 	private String companyLogo;
 	
-	@Column(name = "company_name")
-	private String companyName;
+	@Lob
+	@Column(name = "company_stamp")
+	private String companyStamp;
+	
+	@Column(name = "company_first_name")
+	private String companyFirstName;
+	
+	@Column(name = "company_first_name_color")
+	private String companyFirstNameColor;
+
+	@Column(name = "company_last_name")
+	private String companyLastName;
+	
+	@Column(name = "company_last_name_color")
+	private String companyLastNameColor;
+	
+	@Column(name = "background_color")
+	private String backgroundColor;
 	
 	@Column(name = "office_address")
 	private String officeAddress;
@@ -76,6 +92,9 @@ public class InvoiceHeaderDetails {
 	
 	@Column(name = "branch_name")
 	private String branchName;
+	
+	@Column(name = "thank_you_note")
+	private String thankYouNote;
 	
 	@Lob
 	@Column(name = "footer")
@@ -141,12 +160,52 @@ public class InvoiceHeaderDetails {
 		this.companyLogo = companyLogo;
 	}
 
-	public String getCompanyName() {
-		return companyName;
+	public String getCompanyStamp() {
+		return companyStamp;
 	}
 
-	public void setCompanyName(String companyName) {
-		this.companyName = companyName;
+	public void setCompanyStamp(String companyStamp) {
+		this.companyStamp = companyStamp;
+	}
+
+	public String getCompanyFirstName() {
+		return companyFirstName;
+	}
+
+	public void setCompanyFirstName(String companyFirstName) {
+		this.companyFirstName = companyFirstName;
+	}
+
+	public String getCompanyFirstNameColor() {
+		return companyFirstNameColor;
+	}
+
+	public void setCompanyFirstNameColor(String companyFirstNameColor) {
+		this.companyFirstNameColor = companyFirstNameColor;
+	}
+
+	public String getCompanyLastName() {
+		return companyLastName;
+	}
+
+	public void setCompanyLastName(String companyLastName) {
+		this.companyLastName = companyLastName;
+	}
+
+	public String getCompanyLastNameColor() {
+		return companyLastNameColor;
+	}
+
+	public void setCompanyLastNameColor(String companyLastNameColor) {
+		this.companyLastNameColor = companyLastNameColor;
+	}
+
+	public String getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(String backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 
 	public String getOfficeAddress() {
@@ -251,6 +310,14 @@ public class InvoiceHeaderDetails {
 
 	public void setBranchName(String branchName) {
 		this.branchName = branchName;
+	}
+
+	public String getThankYouNote() {
+		return thankYouNote;
+	}
+
+	public void setThankYouNote(String thankYouNote) {
+		this.thankYouNote = thankYouNote;
 	}
 
 	public String getFooter() {

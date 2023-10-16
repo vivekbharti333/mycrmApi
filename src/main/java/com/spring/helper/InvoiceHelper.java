@@ -73,13 +73,19 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setSerialNumber(0L);
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
-		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
+		invoiceHeaderDetails.setCompanyStamp(invoiceRequest.getCompanyStamp());
+		invoiceHeaderDetails.setCompanyFirstName(invoiceRequest.getCompanyFirstName());
+		invoiceHeaderDetails.setCompanyFirstNameColor(invoiceRequest.getCompanyFirstNameColor());
+		invoiceHeaderDetails.setCompanyLastName(invoiceRequest.getCompanyLastName());
+		invoiceHeaderDetails.setCompanyLastNameColor(invoiceRequest.getCompanyLastNameColor());
+		invoiceHeaderDetails.setBackgroundColor(invoiceRequest.getBackgroundColor());
 		invoiceHeaderDetails.setRegAddress(invoiceRequest.getRegAddress());
 		invoiceHeaderDetails.setOfficeAddress(invoiceRequest.getOfficeAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setAlternateMobile(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setEmailId(invoiceRequest.getEmailId());
 		invoiceHeaderDetails.setWebsite(invoiceRequest.getWebsite());
+		invoiceHeaderDetails.setThankYouNote(invoiceRequest.getThankYouNote());
 		invoiceHeaderDetails.setFooter(invoiceRequest.getFooter());
 		
 		invoiceHeaderDetails.setGstNumber(invoiceRequest.getGstNumber());
@@ -106,17 +112,21 @@ public class InvoiceHelper {
 	
 	public InvoiceHeaderDetails getUpdatedInvoiceHeaderDetailsByReqObj(InvoiceRequestObject invoiceRequest, InvoiceHeaderDetails invoiceHeaderDetails) {
 
-
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
-		invoiceHeaderDetails.setCompanyName(invoiceRequest.getCompanyName());
+		invoiceHeaderDetails.setCompanyStamp(invoiceRequest.getCompanyStamp());
+		invoiceHeaderDetails.setCompanyFirstName(invoiceRequest.getCompanyFirstName());
+		invoiceHeaderDetails.setCompanyFirstNameColor(invoiceRequest.getCompanyFirstNameColor());
+		invoiceHeaderDetails.setCompanyLastName(invoiceRequest.getCompanyLastName());
+		invoiceHeaderDetails.setCompanyLastNameColor(invoiceRequest.getCompanyLastNameColor());
 		invoiceHeaderDetails.setRegAddress(invoiceRequest.getRegAddress());
 		invoiceHeaderDetails.setOfficeAddress(invoiceRequest.getOfficeAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setAlternateMobile(invoiceRequest.getMobileNo());
 		invoiceHeaderDetails.setEmailId(invoiceRequest.getEmailId());
 		invoiceHeaderDetails.setWebsite(invoiceRequest.getWebsite());
+		invoiceHeaderDetails.setThankYouNote(invoiceRequest.getThankYouNote());
 		invoiceHeaderDetails.setFooter(invoiceRequest.getFooter());
 		
 		invoiceHeaderDetails.setGstNumber(invoiceRequest.getGstNumber());

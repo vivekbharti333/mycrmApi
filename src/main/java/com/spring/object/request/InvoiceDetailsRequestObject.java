@@ -1,6 +1,5 @@
 package com.spring.object.request;
 
-import java.util.Date;
 
 public class InvoiceDetailsRequestObject {	
 	

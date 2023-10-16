@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 @Component
 public class PdfInvoice {
 	
+//	src="data:image/jpeg;base64,[the value of your base64DataString]"
 	
 public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) {
 		
@@ -40,35 +41,36 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 			donationDetails.setPanNumber("---");
 		}
 		
-		String[] companyName = invoiceHeaderDetails.getCompanyName().split(" ");
-		String companyNameFirst = companyName[0];
-		String companyNameSecond = companyName[1];
+//		String[] companyName = invoiceHeaderDetails.getCompanyName().split(" ");
+//		String companyNameFirst = companyName[0];
+//		String companyNameSecond = companyName[1];
 
 		String pattern = "dd/MM/yyyy";
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
 		String date = simpleDateFormat.format(donationDetails.getCreatedAt());
 		
-				
-
-//		String word = convertNumber((long)donationDetails.getAmount());
-		String word = "(One Hhousand Only/";
+		double amount = donationDetails.getAmount();
+		long finalValue = Math.round(amount); //130
+			
+		String word = convertNumber(finalValue);
+//		String word = "(One Hhousand Only/";
 
 		String HTML = "<div class=\"body-Container\" style=\" width: 100%; border: 1px solid black;\">\n"
 				+ "<table width=\"100%\">\n" + "<tr>\n" + "<td width=\"16%\" height=\"140px\">\n"
 				+ "<img src=\"D:\\cef.png\" width=\"100%\" height=\"100%\">\n"
 				+ "</td>\n" + "<td width=\"60%\">\n" + "<center>\n"
-				+ "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: #0477c5;\">"+companyNameFirst+"</strong> <strong style=\"color: #8aca49;\">"+companyNameSecond+"</strong></h1>\n"
+				+ "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: "+invoiceHeaderDetails.getCompanyFirstNameColor()+";\">"+invoiceHeaderDetails.getCompanyFirstName()+"</strong> <strong style=\"color: "+invoiceHeaderDetails.getCompanyLastNameColor()+";\">"+invoiceHeaderDetails.getCompanyLastName()+"</strong></h1>\n"
 				+ "<h5 style=\"margin: 2px;font-size: 14px;\">Trust Registration: E-34254(M)&nbsp; PAN NO."+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
 				+ "<h6 style=\"margin: 2px; font-size: 14px;\">Off. Add:"+invoiceHeaderDetails.getOfficeAddress()+"</h6>\n"
 				+ "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
 				+ "</td></tr></table></center>"
 				+ "<center><p><strong style=\"font-size: 18px;\">Tax Benefit Receipt</strong> </p>\n</center>\n"
-				+ "<div class=\"form-container\" style=\"width: 100%; height: auto; background-color: #8aca49;\">\n"
+				+ "<div class=\"form-container\" style=\"width: 100%; height: auto; background-color: "+invoiceHeaderDetails.getBackgroundColor()+";\">\n"
 				+ "<hr>\n" + "<p style=\"padding: 10px;font-size: 22px \">Receipt No: <strong>"
 				+ donationDetails.getInvoiceNumber()
 				+ "</strong> <span style=\"text-align: right; float: right;margin-right: 10px;\">Date:" + date
 				+ "</span> </p>\n"
-				+ "<p style=\"font-size: 19px;margin-right: 40px; margin-left: 40px;line-height: 30px; text-align: justify;\"><strong>"+invoiceHeaderDetails.getCompanyName()+"</strong> is thankful to <strong>"
+				+ "<p style=\"font-size: 19px;margin-right: 40px; margin-left: 40px;line-height: 30px; text-align: justify;\"><strong>"+invoiceHeaderDetails.getCompanyFirstName()+" "+invoiceHeaderDetails.getCompanyLastName()+"</strong> is thankful to <strong>"
 				+ donationDetails.getDonorName() + "</strong> &nbsp; &nbsp; Address:<strong> "
 				+ donationDetails.getAddress() + "</strong>&nbsp; &nbsp; Email:<strong> "
 				+ donationDetails.getEmailId() + "</strong>&nbsp;&nbsp;Contact No: <strong>"
