@@ -2,30 +2,18 @@ package com.spring.common;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.xhtmlrenderer.pdf.ITextRenderer;
-
-import com.itextpdf.text.*;
 import com.itextpdf.html2pdf.HtmlConverter;
-import com.itextpdf.text.pdf.PdfPageEventHelper;
-import com.itextpdf.text.pdf.PdfWriter;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.io.ByteArrayInputStream;
 
-import javax.servlet.http.HttpServletResponse;
 
 @Component
 public class PdfInvoice {
@@ -105,29 +93,60 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	}
 	
 
-	public void generatePdfInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) throws FileNotFoundException, IOException {
-		
-		
-		if(invoiceHeaderDetails != null) {
-			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
-			String invoiceNumber = invoiceHeaderDetails.getInvoiceInitial().toLowerCase()+"/"+currentYear+"/"+(invoiceHeaderDetails.getSerialNumber()+1);
-			
-			//update donation details
-			donationDetails.setInvoiceNumber(invoiceNumber);
-			donationDetails.setInvoiceDownloadStatus("YES");
-			donationHelper.updateDonationDetails(donationDetails);
-			
-			//update serialNumber
-			invoiceHeaderDetails.setSerialNumber(invoiceHeaderDetails.getSerialNumber()+1);
-			invoiceHelper.updateInvoiceHeaderDetails(invoiceHeaderDetails);
-			
-		}
-		
-		String basePath = filePath.getPathToUploadFile(Constant.receipt);
-		String path = basePath + File.separator + donationDetails.getInvoiceNumber().replace("/", "") + ".pdf";
-		
-		HtmlConverter.convertToPdf(htmlInvoice(donationDetails, invoiceHeaderDetails), new FileOutputStream(path+".pdf"));
+//	public void generatePdfInvoice1(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) throws FileNotFoundException, IOException {
+//		
+//		
+//		if(invoiceHeaderDetails != null) {
+//			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+//			String invoiceNumber = invoiceHeaderDetails.getInvoiceInitial().toLowerCase()+"/"+currentYear+"/"+(invoiceHeaderDetails.getSerialNumber()+1);
+//			
+//			//update donation details
+//			donationDetails.setInvoiceNumber(invoiceNumber);
+//			donationDetails.setInvoiceDownloadStatus("YES");
+//			donationHelper.updateDonationDetails(donationDetails);
+//			
+//			//update serialNumber
+//			invoiceHeaderDetails.setSerialNumber(invoiceHeaderDetails.getSerialNumber()+1);
+//			invoiceHelper.updateInvoiceHeaderDetails(invoiceHeaderDetails);
+//		}
+//		
+//		String basePath = filePath.getPathToUploadFile(Constant.receipt);
+//		String path = basePath + File.separator + donationDetails.getInvoiceNumber().replace("/", "");
+//		
+//		HtmlConverter.convertToPdf(htmlInvoice(donationDetails, invoiceHeaderDetails), new FileOutputStream(path+".pdf"));
+//	}
+	
+	
+	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
+	    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+
+	    if (invoiceHeaderDetails != null) {
+	        String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+	        String invoiceNumber = invoiceHeaderDetails.getInvoiceInitial().toLowerCase() + "/" + currentYear + "/" + (invoiceHeaderDetails.getSerialNumber() + 1);
+
+	        if(donationDetails.getInvoiceNumber() == null) {
+	        	 // Update donation details
+		        donationDetails.setInvoiceNumber(invoiceNumber);
+		        donationDetails.setInvoiceDownloadStatus("YES");
+		        donationHelper.updateDonationDetails(donationDetails);
+
+		        // Update serialNumber
+		        invoiceHeaderDetails.setSerialNumber(invoiceHeaderDetails.getSerialNumber() + 1);
+		        invoiceHelper.updateInvoiceHeaderDetails(invoiceHeaderDetails);
+	        }
+	       
+	    }
+
+//	    String basePath = filePath.getPathToUploadFile(Constant.receipt);
+
+	    String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+
+	    // Convert HTML to PDF and write it to the output stream
+	    HtmlConverter.convertToPdf(htmlContent, pdfStream);
+
+	    return pdfStream;
 	}
+
 
 	
 

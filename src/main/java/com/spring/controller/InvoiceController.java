@@ -1,19 +1,32 @@
 package com.spring.controller;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.itextpdf.text.Document;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.spring.common.PdfInvoice;
 import com.spring.constant.Constant;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.InvoiceNumber;
 import com.spring.exceptions.BizException;
+import com.spring.helper.DonationHelper;
+import com.spring.helper.InvoiceHelper;
 import com.spring.object.request.InvoiceRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.response.GenricResponse;
@@ -26,7 +39,16 @@ import com.spring.services.InvoiceService;
 public class InvoiceController {
 	
 	@Autowired
-	InvoiceService invoiceService;
+	private InvoiceService invoiceService;
+	
+	@Autowired
+	private PdfInvoice pdfInvoice;
+	
+	@Autowired
+	private DonationHelper donationHelper;
+	
+	@Autowired
+	private InvoiceHelper invoiceHelper;
 	
 	
 	@RequestMapping(path = "addInvoiceHeader", method = RequestMethod.POST)
@@ -112,4 +134,60 @@ public class InvoiceController {
 	}
 	
 	
+	@RequestMapping(value = "/invoice/{reffNo}",  method = RequestMethod.GET)
+	public ModelAndView viewPdf1(@PathVariable String reffNo, HttpServletResponse response) throws IOException {
+	    ModelAndView modelAndView = new ModelAndView();
+	    
+	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
+	    if (donationDetails != null) {
+	    	if(donationDetails.getInvoiceDownloadStatus().equalsIgnoreCase("NO")) {
+	    		 InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
+
+	 	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+
+	 	        // Set the response headers for PDF content
+	 	        response.setContentType("application/pdf");
+	 	        response.setHeader("Content-Disposition", "inline; filename=donation-invoice.pdf");
+
+	 	        // Copy the PDF content from the ByteArrayOutputStream to the response's output stream
+	 	        response.getOutputStream().write(pdfStream.toByteArray());
+	 	        response.flushBuffer();
+	    	}else {
+	    		modelAndView.addObject("message", "Invoice Already Downloaded. Please contact admin for details.");
+		    	modelAndView.setViewName("message"); 
+	    	}
+	       
+	    } else {
+	        modelAndView.addObject("message", "Invalid request. Please contact admin for details.");
+	    	modelAndView.setViewName("message"); 
+	    }
+	    
+	    return modelAndView;
+	}
+	
+	
+	@RequestMapping(value = "viewPdf1", method = RequestMethod.GET)
+	public void viewPdf(HttpServletResponse response) throws IOException {
+		System.out.println("Enter hai1");
+
+		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("1234");
+		if (donationDetails != null) {
+			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
+			ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+			// Set the response headers for PDF content
+			response.setContentType("application/pdf");
+			response.setHeader("Content-Disposition", "inline; filename=my-document.pdf");
+			
+			System.out.println("Enter hai");
+
+			// Copy the PDF content from the ByteArrayOutputStream to the response's output
+			// stream
+			response.getOutputStream().write(pdfStream.toByteArray());
+			response.flushBuffer();
+		}
+	}
+	
+	
+	
+	 
 }

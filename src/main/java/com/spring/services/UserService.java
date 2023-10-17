@@ -1,5 +1,6 @@
 package com.spring.services;
 
+import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
@@ -123,20 +124,29 @@ public class UserService {
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getEmailId(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
-				userRequest.setPassword("123");
+				userRequest.setPassword("12345");
 
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
 				userRequest.setPassword(password);
 
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);
-			
+				
 				// Save Address
-				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
-					addressRequest.setUserType(userRequest.getRoleType());
-					addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
+				if(userRequest.getRequestedFor().equalsIgnoreCase("WEB")) {
+					for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
+						addressRequest.setUserType(userRequest.getRoleType());
+						addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
+					}
+				}else {
+					
+					AddressRequestObject addressRequestObj = addressHelper.setAddressRequestObjectByUserReqObj(userRequest);
+					
+					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequestObj, userDetails.getId(), userDetails.getSuperadminId());
+					addressHelper.saveAddressDetails(addressDetails);
 				}
-
+				
+				
 				// send sms
 
 				userRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -162,24 +172,32 @@ public class UserService {
 		userHelper.validateUserRequest(userRequest);
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
-		logger.info("Usere Registration Is valid? : "+userRequest.getCreatedBy()+" is " + isValid);
-
 		if (isValid) {
 			
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
-		logger.info("User Details : "+userDetails);
 		if (userDetails != null) {
 
 			userDetails = userHelper.getUpdatedUserDetailsByReqObj(userDetails, userRequest);
 			userDetails = userHelper.UpdateUserDetails(userDetails);
 			
-			for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
-				AddressDetails addressDetails = addressHelper.getAddressDetailsByUserIdAndAddressType(userDetails.getId(), addressRequest.getAddressType(), userDetails.getSuperadminId());
+			if(userRequest.getRequestedFor().equalsIgnoreCase("WEB")) {
+				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
+					AddressDetails addressDetails = addressHelper.getAddressDetailsByUserIdAndAddressType(userDetails.getId(), addressRequest.getAddressType(), userDetails.getSuperadminId());
+					
+					if(addressDetails != null) {
+						addressService.updateAddressDetailsByRequest(addressRequest,addressDetails);
+					}
+				}
+			}else {
+				
+				AddressRequestObject addressRequestObj = addressHelper.setAddressRequestObjectByUserReqObj(userRequest);
+				AddressDetails addressDetails = addressHelper.getAddressDetailsByUserIdAndAddressType(userDetails.getId(), addressRequestObj.getAddressType(), userDetails.getSuperadminId());
 				
 				if(addressDetails != null) {
-					addressService.updateAddressDetailsByRequest(addressRequest,addressDetails);
+					addressService.updateAddressDetailsByRequest(addressRequestObj,addressDetails);
 				}
 			}
+			
 
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);

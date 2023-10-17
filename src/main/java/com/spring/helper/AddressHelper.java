@@ -49,22 +49,36 @@ public class AddressHelper {
 
 	    Predicate userIdPredicate = criteriaBuilder.equal(root.get("userId"), userId);
 	    Predicate addressTypePredicate = criteriaBuilder.equal(root.get("addressType"), addressType);
-
-	    // Combine the predicates using AND
 	    Predicate restriction = criteriaBuilder.and(userIdPredicate, addressTypePredicate);
 
 	    criteriaQuery.where(restriction);
 	    AddressDetails addressDetails = addressDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 	    return addressDetails;
 	}
+	
+	public AddressRequestObject setAddressRequestObjectByUserReqObj(UserRequestObject userRequest) 
+	{
+		AddressRequestObject addressRequestObj = new AddressRequestObject();
+
+		addressRequestObj.setUserType(userRequest.getUserType());
+		addressRequestObj.setAddressType(userRequest.getAddressType());
+		addressRequestObj.setAddressLine(userRequest.getAddressLine());
+		addressRequestObj.setLandmark(userRequest.getLandmark());
+		addressRequestObj.setDistrict(userRequest.getDistrict());
+		addressRequestObj.setCity(userRequest.getCity());
+		addressRequestObj.setState(userRequest.getState());
+		addressRequestObj.setPincode(userRequest.getPincode());
+
+		return addressRequestObj;
+	}
+
+	
 
 	@Transactional
 	public AddressDetails getAddressDetailsByReqObj(AddressRequestObject addressRequest, Long id, String superadminId) {
 
 		AddressDetails addressDetails = new AddressDetails();
 		
-		System.out.println(addressRequest.getAddressType());
-
 		addressDetails.setUserId(id);
 		addressDetails.setUserType(addressRequest.getUserType());
 		addressDetails.setAddressType(addressRequest.getAddressType());

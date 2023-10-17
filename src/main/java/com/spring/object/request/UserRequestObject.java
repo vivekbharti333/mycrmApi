@@ -28,6 +28,20 @@ public class UserRequestObject {
 	private String isPassChanged;
 	private Date dob;
 	private Date validityExpireOn;
+	
+	//address start
+	private String userType;
+	private String addressType;
+	private String addressLine;
+	private String landmark;
+	private String district;
+	private String city;
+	private String state;
+	private String country;
+	private String pincode; 
+	//address end
+	
+	
 	private Date createdAt;
 	private Date updatedAt;
 	private String createdBy;
@@ -157,6 +171,60 @@ public class UserRequestObject {
 	}
 	public void setValidityExpireOn(Date validityExpireOn) {
 		this.validityExpireOn = validityExpireOn;
+	}
+	public String getUserType() {
+		return userType;
+	}
+	public void setUserType(String userType) {
+		this.userType = userType;
+	}
+	public String getAddressType() {
+		return addressType;
+	}
+	public void setAddressType(String addressType) {
+		this.addressType = addressType;
+	}
+	public String getAddressLine() {
+		return addressLine;
+	}
+	public void setAddressLine(String addressLine) {
+		this.addressLine = addressLine;
+	}
+	public String getLandmark() {
+		return landmark;
+	}
+	public void setLandmark(String landmark) {
+		this.landmark = landmark;
+	}
+	public String getDistrict() {
+		return district;
+	}
+	public void setDistrict(String district) {
+		this.district = district;
+	}
+	public String getCity() {
+		return city;
+	}
+	public void setCity(String city) {
+		this.city = city;
+	}
+	public String getState() {
+		return state;
+	}
+	public void setState(String state) {
+		this.state = state;
+	}
+	public String getCountry() {
+		return country;
+	}
+	public void setCountry(String country) {
+		this.country = country;
+	}
+	public String getPincode() {
+		return pincode;
+	}
+	public void setPincode(String pincode) {
+		this.pincode = pincode;
 	}
 	public Date getCreatedAt() {
 		return createdAt;

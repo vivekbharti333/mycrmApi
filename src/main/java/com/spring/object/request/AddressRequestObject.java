@@ -5,7 +5,6 @@ import java.util.Date;
 public class AddressRequestObject {
 	
 	private Long id;
-	private String sessionId;
 	private String status;
 	private String userType;
 	private String addressType;
@@ -30,12 +29,6 @@ public class AddressRequestObject {
 	}
 	public void setId(Long id) {
 		this.id = id;
-	}
-	public String getSessionId() {
-		return sessionId;
-	}
-	public void setSessionId(String sessionId) {
-		this.sessionId = sessionId;
 	}
 	public String getStatus() {
 		return status;
@@ -136,7 +129,7 @@ public class AddressRequestObject {
 	
 	@Override
 	public String toString() {
-		return "AddressRequestObject [id=" + id + ", sessionId=" + sessionId + ", status=" + status + ", userType="
+		return "AddressRequestObject [id=" + id + ", status=" + status + ", userType="
 				+ userType + ", addressType=" + addressType + ", addressLine=" + addressLine + ", landmark=" + landmark
 				+ ", district=" + district + ", city=" + city + ", state=" + state + ", country=" + country
 				+ ", pincode=" + pincode + ", createdAt=" + createdAt + ", updatedAt=" + updatedAt + ", createdBy="
