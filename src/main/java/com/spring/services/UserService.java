@@ -120,7 +120,7 @@ public class UserService {
 //		userRequest.setPassword("test@123");
 
 		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
-		if (isValid) {
+//		if (isValid) {
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getEmailId(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
@@ -157,11 +157,11 @@ public class UserService {
 				userRequest.setRespMesg(Constant.USER_EXIST);
 				return userRequest;
 			}
-		} else {
-			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			userRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return userRequest;
-		}
+//		} else {
+//			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			userRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return userRequest;
+//		}
 	}
 
 	

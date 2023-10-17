@@ -57,11 +57,11 @@ public class DonationTypeService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 
 		List<DonationType> donationTypeList = new ArrayList<>();
-		if (isValid) {
+//		if (isValid) {
 			donationTypeList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
 			return donationTypeList;
-		}
-		return donationTypeList;
+//		}
+//		return donationTypeList;
 
 	}
 
