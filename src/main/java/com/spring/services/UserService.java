@@ -145,8 +145,6 @@ public class UserService {
 					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequestObj, userDetails.getId(), userDetails.getSuperadminId());
 					addressHelper.saveAddressDetails(addressDetails);
 				}
-				
-				
 				// send sms
 
 				userRequest.setRespCode(Constant.SUCCESS_CODE);
