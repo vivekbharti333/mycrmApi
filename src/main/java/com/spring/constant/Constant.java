@@ -36,6 +36,7 @@ public class Constant {
 	 
 	 public static final String USER_EXIST = "Login Id Already Exists";
 	 public static final String USER_NOT_EXIST = "User Not Exists";
+	 public static final String INACTIVE_USER = "Userid Inactive";
 	 
 	 public static final String INVOICE_GEN_SUCCESS = "Invoice Generated Successfully";
 	 public static final String INVOICE_NUM_EXISTS = "Invoice no already exists";

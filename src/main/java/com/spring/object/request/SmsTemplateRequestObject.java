@@ -12,6 +12,7 @@ public class SmsTemplateRequestObject {
 	private String smsUrl;
 	private String smsSender;
 	private String smsType;
+	private String status;
 	private String templateId;
 	private String entityId;
 	private String companyName;
@@ -70,6 +71,12 @@ public class SmsTemplateRequestObject {
 	}
 	public void setSmsType(String smsType) {
 		this.smsType = smsType;
+	}
+	public String getStatus() {
+		return status;
+	}
+	public void setStatus(String status) {
+		this.status = status;
 	}
 	public String getTemplateId() {
 		return templateId;

@@ -38,6 +38,9 @@ public class SmsTemplateDetails {
 	@Column(name = "sms_type")
 	private String smsType;
 	
+	@Column(name = "status")
+	private String status;	
+	
 	@Column(name = "template_id")
 	private String templateId;
 	
@@ -117,6 +120,14 @@ public class SmsTemplateDetails {
 
 	public void setSmsType(String smsType) {
 		this.smsType = smsType;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 	public String getTemplateId() {

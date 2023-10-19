@@ -47,6 +47,7 @@ public class UserController {
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 //		String resp =smsHelper.sendSms();
+//		System.out.println("Res : "+resp);
 		
 //		System.out.println("Resp : "+resp);
 		

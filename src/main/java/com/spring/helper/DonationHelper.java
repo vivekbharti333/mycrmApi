@@ -197,11 +197,11 @@ public class DonationHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<DonationDetails> getDonationListByReceiptNumber(DonationRequestObject donationRequest) {
+	public List<DonationDetails> getDonationListByReceiptNumber(String receiptNumber) {
 		List<DonationDetails> results = new ArrayList<>();
 		results = donationDetailsDao.getEntityManager().createQuery(
 				"SELECT DD FROM DonationDetails DD WHERE DD.receiptNumber =:receiptNumber")
-				.setParameter("receiptNumber", donationRequest.getReceiptNumber())
+				.setParameter("receiptNumber", receiptNumber)
 				.getResultList();
 		return results;
 	}

@@ -44,9 +44,10 @@ public class SmsTemplateHelper {
 		CriteriaBuilder criteriaBuilder = smsDetailsTemplateDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<SmsTemplateDetails> criteriaQuery = criteriaBuilder.createQuery(SmsTemplateDetails.class);
 		Root<SmsTemplateDetails> root = criteriaQuery.from(SmsTemplateDetails.class);
-		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-		criteriaBuilder.equal(root.get("smsType"), smsType);
-		criteriaQuery.where(restriction);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("smsType"), smsType);
+//		Predicate restriction3 = criteriaBuilder.equal(root.get("status"), status);
+		criteriaQuery.where(restriction1,restriction2);
 		SmsTemplateDetails smsDetails = smsDetailsTemplateDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return smsDetails;
 	}
@@ -60,6 +61,7 @@ public class SmsTemplateHelper {
 		smsTemplateDetails.setSmsUrl(smsTemplateRequest.getSmsUrl());
 		smsTemplateDetails.setSmsSender(smsTemplateRequest.getSmsSender());
 		smsTemplateDetails.setSmsType(smsTemplateRequest.getSmsType());
+		smsTemplateDetails.setStatus(Status.ACTIVE.name());
 		smsTemplateDetails.setTemplateId(smsTemplateRequest.getTemplateId());
 		smsTemplateDetails.setEntityId(smsTemplateRequest.getEntityId());
 		smsTemplateDetails.setCompanyName(smsTemplateRequest.getCompanyName());

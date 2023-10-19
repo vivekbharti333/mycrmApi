@@ -1,7 +1,5 @@
 package com.spring.services;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -12,16 +10,12 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.enums.RequestFor;
@@ -46,6 +40,9 @@ public class DonationService {
 	
 	@Autowired
 	private SmsTemplateHelper smsTemplateHelper;
+	
+	@Autowired
+	private SmsHelper smsHelper;
 	
 	@Autowired
 	private UserHelper userHelper;
@@ -99,7 +96,7 @@ public class DonationService {
 //				
 //			}
 			
-			//Gen Receipt
+			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
 			donationRequest.setReceiptNumber(receiptNumber);
@@ -111,11 +108,10 @@ public class DonationService {
 			// send sms
 			SmsTemplateDetails smsDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
 			if(smsDetails != null) {
-//				
-//				String messageBody = "Aarine Foundation Recieved Donation of Rs." + donationDetails.getAmount()
-//				+ " from you click to download Receipt within 10days http://103.220.223.172:9090/aarineFront/#/home/"+donationDetails.getReceiptNumber();
+				
+				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
 //
-//				smsHelper.sendSms(messageBody, smsDetails);			
+				smsHelper.sendSms(messageBody, smsDetails);			
 			}
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -192,9 +188,9 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		
 		List<DonationDetails> donationList = new ArrayList<>();
-		donationRequest.setFirstDate(todayDate);
-		donationRequest.setLastDate(tomorrowDate);
-		donationList = donationHelper.getDonationListByReceiptNumber(donationRequest);
+//		donationRequest.setFirstDate(todayDate);
+//		donationRequest.setLastDate(tomorrowDate);
+		donationList = donationHelper.getDonationListByReceiptNumber(donationRequest.getReceiptNumber());
 		return donationList;
 	}	
 

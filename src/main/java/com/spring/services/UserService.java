@@ -16,6 +16,7 @@ import com.google.gson.JsonParser;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AddressHelper;
 import com.spring.helper.UserHelper;
@@ -48,6 +49,12 @@ public class UserService {
 
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
+			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+				
+				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				userRequest.setRespMesg(Constant.INACTIVE_USER);
+				return userRequest;
+			}
 
 			boolean isValid = userHelper.checkValidityOfUser(userDetails.getValidityExpireOn());
 

@@ -47,14 +47,21 @@ public class SmsHelper {
 	public String sendSms(String messageBody, SmsTemplateDetails smsDetails) {
 		try {
 			
-//			SmsDetails smsDetails = new SmsDetails();
+//			smsDetails.setSmsUrl("http://nimbusit.biz/api/SmsApi/SendSingleApi?");
+//			smsDetails.setSmsUserId("aarinefoundation");
+//			smsDetails.setSmsPassword("eqpu2598EQ");
+//			smsDetails.setSmsSender("AARINE");
+//			smsDetails.setEntityId("1201161467507592526");
+//			smsDetails.setTemplateId("1207167835475038639");
+			
+//			String messageBody = "Thank you for donating Rs. 1000 at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/1234 CE FOUNDATION";
 			
 			smsDetails.setSmsUrl("http://nimbusit.biz/api/SmsApi/SendSingleApi?");
-			smsDetails.setSmsUserId("aarinefoundation");
-			smsDetails.setSmsPassword("eqpu2598EQ");
-			smsDetails.setSmsSender("AARINE");
-			smsDetails.setEntityId("1201161467507592526");
-			smsDetails.setTemplateId("1207167835475038639");
+			smsDetails.setSmsUserId("cefoundation");
+			smsDetails.setSmsPassword("qlmo6657QL");
+			smsDetails.setSmsSender("CEFOUN");
+			smsDetails.setEntityId("1701169743366929967");
+			smsDetails.setTemplateId("1707169770557920168");
 			
 			String providerUrl = smsDetails.getSmsUrl();
 			String username = URLEncoder.encode(smsDetails.getSmsUserId(), "UTF-8");

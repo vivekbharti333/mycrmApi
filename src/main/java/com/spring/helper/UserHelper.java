@@ -171,7 +171,8 @@ public class UserHelper {
 		System.out.println(userRequest);
 		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
+					.setParameter("roleType", RoleType.MAINADMIN.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
@@ -209,10 +210,18 @@ public class UserHelper {
 	
 	public Long getActiveAndInactiveUserCount(String roleType, String createdBy, String status) {
 		Long count = 0L;
-		if (roleType.equals(RoleType.SUPERADMIN.name())) {
+		if (roleType.equals(RoleType.MAINADMIN.name())) {
 			count = (Long) userDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND DD.superadminId = :superadminId")
+					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND roleType NOT IN :roleType")
 					.setParameter("status", status)
+					.setParameter("roleType", RoleType.MAINADMIN.name())
+					.getSingleResult();
+			return count;
+		} else if (roleType.equals(RoleType.SUPERADMIN.name())) {
+			count = (Long) userDetailsDao.getEntityManager().createQuery(
+					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND roleType NOT IN :roleType AND DD.superadminId = :superadminId")
+					.setParameter("status", status)
+					.setParameter("roleType", RoleType.SUPERADMIN.name())
 					.setParameter("superadminId", createdBy)
 					.getSingleResult();
 			return count;

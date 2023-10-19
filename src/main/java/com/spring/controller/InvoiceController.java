@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
@@ -8,11 +9,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -27,10 +34,12 @@ import com.spring.entities.InvoiceNumber;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
+import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.InvoiceRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
+import com.spring.services.DonationService;
 import com.spring.services.InvoiceService;
 
 
@@ -134,8 +143,40 @@ public class InvoiceController {
 	}
 	
 	
-	@RequestMapping(value = "/invoice/{reffNo}",  method = RequestMethod.GET)
-	public ModelAndView viewPdf1(@PathVariable String reffNo, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/donationinvoice2/{reffNo}", method = RequestMethod.GET)
+	public Object donationinvoice(@PathVariable String reffNo) throws IOException {
+	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
+
+	    if (donationDetails != null) {
+	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
+	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.setContentType(MediaType.APPLICATION_PDF);
+	        headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+	        headers.add("Pragma", "no-cache");
+	        headers.add("Expires", "0");
+
+	        headers.setContentLength(pdfStream.size());
+
+	        String fileName = invoiceHeader.getCompanyFirstName()+"-invoice.pdf";
+	        headers.setContentDispositionFormData("attachment", fileName);
+
+	        InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(pdfStream.toByteArray()));
+
+	        return new ResponseEntity<>(isr, headers, HttpStatus.OK);
+	    } else {
+	        // Handle the case when donationDetails is null by returning an error view
+	        ModelAndView modelAndView = new ModelAndView("message");
+	        modelAndView.addObject("message", "Invalid request. Please contact admin for details.");
+	    	modelAndView.setViewName("message"); 
+	        return modelAndView;
+	    }
+	}
+	
+	
+	@RequestMapping(value = "/donationinvoice/{reffNo}",  method = RequestMethod.GET)
+	public ModelAndView donationinvoice(@PathVariable String reffNo, HttpServletResponse response) throws IOException {
 	    ModelAndView modelAndView = new ModelAndView();
 	    
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
@@ -148,8 +189,6 @@ public class InvoiceController {
 	 	        // Set the response headers for PDF content
 	 	        response.setContentType("application/pdf");
 	 	        response.setHeader("Content-Disposition", "inline; filename=donation-invoice.pdf");
-
-	 	        // Copy the PDF content from the ByteArrayOutputStream to the response's output stream
 	 	        response.getOutputStream().write(pdfStream.toByteArray());
 	 	        response.flushBuffer();
 //	    	}else {
@@ -166,28 +205,14 @@ public class InvoiceController {
 	}
 	
 	
-	@RequestMapping(value = "viewPdf1", method = RequestMethod.GET)
-	public void viewPdf(HttpServletResponse response) throws IOException {
-		System.out.println("Enter hai1");
-
-		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("1234");
-		if (donationDetails != null) {
-			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
-			ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
-			// Set the response headers for PDF content
-			response.setContentType("application/pdf");
-			response.setHeader("Content-Disposition", "inline; filename=my-document.pdf");
-			
-			System.out.println("Enter hai");
-
-			// Copy the PDF content from the ByteArrayOutputStream to the response's output
-			// stream
-			response.getOutputStream().write(pdfStream.toByteArray());
-			response.flushBuffer();
-		}
+	@RequestMapping("donationDetails/{receiptNo}")
+	public @ResponseBody ModelAndView donationDetails(@PathVariable(value = "receiptNo") String receiptNo) throws Exception {
+		ModelAndView modelAndView = new ModelAndView("invoice-details");
+		
+		List<DonationDetails> donationList = donationHelper.getDonationListByReceiptNumber(receiptNo);
+		modelAndView.addObject("donationDetails", donationList.get(0));
+		return modelAndView;
+		
 	}
-	
-	
-	
 	 
 }
