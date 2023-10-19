@@ -122,7 +122,7 @@ public class UserService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
 //		if (isValid) {
 
-			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getEmailId(), userRequest.getSuperadminId());
+			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getMobileNo(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
 				userRequest.setPassword("12345");
 

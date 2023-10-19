@@ -140,7 +140,7 @@ public class InvoiceController {
 	    
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
 	    if (donationDetails != null) {
-	    	if(donationDetails.getInvoiceDownloadStatus().equalsIgnoreCase("NO")) {
+//	    	if(donationDetails.getInvoiceDownloadStatus().equalsIgnoreCase("NO")) {
 	    		 InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
 
 	 	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
@@ -152,10 +152,10 @@ public class InvoiceController {
 	 	        // Copy the PDF content from the ByteArrayOutputStream to the response's output stream
 	 	        response.getOutputStream().write(pdfStream.toByteArray());
 	 	        response.flushBuffer();
-	    	}else {
-	    		modelAndView.addObject("message", "Invoice Already Downloaded. Please contact admin for details.");
-		    	modelAndView.setViewName("message"); 
-	    	}
+//	    	}else {
+//	    		modelAndView.addObject("message", "Invoice Already Downloaded. Please contact admin for details.");
+//		    	modelAndView.setViewName("message"); 
+//	    	}
 	       
 	    } else {
 	        modelAndView.addObject("message", "Invalid request. Please contact admin for details.");

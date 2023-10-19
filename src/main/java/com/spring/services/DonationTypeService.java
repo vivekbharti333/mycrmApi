@@ -54,11 +54,14 @@ public class DonationTypeService {
 
 	public List<DonationType> getDonationTypeListBySuperadminId(Request<DonationRequestObject> donationRequestObject) {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 
-		List<DonationType> donationTypeList = new ArrayList<>();
+//		List<DonationType> donationTypeList = new ArrayList<>();
 //		if (isValid) {
-			donationTypeList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
+		List<DonationType> donationTypeList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
+		
+		logger.info("Superadmin id : "+donationRequest.getSuperadminId());
+		logger.info("DonationTypeList : "+donationTypeList);
 			return donationTypeList;
 //		}
 //		return donationTypeList;
