@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.SmsTemplateDetailsDao;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
@@ -44,7 +45,7 @@ public class SmsHelper {
 	}
 	
 
-	public String sendSms(String messageBody, SmsTemplateDetails smsDetails) {
+	public String sendSms(String messageBody, SmsTemplateDetails smsDetails, DonationDetails donationDetails) {
 		try {
 			
 //			smsDetails.setSmsUrl("http://nimbusit.biz/api/SmsApi/SendSingleApi?");
@@ -67,7 +68,7 @@ public class SmsHelper {
 			String username = URLEncoder.encode(smsDetails.getSmsUserId(), "UTF-8");
 			String password = URLEncoder.encode(smsDetails.getSmsPassword(), "UTF-8");
 			String sender = URLEncoder.encode(smsDetails.getSmsSender(), "UTF-8");
-			String sendto = URLEncoder.encode("8800689752", "UTF-8");
+			String sendto = URLEncoder.encode(donationDetails.getMobileNumber(), "UTF-8");
 			String message = URLEncoder.encode(messageBody, "UTF-8");
 			String entityid = smsDetails.getEntityId();
 			String templateId = smsDetails.getTemplateId();

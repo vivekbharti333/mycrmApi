@@ -1,9 +1,5 @@
 package com.spring.helper;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,8 +15,6 @@ import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.OptionTypeDetails;
-import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;

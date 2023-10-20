@@ -88,14 +88,6 @@ public class DonationService {
 				return donationRequest; 
 			}
 			
-//			//Generate Receipt Number
-//			InvoiceHeaderDetails headerDetails = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationRequest.getSuperadminId());
-//			if(headerDetails != null) {
-//				String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
-//				String receiptNumber = headerDetails.getInvoiceInitial().toLowerCase()+"/"+currentYear+"/"+headerDetails.getInvoiceInitial();
-//				
-//			}
-			
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
@@ -111,7 +103,7 @@ public class DonationService {
 				
 				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
 //
-				smsHelper.sendSms(messageBody, smsDetails);			
+				smsHelper.sendSms(messageBody, smsDetails, donationDetails);			
 			}
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -188,8 +180,6 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		
 		List<DonationDetails> donationList = new ArrayList<>();
-//		donationRequest.setFirstDate(todayDate);
-//		donationRequest.setLastDate(tomorrowDate);
 		donationList = donationHelper.getDonationListByReceiptNumber(donationRequest.getReceiptNumber());
 		return donationList;
 	}	
@@ -202,22 +192,9 @@ public class DonationService {
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 		if (isValid) {
-			
-//			LocalDate localDate = LocalDate.now();
-//			LocalDate nextday = localDate.plus(1, ChronoUnit.DAYS);
-//			LocalDate preday = localDate.minus(1, ChronoUnit.DAYS);
-//			LocalDate firstDateOfMonth = localDate.withDayOfMonth(1);
-//			LocalDate lastDateOfMonth = localDate.with(TemporalAdjusters.lastDayOfMonth());
-//			
-//			Date todayDate = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//			Date tomorrowDate = Date.from(nextday.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//			Date previousDate = Date.from(preday.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//			Date firstDate = Date.from(firstDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
-//			Date lastDate = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
 			//todays
 			Object[] todays = donationHelper.getCountAndSum(donationRequest, todayDate, tomorrowDate);
-			
 			donationRequest.setTodaysCount((Long) todays[0]);
 			donationRequest.setTodaysAmount((Double) todays[1]);
 			
@@ -233,7 +210,6 @@ public class DonationService {
 			
 			//Active
 			Long activeUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(), donationRequest.getCreatedBy(), Status.ACTIVE.name());
-			
 			donationRequest.setActiveUserCount(activeUserCount);
 			
 			//Inactive
