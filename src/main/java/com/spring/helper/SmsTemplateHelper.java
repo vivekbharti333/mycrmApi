@@ -66,6 +66,7 @@ public class SmsTemplateHelper {
 		smsTemplateDetails.setEntityId(smsTemplateRequest.getEntityId());
 		smsTemplateDetails.setCompanyName(smsTemplateRequest.getCompanyName());
 		smsTemplateDetails.setInvoiceDomain(smsTemplateRequest.getInvoiceDomain());
+		smsTemplateDetails.setCompanyRegards(smsTemplateRequest.getCompanyRegards());
 		smsTemplateDetails.setSuperadminId(smsTemplateRequest.getSuperadminId());
 		smsTemplateDetails.setUpdatedBy(smsTemplateRequest.getUpdatedBy());
 		smsTemplateDetails.setCreatedAt(new Date());
@@ -92,6 +93,7 @@ public class SmsTemplateHelper {
 		smsTemplateDetails.setEntityId(smsTemplateRequest.getEntityId());
 		smsTemplateDetails.setCompanyName(smsTemplateRequest.getCompanyName());
 		smsTemplateDetails.setInvoiceDomain(smsTemplateRequest.getInvoiceDomain());
+		smsTemplateDetails.setCompanyRegards(smsTemplateRequest.getCompanyRegards());
 		smsTemplateDetails.setUpdatedBy(smsTemplateRequest.getUpdatedBy());
 		smsTemplateDetails.setUpdatedAt(new Date());
 

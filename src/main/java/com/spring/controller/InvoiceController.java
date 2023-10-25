@@ -143,7 +143,7 @@ public class InvoiceController {
 	}
 	
 	
-	@RequestMapping(value = "/donationinvoice2/{reffNo}", method = RequestMethod.GET)
+	@RequestMapping(value = "/donationinvoice/{reffNo}", method = RequestMethod.GET)
 	public Object donationinvoice(@PathVariable String reffNo) throws IOException {
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
 
@@ -175,8 +175,8 @@ public class InvoiceController {
 	}
 	
 	
-	@RequestMapping(value = "/donationinvoice/{reffNo}",  method = RequestMethod.GET)
-	public ModelAndView donationinvoice(@PathVariable String reffNo, HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/donationinvoice123/{reffNo}",  method = RequestMethod.GET)
+	public ModelAndView donationinvoice123(@PathVariable String reffNo, HttpServletResponse response) throws IOException {
 	    ModelAndView modelAndView = new ModelAndView();
 	    
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);

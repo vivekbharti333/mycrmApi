@@ -44,9 +44,8 @@ public class SmsTemplateService {
 		SmsTemplateRequestObject smsTemplateRequest = smsTemplateRequestObject.getPayload();
 		smsTemplateHelper.validateSmsTemplateRequest(smsTemplateRequest);
 
-		Boolean isValid = jwtTokenUtil.validateJwtToken(smsTemplateRequest.getCreatedBy(),
-				smsTemplateRequest.getToken());
-		if (isValid) {
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(smsTemplateRequest.getCreatedBy(),smsTemplateRequest.getToken());
+//		if (isValid) {
 			SmsTemplateDetails existsSmsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(smsTemplateRequest.getSuperadminId(), smsTemplateRequest.getSmsType());
 			if (existsSmsTemplateDetails == null) {
 				SmsTemplateDetails smsTemplateDetails = smsTemplateHelper.getSmsTemplateDetailsByReqObj(smsTemplateRequest);
@@ -60,11 +59,11 @@ public class SmsTemplateService {
 				smsTemplateRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
 				return smsTemplateRequest;
 			}
-		} else {
-			smsTemplateRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			smsTemplateRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return smsTemplateRequest;
-		}
+//		} else {
+//			smsTemplateRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			smsTemplateRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return smsTemplateRequest;
+//		}
 	}
 	
 	

@@ -17,6 +17,7 @@ public class SmsTemplateRequestObject {
 	private String entityId;
 	private String companyName;
 	private String invoiceDomain;
+	private String companyRegards;
 
 	private Date createdAt;
 	private Date updatedAt;
@@ -101,6 +102,12 @@ public class SmsTemplateRequestObject {
 	}
 	public void setInvoiceDomain(String invoiceDomain) {
 		this.invoiceDomain = invoiceDomain;
+	}
+	public String getCompanyRegards() {
+		return companyRegards;
+	}
+	public void setCompanyRegards(String companyRegards) {
+		this.companyRegards = companyRegards;
 	}
 	public Date getCreatedAt() {
 		return createdAt;

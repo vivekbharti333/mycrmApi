@@ -78,15 +78,15 @@ public class DonationService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
 		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 
-		if (isValid) {
-			
-			//Validate created By
-			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getCreatedBy(), donationRequest.getSuperadminId());
-			if(existsUserDetails == null) {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Invalid Createdby");
-				return donationRequest; 
-			}
+//		if (isValid) {
+//			
+//			//Validate created By
+//			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getCreatedBy(), donationRequest.getSuperadminId());
+//			if(existsUserDetails == null) {
+//				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//				donationRequest.setRespMesg("Invalid Createdby");
+//				return donationRequest; 
+//			}
 			
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
@@ -109,11 +109,11 @@ public class DonationService {
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;
-		}else {
-			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return donationRequest; 
-		}
+//		}else {
+//			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return donationRequest; 
+//		}
 	}
 
 
@@ -122,7 +122,7 @@ public class DonationService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 		
 		List<DonationDetails> donationList = new ArrayList<>();
-		if (isValid) {
+//		if (isValid) {
 		if(donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
 			
 			if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
@@ -171,7 +171,8 @@ public class DonationService {
 				return donationList;
 			}
 		}	
-		}
+//		}
+//		return donationList;
 		return donationList;
 	}
 	
@@ -190,13 +191,17 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();	
 		donationHelper.validateDonationRequest(donationRequest);
 		
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
-		if (isValid) {
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+//		if (isValid) {
 
 			//todays
 			Object[] todays = donationHelper.getCountAndSum(donationRequest, todayDate, tomorrowDate);
 			donationRequest.setTodaysCount((Long) todays[0]);
 			donationRequest.setTodaysAmount((Double) todays[1]);
+			
+			
+			System.out.println(todays[0]+" , "+todays[1]+" , "+todayDate+" , "+tomorrowDate);
+			System.out.println(todays[0]+" , "+todays[1]+" , "+firstDateMonth+"  ,  "+ lastDateMonth);
 			
 			//yesterday
 			Object[] yesterday = donationHelper.getCountAndSum(donationRequest, previousDate, todayDate);
@@ -219,11 +224,11 @@ public class DonationService {
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Fetch");
 			return donationRequest;
-		}else {
-			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return donationRequest; 
-		}
+//		}else {
+//			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return donationRequest; 
+//		}
 	}
 
 	

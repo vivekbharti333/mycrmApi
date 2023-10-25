@@ -53,6 +53,9 @@ public class SmsTemplateDetails {
 	@Column(name = "invoice_domain")
 	private String invoiceDomain;
 	
+	@Column(name = " company_regards")
+	private String companyRegards;
+	
 	@Column(name = "superadmin_id")
 	private String superadminId;
 	
@@ -160,6 +163,14 @@ public class SmsTemplateDetails {
 
 	public void setInvoiceDomain(String invoiceDomain) {
 		this.invoiceDomain = invoiceDomain;
+	}
+
+	public String getCompanyRegards() {
+		return companyRegards;
+	}
+
+	public void setCompanyRegards(String companyRegards) {
+		this.companyRegards = companyRegards;
 	}
 
 	public String getSuperadminId() {

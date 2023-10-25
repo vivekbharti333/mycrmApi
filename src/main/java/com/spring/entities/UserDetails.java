@@ -37,7 +37,7 @@ public class UserDetails {
 	
 	@NonNull
 	@Length(min = 5, max = 20)
-	@Column(name = "login_id", unique=true)
+	@Column(name = "login_id")
 	private String loginId;
 	
 	@Column(name = "password")

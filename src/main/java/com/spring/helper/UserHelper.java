@@ -98,7 +98,7 @@ public class UserHelper {
 
 		UserDetails userDetails = new UserDetails();
 		
-		userDetails.setLoginId(userRequest.getEmailId());
+		userDetails.setLoginId(userRequest.getMobileNo());
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
 		userDetails.setRoleType(userRequest.getRoleType());
