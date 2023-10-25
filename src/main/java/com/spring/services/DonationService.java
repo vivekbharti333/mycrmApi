@@ -98,12 +98,13 @@ public class DonationService {
 			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
 			// send sms
-			SmsTemplateDetails smsDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
-			if(smsDetails != null) {
+			SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
+			if(smsTemplate != null) {
 				
-				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
-//
-				smsHelper.sendSms(messageBody, smsDetails, donationDetails);			
+				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at "+smsTemplate.getCompanyName()+". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" "+smsTemplate.getCompanyRegards();
+//              String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
+
+				smsHelper.sendSms(messageBody, smsTemplate, donationDetails);			
 			}
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -172,7 +173,6 @@ public class DonationService {
 			}
 		}	
 //		}
-//		return donationList;
 		return donationList;
 	}
 	

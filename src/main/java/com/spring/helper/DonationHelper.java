@@ -34,6 +34,10 @@ public class DonationHelper {
 	{ 
 		if(donationRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null"); 
+		} else if(donationRequestObject.getAmount() == null || donationRequestObject.getAmount() == 0) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Amount can not be null or Zero"); 
+		} else if(donationRequestObject.getMobileNumber() == null || donationRequestObject.getMobileNumber().equalsIgnoreCase("")) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Mobile Number can not Empty"); 
 		}
 	}
 	
