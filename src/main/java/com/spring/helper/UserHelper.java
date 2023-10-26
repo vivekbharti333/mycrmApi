@@ -196,7 +196,6 @@ public class UserHelper {
 
 	@SuppressWarnings("unchecked")
 	public List<AddressDetails> getAddressDetails(UserRequestObject userRequest) {
-		
 		if(userRequest.getRequestedFor().equals("ALL")) {
 			List<AddressDetails> results = userDetailsDao.getEntityManager()
 					.createQuery("SELECT AD FROM AddressDetails AD WHERE AD.userId =:userId And AD.superadminId =:superadminId ORDER BY AD.id DESC")

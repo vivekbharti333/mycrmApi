@@ -1,18 +1,12 @@
 package com.spring.services;
 
-import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
@@ -80,6 +74,7 @@ public class UserService {
 					userRequest.setService(userDetails.getService());
 					userRequest.setRoleType(userDetails.getRoleType());
 					userRequest.setSuperadminId(userDetails.getSuperadminId());
+					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
 					userRequest.setToken(token);
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -111,6 +106,9 @@ public class UserService {
 			
 			userRequest.setFirstName(userDetails.getFirstName());
 			userRequest.setUserPicture(userDetails.getUserPicture());
+			
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			return userRequest;
 		}
 		
 		return userRequest;

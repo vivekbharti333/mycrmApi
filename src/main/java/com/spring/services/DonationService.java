@@ -87,6 +87,12 @@ public class DonationService {
 //				donationRequest.setRespMesg("Invalid Createdby");
 //				return donationRequest; 
 //			}
+		
+		if(donationRequest.getAmount() == 0) {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Amount can not be null or Zero");
+			return donationRequest; 
+		}
 			
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
@@ -104,7 +110,8 @@ public class DonationService {
 				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at "+smsTemplate.getCompanyName()+". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" "+smsTemplate.getCompanyRegards();
 //              String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
 
-				smsHelper.sendSms(messageBody, smsTemplate, donationDetails);			
+				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+				System.out.println("Sms Response : "+responce);
 			}
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -198,10 +205,6 @@ public class DonationService {
 			Object[] todays = donationHelper.getCountAndSum(donationRequest, todayDate, tomorrowDate);
 			donationRequest.setTodaysCount((Long) todays[0]);
 			donationRequest.setTodaysAmount((Double) todays[1]);
-			
-			
-			System.out.println(todays[0]+" , "+todays[1]+" , "+todayDate+" , "+tomorrowDate);
-			System.out.println(todays[0]+" , "+todays[1]+" , "+firstDateMonth+"  ,  "+ lastDateMonth);
 			
 			//yesterday
 			Object[] yesterday = donationHelper.getCountAndSum(donationRequest, previousDate, todayDate);

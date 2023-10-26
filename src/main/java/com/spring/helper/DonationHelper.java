@@ -34,11 +34,12 @@ public class DonationHelper {
 	{ 
 		if(donationRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null"); 
-		} else if(donationRequestObject.getAmount() == null || donationRequestObject.getAmount() == 0) {
-			throw new BizException(Constant.BAD_REQUEST_CODE, "Amount can not be null or Zero"); 
-		} else if(donationRequestObject.getMobileNumber() == null || donationRequestObject.getMobileNumber().equalsIgnoreCase("")) {
-			throw new BizException(Constant.BAD_REQUEST_CODE, "Mobile Number can not Empty"); 
-		}
+		} 
+//			else if(donationRequestObject.getAmount() == null || donationRequestObject.getAmount() == 0) {
+//			throw new BizException(Constant.BAD_REQUEST_CODE, "Amount can not be null or Zero"); 
+//		} else if(donationRequestObject.getMobileNumber() == null || donationRequestObject.getMobileNumber().equalsIgnoreCase("")) {
+//			throw new BizException(Constant.BAD_REQUEST_CODE, "Mobile Number can not Empty"); 
+//		}
 	}
 	
 	@Transactional
@@ -176,7 +177,7 @@ public class DonationHelper {
 		Object[] count = new Object[] {};
 		if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(*) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId")
+					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
@@ -184,7 +185,7 @@ public class DonationHelper {
 			return count;
 		} else {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(*) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy")
+					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
