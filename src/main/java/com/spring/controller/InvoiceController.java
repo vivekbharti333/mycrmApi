@@ -175,41 +175,22 @@ public class InvoiceController {
 	}
 	
 	
-	@RequestMapping(value = "/donationinvoice123/{reffNo}",  method = RequestMethod.GET)
-	public ModelAndView donationinvoice123(@PathVariable String reffNo, HttpServletResponse response) throws IOException {
-	    ModelAndView modelAndView = new ModelAndView();
-	    
-	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
-	    if (donationDetails != null) {
-//	    	if(donationDetails.getInvoiceDownloadStatus().equalsIgnoreCase("NO")) {
-	    		 InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
-
-	 	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
-
-	 	        // Set the response headers for PDF content
-	 	        response.setContentType("application/pdf");
-	 	        response.setHeader("Content-Disposition", "inline; filename=donation-invoice.pdf");
-	 	        response.getOutputStream().write(pdfStream.toByteArray());
-	 	        response.flushBuffer();
-//	    	}else {
-//	    		modelAndView.addObject("message", "Invoice Already Downloaded. Please contact admin for details.");
-//		    	modelAndView.setViewName("message"); 
-//	    	}
-	       
-	    } else {
-	        modelAndView.addObject("message", "Invalid request. Please contact admin for details.");
-	    	modelAndView.setViewName("message"); 
-	    }
-	    
-	    return modelAndView;
-	}
-	
-	
 	@RequestMapping("donationDetails/{receiptNo}")
 	public @ResponseBody ModelAndView donationDetails(@PathVariable(value = "receiptNo") String receiptNo) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("invoice-details");
 		
 		List<DonationDetails> donationList = donationHelper.getDonationListByReceiptNumber(receiptNo);
+		DonationDetails donationDetails = new DonationDetails();
+		
+		donationDetails.setDonorName(donationList.get(0).getDonorName());
+		donationDetails.setMobileNumber(donationList.get(0).getMobileNumber());
+		donationDetails.setEmailId(donationList.get(0).getEmailId());
+		donationDetails.setPanNumber(donationList.get(0).getPanNumber());
+		donationDetails.setProgramName(donationList.get(0).getProgramName());
+		donationDetails.setAddress(donationList.get(0).getAddress());
+		donationDetails.setAddress(donationList.get(0).getAddress());
+		donationDetails.setAddress(donationList.get(0).getAddress());
+		
 		modelAndView.addObject("donationDetails", donationList.get(0));
 		return modelAndView;
 		

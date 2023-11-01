@@ -14,13 +14,9 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.spring.constant.Constant;
 import com.spring.dao.SmsTemplateDetailsDao;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.SmsTemplateDetails;
-import com.spring.entities.UserDetails;
-import com.spring.exceptions.BizException;
-import com.spring.object.request.DonationRequestObject;
 
 
 
@@ -57,12 +53,12 @@ public class SmsHelper {
 			
 //			String messageBody = "Thank you for donating Rs. 1000 at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/1234 CE FOUNDATION";
 			
-			smsDetails.setSmsUrl("http://nimbusit.biz/api/SmsApi/SendSingleApi?");
-			smsDetails.setSmsUserId("cefoundation");
-			smsDetails.setSmsPassword("qlmo6657QL");
-			smsDetails.setSmsSender("CEFOUN");
-			smsDetails.setEntityId("1701169743366929967");
-			smsDetails.setTemplateId("1707169770557920168");
+//			smsDetails.setSmsUrl("http://nimbusit.biz/api/SmsApi/SendSingleApi?");
+//			smsDetails.setSmsUserId("cefoundation");
+//			smsDetails.setSmsPassword("qlmo6657QL");
+//			smsDetails.setSmsSender("CEFOUN");
+//			smsDetails.setEntityId("1701169743366929967");
+//			smsDetails.setTemplateId("1707169770557920168");
 			
 			String providerUrl = smsDetails.getSmsUrl();
 			String username = URLEncoder.encode(smsDetails.getSmsUserId(), "UTF-8");

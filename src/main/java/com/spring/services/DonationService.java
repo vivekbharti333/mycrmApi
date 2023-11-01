@@ -68,6 +68,7 @@ public class DonationService {
 	private Date lastDateMonth = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	
 	
+	
 	@SuppressWarnings("static-access")
 	@Transactional
 	public DonationRequestObject addDonation(Request<DonationRequestObject> donationRequestObject)
@@ -111,7 +112,6 @@ public class DonationService {
 //              String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
 
 				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
-				System.out.println("Sms Response : "+responce);
 			}
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);

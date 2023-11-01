@@ -105,7 +105,9 @@ public class UserService {
 		if (userDetails != null) {
 			
 			userRequest.setFirstName(userDetails.getFirstName());
+			userRequest.setLastName(userDetails.getLastName());
 			userRequest.setUserPicture(userDetails.getUserPicture());
+			userRequest.setRoleType(userDetails.getRoleType());
 			
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			return userRequest;
