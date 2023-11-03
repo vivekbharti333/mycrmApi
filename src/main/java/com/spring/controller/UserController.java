@@ -46,14 +46,6 @@ public class UserController {
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
-//		String resp =smsHelper.sendSms();
-//		System.out.println("Res : "+resp);
-		
-//		System.out.println("Resp : "+resp);
-		
-		String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
-		
-		System.out.println(currentYear);
 		
 		return new ModelAndView("home");
 	}
@@ -157,10 +149,22 @@ public class UserController {
 	}
 
 	@RequestMapping(path = "getUserDetails", method = RequestMethod.POST)
-	public Response<UserDetails> getAllUser(@RequestBody Request<UserRequestObject> userRequestObject) {
+	public Response<UserDetails> getUserDetails(@RequestBody Request<UserRequestObject> userRequestObject) {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
 		try {
 			List<UserDetails> userList = userService.getUserDetails(userRequestObject);
+			return response.createListResponse(userList, 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getUserListForDropDown", method = RequestMethod.POST)
+	public Response<UserDetails> getUserListForDropDown(@RequestBody Request<UserRequestObject> userRequestObject) {
+		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
+		try {
+			List<UserDetails> userList = userService.getUserListForDropDown(userRequestObject);
 			return response.createListResponse(userList, 200);
 		} catch (Exception e) {
 			e.printStackTrace();

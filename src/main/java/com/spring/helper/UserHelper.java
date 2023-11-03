@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -169,11 +170,11 @@ public class UserHelper {
 
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserDetails(UserRequestObject userRequest) {
-		System.out.println(userRequest);
 		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
-					.setParameter("roleType", RoleType.MAINADMIN.name())
+//					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
+					.createQuery("SELECT UD FROM UserDetails UD ")
+//					.setParameter("roleType", RoleType.MAINADMIN.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
@@ -185,14 +186,31 @@ public class UserHelper {
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.ADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId ORDER BY UD.id DESC")
+					.setParameter("createdBy", userRequest.getCreatedBy())
+					.setParameter("superadminId", userRequest.getSuperadminId())
+					.getResultList();
+			return results;
+		}else if(userRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
+			List<UserDetails> results = userDetailsDao.getEntityManager()
 					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId ORDER BY UD.id DESC")
-					.setParameter("createdBy", userRequest.getSuperadminId())
-					.setParameter("superadminId", userRequest.getCreatedBy())
+					.setParameter("createdBy", userRequest.getCreatedBy())
+					.setParameter("superadminId", userRequest.getSuperadminId())
 					.getResultList();
 			return results;
 		}
 		return null;	
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<UserDetails> getUserListForDropDown(UserRequestObject userRequest) {
+		List<UserDetails> results = userDetailsDao.getEntityManager()
+				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
+				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
+				.getResultList();
+		return results;
+	}
+	
 
 	@SuppressWarnings("unchecked")
 	public List<AddressDetails> getAddressDetails(UserRequestObject userRequest) {
@@ -234,5 +252,6 @@ public class UserHelper {
 			return count;
 		}
 	}
+
 
 }

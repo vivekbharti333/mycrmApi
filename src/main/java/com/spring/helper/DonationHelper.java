@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
@@ -27,6 +28,9 @@ public class DonationHelper {
 	
 	@Autowired
 	private DonationDetailsDao donationDetailsDao;
+	
+	@Autowired
+	private UserHelper userHelper;
 	
 	
 	public void validateDonationRequest(DonationRequestObject donationRequestObject) 
@@ -66,6 +70,12 @@ public class DonationHelper {
 	public DonationDetails getDonationDetailsByReqObj(DonationRequestObject donationRequest) {
 		
 		DonationDetails donationDetails = new DonationDetails();
+		
+		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
+		if(userDetails != null) {
+			donationDetails.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
+			donationDetails.setTeamLeaderId(userDetails.getCreatedBy());
+		}
 		
 		donationDetails.setDonorName(donationRequest.getDonorName());
 		donationDetails.setMobileNumber(donationRequest.getMobileNumber());
@@ -121,6 +131,19 @@ public class DonationHelper {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<DonationDetails> getDonationListByTeamLeaderId(DonationRequestObject donationRequest) {
+
+		List<DonationDetails> results = new ArrayList<>();
+		results = donationDetailsDao.getEntityManager().createQuery(
+				"SELECT DD FROM DonationDetails DD WHERE DD.teamLeaderId =:teamLeaderId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+				.setParameter("teamLeaderId", donationRequest.getCreatedBy())
+				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
+				.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+				.getResultList();
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<DonationDetails> getDonationListCreatedBy(DonationRequestObject donationRequest) {
 
 		List<DonationDetails> results = new ArrayList<>();
@@ -145,16 +168,26 @@ public class DonationHelper {
 					.setParameter("superadminId", donationRequest.getSuperadminId())
 					.getSingleResult();
 			return count;
-		} else {
+		} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy")
+					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.teamLeaderId =:teamLeaderId")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
-					.setParameter("createdBy", donationRequest.getCreatedBy())
+					.setParameter("teamLeaderId", donationRequest.getCreatedBy())
 					.getSingleResult();
 			return count;
 		}
+		 else {
+				count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
+						"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy")
+						.setParameter("firstDate", firstDate, TemporalType.DATE)
+						.setParameter("lastDate", secondDate, TemporalType.DATE)
+						.setParameter("superadminId", donationRequest.getSuperadminId())
+						.setParameter("createdBy", donationRequest.getCreatedBy())
+						.getSingleResult();
+				return count;
+			}
 	}
 
 	@SuppressWarnings("unchecked")

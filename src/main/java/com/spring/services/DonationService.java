@@ -100,8 +100,9 @@ public class DonationService {
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
 			donationRequest.setReceiptNumber(receiptNumber);
 			
+			
 			//Save Donation Details
-			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
+			 DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
 			// send sms
@@ -153,6 +154,31 @@ public class DonationService {
 				
 			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
 				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
+				return donationList;
+			}
+			
+		} else if(donationRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+			
+			if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+				donationRequest.setFirstDate(todayDate);
+				donationRequest.setLastDate(tomorrowDate);
+				donationList = donationHelper.getDonationListByTeamLeaderId(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
+				donationRequest.setFirstDate(previousDate);
+				donationRequest.setLastDate(todayDate);
+				donationList = donationHelper.getDonationListByTeamLeaderId(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+				donationRequest.setFirstDate(firstDateMonth);
+				donationRequest.setLastDate(lastDateMonth);
+				donationList = donationHelper.getDonationListByTeamLeaderId(donationRequest);
+				return donationList;
+				
+			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
+				donationList = donationHelper.getDonationListByTeamLeaderId(donationRequest);
 				return donationList;
 			}
 		} else {

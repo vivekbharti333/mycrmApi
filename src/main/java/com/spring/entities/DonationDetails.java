@@ -73,8 +73,14 @@ public class DonationDetails {
 	@Column(name = "created_by")
 	private String createdBy;
 	
+	@Column(name = "createdby_name")
+	private String createdbyName;
+	
 	@Column(name = "loginid")
 	private String loginId;
+	
+	@Column(name = "team_leader_id")
+	private String teamLeaderId;
 	
 	@Column(name = "superadmin_id")
 	private String superadminId;
@@ -231,12 +237,28 @@ public class DonationDetails {
 		this.createdBy = createdBy;
 	}
 
+	public String getCreatedbyName() {
+		return createdbyName;
+	}
+
+	public void setCreatedbyName(String createdbyName) {
+		this.createdbyName = createdbyName;
+	}
+
 	public String getLoginId() {
 		return loginId;
 	}
 
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
+	}
+
+	public String getTeamLeaderId() {
+		return teamLeaderId;
+	}
+
+	public void setTeamLeaderId(String teamLeaderId) {
+		this.teamLeaderId = teamLeaderId;
 	}
 
 	public String getSuperadminId() {

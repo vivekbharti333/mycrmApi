@@ -23,7 +23,9 @@ public class DonationRequestObject {
 	private Date createdAt;
 	private Date updatedAt;
 	private String createdBy;
+	private String createdbyName;
 	private String loginId;
+	private String teamLeaderId;
 	private String superadminId;
 	
 	private String roleType;
@@ -157,11 +159,23 @@ public class DonationRequestObject {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+	public String getCreatedbyName() {
+		return createdbyName;
+	}
+	public void setCreatedbyName(String createdbyName) {
+		this.createdbyName = createdbyName;
+	}
 	public String getLoginId() {
 		return loginId;
 	}
 	public void setLoginId(String loginId) {
 		this.loginId = loginId;
+	}
+	public String getTeamLeaderId() {
+		return teamLeaderId;
+	}
+	public void setTeamLeaderId(String teamLeaderId) {
+		this.teamLeaderId = teamLeaderId;
 	}
 	public String getSuperadminId() {
 		return superadminId;
@@ -274,13 +288,14 @@ public class DonationRequestObject {
 				+ ", amount=" + amount + ", transactionId=" + transactionId + ", paymentMode=" + paymentMode
 				+ ", paymentType=" + paymentType + ", notes=" + notes + ", receiptNumber=" + receiptNumber
 				+ ", invoiceDownloadStatus=" + invoiceDownloadStatus + ", status=" + status + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", loginId=" + loginId + ", superadminId="
-				+ superadminId + ", roleType=" + roleType + ", requestedFor=" + requestedFor + ", firstDate="
-				+ firstDate + ", lastDate=" + lastDate + ", activeUserCount=" + activeUserCount + ", inactiveUserCount="
-				+ inactiveUserCount + ", todaysCount=" + todaysCount + ", todaysAmount=" + todaysAmount
-				+ ", yesterdayCount=" + yesterdayCount + ", yesterdayAmount=" + yesterdayAmount + ", monthCount="
-				+ monthCount + ", monthAmount=" + monthAmount + ", respCode=" + respCode + ", respMesg=" + respMesg
-				+ "]";
+				+ ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", createdbyName=" + createdbyName
+				+ ", loginId=" + loginId + ", teamLeaderId=" + teamLeaderId + ", superadminId=" + superadminId
+				+ ", roleType=" + roleType + ", requestedFor=" + requestedFor + ", firstDate=" + firstDate
+				+ ", lastDate=" + lastDate + ", programName=" + programName + ", programAmount=" + programAmount
+				+ ", activeUserCount=" + activeUserCount + ", inactiveUserCount=" + inactiveUserCount + ", todaysCount="
+				+ todaysCount + ", todaysAmount=" + todaysAmount + ", yesterdayCount=" + yesterdayCount
+				+ ", yesterdayAmount=" + yesterdayAmount + ", monthCount=" + monthCount + ", monthAmount=" + monthAmount
+				+ ", respCode=" + respCode + ", respMesg=" + respMesg + "]";
 	}
 	
 	
