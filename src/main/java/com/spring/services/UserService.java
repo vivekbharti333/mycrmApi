@@ -42,6 +42,7 @@ public class UserService {
 		userHelper.validateUserRequest(userRequest);
 
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		System.out.println(userDetails);
 		if (userDetails != null) {
 			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				
@@ -194,7 +195,6 @@ public class UserService {
 					}
 				}
 			}else {
-				
 				AddressRequestObject addressRequestObj = addressHelper.setAddressRequestObjectByUserReqObj(userRequest);
 				AddressDetails addressDetails = addressHelper.getAddressDetailsByUserIdAndAddressType(userDetails.getId(), addressRequestObj.getAddressType(), userDetails.getSuperadminId());
 				

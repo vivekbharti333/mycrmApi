@@ -16,6 +16,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+
+import org.jvnet.staxex.util.XMLStreamReaderToXMLStreamWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
@@ -75,8 +77,9 @@ public class UserHelper {
 		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
-		Predicate restriction = criteriaBuilder.equal(root.get("loginId"), loginId);
-		criteriaQuery.where(restriction);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("status"), "ACTIVE");
+		criteriaQuery.where(restriction1, restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
 	}
@@ -204,9 +207,11 @@ public class UserHelper {
 	
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserListForDropDown(UserRequestObject userRequest) {
+		List<String> excludedRoleTypes = Arrays.asList(RoleType.FUNDRAISING_OFFICER.name(), RoleType.MAINADMIN.name());
 		List<UserDetails> results = userDetailsDao.getEntityManager()
-				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
-				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
+				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId")
+				.setParameter("roleType", excludedRoleTypes)
+				.setParameter("superadminId", userRequest.getSuperadminId())
 				.getResultList();
 		return results;
 	}

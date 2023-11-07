@@ -74,7 +74,20 @@ public class DonationHelper {
 		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
 		if(userDetails != null) {
 			donationDetails.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
+			
+			if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
+					|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
+					|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
+			{
+				donationDetails.setTeamLeaderId(donationRequest.getLoginId());
+			}else {
+				donationDetails.setTeamLeaderId(userDetails.getCreatedBy());
+			}
+			
 			donationDetails.setTeamLeaderId(userDetails.getCreatedBy());
+			System.out.println(donationDetails.getCreatedbyName());
+			System.out.println(donationDetails.getTeamLeaderId());
+			System.out.println(userDetails.getCreatedBy());
 		}
 		
 		donationDetails.setDonorName(donationRequest.getDonorName());
@@ -148,7 +161,7 @@ public class DonationHelper {
 
 		List<DonationDetails> results = new ArrayList<>();
 		results = donationDetailsDao.getEntityManager().createQuery(
-				"SELECT DD FROM DonationDetails DD WHERE DD.createdBy =:createdBy DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+				"SELECT DD FROM DonationDetails DD WHERE DD.createdBy = :createdBy AND DD.superadminId = :superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
 				.setParameter("createdBy", donationRequest.getCreatedBy())
 				.setParameter("superadminId", donationRequest.getSuperadminId())
 				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)

@@ -182,6 +182,7 @@ public class DonationService {
 				return donationList;
 			}
 		} else {
+			
 			if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
 				donationRequest.setFirstDate(todayDate);
 				donationRequest.setLastDate(tomorrowDate);
@@ -258,6 +259,19 @@ public class DonationService {
 //			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
 //			return donationRequest; 
 //		}
+	}
+
+
+	public DonationRequestObject updateDonation(Request<DonationRequestObject> donationRequestObject)
+		throws BizException, Exception {
+			DonationRequestObject donationRequest = donationRequestObject.getPayload();
+			donationHelper.validateDonationRequest(donationRequest);
+			
+			Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
+			logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
+			
+			
+		return null;
 	}
 
 	
