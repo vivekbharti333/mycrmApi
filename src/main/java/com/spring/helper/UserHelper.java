@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -205,9 +206,25 @@ public class UserHelper {
 		return null;	
 	}
 	
+
+	public List<UserDetails> getUserDetailsByUserRole(UserRequestObject userRequest) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserListForDropDown(UserRequestObject userRequest) {
-		List<String> excludedRoleTypes = Arrays.asList(RoleType.FUNDRAISING_OFFICER.name(), RoleType.MAINADMIN.name());
+		
+		List<String> excludedRoleTypes = new ArrayList<String>();
+		if(userRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+			excludedRoleTypes = Arrays.asList(RoleType.FUNDRAISING_OFFICER.name(), RoleType.MAINADMIN.name());
+			
+		}else if(userRequest.getRoleType().equalsIgnoreCase(RoleType.FUNDRAISING_OFFICER.name())) {
+			excludedRoleTypes = Arrays.asList(RoleType.MAINADMIN.name(), RoleType.SUPERADMIN.name(), 
+					RoleType.ADMIN.name(), RoleType.TEAM_LEADER.name());
+		}
+		
 		List<UserDetails> results = userDetailsDao.getEntityManager()
 				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId")
 				.setParameter("roleType", excludedRoleTypes)

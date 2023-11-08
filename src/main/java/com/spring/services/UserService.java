@@ -276,6 +276,12 @@ public class UserService {
 		return userList;
 	}
 	
+	public List<UserDetails> getUserDetailsByUserRole(Request<UserRequestObject> userRequestObject) {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		List<UserDetails> userList = userHelper.getUserDetailsByUserRole(userRequest);
+		return userList;
+	}
+	
 	public List<UserDetails> getUserListForDropDown(Request<UserRequestObject> userRequestObject) {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		List<UserDetails> userList = userHelper.getUserListForDropDown(userRequest);
@@ -287,6 +293,8 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
+
 
 	
 

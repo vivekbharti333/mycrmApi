@@ -160,6 +160,20 @@ public class UserController {
 		}
 	}
 	
+	
+	@RequestMapping(path = "getUserDetailsByUserRole", method = RequestMethod.POST)
+	public Response<UserDetails> getUserDetailsByUserRole(@RequestBody Request<UserRequestObject> userRequestObject) {
+		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
+		try {
+			List<UserDetails> userList = userService.getUserDetailsByUserRole(userRequestObject);
+			return response.createListResponse(userList, 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		}
+	}
+	
+	
 	@RequestMapping(path = "getUserListForDropDown", method = RequestMethod.POST)
 	public Response<UserDetails> getUserListForDropDown(@RequestBody Request<UserRequestObject> userRequestObject) {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
