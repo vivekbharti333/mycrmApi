@@ -27,6 +27,7 @@ public class DonationRequestObject {
 	private String loginId;
 	private String teamLeaderId;
 	private String superadminId;
+	private String smsResponse;
 	
 	private String roleType;
 	private String requestedFor;
@@ -182,6 +183,12 @@ public class DonationRequestObject {
 	}
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
+	}
+	public String getSmsResponse() {
+		return smsResponse;
+	}
+	public void setSmsResponse(String smsResponse) {
+		this.smsResponse = smsResponse;
 	}
 	public String getRoleType() {
 		return roleType;

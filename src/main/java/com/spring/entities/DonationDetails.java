@@ -85,6 +85,9 @@ public class DonationDetails {
 	@Column(name = "superadmin_id")
 	private String superadminId;
 	
+	@Column(name = "sms_response")
+	private String smsResponse;
+	
 	public Long getId() {
 		return id;
 	}
@@ -267,6 +270,14 @@ public class DonationDetails {
 
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
+	}
+
+	public String getSmsResponse() {
+		return smsResponse;
+	}
+
+	public void setSmsResponse(String smsResponse) {
+		this.smsResponse = smsResponse;
 	}
 
 	
