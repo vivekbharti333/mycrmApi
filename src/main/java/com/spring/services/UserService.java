@@ -177,14 +177,16 @@ public class UserService {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
 		
-		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
-		if (isValid) {
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
+//		if (isValid) {
 			
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
-
+			System.out.println("Enter 1");
 			userDetails = userHelper.getUpdatedUserDetailsByReqObj(userDetails, userRequest);
 			userDetails = userHelper.UpdateUserDetails(userDetails);
+			
+			System.out.println("Enter 2");
 			
 			if(userRequest.getRequestedFor().equalsIgnoreCase("WEB")) {
 				for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
@@ -212,11 +214,11 @@ public class UserService {
 			userRequest.setRespMesg(Constant.USER_NOT_EXIST);
 			return userRequest;
 		}
-		}else {
-			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			userRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return userRequest;
-		}
+//		}else {
+//			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			userRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return userRequest;
+//		}
 	}
 
 	public UserRequestObject changeUserPassword(Request<UserRequestObject> userRequestObject)throws BizException, Exception {
@@ -269,6 +271,30 @@ public class UserService {
 			return userRequest;
 		}
 	}
+	
+	public UserRequestObject changeTeamLeader(Request<UserRequestObject> userRequestObject) 
+			throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+		
+		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		if (userDetails != null) {
+			
+			userDetails.setCreatedBy(userRequest.getTeamLeaderId());
+			userHelper.UpdateUserDetails(userDetails);
+			
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return userRequest;
+		}else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg("User Not Found");
+			return userRequest;
+		}
+		
+		
+	}
+
 
 	public List<UserDetails> getUserDetails(Request<UserRequestObject> userRequestObject) {
 		UserRequestObject userRequest = userRequestObject.getPayload();
@@ -294,6 +320,7 @@ public class UserService {
 		return addressList;
 	}
 
+	
 
 
 	

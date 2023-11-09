@@ -45,6 +45,7 @@ public class UserRequestObject {
 	private Date createdAt;
 	private Date updatedAt;
 	private String createdBy;
+	private String teamLeaderId;
 	private String superadminId;
 	
 	private String requestedFor;
@@ -243,6 +244,12 @@ public class UserRequestObject {
 	}
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
+	}
+	public String getTeamLeaderId() {
+		return teamLeaderId;
+	}
+	public void setTeamLeaderId(String teamLeaderId) {
+		this.teamLeaderId = teamLeaderId;
 	}
 	public String getSuperadminId() {
 		return superadminId;
