@@ -85,9 +85,6 @@ public class DonationHelper {
 			}
 			
 			donationDetails.setTeamLeaderId(userDetails.getCreatedBy());
-			System.out.println(donationDetails.getCreatedbyName());
-			System.out.println(donationDetails.getTeamLeaderId());
-			System.out.println(userDetails.getCreatedBy());
 		}
 		
 		donationDetails.setDonorName(donationRequest.getDonorName());
@@ -101,15 +98,17 @@ public class DonationHelper {
 		donationDetails.setTransactionId(donationRequest.getTransactionId());
 		donationDetails.setPaymentMode(donationRequest.getPaymentMode());
 		donationDetails.setPaymentType(donationRequest.getPaymentType());
-		donationDetails.setInvoiceDownloadStatus(Status.ACTIVE.name());
+		donationDetails.setInvoiceDownloadStatus(Status.NO.name());
 		donationDetails.setStatus(Status.ACTIVE.name());
 		donationDetails.setNotes(donationRequest.getNotes());
 		donationDetails.setLoginId(donationRequest.getLoginId());
+		donationDetails.setInvoiceHeaderDetailsId(donationRequest.getInvoiceHeaderDetailsId());
+		donationDetails.setInvoiceHeaderName(donationRequest.getInvoiceHeaderName());
 		
-		if(donationRequest.getCreatedBy().isEmpty()) 
+//		if(donationRequest.getCreatedBy().isEmpty()) 
 			donationDetails.setCreatedBy(donationRequest.getLoginId());
-		else 
-			donationDetails.setCreatedBy(donationRequest.getCreatedBy());
+//		else 
+			donationDetails.setCreatedBy(donationRequest.getLoginId());
 		
 		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
 		donationDetails.setCreatedAt(new Date());

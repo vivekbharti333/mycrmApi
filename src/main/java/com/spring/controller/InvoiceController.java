@@ -60,6 +60,34 @@ public class InvoiceController {
 	private InvoiceHelper invoiceHelper;
 	
 	
+//	@RequestMapping(path = "addInvoiceHeaderType", method = RequestMethod.POST)
+//	public Response<InvoiceRequestObject>addInvoiceHeaderType(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request)
+//	{
+//		GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
+//		try {
+//			InvoiceRequestObject responce =  invoiceService.addInvoiceHeaderType(invoiceRequestObject);
+//			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+//		}catch (BizException e) {
+//			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+//		} 
+// 		catch (Exception e) {e.printStackTrace();
+//			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
+//	
+//	@RequestMapping(path = "getInvoiceHeaderTypeList", method = RequestMethod.POST)
+//	public Response<InvoiceHeaderType> getInvoiceHeaderTypeList(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
+//		GenricResponse<InvoiceHeaderType> response = new GenricResponse<InvoiceHeaderType>();
+//		try {
+//			List<InvoiceHeaderType> invoiceDetails = invoiceService.getInvoiceHeaderTypeList(invoiceRequestObject);
+//			return response.createListResponse(invoiceDetails, Constant.SUCCESS_CODE);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
+	
+	
 	@RequestMapping(path = "addInvoiceHeader", method = RequestMethod.POST)
 	public Response<InvoiceRequestObject>addInvoiceHeader(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request)
 	{
@@ -75,20 +103,20 @@ public class InvoiceController {
 		}
 	}
 	
-	@RequestMapping(path = "updateInvoiceHeader", method = RequestMethod.POST)
-	public Response<InvoiceRequestObject>updateInvoiceHeader(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request)
-	{
-		GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
-		try {
-			InvoiceRequestObject responce =  invoiceService.updateInvoiceHeader(invoiceRequestObject);
-			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
-		}catch (BizException e) {
-			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
-		} 
- 		catch (Exception e) {e.printStackTrace();
-			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
-		}
-	}
+//	@RequestMapping(path = "updateInvoiceHeader", method = RequestMethod.POST)
+//	public Response<InvoiceRequestObject>updateInvoiceHeader(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request)
+//	{
+//		GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
+//		try {
+//			InvoiceRequestObject responce =  invoiceService.updateInvoiceHeader(invoiceRequestObject);
+//			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+//		}catch (BizException e) {
+//			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+//		} 
+// 		catch (Exception e) {e.printStackTrace();
+//			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
 	
 	@RequestMapping(path = "getInvoiceHeaderList", method = RequestMethod.POST)
 	public Response<InvoiceHeaderDetails> getInvoiceHeaderList(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
@@ -148,7 +176,8 @@ public class InvoiceController {
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
 
 	    if (donationDetails != null) {
-	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
+//	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
+	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
 	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
 	        HttpHeaders headers = new HttpHeaders();
@@ -175,25 +204,25 @@ public class InvoiceController {
 	}
 	
 	
-	@RequestMapping("donationDetails/{receiptNo}")
-	public @ResponseBody ModelAndView donationDetails(@PathVariable(value = "receiptNo") String receiptNo) throws Exception {
-		ModelAndView modelAndView = new ModelAndView("invoice-details");
-		
-		List<DonationDetails> donationList = donationHelper.getDonationListByReceiptNumber(receiptNo);
-		DonationDetails donationDetails = new DonationDetails();
-		
-		donationDetails.setDonorName(donationList.get(0).getDonorName());
-		donationDetails.setMobileNumber(donationList.get(0).getMobileNumber());
-		donationDetails.setEmailId(donationList.get(0).getEmailId());
-		donationDetails.setPanNumber(donationList.get(0).getPanNumber());
-		donationDetails.setProgramName(donationList.get(0).getProgramName());
-		donationDetails.setAddress(donationList.get(0).getAddress());
-		donationDetails.setAddress(donationList.get(0).getAddress());
-		donationDetails.setAddress(donationList.get(0).getAddress());
-		
-		modelAndView.addObject("donationDetails", donationList.get(0));
-		return modelAndView;
-		
-	}
+//	@RequestMapping("donationDetails/{receiptNo}")
+//	public @ResponseBody ModelAndView donationDetails(@PathVariable(value = "receiptNo") String receiptNo) throws Exception {
+//		ModelAndView modelAndView = new ModelAndView("invoice-details");
+//		
+//		List<DonationDetails> donationList = donationHelper.getDonationListByReceiptNumber(receiptNo);
+//		DonationDetails donationDetails = new DonationDetails();
+//		
+//		donationDetails.setDonorName(donationList.get(0).getDonorName());
+//		donationDetails.setMobileNumber(donationList.get(0).getMobileNumber());
+//		donationDetails.setEmailId(donationList.get(0).getEmailId());
+//		donationDetails.setPanNumber(donationList.get(0).getPanNumber());
+//		donationDetails.setProgramName(donationList.get(0).getProgramName());
+//		donationDetails.setAddress(donationList.get(0).getAddress());
+//		donationDetails.setAddress(donationList.get(0).getAddress());
+//		donationDetails.setAddress(donationList.get(0).getAddress());
+//		
+//		modelAndView.addObject("donationDetails", donationList.get(0));
+//		return modelAndView;
+//		
+//	}
 	 
 }

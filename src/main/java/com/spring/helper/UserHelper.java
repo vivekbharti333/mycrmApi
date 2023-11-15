@@ -103,6 +103,7 @@ public class UserHelper {
 
 		UserDetails userDetails = new UserDetails();
 		
+		userDetails.setUserCode(userRequest.getFirstName().substring(0,1)+userRequest.getLastName().substring(0,1));
 		userDetails.setLoginId(userRequest.getMobileNo());
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
@@ -177,13 +178,13 @@ public class UserHelper {
 		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
 //					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
-					.createQuery("SELECT UD FROM UserDetails UD ")
-//					.setParameter("roleType", RoleType.MAINADMIN.name())
+					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType ORDER BY UD.id DESC")
+					.setParameter("roleType", RoleType.SUPERADMIN.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType  ORDER BY UD.id DESC")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType ORDER BY UD.id DESC")
 					.setParameter("superadminId", userRequest.getCreatedBy())
 					.setParameter("roleType", RoleType.SUPERADMIN.name())
 					.getResultList();

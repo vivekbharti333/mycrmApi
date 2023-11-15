@@ -51,6 +51,59 @@ public class InvoiceHelper {
 		InvoiceNumber invoiceNumber = invoiceNumberDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return invoiceNumber;
 	}
+	
+//	@Transactional
+//	public InvoiceHeaderType getInvoiceHeaderTypeBySuperAdminIdAndName(String superadminId, String invoiceHeaderName) {
+//
+//		CriteriaBuilder criteriaBuilder = invoiceHeaderTypeDao.getSession().getCriteriaBuilder();
+//		CriteriaQuery<InvoiceHeaderType> criteriaQuery = criteriaBuilder.createQuery(InvoiceHeaderType.class);
+//		Root<InvoiceHeaderType> root = criteriaQuery.from(InvoiceHeaderType.class);
+//		Predicate restriction1 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+//		Predicate restriction2 = criteriaBuilder.equal(root.get("invoiceHeaderName"), invoiceHeaderName);
+//		criteriaQuery.where(restriction1, restriction2);
+//		InvoiceHeaderType invoiceHeader = invoiceHeaderTypeDao.getSession().createQuery(criteriaQuery).uniqueResult();
+//		return invoiceHeader;
+//	}
+//	
+//	public InvoiceHeaderType getInvoiceHeaderTypeByReqObj(InvoiceRequestObject invoiceRequest) {
+//		
+//		InvoiceHeaderType invoiceHeaderType = new InvoiceHeaderType();
+//		invoiceHeaderType.setInvoiceHeaderDetailsId(invoiceRequest.getInvoiceHeaderDetailsId());
+//		invoiceHeaderType.setInvoiceHeaderName(invoiceRequest.getInvoiceHeaderName());
+//		invoiceHeaderType.setCreatedBy(invoiceRequest.getCreatedBy());
+//		invoiceHeaderType.setSuperadminId(invoiceRequest.getSuperadminId());
+//		
+//		invoiceHeaderType.setCreatedAt(new Date());
+//		invoiceHeaderType.setUpdatedAt(new Date());
+//		
+//		return invoiceHeaderType;
+//	}
+//	
+//	@Transactional
+//	public InvoiceHeaderType saveInvoiceHeaderType(InvoiceHeaderType invoiceHeaderType) {
+//		invoiceHeaderTypeDao.persist(invoiceHeaderType);
+//		return invoiceHeaderType;
+//	}
+//	
+//	@SuppressWarnings("unchecked")
+//	public List<InvoiceHeaderType> getInvoiceHeaderTypeList(InvoiceRequestObject invoiceRequest) {
+//		if(invoiceRequest.getRequestFor().equalsIgnoreCase("DROPDOWN")) {
+//			List<InvoiceHeaderType> results = invoiceHeaderTypeDao.getEntityManager()
+//					.createQuery("SELECT IY FROM InvoiceHeaderType IY WHERE IY.superadminId =:superadminId")
+//					.setParameter("superadminId", invoiceRequest.getSuperadminId())
+//					.getResultList();
+//			return results;
+//		}else if(invoiceRequest.getRequestFor().equalsIgnoreCase("BYID")) {
+//			List<InvoiceHeaderType> results = invoiceHeaderTypeDao.getEntityManager()
+//					.createQuery("SELECT IY FROM InvoiceHeaderType IY WHERE IY.superadminId =:superadminId")
+//					.setParameter("superadminId", invoiceRequest.getSuperadminId())
+//					.getResultList();
+//			return results;
+//		}else {
+//			return null;
+//		}
+//		
+//	}
 
 	@Transactional
 	public InvoiceHeaderDetails getInvoiceHeaderBySuperAdminId(String superadminId) {
@@ -60,7 +113,33 @@ public class InvoiceHelper {
 		Root<InvoiceHeaderDetails> root = criteriaQuery.from(InvoiceHeaderDetails.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
 		criteriaQuery.where(restriction);
-		InvoiceHeaderDetails invoiceHeader = invoiceNumberDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		InvoiceHeaderDetails invoiceHeader = invoiceHeaderDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return invoiceHeader;
+	}
+	
+	@Transactional
+	public InvoiceHeaderDetails getInvoiceHeaderByNameAndSuperAdminId(String companyFirstName, String companyLastName, String superadminId) {
+
+		CriteriaBuilder criteriaBuilder = invoiceHeaderDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<InvoiceHeaderDetails> criteriaQuery = criteriaBuilder.createQuery(InvoiceHeaderDetails.class);
+		Root<InvoiceHeaderDetails> root = criteriaQuery.from(InvoiceHeaderDetails.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("companyFirstName"), companyFirstName);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("companyLastName"), companyLastName);
+		Predicate restriction3 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		criteriaQuery.where(restriction1, restriction2, restriction3);
+		InvoiceHeaderDetails invoiceHeader = invoiceHeaderDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return invoiceHeader;
+	}
+	
+	@Transactional
+	public InvoiceHeaderDetails getInvoiceHeaderById(Long id) {
+
+		CriteriaBuilder criteriaBuilder = invoiceHeaderDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<InvoiceHeaderDetails> criteriaQuery = criteriaBuilder.createQuery(InvoiceHeaderDetails.class);
+		Root<InvoiceHeaderDetails> root = criteriaQuery.from(InvoiceHeaderDetails.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("id"), id);
+		criteriaQuery.where(restriction);
+		InvoiceHeaderDetails invoiceHeader = invoiceHeaderDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return invoiceHeader;
 	}
 
@@ -138,8 +217,8 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setBranchName(invoiceRequest.getBranchName());
 
 		invoiceHeaderDetails.setUpdatedAt(new Date());
-		invoiceHeaderDetails.setCreatedBy(invoiceRequest.getCreatedBy());
-		invoiceHeaderDetails.setSuperadminId(invoiceRequest.getSuperadminId());
+//		invoiceHeaderDetails.setCreatedBy(invoiceRequest.getCreatedBy());
+//		invoiceHeaderDetails.setSuperadminId(invoiceRequest.getSuperadminId());
 
 		return invoiceHeaderDetails;
 	}
@@ -153,11 +232,21 @@ public class InvoiceHelper {
 	
 	@SuppressWarnings("unchecked")
 	public List<InvoiceHeaderDetails> getInvoiceHeaderList(InvoiceRequestObject invoiceRequest) {
+		if(invoiceRequest.getRequestFor().equalsIgnoreCase("BYSUPERADMINID")) {
 			List<InvoiceHeaderDetails> results = invoiceHeaderDetailsDao.getEntityManager()
 					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.superadminId =:superadminId")
 					.setParameter("superadminId", invoiceRequest.getSuperadminId())
 					.getResultList();
-		return results;
+			return results;
+			
+		}else if(invoiceRequest.getRequestFor().equalsIgnoreCase("BYID")) {
+			List<InvoiceHeaderDetails> results = invoiceHeaderDetailsDao.getEntityManager()
+					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.id =:id")
+					.setParameter("id", invoiceRequest.getId())
+					.getResultList();
+			return results;
+		}
+		return null;
 	}
 	
 
@@ -261,6 +350,8 @@ public class InvoiceHelper {
 		return null;
 
 	}
+
+
 
 	
 

@@ -8,6 +8,7 @@ public class UserRequestObject {
 	private Long id;
 	private String token;
 	private String userPicture;
+	private String userCode;
 	private String loginId;
 	private String password;
 	private String status;
@@ -67,6 +68,12 @@ public class UserRequestObject {
 	}
 	public String getUserPicture() {
 		return userPicture;
+	}
+	public String getUserCode() {
+		return userCode;
+	}
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 	public void setUserPicture(String userPicture) {
 		this.userPicture = userPicture;

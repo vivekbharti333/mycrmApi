@@ -37,6 +37,9 @@ public class DonationRequestObject {
 	private String programName;
 	private Double programAmount;
 	
+	private Long invoiceHeaderDetailsId;
+	private String invoiceHeaderName;
+	
 	private Long activeUserCount;
 	private Long inactiveUserCount;
 	
@@ -225,6 +228,18 @@ public class DonationRequestObject {
 	}
 	public void setProgramAmount(Double programAmount) {
 		this.programAmount = programAmount;
+	}
+	public Long getInvoiceHeaderDetailsId() {
+		return invoiceHeaderDetailsId;
+	}
+	public void setInvoiceHeaderDetailsId(Long invoiceHeaderDetailsId) {
+		this.invoiceHeaderDetailsId = invoiceHeaderDetailsId;
+	}
+	public String getInvoiceHeaderName() {
+		return invoiceHeaderName;
+	}
+	public void setInvoiceHeaderName(String invoiceHeaderName) {
+		this.invoiceHeaderName = invoiceHeaderName;
 	}
 	public Long getActiveUserCount() {
 		return activeUserCount;

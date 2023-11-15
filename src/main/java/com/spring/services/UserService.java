@@ -42,7 +42,6 @@ public class UserService {
 		userHelper.validateUserRequest(userRequest);
 
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
-		System.out.println(userDetails);
 		if (userDetails != null) {
 			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				
@@ -126,6 +125,8 @@ public class UserService {
 
 //		String password = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 10);
 //		userRequest.setPassword("test@123");
+		
+		
 
 		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
 //		if (isValid) {
@@ -136,6 +137,20 @@ public class UserService {
 
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
 				userRequest.setPassword(password);
+				
+				if(userRequest.getFirstName() == null || userRequest.getFirstName().equalsIgnoreCase("")) {
+					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					userRequest.setRespMesg("Enter First Name");
+					return userRequest;
+				}
+				
+				if(userRequest.getLastName() == null || userRequest.getLastName().equalsIgnoreCase("")) {
+					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					userRequest.setRespMesg("Enter Last Name");
+					return userRequest;
+				}
+				
+//				String userCode = userRequest.getFirstName().substring(0,1)+userRequest.getLastName().substring(0,1);
 
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);

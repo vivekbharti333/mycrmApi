@@ -60,8 +60,9 @@ public class DonationTypeHelper {
 
 		List<DonationType> results = new ArrayList<>();
 		results = donationTypeDao.getEntityManager()
-				.createQuery("SELECT DD FROM DonationType DD WHERE DD.superadminId =:superadminId ORDER BY DD.id DESC")
+				.createQuery("SELECT DD FROM DonationType DD WHERE DD.status =:status AND DD.superadminId =:superadminId ORDER BY DD.id DESC")
 				.setParameter("superadminId", donationRequest.getSuperadminId())
+				.setParameter("status", Status.ACTIVE.name())
 				.getResultList();
 		return results;
 	}

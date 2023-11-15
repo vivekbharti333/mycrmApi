@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.enums.RequestFor;
@@ -76,8 +77,7 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 		
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
-		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
+//		      logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 
 //		if (isValid) {
 //			
@@ -94,15 +94,26 @@ public class DonationService {
 			donationRequest.setRespMesg("Amount can not be null or Zero");
 			return donationRequest; 
 		}
-			
+		
+		if(donationRequest.getInvoiceHeaderDetailsId() == null) {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Please Select invoice type");
+			return donationRequest; 
+		}
+		
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
 			donationRequest.setReceiptNumber(receiptNumber);
 			
+			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationRequest.getInvoiceHeaderDetailsId());
+			if(invoiceHeader != null) {
+				donationRequest.setInvoiceHeaderName(invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName());
+			}
+			
 			
 			//Save Donation Details
-			 DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
+			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
 			// send sms
@@ -113,10 +124,6 @@ public class DonationService {
 //              String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
 
 				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
-				
-				//update sms response
-				donationDetails.setSmsResponse(responce);
-				donationHelper.updateDonationDetails(donationDetails);
 			}
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);

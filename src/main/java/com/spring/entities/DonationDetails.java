@@ -51,6 +51,12 @@ public class DonationDetails {
 	@Column(name = "receipt_number")
 	private String receiptNumber;
 	
+	@Column(name = "invoice_header_details_id")
+	private Long invoiceHeaderDetailsId;
+	
+	@Column(name = "invoice_header_name")
+	private String invoiceHeaderName;
+	
 	@Column(name = "invoice_number")
 	private String invoiceNumber;
 	
@@ -84,9 +90,6 @@ public class DonationDetails {
 	
 	@Column(name = "superadmin_id")
 	private String superadminId;
-	
-	@Column(name = "sms_response")
-	private String smsResponse;
 	
 	public Long getId() {
 		return id;
@@ -184,6 +187,22 @@ public class DonationDetails {
 		this.receiptNumber = receiptNumber;
 	}
 
+	public Long getInvoiceHeaderDetailsId() {
+		return invoiceHeaderDetailsId;
+	}
+
+	public void setInvoiceHeaderDetailsId(Long invoiceHeaderDetailsId) {
+		this.invoiceHeaderDetailsId = invoiceHeaderDetailsId;
+	}
+
+	public String getInvoiceHeaderName() {
+		return invoiceHeaderName;
+	}
+
+	public void setInvoiceHeaderName(String invoiceHeaderName) {
+		this.invoiceHeaderName = invoiceHeaderName;
+	}
+
 	public String getInvoiceNumber() {
 		return invoiceNumber;
 	}
@@ -270,14 +289,6 @@ public class DonationDetails {
 
 	public void setSuperadminId(String superadminId) {
 		this.superadminId = superadminId;
-	}
-
-	public String getSmsResponse() {
-		return smsResponse;
-	}
-
-	public void setSmsResponse(String smsResponse) {
-		this.smsResponse = smsResponse;
 	}
 
 	

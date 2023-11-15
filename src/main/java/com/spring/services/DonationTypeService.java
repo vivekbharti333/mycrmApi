@@ -59,9 +59,6 @@ public class DonationTypeService {
 //		List<DonationType> donationTypeList = new ArrayList<>();
 //		if (isValid) {
 		List<DonationType> donationTypeList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
-		
-		logger.info("Superadmin id : "+donationRequest.getSuperadminId());
-		logger.info("DonationTypeList : "+donationTypeList);
 			return donationTypeList;
 //		}
 //		return donationTypeList;

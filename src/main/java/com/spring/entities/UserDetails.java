@@ -29,6 +29,9 @@ public class UserDetails {
 	@Column(name = "user_picture")
 	private String userPicture;
 	
+	@Column(name = "user_code")
+	private String userCode;
+	
 	@Column(name = "first_name")
 	private String firstName;
 	
@@ -113,6 +116,14 @@ public class UserDetails {
 
 	public void setUserPicture(String userPicture) {
 		this.userPicture = userPicture;
+	}
+
+	public String getUserCode() {
+		return userCode;
+	}
+
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
 	}
 
 	public String getFirstName() {

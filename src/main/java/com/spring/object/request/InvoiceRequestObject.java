@@ -27,6 +27,8 @@ public class InvoiceRequestObject {
 	private String token;
 	private String requestFor;
 	
+	private Long invoiceHeaderDetailsId;
+	private String invoiceHeaderName;
 	private String invoiceInitial;
 	private Long serialNumber;
 	private String companyLogo;
@@ -181,6 +183,18 @@ public class InvoiceRequestObject {
 	}
 	public void setRequestFor(String requestFor) {
 		this.requestFor = requestFor;
+	}
+	public Long getInvoiceHeaderDetailsId() {
+		return invoiceHeaderDetailsId;
+	}
+	public void setInvoiceHeaderDetailsId(Long invoiceHeaderDetailsId) {
+		this.invoiceHeaderDetailsId = invoiceHeaderDetailsId;
+	}
+	public String getInvoiceHeaderName() {
+		return invoiceHeaderName;
+	}
+	public void setInvoiceHeaderName(String invoiceHeaderName) {
+		this.invoiceHeaderName = invoiceHeaderName;
 	}
 	public String getInvoiceInitial() {
 		return invoiceInitial;

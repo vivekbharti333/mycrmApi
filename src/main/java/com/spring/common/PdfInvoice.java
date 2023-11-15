@@ -6,8 +6,11 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
+import com.spring.entities.UserDetails;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
+import com.spring.helper.UserHelper;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -20,6 +23,9 @@ public class PdfInvoice {
 	
 	@Autowired
 	private DonationHelper donationHelper;
+	
+	@Autowired
+	private UserHelper userHelper;
 	
 	@Autowired
 	private InvoiceHelper invoiceHelper;
@@ -56,40 +62,44 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 
 		
 		String HTML = "<div class=\"body-Container\" style=\" width: 100%; border: 1px solid black;\">\n"
-				+ "<table width=\"100%\">\n" + "<tr>\n" + "<td width=\"16%\" height=\"140px\">\n"
-				+ "<img src="+basePath+File.separator+invoiceHeaderDetails.getCompanyLogo()+" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
-				+ "</td>\n" + "<td width=\"60%\">\n" + "<center>\n"
-				+ "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: "+invoiceHeaderDetails.getCompanyFirstNameColor()+";\">"+invoiceHeaderDetails.getCompanyFirstName()+"</strong> <strong style=\"color: "+invoiceHeaderDetails.getCompanyLastNameColor()+";\">"+invoiceHeaderDetails.getCompanyLastName()+"</strong></h1>\n"
-				+ "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
-				+ "<h6 style=\"margin: 2px; font-size: 14px;\">Off. Add:"+invoiceHeaderDetails.getOfficeAddress()+"</h6>\n"
-				+ "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
-				+ "</td></tr></table></center>"
-				+ "<center><p><strong style=\"font-size: 18px;\">Tax Benefit Receipt</strong> </p>\n</center>\n"
-				+ "<div class=\"form-container\" style=\"width: 100%; height: auto; background-color: "+invoiceHeaderDetails.getBackgroundColor()+";\">\n"
-				+ "<hr>\n" + "<p style=\"padding: 10px;font-size: 22px \">Receipt No: <strong>"
-				+ donationDetails.getInvoiceNumber()
-				+ "</strong> <span style=\"text-align: right; float: right;margin-right: 10px;\">Date:" + date
-				+ "</span> </p>\n"
-				+ "<p style=\"font-size: 19px;margin-right: 40px; margin-left: 40px;line-height: 30px; text-align: justify;\"><strong>"+invoiceHeaderDetails.getCompanyFirstName()+" "+invoiceHeaderDetails.getCompanyLastName()+"</strong> is thankful to <strong>"
-				+ donationDetails.getDonorName() + "</strong> &nbsp; &nbsp; Address:<strong> "
-				+ donationDetails.getAddress() + "</strong>&nbsp; &nbsp; Email:<strong> "
-				+ donationDetails.getEmailId() + "</strong>&nbsp;&nbsp;Contact No: <strong>"
-				+ donationDetails.getMobileNumber() + "</strong>&nbsp; &nbsp;Pan No: <strong>"
-				+ donationDetails.getPanNumber()
-				+ "</strong>&nbsp; &nbsp;<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
-				+ "/-</strong>. ("+ word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
-				+ "<img src=\""+basePath+File.separator+invoiceHeaderDetails.getCompanyStamp()+"\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
-				+ "<p style=\"font-size: 20px;letter-spacing: 0.6px;margin-top: -30px; margin-left:110px;\">Authorised Sign.</p>\n"
-				+ "\n" + "\n" + "<center><h1 style=\"border-top: 2px solid black;\">Thank You Letter</h1> </center>\n"
-				+ "\n"
-				+ ""+invoiceHeaderDetails.getThankYouNote()+"\n"
-				+ "<hr>\n" + "</div>\n" + "<div style=\"\">\n"
-				+ "<p style=\"font-weight: bold;margin-right: 20px; letter-spacing: 0.5px;line-height: 1.6; margin-left: 20px; text-align: justify;\">"+invoiceHeaderDetails.getFooter()+"</p>\n"
-				+ "</div>\n" + "</div>\n" + "<center>\n"
-				+ "<h6 style=\"margin: 2px;font-size: 14px;\">Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+", &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
-				+ "</center>";
+			    + "<table width=\"100%\">\n" + "<tr>\n" + "<td width=\"16%\" height=\"140px\">\n"
+			    + "<img src="+basePath+File.separator+invoiceHeaderDetails.getCompanyLogo()+" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
+			    + "</td>\n" + "<td width=\"60%\">\n" + "<center>\n"
+			    + "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: "+invoiceHeaderDetails.getCompanyFirstNameColor()+";\">"+invoiceHeaderDetails.getCompanyFirstName()+"</strong> <strong style=\"color: "+invoiceHeaderDetails.getCompanyLastNameColor()+";\">"+invoiceHeaderDetails.getCompanyLastName()+"</strong></h1>\n"
+			    + "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
+			    + "<h6 style=\"margin: 2px; font-size: 14px;\">Off. Add:"+invoiceHeaderDetails.getOfficeAddress()+"</h6>\n"
+			    + "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
+			    + "</td></tr></table></center>"
+			    + "<center><p><strong style=\"font-size: 18px;\">Tax Benefit Receipt</strong> </p>\n</center>\n"
+			    + "<div class=\"form-container\" style=\"width: 100%; height: auto; background-color: "+invoiceHeaderDetails.getBackgroundColor()+";\">\n"
+			    + "<hr>\n" + "<p style=\"padding: 10px;font-size: 22px \">Receipt No: <strong>"
+			    + donationDetails.getInvoiceNumber()
+			    + "</strong> <span style=\"text-align: right; float: right;margin-right: 10px;\">Date:" + date
+			    + "</span> </p>\n"
+			    + "<p style=\"font-size: 19px;margin-right: 40px; margin-left: 40px;line-height: 30px; text-align: justify;\"><strong>"+invoiceHeaderDetails.getCompanyFirstName()+" "+invoiceHeaderDetails.getCompanyLastName()+"</strong> is thankful to <strong>"
+			    + donationDetails.getDonorName() + "</strong> &nbsp; &nbsp; Address:<strong> "
+			    + donationDetails.getAddress() + "</strong>&nbsp; &nbsp; Email:<strong> "
+			    + donationDetails.getEmailId() + "</strong>&nbsp;&nbsp;Contact No: <strong>"
+			    + donationDetails.getMobileNumber() + "</strong>&nbsp; &nbsp;Pan No: <strong>"
+			    + donationDetails.getPanNumber()
+			    + "</strong>&nbsp; &nbsp;<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
+			    + "/-</strong>. ("+ word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
+			    + "<img src=\""+basePath+File.separator+invoiceHeaderDetails.getCompanyStamp()+"\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
+			    + "<p style=\"font-size: 20px;letter-spacing: 0.6px;margin-top: -30px; margin-left:110px;\">Authorised Sign.</p>\n"
+			    + "\n" + "\n";
 
-		return HTML;
+			if (!"N/A".equals(invoiceHeaderDetails.getThankYouNote())) {
+			    HTML += "<center><h1 style=\"border-top: 2px solid black;\">Thank You Letter</h1> </center>\n"
+			        + invoiceHeaderDetails.getThankYouNote() + "\n";
+			}
+
+			HTML += "<hr>\n" + "</div>\n" + "<div style=\"\">\n"
+			    + "<p style=\"font-weight: bold;margin-right: 20px;line-height: 1.6; margin-left: 20px; text-align: justify;\">"+invoiceHeaderDetails.getFooter()+"</p>\n"
+			    + "</div>\n" + "</div>\n" + "<center>\n"
+			    + "<h6 style=\"margin: 2px;font-size: 14px;\">Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+", &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
+			    + "</center>";
+
+			return HTML;
 	}
 	
 
@@ -120,9 +130,11 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
 	    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
+	    UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationDetails.getTeamLeaderId(), donationDetails.getSuperadminId());
+	    
 	    if (invoiceHeaderDetails != null) {
 	        String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
-	        String invoiceNumber = invoiceHeaderDetails.getInvoiceInitial().toLowerCase() + "/" + currentYear + "/" + (invoiceHeaderDetails.getSerialNumber() + 1);
+	        String invoiceNumber = userDetails.getUserCode()+"/"+invoiceHeaderDetails.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeaderDetails.getSerialNumber() + 1);
 
 	        if(donationDetails.getInvoiceNumber() == null) {
 	        	 // Update donation details

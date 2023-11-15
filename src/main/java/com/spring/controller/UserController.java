@@ -54,6 +54,10 @@ public class UserController {
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String hi() throws Exception {
 		
+		
+		String userCode = "Aarine".substring(0,1)+"Foundation".substring(0,1);
+		System.out.println(userCode);
+		
 //		pdfInvoice.htmlContaints();
 		return "Working";
 	}

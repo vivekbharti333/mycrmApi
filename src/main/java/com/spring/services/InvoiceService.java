@@ -3,6 +3,8 @@ package com.spring.services;
 import java.time.LocalDate;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -63,6 +65,33 @@ public class InvoiceService {
 		return invoiceNo;
 
 	}
+	
+	
+//	public InvoiceRequestObject addInvoiceHeaderType(Request<InvoiceRequestObject> invoiceRequestObject) throws BizException, Exception {
+//		
+//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
+//		invoiceHelper.validateInvoiceRequest(invoiceRequest);
+//		
+//		InvoiceHeaderType existsInvoiceHeaderType = invoiceHelper.getInvoiceHeaderTypeBySuperAdminIdAndName(invoiceRequest.getSuperadminId(), invoiceRequest.getInvoiceHeaderName());
+//		if(existsInvoiceHeaderType == null) {
+//			InvoiceHeaderType invoiceHeaderType = invoiceHelper.getInvoiceHeaderTypeByReqObj(invoiceRequest);
+//			invoiceHeaderType = invoiceHelper.saveInvoiceHeaderType(invoiceHeaderType);
+//			
+//			invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+//			invoiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
+//			return invoiceRequest;
+//		}else {
+//			invoiceRequest.setRespCode(Constant.ALREADY_EXISTS);
+//			invoiceRequest.setRespMesg("EXISTS");
+//			return invoiceRequest;
+//		}
+//	}
+//	
+//	public List<InvoiceHeaderType> getInvoiceHeaderTypeList(Request<InvoiceRequestObject> invoiceRequestObject) {
+//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
+//		List<InvoiceHeaderType> invoicetypeList = invoiceHelper.getInvoiceHeaderTypeList(invoiceRequest);
+//		return invoicetypeList;
+//	}
 
 	
 	public InvoiceRequestObject addInvoiceHeader(Request<InvoiceRequestObject> invoiceRequestObject) 
@@ -71,10 +100,11 @@ public class InvoiceService {
 		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
 		invoiceHelper.validateInvoiceRequest(invoiceRequest);
 		
-		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
-		if (!isValid) {
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
+//		if (!isValid) {
 			
-			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
+			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderByNameAndSuperAdminId(invoiceRequest.getCompanyFirstName(),invoiceRequest.getCompanyLastName(),
+					invoiceRequest.getSuperadminId());
 			if(existsInvoiceHeader == null) {
 				
 				InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
@@ -92,46 +122,45 @@ public class InvoiceService {
 				invoiceRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 				return invoiceRequest;
 			}
-		} else {
-			invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return invoiceRequest;
-		}
+//		} else {
+//			invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return invoiceRequest;
+//		}
 	}
 	
-	public InvoiceRequestObject updateInvoiceHeader(Request<InvoiceRequestObject> invoiceRequestObject) 
-		throws BizException, Exception {
-			
-			InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-			invoiceHelper.validateInvoiceRequest(invoiceRequest);
-			
-			Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
-			if (isValid) {
-				
-				InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
-				if(existsInvoiceHeader != null) {
-					
-					InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
-					invoiceHeaderDetails = invoiceHelper.saveInvoiceHeaderDetails(invoiceHeaderDetails);
-					
-					invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
-					invoiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
-					return invoiceRequest;
-					
-				}else {
-					invoiceRequest.setRespCode(Constant.ALREADY_EXISTS);
-					invoiceRequest.setRespMesg("EXISTS");
-					return invoiceRequest;
-				}
-			} else {
-				invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-				invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
-				return invoiceRequest;
-			}
-		}
+//	public InvoiceRequestObject updateInvoiceHeader(Request<InvoiceRequestObject> invoiceRequestObject) 
+//		throws BizException, Exception {
+//			
+//			InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
+//			invoiceHelper.validateInvoiceRequest(invoiceRequest);
+//			
+//			Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
+//			if (isValid) {
+//				
+//				InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
+//				if(existsInvoiceHeader != null) {
+//					
+//					InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
+//					invoiceHeaderDetails = invoiceHelper.saveInvoiceHeaderDetails(invoiceHeaderDetails);
+//					
+//					invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+//					invoiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
+//					return invoiceRequest;
+//					
+//				}else {
+//					invoiceRequest.setRespCode(Constant.ALREADY_EXISTS);
+//					invoiceRequest.setRespMesg("EXISTS");
+//					return invoiceRequest;
+//				}
+//			} else {
+//				invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//				invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
+//				return invoiceRequest;
+//			}
+//		}
 	
 	
-	@SuppressWarnings("unused")
 	public InvoiceRequestObject generateInvoice1(Request<InvoiceRequestObject> invoiceRequestObject)
 			throws BizException, Exception {
 
@@ -275,6 +304,12 @@ public class InvoiceService {
 		List<InvoiceHeaderDetails> invoiceHeader = invoiceHelper.getInvoiceHeaderList(invoiceRequest);
 		return invoiceHeader;
 	}
+
+
+
+
+
+
 
 
 }
