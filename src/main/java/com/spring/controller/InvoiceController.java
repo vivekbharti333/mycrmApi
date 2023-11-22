@@ -176,6 +176,9 @@ public class InvoiceController {
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
 
 	    if (donationDetails != null) {
+	    	if(!donationDetails.getStatus().equalsIgnoreCase("CANCELED")) {
+	    		
+	    	
 //	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
 	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
 	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
@@ -194,6 +197,12 @@ public class InvoiceController {
 	        InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(pdfStream.toByteArray()));
 
 	        return new ResponseEntity<>(isr, headers, HttpStatus.OK);
+	    	}else {
+	    		 ModelAndView modelAndView = new ModelAndView("message");
+	 	        modelAndView.addObject("message", "Cancelled request. Please contact admin for details.");
+	 	    	modelAndView.setViewName("message"); 
+	 	        return modelAndView;
+	    	}
 	    } else {
 	        // Handle the case when donationDetails is null by returning an error view
 	        ModelAndView modelAndView = new ModelAndView("message");

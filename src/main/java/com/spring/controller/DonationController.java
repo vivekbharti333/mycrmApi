@@ -59,6 +59,22 @@ public class DonationController {
 		}
 	}
 	
+	@RequestMapping(path = "updateDonationStatus", method = RequestMethod.POST)
+	public Response<DonationRequestObject>updateDonationStatus(@RequestBody Request<DonationRequestObject> donationRequestObject, HttpServletRequest request)
+	{
+		GenricResponse<DonationRequestObject> responseObj = new GenricResponse<DonationRequestObject>();
+		try {
+			DonationRequestObject responce =  donationService.updateDonationStatus(donationRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getDonationList", method = RequestMethod.POST)
 	public Response<DonationDetails> getDonationList(@RequestBody Request<DonationRequestObject> donationRequestObject) {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();

@@ -101,6 +101,12 @@ public class DonationService {
 			return donationRequest; 
 		}
 		
+		if(donationRequest.getProgramName() == null) {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Please Donation Program");
+			return donationRequest; 
+		}
+		
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
@@ -283,6 +289,27 @@ public class DonationService {
 			
 			
 		return null;
+	}
+
+
+	public DonationRequestObject updateDonationStatus(Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+		
+		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(donationRequest.getId(), donationRequest.getSuperadminId());
+		
+		if(donationDetails != null) {
+			donationDetails.setStatus(donationRequest.getStatus());
+			donationHelper.updateDonationDetails(donationDetails);
+			
+			donationRequest.setRespCode(Constant.SUCCESS_CODE);
+			donationRequest.setRespMesg("Successfully Fetch");
+			return donationRequest;
+		}else {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Donation Not Found");
+			return donationRequest;
+		}
 	}
 
 	

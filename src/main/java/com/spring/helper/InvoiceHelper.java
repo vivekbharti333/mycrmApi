@@ -194,7 +194,7 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
-		invoiceHeaderDetails.setCompanyStamp(invoiceRequest.getCompanyStamp());
+//		invoiceHeaderDetails.setCompanyStamp(invoiceRequest.getCompanyStamp());
 		invoiceHeaderDetails.setCompanyFirstName(invoiceRequest.getCompanyFirstName());
 		invoiceHeaderDetails.setCompanyFirstNameColor(invoiceRequest.getCompanyFirstNameColor());
 		invoiceHeaderDetails.setCompanyLastName(invoiceRequest.getCompanyLastName());
@@ -234,8 +234,9 @@ public class InvoiceHelper {
 	public List<InvoiceHeaderDetails> getInvoiceHeaderList(InvoiceRequestObject invoiceRequest) {
 		if(invoiceRequest.getRequestFor().equalsIgnoreCase("BYSUPERADMINID")) {
 			List<InvoiceHeaderDetails> results = invoiceHeaderDetailsDao.getEntityManager()
-					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.superadminId =:superadminId")
+					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.superadminId =:superadminId AND status =:status")
 					.setParameter("superadminId", invoiceRequest.getSuperadminId())
+					.setParameter("status", Status.ACTIVE.name())
 					.getResultList();
 			return results;
 			

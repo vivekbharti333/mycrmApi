@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AddressHelper;
@@ -41,7 +42,7 @@ public class UserService {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
 
-		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
 		if (userDetails != null) {
 			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				
@@ -298,6 +299,28 @@ public class UserService {
 			userDetails.setCreatedBy(userRequest.getTeamLeaderId());
 			userHelper.UpdateUserDetails(userDetails);
 			
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return userRequest;
+		}else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg("User Not Found");
+			return userRequest;
+		}
+	}
+	
+	public UserRequestObject changeUserRole(Request<UserRequestObject> userRequestObject) 
+			throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+		
+		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
+		if (userDetails != null) {
+
+			userDetails.setRoleType(userRequest.getRoleType());
+			userDetails.setCreatedBy(userDetails.getSuperadminId());
+			
+			userHelper.UpdateUserDetails(userDetails);
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 			return userRequest;

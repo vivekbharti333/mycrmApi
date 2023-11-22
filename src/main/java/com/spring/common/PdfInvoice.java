@@ -136,6 +136,7 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	        String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
 	        String invoiceNumber = userDetails.getUserCode()+"/"+invoiceHeaderDetails.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeaderDetails.getSerialNumber() + 1);
 
+	        
 	        if(donationDetails.getInvoiceNumber() == null) {
 	        	 // Update donation details
 		        donationDetails.setInvoiceNumber(invoiceNumber);
