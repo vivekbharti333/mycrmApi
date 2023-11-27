@@ -89,23 +89,37 @@ public class DonationService {
 //				return donationRequest; 
 //			}
 		
+		if(donationRequest.getInvoiceHeaderDetailsId() == null) {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Please Select Receipt Type");
+			return donationRequest; 
+		}
+		
+		if(donationRequest.getMobileNumber() == null) {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Enter Mobile Number");
+			return donationRequest; 
+		}
+		
 		if(donationRequest.getAmount() == 0) {
 			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			donationRequest.setRespMesg("Amount can not be null or Zero");
 			return donationRequest; 
 		}
 		
-		if(donationRequest.getInvoiceHeaderDetailsId() == null) {
+		
+		
+		if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
 			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Please Select invoice type");
+			donationRequest.setRespMesg("Please Program");
+			return donationRequest; 
+		}
+		if((donationRequest.getPaymentMode() == null) || donationRequest.getPaymentMode().equalsIgnoreCase(""))  {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Please select payment mode");
 			return donationRequest; 
 		}
 		
-		if(donationRequest.getProgramName() == null) {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Please Donation Program");
-			return donationRequest; 
-		}
 		
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
@@ -124,7 +138,7 @@ public class DonationService {
 
 			// send sms
 			SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
-			if(smsTemplate != null) {
+			if(smsTemplate != null && !donationRequest.getProgramName().equalsIgnoreCase("Sale")) {
 				
 				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at "+smsTemplate.getCompanyName()+". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" "+smsTemplate.getCompanyRegards();
 //              String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";

@@ -176,7 +176,7 @@ public class InvoiceController {
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
 
 	    if (donationDetails != null) {
-	    	if(!donationDetails.getStatus().equalsIgnoreCase("CANCELED")) {
+	    	if(!donationDetails.getStatus().equalsIgnoreCase("INACTIVE")) {
 	    		
 	    	
 //	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
