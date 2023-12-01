@@ -198,7 +198,7 @@ public class InvoiceController {
 
 	        return new ResponseEntity<>(isr, headers, HttpStatus.OK);
 	    	}else {
-	    		 ModelAndView modelAndView = new ModelAndView("message");
+	    		ModelAndView modelAndView = new ModelAndView("message");
 	 	        modelAndView.addObject("message", "Cancelled request. Please contact admin for details.");
 	 	    	modelAndView.setViewName("message"); 
 	 	        return modelAndView;

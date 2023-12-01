@@ -1,5 +1,6 @@
 package com.spring.services;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
@@ -131,20 +132,55 @@ public class DonationService {
 				donationRequest.setInvoiceHeaderName(invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName());
 			}
 			
+	
+			//Get Team leader Details
+			UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
+			if(userDetails != null) {
+				donationRequest.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
+				
+				if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
+						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
+						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
+				{
+					donationRequest.setTeamLeaderId(donationRequest.getLoginId());
+				}else {
+					donationRequest.setTeamLeaderId(userDetails.getCreatedBy());
+				}
+			}
+			
+			//Invoice Number Generate
+			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
+			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+	      	String invoiceNumber = teamLeaderCode.getUserCode()+"/"+invoiceHeader.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeader.getSerialNumber() + 1);
+
+	      	donationRequest.setInvoiceNumber(invoiceNumber);
+			
 			
 			//Save Donation Details
 			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 			donationDetails = donationHelper.saveDonationDetails(donationDetails);
+			
+			
+			// increase serial number by 1
+			invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
+	        invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
+			
 
 			// send sms
-			SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.RECEIPT.name());
-			if(smsTemplate != null && !donationRequest.getProgramName().equalsIgnoreCase("Sale")) {
-				
-				String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at "+smsTemplate.getCompanyName()+". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" "+smsTemplate.getCompanyRegards();
-//              String messageBody = "Thank you for donating Rs. "+donationDetails.getAmount()+" at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+donationDetails.getReceiptNumber()+" CE FOUNDATION";
+			if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.DONATION_RECEIPT.name())) {
 
-				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+				
+				SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.DONATION_RECEIPT.name());
+				if (smsTemplate != null) {
+
+					String messageBody = "Thank you for donating Rs. " + donationDetails.getAmount() + " at "+ smsTemplate.getCompanyName()+ ". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+ donationDetails.getReceiptNumber() + " " + smsTemplate.getCompanyRegards();
+					String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+				}
+
+			} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
+				System.out.println(SmsType.PRODUCT_RECEIPT.name());
 			}
+			
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");

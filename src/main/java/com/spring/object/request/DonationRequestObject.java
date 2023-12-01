@@ -39,6 +39,7 @@ public class DonationRequestObject {
 	
 	private Long invoiceHeaderDetailsId;
 	private String invoiceHeaderName;
+	private String invoiceNumber;
 	
 	private Long activeUserCount;
 	private Long inactiveUserCount;
@@ -240,6 +241,12 @@ public class DonationRequestObject {
 	}
 	public void setInvoiceHeaderName(String invoiceHeaderName) {
 		this.invoiceHeaderName = invoiceHeaderName;
+	}
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 	public Long getActiveUserCount() {
 		return activeUserCount;

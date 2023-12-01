@@ -19,6 +19,9 @@ public class InvoiceHeaderDetails {
 	@Column(name = "id")
 	private Long id;
 	
+	@Column(name = "sms_type")
+	private String smsType;
+	
 	@Column(name = "login_id")
 	private String loginId;
 	
@@ -119,6 +122,14 @@ public class InvoiceHeaderDetails {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getSmsType() {
+		return smsType;
+	}
+
+	public void setSmsType(String smsType) {
+		this.smsType = smsType;
 	}
 
 	public String getLoginId() {

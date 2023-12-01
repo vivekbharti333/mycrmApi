@@ -130,27 +130,25 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
 	    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-	    UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationDetails.getTeamLeaderId(), donationDetails.getSuperadminId());
+//	    UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationDetails.getTeamLeaderId(), donationDetails.getSuperadminId());
 	    
-	    if (invoiceHeaderDetails != null) {
-	        String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
-	        String invoiceNumber = userDetails.getUserCode()+"/"+invoiceHeaderDetails.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeaderDetails.getSerialNumber() + 1);
+//	    if (invoiceHeaderDetails != null) {
+//	        String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
+//	        String invoiceNumber = userDetails.getUserCode()+"/"+invoiceHeaderDetails.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeaderDetails.getSerialNumber() + 1);
 
 	        
-	        if(donationDetails.getInvoiceNumber() == null) {
+//	        if(donationDetails.getInvoiceNumber() == null) {
 	        	 // Update donation details
-		        donationDetails.setInvoiceNumber(invoiceNumber);
+		      //  donationDetails.setInvoiceNumber(invoiceNumber);
 		        donationDetails.setInvoiceDownloadStatus("YES");
 		        donationHelper.updateDonationDetails(donationDetails);
 
 		        // Update serialNumber
-		        invoiceHeaderDetails.setSerialNumber(invoiceHeaderDetails.getSerialNumber() + 1);
-		        invoiceHelper.updateInvoiceHeaderDetails(invoiceHeaderDetails);
-	        }
+//		        invoiceHeaderDetails.setSerialNumber(invoiceHeaderDetails.getSerialNumber() + 1);
+//		        invoiceHelper.updateInvoiceHeaderDetails(invoiceHeaderDetails);
+//	        }
 	       
-	    }
-
-//	    String basePath = filePath.getPathToUploadFile(Constant.receipt);
+//	    }
 
 	    String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
 

@@ -1,5 +1,5 @@
 package com.spring.enums;
 
 public enum SmsType {
-	RECEIPT;
+	DONATION_RECEIPT, PRODUCT_RECEIPT;
 }

@@ -71,22 +71,7 @@ public class DonationHelper {
 		
 		DonationDetails donationDetails = new DonationDetails();
 		
-		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
-		if(userDetails != null) {
-			donationDetails.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
-			
-			if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
-					|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
-					|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
-			{
-				donationDetails.setTeamLeaderId(donationRequest.getLoginId());
-			}else {
-				donationDetails.setTeamLeaderId(userDetails.getCreatedBy());
-			}
-			
-//			donationDetails.setTeamLeaderId(userDetails.getCreatedBy());
-		}
-		
+		donationDetails.setInvoiceNumber(donationRequest.getInvoiceNumber());	
 		donationDetails.setDonorName(donationRequest.getDonorName());
 		donationDetails.setMobileNumber(donationRequest.getMobileNumber());
 		donationDetails.setEmailId(donationRequest.getEmailId());
@@ -104,12 +89,9 @@ public class DonationHelper {
 		donationDetails.setLoginId(donationRequest.getLoginId());
 		donationDetails.setInvoiceHeaderDetailsId(donationRequest.getInvoiceHeaderDetailsId());
 		donationDetails.setInvoiceHeaderName(donationRequest.getInvoiceHeaderName());
-		
-//		if(donationRequest.getCreatedBy().isEmpty()) 
-			donationDetails.setCreatedBy(donationRequest.getLoginId());
-//		else 
-			donationDetails.setCreatedBy(donationRequest.getLoginId());
-		
+		donationDetails.setCreatedBy(donationRequest.getLoginId());
+		donationDetails.setCreatedbyName(donationRequest.getCreatedbyName());
+		donationDetails.setTeamLeaderId(donationRequest.getTeamLeaderId());
 		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
 		donationDetails.setCreatedAt(new Date());
 		donationDetails.setUpdatedAt(new Date());
