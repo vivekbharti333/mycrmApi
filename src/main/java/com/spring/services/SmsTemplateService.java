@@ -46,19 +46,19 @@ public class SmsTemplateService {
 
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(smsTemplateRequest.getCreatedBy(),smsTemplateRequest.getToken());
 //		if (isValid) {
-			SmsTemplateDetails existsSmsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(smsTemplateRequest.getSuperadminId(), smsTemplateRequest.getSmsType());
-			if (existsSmsTemplateDetails == null) {
+//			SmsTemplateDetails existsSmsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(smsTemplateRequest.getSuperadminId(), smsTemplateRequest.getSmsType());
+//			if (existsSmsTemplateDetails == null) {
 				SmsTemplateDetails smsTemplateDetails = smsTemplateHelper.getSmsTemplateDetailsByReqObj(smsTemplateRequest);
 				smsTemplateHelper.saveSmsTemplateDetails(smsTemplateDetails);
 
 				smsTemplateRequest.setRespCode(Constant.SUCCESS_CODE);
 				smsTemplateRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
 				return smsTemplateRequest;
-			} else {
-				smsTemplateRequest.setRespCode(Constant.ALREADY_EXISTS);
-				smsTemplateRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
-				return smsTemplateRequest;
-			}
+//			} else {
+//				smsTemplateRequest.setRespCode(Constant.ALREADY_EXISTS);
+//				smsTemplateRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
+//				return smsTemplateRequest;
+//			}
 //		} else {
 //			smsTemplateRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
 //			smsTemplateRequest.setRespMesg(Constant.INVALID_TOKEN);
@@ -67,33 +67,33 @@ public class SmsTemplateService {
 	}
 	
 	
-	public SmsTemplateRequestObject updateSmsTemplate(Request<SmsTemplateRequestObject> smsTemplateRequestObject)
-			throws BizException, Exception {
-		SmsTemplateRequestObject smsTemplateRequest = smsTemplateRequestObject.getPayload();
-		smsTemplateHelper.validateSmsTemplateRequest(smsTemplateRequest);
-
-		Boolean isValid = jwtTokenUtil.validateJwtToken(smsTemplateRequest.getCreatedBy(),
-				smsTemplateRequest.getToken());
-		if (isValid) {
-			SmsTemplateDetails smsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(smsTemplateRequest.getSuperadminId(), smsTemplateRequest.getSmsType());
-			if (smsTemplateDetails != null) {
-				smsTemplateDetails = smsTemplateHelper.getUpdatedSmsTemplateDetailsByReqObj(smsTemplateRequest, smsTemplateDetails);
-				smsTemplateHelper.UpdateSmsTemplateDetails(smsTemplateDetails);
-
-				smsTemplateRequest.setRespCode(Constant.SUCCESS_CODE);
-				smsTemplateRequest.setRespMesg(Constant.UPDATED_SUCCESS);
-				return smsTemplateRequest;
-			} else {
-				smsTemplateRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				smsTemplateRequest.setRespMesg(Constant.DATA_NOT_FOUND);
-				return smsTemplateRequest;
-			}
-		} else {
-			smsTemplateRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			smsTemplateRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return smsTemplateRequest;
-		}
-	}
+//	public SmsTemplateRequestObject updateSmsTemplate(Request<SmsTemplateRequestObject> smsTemplateRequestObject)
+//			throws BizException, Exception {
+//		SmsTemplateRequestObject smsTemplateRequest = smsTemplateRequestObject.getPayload();
+//		smsTemplateHelper.validateSmsTemplateRequest(smsTemplateRequest);
+//
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(smsTemplateRequest.getCreatedBy(),
+//				smsTemplateRequest.getToken());
+//		if (isValid) {
+//			SmsTemplateDetails smsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(smsTemplateRequest.getSuperadminId(), smsTemplateRequest.getSmsType());
+//			if (smsTemplateDetails != null) {
+//				smsTemplateDetails = smsTemplateHelper.getUpdatedSmsTemplateDetailsByReqObj(smsTemplateRequest, smsTemplateDetails);
+//				smsTemplateHelper.UpdateSmsTemplateDetails(smsTemplateDetails);
+//
+//				smsTemplateRequest.setRespCode(Constant.SUCCESS_CODE);
+//				smsTemplateRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+//				return smsTemplateRequest;
+//			} else {
+//				smsTemplateRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//				smsTemplateRequest.setRespMesg(Constant.DATA_NOT_FOUND);
+//				return smsTemplateRequest;
+//			}
+//		} else {
+//			smsTemplateRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			smsTemplateRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return smsTemplateRequest;
+//		}
+//	}
 	
 	
 	public List<SmsTemplateDetails> getSmsTemplateList(Request<SmsTemplateRequestObject> smsTemplateRequestObject) 

@@ -20,6 +20,9 @@ public class SmsTemplateDetails {
 	private Long id;
 	
 	
+	@Column(name = "invoice_header_id")
+	private Long invoiceHeaderId;
+	
 	@Column(name = "sms_user_id")
 	private String smsUserId;
 	
@@ -67,7 +70,7 @@ public class SmsTemplateDetails {
 	
 	@Column(name = "updated_by")
 	private String updatedBy;
-
+	
 	
 	public Long getId() {
 		return id;
@@ -75,6 +78,14 @@ public class SmsTemplateDetails {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public Long getInvoiceHeaderId() {
+		return invoiceHeaderId;
+	}
+
+	public void setInvoiceHeaderId(Long invoiceHeaderId) {
+		this.invoiceHeaderId = invoiceHeaderId;
 	}
 
 	public String getSmsUserId() {

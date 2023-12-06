@@ -167,18 +167,21 @@ public class DonationService {
 			
 
 			// send sms
+	        SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), donationRequest.getInvoiceHeaderDetailsId());
+
 			if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.DONATION_RECEIPT.name())) {
 
-				
-				SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), SmsType.DONATION_RECEIPT.name());
 				if (smsTemplate != null) {
 
-					String messageBody = "Thank you for donating Rs. " + donationDetails.getAmount() + " at "+ smsTemplate.getCompanyName()+ ". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+ donationDetails.getReceiptNumber() + " " + smsTemplate.getCompanyRegards();
+					//String messageBody = "Thank you for donating Rs. " + donationDetails.getAmount() + " at "+ smsTemplate.getCompanyName()+ ". Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/"+ donationDetails.getReceiptNumber() + " " + smsTemplate.getCompanyRegards();
+					String messageBody = " We have received donation of Rs "+ donationDetails.getAmount() +" Click to Download your receipt "+smsTemplate.getInvoiceDomain()+donationDetails.getReceiptNumber()+" - "+ smsTemplate.getCompanyRegards() ;
+//					String messageBody1 = " We have received donation of Rs {#var#} Click to Download your receipt https://mydonation.in/#/receipt/{#var#} - Anindya Foundation";
 					String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
 				}
 
 			} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
-				System.out.println(SmsType.PRODUCT_RECEIPT.name());
+				String messageBody = " We have received Rs "+ donationDetails.getAmount() +" through receipt no "+donationDetails.getInvoiceNumber()+" For Receipt mail on help@mydonation.in - Mydonation ";
+				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
 			}
 			
 			

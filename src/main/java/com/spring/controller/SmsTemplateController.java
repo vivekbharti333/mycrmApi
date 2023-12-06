@@ -45,20 +45,20 @@ public class SmsTemplateController {
 		}
 	}
 	
-	@RequestMapping(path = "updateSmsTemplate", method = RequestMethod.POST)
-	public Response<SmsTemplateRequestObject> updateSmsTemplate(@RequestBody Request<SmsTemplateRequestObject> smsTemplateRequestObject,
-			HttpServletRequest request) {
-		GenricResponse<SmsTemplateRequestObject> responseObj = new GenricResponse<SmsTemplateRequestObject>();
-		try {
-			SmsTemplateRequestObject responce = smsTemplateService.updateSmsTemplate(smsTemplateRequestObject);
-			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
-		} catch (BizException e) {
-			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
-		} catch (Exception e) {
-			e.printStackTrace();
-			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
-		}
-	}
+//	@RequestMapping(path = "updateSmsTemplate", method = RequestMethod.POST)
+//	public Response<SmsTemplateRequestObject> updateSmsTemplate(@RequestBody Request<SmsTemplateRequestObject> smsTemplateRequestObject,
+//			HttpServletRequest request) {
+//		GenricResponse<SmsTemplateRequestObject> responseObj = new GenricResponse<SmsTemplateRequestObject>();
+//		try {
+//			SmsTemplateRequestObject responce = smsTemplateService.updateSmsTemplate(smsTemplateRequestObject);
+//			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+//		} catch (BizException e) {
+//			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
 
 
 
