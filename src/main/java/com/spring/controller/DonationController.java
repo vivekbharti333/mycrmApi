@@ -116,4 +116,17 @@ public class DonationController {
 	}
 	
 	
+	@RequestMapping(path = "getDonationCountAndAmountGroupByName", method = RequestMethod.POST)
+	public Response<DonationDetails> getDonationCountAndAmountGroupByName(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
+		try {
+			List<DonationDetails> donationList = donationService.getDonationCountAndAmountGroupByName(donationRequestObject);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	
 }

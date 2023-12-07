@@ -365,6 +365,30 @@ public class DonationService {
 		}
 	}
 
+
+	public List<DonationDetails> getDonationCountAndAmountGroupByName(Request<DonationRequestObject> donationRequestObject)
+			throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
+			return donationList;
+
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.WEEK.name())) {
+			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest,  previousDate, todayDate);
+			return donationList;
+
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, firstDateMonth, lastDateMonth);
+			return donationList;
+		}
+		return donationList;
+
+	}
+
 	
 	
 

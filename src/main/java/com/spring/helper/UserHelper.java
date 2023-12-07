@@ -78,8 +78,9 @@ public class UserHelper {
 		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
-		Predicate restriction = criteriaBuilder.equal(root.get("loginId"), loginId);
-		criteriaQuery.where(restriction);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("status"), Status.REMOVED.name());
+		criteriaQuery.where(restriction1,restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
 	}
@@ -105,7 +106,8 @@ public class UserHelper {
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
 		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-		criteriaQuery.where(restriction1, restriction2);
+		Predicate restriction3 = criteriaBuilder.equal(root.get("status"), Status.REMOVED.name());
+		criteriaQuery.where(restriction1, restriction2, restriction3);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
 	}
@@ -190,29 +192,33 @@ public class UserHelper {
 		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
 //					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
-					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType ORDER BY UD.id DESC")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND status NOT IN :REMOVED ORDER BY UD.id DESC")
 					.setParameter("roleType", RoleType.SUPERADMIN.name())
+					.setParameter("REMOVED", Status.REMOVED.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType ORDER BY UD.id DESC")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType AND status NOT IN :REMOVED ORDER BY UD.id DESC")
 					.setParameter("superadminId", userRequest.getCreatedBy())
 					.setParameter("roleType", RoleType.SUPERADMIN.name())
+					.setParameter("REMOVED", Status.REMOVED.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.ADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId ORDER BY UD.id DESC")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND status NOT IN :REMOVED ORDER BY UD.id DESC")
 					.setParameter("createdBy", userRequest.getCreatedBy())
 					.setParameter("superadminId", userRequest.getSuperadminId())
+					.setParameter("REMOVED", Status.REMOVED.name())
 					.getResultList();
 			return results;
 		}else if(userRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId ORDER BY UD.id DESC")
+					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId AND status NOT IN :REMOVED ORDER BY UD.id DESC")
 					.setParameter("createdBy", userRequest.getCreatedBy())
 					.setParameter("superadminId", userRequest.getSuperadminId())
+					.setParameter("REMOVED", Status.REMOVED.name())
 					.getResultList();
 			return results;
 		}

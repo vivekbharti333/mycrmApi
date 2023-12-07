@@ -44,6 +44,7 @@ public class Constant {
 	 public static final String REGISTERED_SUCCESS = "Registered Successfully";
 	 public static final String REGISTERED_FAILED = "Already Registered";
 	 public static final String UPDATED_SUCCESS = "Updated Successfully";
+	 public static final String REMOVED_SUCCESS = "Removed Successfully";
 	 public static final String DATA_NOT_FOUND ="Data Not Available";
 	 
 }

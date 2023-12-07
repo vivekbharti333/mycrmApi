@@ -270,16 +270,37 @@ public class UserService {
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
 
-			if (userDetails.getStatus().equalsIgnoreCase("INACTIVE")) {
-				userDetails.setStatus("ACTIVE");
+			if (userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+				userDetails.setStatus(Status.ACTIVE.name());
 			} else {
-				userDetails.setStatus("INACTIVE");
+				userDetails.setStatus(Status.INACTIVE.name());
 			}
 			userDetails = userHelper.UpdateUserDetails(userDetails);
 
 			userRequest.setStatus(userDetails.getStatus());
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return userRequest;
+		} else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg("User Not Found");
+			return userRequest;
+		}
+	}
+	
+	public UserRequestObject removeUserParmanent(Request<UserRequestObject> userRequestObject) 
+			throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getLoginId(), userRequest.getSuperadminId());
+		if (userDetails != null) {
+			
+			userDetails.setStatus(Status.REMOVED.name());
+			userDetails = userHelper.UpdateUserDetails(userDetails);
+			
+			userRequest.setStatus(userDetails.getStatus());
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg(Constant.REMOVED_SUCCESS);
 			return userRequest;
 		} else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
@@ -329,8 +350,6 @@ public class UserService {
 			userRequest.setRespMesg("User Not Found");
 			return userRequest;
 		}
-		
-		
 	}
 
 
@@ -357,6 +376,8 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
+	
 
 	
 

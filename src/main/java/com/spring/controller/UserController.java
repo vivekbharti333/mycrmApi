@@ -39,9 +39,6 @@ public class UserController {
 	
 	@Autowired
 	PdfInvoice pdfInvoice;
-	
-	@Autowired
-	private SmsHelper smsHelper;
 
 	
 	@RequestMapping(value = "/")
@@ -52,13 +49,7 @@ public class UserController {
 
 //	@Scheduled(fixedDelay = 5000)
 	@RequestMapping(path = "test", method = RequestMethod.GET)
-	public String hi() throws Exception {
-		
-		
-		String userCode = "Aarine".substring(0,1)+"Foundation".substring(0,1);
-		System.out.println(userCode);
-		
-//		pdfInvoice.htmlContaints();
+	public String test() throws Exception {
 		return "Working";
 	}
 
@@ -144,6 +135,21 @@ public class UserController {
 		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
 		try {
 			UserRequestObject responce = userService.changeUserStatus(userRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "removeUserParmanent", method = RequestMethod.POST)
+	public Response<UserRequestObject> removeUserParmanent(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject responce = userService.removeUserParmanent(userRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
