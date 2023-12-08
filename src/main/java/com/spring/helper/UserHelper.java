@@ -11,14 +11,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import javax.persistence.TemporalType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import org.jvnet.staxex.util.XMLStreamReaderToXMLStreamWriter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
@@ -28,7 +26,6 @@ import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
-import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.UserRequestObject;
 
 @Component
@@ -79,7 +76,7 @@ public class UserHelper {
 		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
-		Predicate restriction2 = criteriaBuilder.equal(root.get("status"), Status.REMOVED.name());
+		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1,restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
@@ -92,7 +89,7 @@ public class UserHelper {
 		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
-		Predicate restriction2 = criteriaBuilder.equal(root.get("status"), "ACTIVE");
+		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1, restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
@@ -106,7 +103,7 @@ public class UserHelper {
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
 		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-		Predicate restriction3 = criteriaBuilder.equal(root.get("status"), Status.REMOVED.name());
+		Predicate restriction3 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1, restriction2, restriction3);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
@@ -245,9 +242,10 @@ public class UserHelper {
 		}
 		
 		List<UserDetails> results = userDetailsDao.getEntityManager()
-				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId")
+				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
 				.setParameter("roleType", excludedRoleTypes)
 				.setParameter("superadminId", userRequest.getSuperadminId())
+				.setParameter("REMOVED", Status.REMOVED.name())
 				.getResultList();
 		return results;
 	}
