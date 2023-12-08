@@ -296,6 +296,10 @@ public class UserService {
 		if (userDetails != null) {
 			
 			userDetails.setStatus(Status.REMOVED.name());
+			
+			userDetails.setLoginId(userDetails.getLoginId()+"removed");
+			userDetails.setCreatedBy(userDetails.getCreatedBy()+"removed");
+			userDetails.setSuperadminId(userDetails.getSuperadminId()+"removed");
 			userDetails = userHelper.UpdateUserDetails(userDetails);
 			
 			userRequest.setStatus(userDetails.getStatus());
