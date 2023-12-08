@@ -70,7 +70,6 @@ public class DonationService {
 	private Date lastDateMonth = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	
 	
-	
 	@SuppressWarnings("static-access")
 	@Transactional
 	public DonationRequestObject addDonation(Request<DonationRequestObject> donationRequestObject)
@@ -90,37 +89,34 @@ public class DonationService {
 //				return donationRequest; 
 //			}
 		
-		if(donationRequest.getInvoiceHeaderDetailsId() == null) {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Please Select Receipt Type");
-			return donationRequest; 
-		}
-		
-		if(donationRequest.getMobileNumber() == null) {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Enter Mobile Number");
-			return donationRequest; 
-		}
-		
-		if(donationRequest.getAmount() == 0) {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Amount can not be null or Zero");
-			return donationRequest; 
-		}
-		
-		
-		
-		if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Please Program");
-			return donationRequest; 
-		}
-		if((donationRequest.getPaymentMode() == null) || donationRequest.getPaymentMode().equalsIgnoreCase(""))  {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg("Please select payment mode");
-			return donationRequest; 
-		}
-		
+			if(donationRequest.getInvoiceHeaderDetailsId() == null) {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Please Select Receipt Type");
+				return donationRequest; 
+			}
+			
+			if(donationRequest.getMobileNumber() == null) {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Enter Mobile Number");
+				return donationRequest; 
+			}
+			
+			if(donationRequest.getAmount() == 0) {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Amount can not be null or Zero");
+				return donationRequest; 
+			}
+			
+			if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Please Select Program");
+				return donationRequest; 
+			}
+			if((donationRequest.getPaymentMode() == null) || donationRequest.getPaymentMode().equalsIgnoreCase(""))  {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Please Select Payment Mode");
+				return donationRequest; 
+			}
 		
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
