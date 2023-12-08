@@ -127,7 +127,6 @@ public class DonationService {
 			if(invoiceHeader != null) {
 				donationRequest.setInvoiceHeaderName(invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName());
 			}
-			
 	
 			//Get Team leader Details
 			UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
