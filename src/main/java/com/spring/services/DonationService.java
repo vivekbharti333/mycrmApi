@@ -372,7 +372,7 @@ public class DonationService {
 			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
 			return donationList;
 
-		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.WEEK.name())) {
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
 			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest,  previousDate, todayDate);
 			return donationList;
 

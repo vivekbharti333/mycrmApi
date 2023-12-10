@@ -208,7 +208,7 @@ public class DonationHelper {
 					.setParameter("status", Status.ACTIVE.name())
 					.getResultList();
 			return results;
-		} else if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+		} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 			results = donationDetailsDao.getEntityManager().createQuery(
 					"SELECT DD.createdbyName, COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status =:status GROUP BY DD.createdbyName")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
