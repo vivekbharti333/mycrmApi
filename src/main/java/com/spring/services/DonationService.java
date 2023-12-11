@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -218,6 +219,14 @@ public class DonationService {
 				return donationList;
 				
 			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
+				
+				Calendar calendar = Calendar.getInstance();
+		        calendar.setTime(donationRequest.getLastDate());
+		        calendar.add(Calendar.DAY_OF_YEAR, 1);
+		        Date nextDate = calendar.getTime();
+				
+				donationRequest.setLastDate(nextDate);
+				
 				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
 				return donationList;
 			}
@@ -243,6 +252,14 @@ public class DonationService {
 				return donationList;
 				
 			} else if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
+				
+				Calendar calendar = Calendar.getInstance();
+		        calendar.setTime(donationRequest.getLastDate());
+		        calendar.add(Calendar.DAY_OF_YEAR, 1);
+		        Date nextDate = calendar.getTime();
+				
+				donationRequest.setLastDate(nextDate);
+				
 				donationList = donationHelper.getDonationListByTeamLeaderId(donationRequest);
 				return donationList;
 			}
@@ -382,6 +399,52 @@ public class DonationService {
 		}
 		return donationList;
 
+	}
+
+
+	public List<DonationDetails> getDonationPaymentModeCountAndAmountGroupByName(Request<DonationRequestObject> donationRequestObject) 
+			throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
+			return donationList;
+
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
+			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest,  previousDate, todayDate);
+			return donationList;
+
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, firstDateMonth, lastDateMonth);
+			return donationList;
+		}
+		return donationList;
+
+	}
+
+
+	public List<DonationDetails> getDonationProgramNameCountAndAmountGroupByName(Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
+			return donationList;
+
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
+			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest,  previousDate, todayDate);
+			return donationList;
+
+		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, firstDateMonth, lastDateMonth);
+			return donationList;
+		}
+		return donationList;
 	}
 
 	
