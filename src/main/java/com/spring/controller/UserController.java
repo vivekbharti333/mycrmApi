@@ -41,6 +41,9 @@ public class UserController {
 	PdfInvoice pdfInvoice;
 
 	
+	@Autowired
+	public HttpServletRequest request;
+	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		
@@ -50,7 +53,10 @@ public class UserController {
 //	@Scheduled(fixedDelay = 5000)
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() throws Exception {
-		return "Working";
+		
+		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr();
+		
+	return "Working : "+clientIp;
 	}
 
 	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
