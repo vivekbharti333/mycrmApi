@@ -21,6 +21,17 @@ public class ApplicationHeaderDetails {
 	@Column(name = "status")
 	private String status;
 	
+	@Column(name = "ip_address")
+	private String ipAddress;
+	
+	@Lob
+	@Column(name = "login_page_wallpaper")
+	private String loginPageWallpaper;
+	
+	@Lob
+	@Column(name = "login_page_logo")
+	private String loginPageLogo;
+	
 	@Lob
 	@Column(name = "display_logo")
 	private String displayLogo;
@@ -54,6 +65,30 @@ public class ApplicationHeaderDetails {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getIpAddress() {
+		return ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
+	}
+
+	public String getLoginPageWallpaper() {
+		return loginPageWallpaper;
+	}
+
+	public void setLoginPageWallpaper(String loginPageWallpaper) {
+		this.loginPageWallpaper = loginPageWallpaper;
+	}
+
+	public String getLoginPageLogo() {
+		return loginPageLogo;
+	}
+
+	public void setLoginPageLogo(String loginPageLogo) {
+		this.loginPageLogo = loginPageLogo;
 	}
 
 	public String getDisplayLogo() {

@@ -4,6 +4,9 @@ public class ApplicationRequestObject {
 	
 	private Long id;
 	private String status;
+	private String loginPageWallpaper;
+	private String loginPageLogo;
+	private String ipAddress;
 	private String displayLogo;
 	private String displayName;
 	private String emailId;
@@ -26,6 +29,24 @@ public class ApplicationRequestObject {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getLoginPageWallpaper() {
+		return loginPageWallpaper;
+	}
+	public void setLoginPageWallpaper(String loginPageWallpaper) {
+		this.loginPageWallpaper = loginPageWallpaper;
+	}
+	public String getLoginPageLogo() {
+		return loginPageLogo;
+	}
+	public void setLoginPageLogo(String loginPageLogo) {
+		this.loginPageLogo = loginPageLogo;
+	}
+	public String getIpAddress() {
+		return ipAddress;
+	}
+	public void setIpAddress(String ipAddress) {
+		this.ipAddress = ipAddress;
 	}
 	public String getDisplayLogo() {
 		return displayLogo;

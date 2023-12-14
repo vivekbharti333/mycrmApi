@@ -52,6 +52,9 @@ public class ApplicationHelper {
 
 		ApplicationHeaderDetails applicationHeaderDetails = new ApplicationHeaderDetails();
 
+		applicationHeaderDetails.setIpAddress(applicationRequest.getIpAddress());
+		applicationHeaderDetails.setLoginPageWallpaper(applicationRequest.getLoginPageWallpaper());
+		applicationHeaderDetails.setLoginPageLogo(applicationRequest.getLoginPageLogo());
 		applicationHeaderDetails.setDisplayName(applicationRequest.getDisplayName());
 		applicationHeaderDetails.setDisplayLogo(applicationRequest.getDisplayLogo());
 		applicationHeaderDetails.setEmailId(applicationRequest.getEmailId());
@@ -69,9 +72,12 @@ public class ApplicationHelper {
 		return applicationHeaderDetails;
 	}
 
-	public ApplicationHeaderDetails getUpdatedApplicationDetailsByReqObj(ApplicationRequestObject applicationRequest, ApplicationHeaderDetails applicationHeaderDetails) {
+	public ApplicationHeaderDetails getUpdatedApplicationDetailsByReqObj(ApplicationRequestObject applicationRequest, 
+			ApplicationHeaderDetails applicationHeaderDetails) {
 
-
+		applicationHeaderDetails.setIpAddress(applicationRequest.getIpAddress());
+		applicationHeaderDetails.setLoginPageWallpaper(applicationRequest.getLoginPageWallpaper());
+		applicationHeaderDetails.setLoginPageLogo(applicationRequest.getLoginPageLogo());
 		applicationHeaderDetails.setDisplayName(applicationRequest.getDisplayName());
 		applicationHeaderDetails.setDisplayLogo(applicationRequest.getDisplayLogo());
 		applicationHeaderDetails.setEmailId(applicationRequest.getEmailId());
@@ -92,7 +98,6 @@ public class ApplicationHelper {
 	@SuppressWarnings("unchecked")
 	public List<ApplicationHeaderDetails> getApplicationHeaderDetailsBySuperadminId(
 			ApplicationRequestObject applicationRequest) {
-		System.out.println(applicationRequest.getSuperadminId() + " suuiu");
 		List<ApplicationHeaderDetails> results = new ArrayList<>();
 		results = applicationHeaderDetailsDao.getEntityManager().createQuery(
 				"SELECT DD FROM ApplicationHeaderDetails DD WHERE DD.status =:status AND DD.superadminId =:superadminId ORDER BY DD.id DESC")
