@@ -60,7 +60,8 @@ public class ApplicationService {
 		}	
 	}
 
-	public ApplicationRequestObject getApplicationHeaderDetailsBySuperadminId(Request<ApplicationRequestObject> applicationRequestObject) throws BizException, Exception {
+	public ApplicationRequestObject getApplicationHeaderDetailsBySuperadminId(Request<ApplicationRequestObject> applicationRequestObject) 
+			throws BizException, Exception {
 		ApplicationRequestObject applicationRequest = applicationRequestObject.getPayload();
 		applicationHelper.validateApplicationRequest(applicationRequest);
 		
@@ -81,6 +82,25 @@ public class ApplicationService {
 		return null;
 	}
 	
+	public ApplicationRequestObject getApplicationDetailsByIpAddress(Request<ApplicationRequestObject> applicationRequestObject) 
+			throws BizException {
+		ApplicationRequestObject applicationRequest = applicationRequestObject.getPayload();
+		applicationHelper.validateApplicationRequest(applicationRequest);
+		
+		ApplicationHeaderDetails applicationHeaderdetails = applicationHelper.getApplicationHeaderDetailsByIpAddress(applicationRequest.getIpAddress());
+		if(applicationHeaderdetails != null) {
+			
+			applicationRequest.setLoginPageWallpaper(applicationHeaderdetails.getLoginPageWallpaper());
+			applicationRequest.setLoginPageLogo(applicationHeaderdetails.getLoginPageLogo());
+			
+			applicationRequest.setRespCode(Constant.SUCCESS_CODE);
+			applicationRequest.setRespMesg("Successfully");
+			return applicationRequest;
+		}
+		
+		return null;
+	}
+	
 
 	public List<ApplicationHeaderDetails> getApplicationHeaderDetails(Request<ApplicationRequestObject> applicationRequestObject) {
 		ApplicationRequestObject applicationRequest = applicationRequestObject.getPayload();
@@ -88,6 +108,8 @@ public class ApplicationService {
 		return applicationHeaderDetails;
 
 	}
+
+	
 
 
 

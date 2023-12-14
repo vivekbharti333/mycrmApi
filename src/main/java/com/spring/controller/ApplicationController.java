@@ -61,6 +61,22 @@ public class ApplicationController {
 		}
 	}
 	
+	@RequestMapping(path = "getApplicationDetailsByIpAddress", method = RequestMethod.POST)
+	public Response<ApplicationRequestObject>getApplicationDetailsByIpAddress(@RequestBody Request<ApplicationRequestObject> applicationRequestObject, HttpServletRequest request)
+	{
+		GenricResponse<ApplicationRequestObject> responseObj = new GenricResponse<ApplicationRequestObject>();
+		try {
+			ApplicationRequestObject responce =  applicationService.getApplicationDetailsByIpAddress(applicationRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getApplicationHeaderDetails", method = RequestMethod.POST)
 	public Response<ApplicationHeaderDetails> getApplicationHeaderDetailsBySuperadminId(@RequestBody Request<ApplicationRequestObject> applicationRequestObject) {
 		GenricResponse<ApplicationHeaderDetails> response = new GenricResponse<ApplicationHeaderDetails>();

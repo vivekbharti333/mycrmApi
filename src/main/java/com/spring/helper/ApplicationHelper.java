@@ -36,12 +36,24 @@ public class ApplicationHelper {
 
 	@Transactional
 	public ApplicationHeaderDetails getApplicationHeaderDetailsBySuperadminId(String superadminId) {
-
 		CriteriaBuilder criteriaBuilder = applicationHeaderDetailsDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<ApplicationHeaderDetails> criteriaQuery = criteriaBuilder
 				.createQuery(ApplicationHeaderDetails.class);
 		Root<ApplicationHeaderDetails> root = criteriaQuery.from(ApplicationHeaderDetails.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		criteriaQuery.where(restriction);
+		ApplicationHeaderDetails applicationHeaderDetails = applicationHeaderDetailsDao.getSession()
+				.createQuery(criteriaQuery).uniqueResult();
+		return applicationHeaderDetails;
+	}
+	
+	@Transactional
+	public ApplicationHeaderDetails getApplicationHeaderDetailsByIpAddress(String ipAddress) {
+		CriteriaBuilder criteriaBuilder = applicationHeaderDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<ApplicationHeaderDetails> criteriaQuery = criteriaBuilder
+				.createQuery(ApplicationHeaderDetails.class);
+		Root<ApplicationHeaderDetails> root = criteriaQuery.from(ApplicationHeaderDetails.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("ipAddress"), ipAddress);
 		criteriaQuery.where(restriction);
 		ApplicationHeaderDetails applicationHeaderDetails = applicationHeaderDetailsDao.getSession()
 				.createQuery(criteriaQuery).uniqueResult();
