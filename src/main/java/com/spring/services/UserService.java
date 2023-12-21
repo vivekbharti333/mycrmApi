@@ -349,7 +349,7 @@ public class UserService {
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 			return userRequest;
-		}else {
+		} else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg("User Not Found");
 			return userRequest;

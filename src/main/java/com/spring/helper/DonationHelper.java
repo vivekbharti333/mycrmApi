@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
@@ -28,9 +27,6 @@ public class DonationHelper {
 	
 	@Autowired
 	private DonationDetailsDao donationDetailsDao;
-	
-	@Autowired
-	private UserHelper userHelper;
 	
 	
 	public void validateDonationRequest(DonationRequestObject donationRequestObject) 
