@@ -31,6 +31,7 @@ import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.InvoiceNumber;
+import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
@@ -176,10 +177,8 @@ public class InvoiceController {
 	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(reffNo);
 
 	    if (donationDetails != null) {
-	    	if(!donationDetails.getStatus().equalsIgnoreCase("INACTIVE")) {
+	    	if(!donationDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 	    		
-	    	
-//	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(donationDetails.getSuperadminId());
 	        InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
 	        ByteArrayOutputStream pdfStream = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
@@ -212,26 +211,5 @@ public class InvoiceController {
 	    }
 	}
 	
-	
-//	@RequestMapping("donationDetails/{receiptNo}")
-//	public @ResponseBody ModelAndView donationDetails(@PathVariable(value = "receiptNo") String receiptNo) throws Exception {
-//		ModelAndView modelAndView = new ModelAndView("invoice-details");
-//		
-//		List<DonationDetails> donationList = donationHelper.getDonationListByReceiptNumber(receiptNo);
-//		DonationDetails donationDetails = new DonationDetails();
-//		
-//		donationDetails.setDonorName(donationList.get(0).getDonorName());
-//		donationDetails.setMobileNumber(donationList.get(0).getMobileNumber());
-//		donationDetails.setEmailId(donationList.get(0).getEmailId());
-//		donationDetails.setPanNumber(donationList.get(0).getPanNumber());
-//		donationDetails.setProgramName(donationList.get(0).getProgramName());
-//		donationDetails.setAddress(donationList.get(0).getAddress());
-//		donationDetails.setAddress(donationList.get(0).getAddress());
-//		donationDetails.setAddress(donationList.get(0).getAddress());
-//		
-//		modelAndView.addObject("donationDetails", donationList.get(0));
-//		return modelAndView;
-//		
-//	}
-	 
+
 }
