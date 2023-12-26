@@ -49,6 +49,12 @@ public class UserController {
 		
 		return new ModelAndView("home");
 	}
+	
+	
+	@RequestMapping(value = "version")
+	public String version(HttpServletResponse response) throws IOException {
+		return "1.2";
+	}
 
 //	@Scheduled(fixedDelay = 5000)
 	@RequestMapping(path = "test", method = RequestMethod.GET)
