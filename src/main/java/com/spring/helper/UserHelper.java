@@ -7,6 +7,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -23,6 +24,7 @@ import com.spring.constant.Constant;
 import com.spring.dao.UserDetailsDao;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
@@ -187,13 +189,25 @@ public class UserHelper {
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserDetails(UserRequestObject userRequest) {
 		if(userRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
-			List<UserDetails> results = userDetailsDao.getEntityManager()
-//					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType")
-					.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND status NOT IN :REMOVED ORDER BY UD.id DESC")
-					.setParameter("roleType", RoleType.SUPERADMIN.name())
-					.setParameter("REMOVED", Status.REMOVED.name())
-					.getResultList();
-			return results;
+			if(userRequest.getRequestedFor().equalsIgnoreCase(RequestFor.SEARCH.name())) {
+				List<UserDetails> results = userDetailsDao.getEntityManager()
+					    .createQuery("SELECT UD FROM UserDetails UD WHERE roleType = :roleType AND status NOT IN (:removed) AND"
+					    		+ " (userCode LIKE :searchParam OR firstName LIKE :searchParam OR lastName LIKE :searchParam "
+					    		+ "OR loginId LIKE :searchParam OR roleType LIKE :searchParam OR mobileNo LIKE :searchParam ) ORDER BY UD.id DESC")
+					    .setParameter("roleType", RoleType.SUPERADMIN.name())
+					    .setParameter("removed", Collections.singletonList(Status.REMOVED.name()))
+					    .setParameter("searchParam", "%" + userRequest.getSearchParam() + "%")
+					    .getResultList();
+
+					return results;
+			}else {
+				List<UserDetails> results = userDetailsDao.getEntityManager()
+						.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND status NOT IN (:REMOVED) ORDER BY UD.id DESC")
+						.setParameter("roleType", RoleType.SUPERADMIN.name())
+						.setParameter("REMOVED", Status.REMOVED.name())
+						.getResultList();
+				return results;
+			}
 		}else if(userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			List<UserDetails> results = userDetailsDao.getEntityManager()
 					.createQuery("SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType AND status NOT IN :REMOVED ORDER BY UD.id DESC")
