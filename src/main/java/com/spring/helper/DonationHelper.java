@@ -146,7 +146,61 @@ public class DonationHelper {
 				.getResultList();
 		return results;
 	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<DonationDetails> getDonationListBySearchKey(DonationRequestObject donationRequest) {
 
+	    List<DonationDetails> results = new ArrayList<>();
+	    if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
+	        results = donationDetailsDao.getEntityManager().createQuery(
+	                "SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId "
+	                        + "AND (DD.donorName LIKE :searchParam "
+	                        + "OR DD.mobileNumber LIKE :searchParam OR DD.panNumber LIKE :searchParam "
+	                        + "OR DD.programName LIKE :searchParam OR DD.amount LIKE :searchParam "
+	                        + "OR DD.transactionId LIKE :searchParam OR DD.paymentMode LIKE :searchParam "
+	                        + "OR DD.receiptNumber LIKE :searchParam OR DD.invoiceHeaderName LIKE :searchParam "
+	                        + "OR DD.invoiceNumber LIKE :searchParam OR DD.invoiceDownloadStatus LIKE :searchParam "
+	                        + "OR DD.createdbyName LIKE :searchParam) ORDER BY DD.id DESC")
+	                .setParameter("superadminId", donationRequest.getSuperadminId())
+	                .setParameter("searchParam", donationRequest.getSearchParam())
+	                .getResultList();
+	        return results;
+	    } else if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+	        results = donationDetailsDao.getEntityManager().createQuery(
+	                "SELECT DD FROM DonationDetails DD WHERE DD.teamLeaderId = :teamLeaderId "
+	                        + "AND DD.superadminId = :superadminId "
+	                        + "AND (DD.donorName LIKE :searchParam "
+	                        + "OR DD.mobileNumber LIKE :searchParam OR DD.panNumber LIKE :searchParam "
+	                        + "OR DD.programName LIKE :searchParam OR DD.amount LIKE :searchParam "
+	                        + "OR DD.transactionId LIKE :searchParam OR DD.paymentMode LIKE :searchParam "
+	                        + "OR DD.receiptNumber LIKE :searchParam OR DD.invoiceHeaderName LIKE :searchParam "
+	                        + "OR DD.invoiceNumber LIKE :searchParam OR DD.invoiceDownloadStatus LIKE :searchParam "
+	                        + "OR DD.createdbyName LIKE :searchParam) ORDER BY DD.id DESC")
+	                .setParameter("teamLeaderId", donationRequest.getCreatedBy())
+	                .setParameter("superadminId", donationRequest.getSuperadminId())
+	                .setParameter("searchParam", donationRequest.getSearchParam())
+	                .getResultList();
+	        return results;
+	    } else if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.FUNDRAISING_OFFICER.name())) {
+	        results = donationDetailsDao.getEntityManager().createQuery(
+	                "SELECT DD FROM DonationDetails DD WHERE DD.createdBy = :createdBy "
+	                        + "AND DD.superadminId = :superadminId "
+	                        + "AND (DD.donorName LIKE :searchParam "
+	                        + "OR DD.mobileNumber LIKE :searchParam OR DD.panNumber LIKE :searchParam "
+	                        + "OR DD.programName LIKE :searchParam OR DD.amount LIKE :searchParam "
+	                        + "OR DD.transactionId LIKE :searchParam OR DD.paymentMode LIKE :searchParam "
+	                        + "OR DD.receiptNumber LIKE :searchParam OR DD.invoiceHeaderName LIKE :searchParam "
+	                        + "OR DD.invoiceNumber LIKE :searchParam OR DD.invoiceDownloadStatus LIKE :searchParam "
+	                        + "OR DD.createdbyName LIKE :searchParam) ORDER BY DD.id DESC")
+	                .setParameter("createdBy", donationRequest.getCreatedBy())
+	                .setParameter("superadminId", donationRequest.getSuperadminId())
+	                .setParameter("searchParam", donationRequest.getSearchParam())
+	                .getResultList();
+	        return results;
+	    }
+	    return results;
+	}
 
 	public Object[] getCountAndSum(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
 		Object[] count = new Object[] {};

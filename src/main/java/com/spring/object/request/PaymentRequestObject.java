@@ -3,15 +3,14 @@ package com.spring.object.request;
 import java.util.Date;
 
 
-public class OptionRequestObject {
+public class PaymentRequestObject {
 	
 	private Long id;
-	private String OptionType;
-	private String optionFor;
+	private String paymentMode;
+	private String paymentModeIds;
 	private String status;
 	private String superadminId;
 	private Date createdAt;
-	private Date updatedAt;
 	private String createdBy;
 	private String updatedBy;
 	
@@ -26,17 +25,17 @@ public class OptionRequestObject {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	public String getOptionType() {
-		return OptionType;
+	public String getPaymentMode() {
+		return paymentMode;
 	}
-	public void setOptionType(String optionType) {
-		OptionType = optionType;
+	public void setPaymentMode(String paymentMode) {
+		this.paymentMode = paymentMode;
 	}
-	public String getOptionFor() {
-		return optionFor;
+	public String getPaymentModeIds() {
+		return paymentModeIds;
 	}
-	public void setOptionFor(String optionFor) {
-		this.optionFor = optionFor;
+	public void setPaymentModeIds(String paymentModeIds) {
+		this.paymentModeIds = paymentModeIds;
 	}
 	public String getStatus() {
 		return status;
@@ -55,12 +54,6 @@ public class OptionRequestObject {
 	}
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
-	}
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
 	}
 	public String getCreatedBy() {
 		return createdBy;

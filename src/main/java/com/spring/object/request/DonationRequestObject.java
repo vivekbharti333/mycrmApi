@@ -51,7 +51,7 @@ public class DonationRequestObject {
 	private Long monthCount = 0L;
 	private Double monthAmount = 0D;
 	
-	
+	private String searchParam;
 	private int respCode;
 	private String respMesg;
 	
@@ -295,6 +295,12 @@ public class DonationRequestObject {
 	}
 	public void setMonthAmount(Double monthAmount) {
 		this.monthAmount = monthAmount;
+	}
+	public String getSearchParam() {
+		return searchParam;
+	}
+	public void setSearchParam(String searchParam) {
+		this.searchParam = searchParam;
 	}
 	public int getRespCode() {
 		return respCode;

@@ -292,6 +292,15 @@ public class DonationService {
 	}
 	
 	
+	public List<DonationDetails> getDonationListBySearchKey(Request<DonationRequestObject> donationRequestObject) {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		
+		List<DonationDetails> donationList = new ArrayList<>();
+		donationList = donationHelper.getDonationListBySearchKey(donationRequest);
+		return donationList;
+	}
+	
+	
 	public List<DonationDetails> getDonationListByReceiptNumber(Request<DonationRequestObject> donationRequestObject) {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		
