@@ -101,6 +101,35 @@ public class DonationHelper {
 		return donationDetails;
 	}
 	
+public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject donationRequest, DonationDetails donationDetails) {
+		
+//		donationDetails.setDonorName(donationRequest.getDonorName());
+		donationDetails.setMobileNumber(donationRequest.getMobileNumber());
+		donationDetails.setEmailId(donationRequest.getEmailId());
+		donationDetails.setPanNumber(donationRequest.getPanNumber());
+		donationDetails.setAddress(donationRequest.getAddress());
+//		donationDetails.setProgramName(donationRequest.getProgramName());
+//		donationDetails.setAmount(donationRequest.getAmount());
+//		donationDetails.setReceiptNumber(donationRequest.getReceiptNumber());
+		donationDetails.setTransactionId(donationRequest.getTransactionId());
+		donationDetails.setPaymentMode(donationRequest.getPaymentMode());
+		donationDetails.setPaymentType(donationRequest.getPaymentType());
+//		donationDetails.setInvoiceDownloadStatus(Status.NO.name());
+		donationDetails.setStatus(Status.ACTIVE.name());
+		donationDetails.setNotes(donationRequest.getNotes());
+//		donationDetails.setLoginId(donationRequest.getLoginId());
+//		donationDetails.setInvoiceHeaderDetailsId(donationRequest.getInvoiceHeaderDetailsId());
+//		donationDetails.setInvoiceHeaderName(donationRequest.getInvoiceHeaderName());
+//		donationDetails.setCreatedBy(donationRequest.getLoginId());
+//		donationDetails.setCreatedbyName(donationRequest.getCreatedbyName());
+//		donationDetails.setTeamLeaderId(donationRequest.getTeamLeaderId());
+//		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
+//		donationDetails.setCreatedAt(new Date());
+		donationDetails.setUpdatedAt(new Date());
+		
+		return donationDetails;
+	}
+	
 	@Transactional
 	public DonationDetails updateDonationDetails(DonationDetails donationDetails) { 
 		donationDetailsDao.update(donationDetails);

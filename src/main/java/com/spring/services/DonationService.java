@@ -360,8 +360,24 @@ public class DonationService {
 			Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
 			logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 			
+//			if(isValid) {
+				DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(donationRequest.getId(), donationRequest.getSuperadminId());
+				if(donationDetails != null) {
+					donationDetails = donationHelper.getUpdatedDonationDetailsByReqObj(donationRequest, donationDetails);
+					donationDetails = donationHelper.updateDonationDetails(donationDetails);
+					
+					donationRequest.setRespCode(Constant.SUCCESS_CODE);
+					donationRequest.setRespMesg("Successfully Updated");
+					return donationRequest;
+				}else {
+					donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					donationRequest.setRespMesg("Invalid Id");
+					return donationRequest;
+				}
+//			} else {
+//				//session out
+//			}
 			
-		return null;
 	}
 
 
