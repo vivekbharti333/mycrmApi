@@ -71,7 +71,7 @@ public class EmailHelper {
         String message = "I have some attachments for you.";
 
         // Attachments
-        String[] attachFiles = {"C:\\Users\\HP\\Downloads\\Screenshot_2024-01-18_124045-removebg-preview.png"};
+        String[] attachFiles = {"C:\\Users\\lenovo\\Downloads\\WhatsApp Image 2023-12-18 at 1.02.04 PM (1).jpeg"};
 
         // Set SMTP server properties
         Properties properties = new Properties();
@@ -91,7 +91,7 @@ public class EmailHelper {
         // Create a new email message
         Message msg = new MimeMessage(session);
 
-        msg.setFrom(new InternetAddress(mailFrom));
+        msg.setFrom(new InternetAddress("invoice@mydonation.co.in"));
         InternetAddress[] toAddresses = {new InternetAddress(mailTo)};
         msg.setRecipients(Message.RecipientType.TO, toAddresses);
         msg.setSubject(subject);
