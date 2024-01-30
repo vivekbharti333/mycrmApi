@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.spring.common.EmailHelper;
 import com.spring.common.PdfInvoice;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
@@ -39,6 +40,9 @@ public class UserController {
 	
 	@Autowired
 	PdfInvoice pdfInvoice;
+	
+	@Autowired
+	EmailHelper emailHelper;
 
 	
 	@Autowired
@@ -57,10 +61,13 @@ public class UserController {
 	}
 
 //	@Scheduled(fixedDelay = 5000)
+	@SuppressWarnings("static-access")
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() throws Exception {
 		
 		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr();
+		
+		emailHelper.sendEmailWithAttachments();
 		
 	return "Working : "+clientIp;
 	}
