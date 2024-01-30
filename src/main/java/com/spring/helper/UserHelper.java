@@ -94,6 +94,7 @@ public class UserHelper {
 		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1, restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		System.out.println(userDetails+"yttyt");
 		return userDetails;
 	}
 	

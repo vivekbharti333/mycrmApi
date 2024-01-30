@@ -78,9 +78,11 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 		
-//		      logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
+		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+		
+		      logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 
-//		if (isValid) {
+		if (isValid) {
 //			
 //			//Validate created By
 //			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getCreatedBy(), donationRequest.getSuperadminId());
@@ -183,11 +185,11 @@ public class DonationService {
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;
-//		}else {
-//			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-//			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
-//			return donationRequest; 
-//		}
+		}else {
+			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
+			return donationRequest; 
+		}
 	}
 
 

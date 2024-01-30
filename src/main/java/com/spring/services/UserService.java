@@ -43,6 +43,7 @@ public class UserService {
 		userHelper.validateUserRequest(userRequest);
 
 		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
+		System.out.println("User Details : "+userDetails.getLoginId());
 		if (userDetails != null) {
 			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				
@@ -92,6 +93,7 @@ public class UserService {
 				return userRequest;
 			}
 		} else {
+			System.out.println("ENter hia : "+userRequest);
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg(Constant.INVALID_LOGIN);
 			return userRequest;
@@ -130,7 +132,7 @@ public class UserService {
 		
 
 		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
-//		if (isValid) {
+		if (isValid) {
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getMobileNo(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
@@ -179,11 +181,11 @@ public class UserService {
 				userRequest.setRespMesg(Constant.USER_EXIST);
 				return userRequest;
 			}
-//		} else {
-//			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-//			userRequest.setRespMesg(Constant.INVALID_TOKEN);
-//			return userRequest;
-//		}
+		} else {
+			userRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+			userRequest.setRespMesg(Constant.INVALID_TOKEN);
+			return userRequest;
+		}
 	}
 
 	
