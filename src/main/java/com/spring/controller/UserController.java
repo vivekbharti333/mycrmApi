@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +22,10 @@ import com.spring.common.PdfInvoice;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
+import com.spring.helper.DonationHelper;
 import com.spring.object.request.Request;
 import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
@@ -43,6 +46,9 @@ public class UserController {
 	
 	@Autowired
 	EmailHelper emailHelper;
+	
+	@Autowired
+	private DonationHelper donationHelper;
 
 	
 	@Autowired
@@ -67,7 +73,13 @@ public class UserController {
 		
 		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr();
 		
-		emailHelper.sendEmailWithAttachments();
+		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
+		System.out.println(donationDetails+" khjhjkhjhj");
+		if(donationDetails != null) {
+			emailHelper.sendEmailWithInvoice(donationDetails);
+		}
+		 
+		
 		
 	return "Working : "+clientIp;
 	}
@@ -88,10 +100,15 @@ public class UserController {
 	}
 	
 	@RequestMapping(path = "getUserDetailsByLoginId", method = RequestMethod.POST)
-	public Response<UserRequestObject> getUserDetailsByLoginId(@RequestBody Request<UserRequestObject> userRequestObject,
-			HttpServletRequest request) {
+	public Response<UserRequestObject> getUserDetailsByLoginId(@RequestBody Request<UserRequestObject> userRequestObject, HttpServletRequest request, @RequestHeader("TOKEN") String token) {
 		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
 		try {
+//			 if (!tokenService.isValidToken(token)) {
+			if (!token.equalsIgnoreCase("12345")) {
+		            // Token is invalid, return appropriate response
+		            return responseObj.createErrorResponse(Constant.INVALID_TOKEN_CODE, "Invalid token");
+		        }
+			
 			UserRequestObject response = userService.getUserDetailsByLoginId(userRequestObject);
 			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
 		} catch (BizException e) {

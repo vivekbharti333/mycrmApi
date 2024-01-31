@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.common.EmailHelper;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
@@ -46,6 +47,9 @@ public class DonationService {
 	
 	@Autowired
 	private SmsHelper smsHelper;
+	
+	@Autowired
+	private EmailHelper emailHelper;
 	
 	@Autowired
 	private UserHelper userHelper;
@@ -172,13 +176,18 @@ public class DonationService {
 				if (smsTemplate != null) {
 
 					String messageBody = " We have received donation of Rs "+ donationDetails.getAmount() +" Click to Download your receipt "+smsTemplate.getInvoiceDomain()+donationDetails.getReceiptNumber()+" - "+ smsTemplate.getCompanyRegards() ;
-//					String messageBody1 = " We have received donation of Rs {#var#} Click to Download your receipt https://mydonation.in/#/receipt/{#var#} - Anindya Foundation";
 					String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
 				}
 
 			} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
 				String messageBody = " We have received Rs "+ donationDetails.getAmount() +" through receipt no "+donationDetails.getInvoiceNumber()+" For Receipt mail on help@mydonation.in - Mydonation ";
 				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+			}
+			
+			
+			//send email
+			if(!donationDetails.getEmailId().equalsIgnoreCase("")) {
+				//emailHelper.sendEmailWithInvoice(donationDetails);
 			}
 			
 			
