@@ -73,11 +73,11 @@ public class UserController {
 		
 		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr();
 		
-		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
-		System.out.println(donationDetails+" khjhjkhjhj");
-		if(donationDetails != null) {
-			sendEmailHelper.sendEmailWithInvoice(donationDetails);
-		}
+//		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
+//		System.out.println(donationDetails+" khjhjkhjhj");
+//		if(donationDetails != null) {
+//			sendEmailHelper.sendEmailWithInvoice(donationDetails);
+//		}
 		 
 		
 		

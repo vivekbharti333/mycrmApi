@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.dao.SmsTemplateDetailsDao;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.enums.Status;
@@ -82,7 +83,9 @@ public class SendEmailHelper {
 		// Message details
 		String mailTo = "vivekbharti333@gmail.com";
 		String subject = "Testing";
-		String message = "I have some attachments for you.";
+		String message = "<p><strong>Dear Vivek, </strong></p>\r\n"
+				+ "\r\n"
+				+ "<p><strong>I want to extend our deepest gratitude for your generous donation. Please find the attached invoice of your donation .</strong></p>";
 
 		// Attachments
 		String[] attachFiles = { "C:\\Users\\lenovo\\Downloads\\WhatsApp Image 2023-12-18 at 1.02.04 PM (1).jpeg" };
@@ -139,27 +142,28 @@ public class SendEmailHelper {
 		Transport.send(msg);
 	}
 
-	public static void sendEmailWithInvoice(DonationDetails donationDetails) throws MessagingException, IOException {
+	public static void sendEmailWithInvoice(InvoiceHeaderDetails invoiceHeader, DonationDetails donationDetails, EmailServiceDetails emailServiceDetails) throws MessagingException, IOException {
 		
 		//Get details and generate pdf
 //		 DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
 //		 System.out.println(donationDetails+" khjhjkhjhj");
-         InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
-         System.out.println(invoiceHeader+" kgkugkgkj");
+        // InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
+//         System.out.println(invoiceHeader+" kgkugkgkj");
          ByteArrayOutputStream pdfContent = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 		
+		
 		// SMTP server configuration
-		String host = "smtp-relay.brevo.com";
-		String port = "587";
-		String mailFrom = "datafusionlabs@gmail.com";
-		String password = "pURY2Btx6a08EAQW";
+		String host = emailServiceDetails.getHost();
+		String port = emailServiceDetails.getPort();
+		String userId = emailServiceDetails.getEmailUserid();
+		String password = emailServiceDetails.getEmailPassword();
 
 		// Message details
+		String mailFrom = emailServiceDetails.getEmailFrom();
 		String mailTo = donationDetails.getEmailId();
-		String subject = "Donation Invoice";
-		String message = "<p><strong>Dear "+donationDetails.getDonorName()+", </strong></p>\r\n"
-				+ "\r\n"
-				+ "<p><strong>I want to extend our deepest gratitude for your generous donation. Please find the attached invoice of your donation .</strong></p>";
+		String subject = emailServiceDetails.getSubject();
+		String message = emailServiceDetails.getEmailBody();
+		
 
 		// Attachments
 		String[] attachFiles = {};
@@ -175,14 +179,14 @@ public class SendEmailHelper {
 		Session session = Session.getInstance(properties, new Authenticator() {
 			@Override
 			protected PasswordAuthentication getPasswordAuthentication() {
-				return new PasswordAuthentication(mailFrom, password);
+				return new PasswordAuthentication(userId, password);
 			}
 		});
 
 		// Create a new email message
 		Message msg = new MimeMessage(session);
 
-		InternetAddress fromAddress = new InternetAddress("invoice@mydonation.co.in");
+		InternetAddress fromAddress = new InternetAddress(mailFrom);
 		msg.setFrom(fromAddress);
 		msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo));
 		msg.setSubject(subject);
@@ -216,7 +220,7 @@ public class SendEmailHelper {
 
 		// Send the email
 		try (Transport transport = session.getTransport("smtp")) {
-			transport.connect(host, mailFrom, password);
+			transport.connect(host, userId, password);
 			transport.sendMessage(msg, msg.getAllRecipients());
 		}
 

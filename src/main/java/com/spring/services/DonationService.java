@@ -19,6 +19,7 @@ import com.spring.common.SendEmailHelper;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
@@ -28,6 +29,7 @@ import com.spring.enums.SmsType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
+import com.spring.helper.EmailHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.helper.SmsTemplateHelper;
 import com.spring.helper.UserHelper;
@@ -47,6 +49,9 @@ public class DonationService {
 	
 	@Autowired
 	private SmsHelper smsHelper;
+	
+	@Autowired
+	private EmailHelper emailHelper;
 	
 	@Autowired
 	private SendEmailHelper sendEmailHelper;
@@ -83,47 +88,17 @@ public class DonationService {
 		donationHelper.validateDonationRequest(donationRequest);
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
-		
-		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 
 		if (isValid) {
-//			
-//			//Validate created By
-//			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getCreatedBy(), donationRequest.getSuperadminId());
-//			if(existsUserDetails == null) {
-//				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-//				donationRequest.setRespMesg("Invalid Createdby");
-//				return donationRequest; 
-//			}
 		
-		
-			//Generate Receipt Number
-			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
-			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
-			donationRequest.setReceiptNumber(receiptNumber);
-			
 			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationRequest.getInvoiceHeaderDetailsId());
 			if(invoiceHeader != null) {
 				donationRequest.setInvoiceHeaderName(invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName());
+			}else {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Add invoice header first");
+				return donationRequest; 
 			}
-	
-			//Get Team leader Details
-			
-			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
-			System.out.println(donationRequest.getTeamLeaderId());
-//			UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
-//			if(userDetails != null) {
-//				donationRequest.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
-//				
-//				if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
-//						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
-//						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
-//				{
-//					donationRequest.setTeamLeaderId(donationRequest.getLoginId());
-//				}else {
-//					donationRequest.setTeamLeaderId(userDetails.getCreatedBy());
-//				}
-//			}
 			
 			//Invoice Number Generate
 			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
@@ -131,6 +106,15 @@ public class DonationService {
 	      	String invoiceNumber = teamLeaderCode.getUserCode()+"/"+invoiceHeader.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeader.getSerialNumber() + 1);
 
 	      	donationRequest.setInvoiceNumber(invoiceNumber);
+	      	
+	      	//Generate Receipt Number
+			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
+			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
+			donationRequest.setReceiptNumber(receiptNumber);
+			
+			
+			//Get Team leader Details
+			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
 			
 			
 			//Save Donation Details
@@ -144,27 +128,11 @@ public class DonationService {
 			
 
 			// send sms
-	        SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), donationRequest.getInvoiceHeaderDetailsId());
-
-			if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.DONATION_RECEIPT.name())) {
-
-				if (smsTemplate != null) {
-
-					String messageBody = " We have received donation of Rs "+ donationDetails.getAmount() +" Click to Download your receipt "+smsTemplate.getInvoiceDomain()+donationDetails.getReceiptNumber()+" - "+ smsTemplate.getCompanyRegards() ;
-					String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
-				}
-
-			} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
-				String messageBody = " We have received Rs "+ donationDetails.getAmount() +" through receipt no "+donationDetails.getInvoiceNumber()+" For Receipt mail on help@mydonation.in - Mydonation ";
-				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
-			}
-			
+	        donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
 			
 			//send email
-			if(!donationDetails.getEmailId().equalsIgnoreCase("")) {
-				//emailHelper.sendEmailWithInvoice(donationDetails);
-			}
-			
+	        donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
+
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");

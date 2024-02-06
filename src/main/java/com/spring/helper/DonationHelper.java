@@ -1,8 +1,11 @@
 package com.spring.helper;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.mail.MessagingException;
 import javax.persistence.TemporalType;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -18,6 +21,8 @@ import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.EmailServiceDetails;
+import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
@@ -42,6 +47,9 @@ public class DonationHelper {
 	
 	@Autowired
 	private SmsHelper smsHelper;
+	
+	@Autowired
+	private EmailHelper emailHelper;
 	
 	@Autowired
 	private SendEmailHelper sendEmailHelper;
@@ -100,31 +108,44 @@ public class DonationHelper {
 		}
 	}
 	
-//	public String sendDonationMessage(DonationRequestObject donationRequest, DonationDetails donationDetails) {
-//		
-//		// send sms
-//        SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), donationRequest.getInvoiceHeaderDetailsId());
-//
-//		if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.DONATION_RECEIPT.name())) {
-//
-//			if (smsTemplate != null) {
-//
-//				String messageBody = " We have received donation of Rs "+ donationDetails.getAmount() +" Click to Download your receipt "+smsTemplate.getInvoiceDomain()+donationDetails.getReceiptNumber()+" - "+ smsTemplate.getCompanyRegards() ;
-//				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
-//			}
-//
-//		} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
-//			String messageBody = " We have received Rs "+ donationDetails.getAmount() +" through receipt no "+donationDetails.getInvoiceNumber()+" For Receipt mail on help@mydonation.in - Mydonation ";
-//			String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
-//		}
-//		
-//		
-//		//send email
-//		if(!donationDetails.getEmailId().equalsIgnoreCase("")) {
-//			//emailHelper.sendEmailWithInvoice(donationDetails);
-//		}
-//		return null;
-//	}
+	public void sendDonationInvoiceSms( DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
+		
+		 SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId());
+
+			if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.DONATION_RECEIPT.name())) {
+
+				if (smsTemplate != null) {
+
+					String messageBody = " We have received donation of Rs "+ donationDetails.getAmount() +" Click to Download your receipt "+smsTemplate.getInvoiceDomain()+donationDetails.getReceiptNumber()+" - "+ smsTemplate.getCompanyRegards() ;
+					String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+				}
+
+			} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
+				String messageBody = " We have received Rs "+ donationDetails.getAmount() +" through receipt no "+donationDetails.getInvoiceNumber()+" For Receipt mail on help@mydonation.in - Mydonation ";
+				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+			}
+	}
+	
+	@SuppressWarnings("static-access")
+	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
+		if(!donationDetails.getEmailId().equalsIgnoreCase("")) {
+			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
+			if(emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+				
+				sendEmailHelper.sendEmailWithInvoice(invoiceHeader,donationDetails, emailServiceDetails);
+				
+				}
+			}
+		
+	}
+	
+	@SuppressWarnings("static-access")
+	public DonationRequestObject generateReceiptNumber(DonationRequestObject donationRequest) {
+		String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
+		String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
+		donationRequest.setReceiptNumber(receiptNumber);
+		return donationRequest;
+	}
 	
 	
 	public DonationRequestObject getTeamLeaderIdOfDonation(DonationRequestObject donationRequest) {
