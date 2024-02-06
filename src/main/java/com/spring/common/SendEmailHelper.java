@@ -41,7 +41,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
 @Component
-public class EmailHelper {
+public class SendEmailHelper {
 
 	@Autowired
 	private SmsTemplateDetailsDao smsDetailsDao;

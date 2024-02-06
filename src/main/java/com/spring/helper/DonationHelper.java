@@ -12,10 +12,16 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.spring.common.SendEmailHelper;
+import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.entities.DonationDetails;
+import com.spring.entities.SmsTemplateDetails;
+import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
+import com.spring.enums.SmsType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.DonationRequestObject;
@@ -28,14 +34,118 @@ public class DonationHelper {
 	@Autowired
 	private DonationDetailsDao donationDetailsDao;
 	
+	@Autowired
+	private UserHelper userHelper;
 	
-	public void validateDonationRequest(DonationRequestObject donationRequestObject) 
+	@Autowired
+	private SmsTemplateHelper smsTemplateHelper;
+	
+	@Autowired
+	private SmsHelper smsHelper;
+	
+	@Autowired
+	private SendEmailHelper sendEmailHelper;
+	
+	
+	public void validateDonationRequest(DonationRequestObject donationRequest) 
 			throws BizException
 	{ 
-		if(donationRequestObject == null) {
+		if(donationRequest == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null"); 
-		} 
+		} else {
+			if(donationRequest.getInvoiceHeaderDetailsId() == null) {
+				throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Receipt Type"); 
+			}
+			if(donationRequest.getMobileNumber() == null) {
+				throw new BizException(Constant.BAD_REQUEST_CODE, "Enter Mobile Number"); 
+			}
+			if(donationRequest.getAmount() >= 0) {
+				throw new BizException(Constant.BAD_REQUEST_CODE, "Amount can not be null or Zero"); 
+			}
+			if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
+				throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Program"); 
+			}
+			if((donationRequest.getPaymentMode() == null) || donationRequest.getPaymentMode().equalsIgnoreCase(""))  {
+				throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Payment Mode");
+			}
+			
+//			if(donationRequest.getInvoiceHeaderDetailsId() == null) {
+//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			donationRequest.setRespMesg("Please Select Receipt Type");
+//			return donationRequest; 
+//		}
+//		
+//		if(donationRequest.getMobileNumber() == null) {
+//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			donationRequest.setRespMesg("Enter Mobile Number");
+//			return donationRequest; 
+//		}
+//		
+//		if(donationRequest.getAmount() == 0) {
+//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			donationRequest.setRespMesg("Amount can not be null or Zero");
+//			return donationRequest; 
+//		}
+//		
+//		if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
+//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			donationRequest.setRespMesg("Please Select Program");
+//			return donationRequest; 
+//		}
+//		if((donationRequest.getPaymentMode() == null) || donationRequest.getPaymentMode().equalsIgnoreCase(""))  {
+//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			donationRequest.setRespMesg("Please Select Payment Mode");
+//			return donationRequest; 
+//		}
+		}
 	}
+	
+//	public String sendDonationMessage(DonationRequestObject donationRequest, DonationDetails donationDetails) {
+//		
+//		// send sms
+//        SmsTemplateDetails smsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminId(donationDetails.getSuperadminId(), donationRequest.getInvoiceHeaderDetailsId());
+//
+//		if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.DONATION_RECEIPT.name())) {
+//
+//			if (smsTemplate != null) {
+//
+//				String messageBody = " We have received donation of Rs "+ donationDetails.getAmount() +" Click to Download your receipt "+smsTemplate.getInvoiceDomain()+donationDetails.getReceiptNumber()+" - "+ smsTemplate.getCompanyRegards() ;
+//				String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+//			}
+//
+//		} else if (invoiceHeader.getSmsType().equalsIgnoreCase(SmsType.PRODUCT_RECEIPT.name())) {
+//			String messageBody = " We have received Rs "+ donationDetails.getAmount() +" through receipt no "+donationDetails.getInvoiceNumber()+" For Receipt mail on help@mydonation.in - Mydonation ";
+//			String responce = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
+//		}
+//		
+//		
+//		//send email
+//		if(!donationDetails.getEmailId().equalsIgnoreCase("")) {
+//			//emailHelper.sendEmailWithInvoice(donationDetails);
+//		}
+//		return null;
+//	}
+	
+	
+	public DonationRequestObject getTeamLeaderIdOfDonation(DonationRequestObject donationRequest) {
+		
+		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
+		if(userDetails != null) {
+			donationRequest.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
+			
+			if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
+					|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
+					|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
+			{
+				donationRequest.setTeamLeaderId(donationRequest.getLoginId());
+			}else {
+				donationRequest.setTeamLeaderId(userDetails.getCreatedBy());
+			}
+		}
+		return donationRequest;
+	}
+
+	
 	
 	@Transactional
 	public DonationDetails getDonationDetailsByIdAndSuperadminId(Long id, String superadminId) {

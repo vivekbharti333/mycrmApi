@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.common.EmailHelper;
+import com.spring.common.SendEmailHelper;
 import com.spring.common.PdfInvoice;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
@@ -45,7 +45,7 @@ public class UserController {
 	PdfInvoice pdfInvoice;
 	
 	@Autowired
-	EmailHelper emailHelper;
+	SendEmailHelper sendEmailHelper;
 	
 	@Autowired
 	private DonationHelper donationHelper;
@@ -76,7 +76,7 @@ public class UserController {
 		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
 		System.out.println(donationDetails+" khjhjkhjhj");
 		if(donationDetails != null) {
-			emailHelper.sendEmailWithInvoice(donationDetails);
+			sendEmailHelper.sendEmailWithInvoice(donationDetails);
 		}
 		 
 		

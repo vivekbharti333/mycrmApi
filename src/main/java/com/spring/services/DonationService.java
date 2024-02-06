@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.common.EmailHelper;
+import com.spring.common.SendEmailHelper;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
@@ -49,7 +49,7 @@ public class DonationService {
 	private SmsHelper smsHelper;
 	
 	@Autowired
-	private EmailHelper emailHelper;
+	private SendEmailHelper sendEmailHelper;
 	
 	@Autowired
 	private UserHelper userHelper;
@@ -84,7 +84,7 @@ public class DonationService {
 		
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 		
-		      logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
+		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
 
 		if (isValid) {
 //			
@@ -96,34 +96,6 @@ public class DonationService {
 //				return donationRequest; 
 //			}
 		
-			if(donationRequest.getInvoiceHeaderDetailsId() == null) {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Please Select Receipt Type");
-				return donationRequest; 
-			}
-			
-			if(donationRequest.getMobileNumber() == null) {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Enter Mobile Number");
-				return donationRequest; 
-			}
-			
-			if(donationRequest.getAmount() == 0) {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Amount can not be null or Zero");
-				return donationRequest; 
-			}
-			
-			if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Please Select Program");
-				return donationRequest; 
-			}
-			if((donationRequest.getPaymentMode() == null) || donationRequest.getPaymentMode().equalsIgnoreCase(""))  {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Please Select Payment Mode");
-				return donationRequest; 
-			}
 		
 			//Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
@@ -136,19 +108,22 @@ public class DonationService {
 			}
 	
 			//Get Team leader Details
-			UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
-			if(userDetails != null) {
-				donationRequest.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
-				
-				if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
-						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
-						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
-				{
-					donationRequest.setTeamLeaderId(donationRequest.getLoginId());
-				}else {
-					donationRequest.setTeamLeaderId(userDetails.getCreatedBy());
-				}
-			}
+			
+			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
+			System.out.println(donationRequest.getTeamLeaderId());
+//			UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getLoginId(), donationRequest.getSuperadminId());
+//			if(userDetails != null) {
+//				donationRequest.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
+//				
+//				if(userDetails.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
+//						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
+//						|| userDetails.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) 
+//				{
+//					donationRequest.setTeamLeaderId(donationRequest.getLoginId());
+//				}else {
+//					donationRequest.setTeamLeaderId(userDetails.getCreatedBy());
+//				}
+//			}
 			
 			//Invoice Number Generate
 			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
