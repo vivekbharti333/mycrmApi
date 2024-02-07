@@ -58,6 +58,8 @@ public class SendEmailHelper {
 
 	@Autowired
 	private static InvoiceHelper invoiceHelper;
+	
+//	StringUtils.substring(RandomStringUtils.random(64, false, true), 0,6)
 
 	@Transactional
 	public SmsTemplateDetails getSmsDetailsBySuperadminId(String superadminId, String smsType) {

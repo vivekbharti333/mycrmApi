@@ -30,6 +30,7 @@ import com.spring.object.request.Request;
 import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
+import com.spring.paymentgateway.PhonePePaymentGateway;
 import com.spring.services.UserService;
 
 @CrossOrigin(origins = "*")
@@ -49,6 +50,9 @@ public class UserController {
 	
 	@Autowired
 	private DonationHelper donationHelper;
+	
+	@Autowired
+	private PhonePePaymentGateway phonePePaymentGateway;
 
 	
 	@Autowired
@@ -78,6 +82,9 @@ public class UserController {
 //		if(donationDetails != null) {
 //			sendEmailHelper.sendEmailWithInvoice(donationDetails);
 //		}
+		
+		phonePePaymentGateway.getPaymetGatewayParam();
+		phonePePaymentGateway.paymentPageTest();
 		 
 		
 		
