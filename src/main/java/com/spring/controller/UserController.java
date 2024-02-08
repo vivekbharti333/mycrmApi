@@ -83,8 +83,8 @@ public class UserController {
 //			sendEmailHelper.sendEmailWithInvoice(donationDetails);
 //		}
 		
-		phonePePaymentGateway.getPaymetGatewayParam();
-		phonePePaymentGateway.paymentPageTest();
+		String param = phonePePaymentGateway.getPaymetGatewayParam();
+		phonePePaymentGateway.paymentPageTest(param);
 		 
 		
 		

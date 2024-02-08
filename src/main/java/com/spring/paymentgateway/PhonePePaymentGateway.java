@@ -80,23 +80,24 @@ public class PhonePePaymentGateway {
 		parameters.put("merchantTransactionId", "MT7850590068188104");
 		parameters.put("merchantUserId", "MUID123");
 		parameters.put("amount", 100);
-		parameters.put("redirectUrl", "https://webhook.site/redirect-url");
+		parameters.put("redirectUrl", "https://datfuslab.com/successfull");
 		parameters.put("redirectMode", "REDIRECT");
-		parameters.put("callbackUrl", "https://webhook.site/callback-url");
+		parameters.put("callbackUrl", "https://datfuslab.com/successfull");
 		parameters.put("mobileNumber", "8800689752");
 		parameters.put("paymentInstrument", paymentInstrument);
 		
-		System.out.println("Paraeter : "+parameters);
-
+		System.out.println(parameters);
+		
 		return parameters.toString();
 	}
 
 
-	        public void paymentPageTest() {
+	        public void paymentPageTest(String param) {
 	        	 OkHttpClient client = new OkHttpClient();
 
 	             // Define the JSON payload
-	             String jsonPayload = "{\"request\":\"eyJhbW91bnQiOjEwMCwicmVkaXJlY3RVcmwiOiJodHRwczovL3dlYmhvb2suc2l0ZS9yZWRpcmVjdC11cmwiLCJtZXJjaGFudElkIjoiTTIyWExJMUJCU1I0Tg0KICIsInJlZGlyZWN0TW9kZSI6IlJFRElSRUNUIiwibW9iaWxlTnVtYmVyIjoiODgwMDY4OTc1MiIsIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6Ik1UNzg1MDU5MDA2ODE4ODEwNCIsImNhbGxiYWNrVXJsIjoiaHR0cHM6Ly93ZWJob29rLnNpdGUvY2FsbGJhY2stdXJsIiwibWVyY2hhbnRVc2VySWQiOiJNVUlEMTIzIiwicGF5bWVudEluc3RydW1lbnQiOnsicGF5bWVudEluc3RydW1lbnQiOiJQQVlfUEFHRSJ9fQ==\"}";
+//	             String jsonPayload = "{\"request\":\"ewogICJtZXJjaGFudElkIjogIlBHVEVTVFBBWVVBVCIsCiAgIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6ICJNVDc4NTA1OTAwNjgxODgxMDQiLAogICJtZXJjaGFudFVzZXJJZCI6ICJNVUlEMTIzIiwKICAiYW1vdW50IjogMTAwMDAsCiAgInJlZGlyZWN0VXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL3JlZGlyZWN0LXVybCIsCiAgInJlZGlyZWN0TW9kZSI6ICJSRURJUkVDVCIsCiAgImNhbGxiYWNrVXJsIjogImh0dHBzOi8vd2ViaG9vay5zaXRlL2NhbGxiYWNrLXVybCIsCiAgIm1vYmlsZU51bWJlciI6ICI5OTk5OTk5OTk5IiwKICAicGF5bWVudEluc3RydW1lbnQiOiB7CiAgICAidHlwZSI6ICJQQVlfUEFHRSIKICB9Cn0=\"}";
+	             String jsonPayload = "{\"request\":\"eyJhbW91bnQiOjEwMCwicmVkaXJlY3RVcmwiOiJodHRwczovL2RhdGZ1c2xhYi5jb20vc3VjY2Vzc2Z1bGwiLCJtZXJjaGFudElkIjoiTTIyWExJMUJCU1I0TiIsInJlZGlyZWN0TW9kZSI6IlJFRElSRUNUIiwibW9iaWxlTnVtYmVyIjoiODgwMDY4OTc1MiIsIm1lcmNoYW50VHJhbnNhY3Rpb25JZCI6Ik1UNzg1MDU5MDA2ODE4ODEwNCIsImNhbGxiYWNrVXJsIjoiaHR0cHM6Ly9kYXRmdXNsYWIuY29tL3N1Y2Nlc3NmdWxsIiwibWVyY2hhbnRVc2VySWQiOiJNVUlEMTIzIiwicGF5bWVudEluc3RydW1lbnQiOnsicGF5bWVudEluc3RydW1lbnQiOiJQQVlfUEFHRSJ9fQ==\"}";
 
 	             // Build the request body with JSON content
 	             RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonPayload);
@@ -105,9 +106,10 @@ public class PhonePePaymentGateway {
 	             Request request = new Request.Builder()
 	                     .url("https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay")
 	                     .post(body)
-//	                     .addHeader("accept", "text/plain")
+	                     .addHeader("accept", "application/json") //addHeader("accept", "application/json")
 	                     .addHeader("Content-Type", "application/json")
-	                     .addHeader("X-VERIFY", "8C2465490E1A2FD81B6EEA05F3C4CCCA135DEE574714583BD961D5FC1FD291DD###1")
+//	                     .addHeader("X-VERIFY", "d7a8e4458caa6fcd781166bbdc85fec76740c18cb9baa9a4c48cf2387d554180###1")
+	                     .addHeader("X-VERIFY", "e45a3500dc502c1ae981a4de2885ad39cb8fab205b10d7b1948750f669070c38###1")
 	                     .build();
 
 	             // Execute the request
