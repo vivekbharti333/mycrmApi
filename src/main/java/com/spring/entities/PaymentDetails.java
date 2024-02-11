@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "payment_gateway_details")
-public class PaymentGatewayDetails {
+@Table(name = "payment_details")
+public class PaymentDetails {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -25,14 +25,26 @@ public class PaymentGatewayDetails {
 	@Column(name = "merchant_id")
 	private String merchantId;
 	
-	@Column(name = "salt_index")
-	private String saltIndex;
+	@Column(name = "donor_name")
+	private String donorName;
 	
-	@Column(name = "salt_key")
-	private String saltKey;
+	@Column(name = "mobile_number")
+	private String mobileNumber;
+	
+	@Column(name = "amount")
+	private Double amount;
+	
+	@Column(name = "transaction_id")
+	private String transactionId;
+	
+	@Column(name = "invoice_number")
+	private String invoiceNumber;
 	
 	@Column(name = "status")
 	private String status;
+	
+	@Column(name = "created_by")
+	private String createdBy;
 	
 	@Column(name = "superadmin_id")
 	private String superadminId;
@@ -65,20 +77,44 @@ public class PaymentGatewayDetails {
 		this.merchantId = merchantId;
 	}
 
-	public String getSaltIndex() {
-		return saltIndex;
+	public String getDonorName() {
+		return donorName;
 	}
 
-	public void setSaltIndex(String saltIndex) {
-		this.saltIndex = saltIndex;
+	public void setDonorName(String donorName) {
+		this.donorName = donorName;
 	}
 
-	public String getSaltKey() {
-		return saltKey;
+	public String getMobileNumber() {
+		return mobileNumber;
 	}
 
-	public void setSaltKey(String saltKey) {
-		this.saltKey = saltKey;
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+
+	public Double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+
+	public String getTransactionId() {
+		return transactionId;
+	}
+
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 
 	public String getStatus() {
@@ -87,6 +123,14 @@ public class PaymentGatewayDetails {
 
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
 	}
 
 	public String getSuperadminId() {
@@ -105,12 +149,7 @@ public class PaymentGatewayDetails {
 		this.createdAt = createdAt;
 	}
 
-	@Override
-	public String toString() {
-		return "PaymentGatewayDetails [id=" + id + ", pgProvider=" + pgProvider + ", merchantId=" + merchantId
-				+ ", saltIndex=" + saltIndex + ", saltKey=" + saltKey + ", status=" + status + ", superadminId="
-				+ superadminId + ", createdAt=" + createdAt + "]";
-	}
+	
 		
 		
 }

@@ -67,7 +67,7 @@ public class DonationHelper {
 			if(donationRequest.getMobileNumber() == null) {
 				throw new BizException(Constant.BAD_REQUEST_CODE, "Enter Mobile Number"); 
 			}
-			if(donationRequest.getAmount() >= 0) {
+			if(donationRequest.getAmount() <= 0) {
 				throw new BizException(Constant.BAD_REQUEST_CODE, "Amount can not be null or Zero"); 
 			}
 			if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
@@ -128,7 +128,7 @@ public class DonationHelper {
 	
 	@SuppressWarnings("static-access")
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
-		if(!donationDetails.getEmailId().equalsIgnoreCase("")) {
+		if(!donationDetails.getEmailId().equalsIgnoreCase("") || donationDetails.getEmailId() != null) {
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
 			if(emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 				

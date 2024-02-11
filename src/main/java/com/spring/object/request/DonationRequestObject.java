@@ -2,6 +2,8 @@ package com.spring.object.request;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 
 public class DonationRequestObject {
 	
@@ -52,6 +54,13 @@ public class DonationRequestObject {
 	private Double monthAmount = 0D;
 	
 	private String searchParam;
+	
+	private String pgProvider;
+	private String merchantId;
+	private String saltIndex;
+	private String saltKey;
+	private String paymentGatewayPageRedirectUrl;
+	
 	private int respCode;
 	private String respMesg;
 	
@@ -301,6 +310,36 @@ public class DonationRequestObject {
 	}
 	public void setSearchParam(String searchParam) {
 		this.searchParam = searchParam;
+	}
+	public String getPgProvider() {
+		return pgProvider;
+	}
+	public void setPgProvider(String pgProvider) {
+		this.pgProvider = pgProvider;
+	}
+	public String getMerchantId() {
+		return merchantId;
+	}
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}  
+	public String getSaltIndex() {
+		return saltIndex;
+	}
+	public void setSaltIndex(String saltIndex) {
+		this.saltIndex = saltIndex;
+	}
+	public String getSaltKey() {
+		return saltKey;
+	}
+	public void setSaltKey(String saltKey) {
+		this.saltKey = saltKey;
+	}
+	public String getPaymentGatewayPageRedirectUrl() {
+		return paymentGatewayPageRedirectUrl;
+	}
+	public void setPaymentGatewayPageRedirectUrl(String paymentGatewayPageRedirectUrl) {
+		this.paymentGatewayPageRedirectUrl = paymentGatewayPageRedirectUrl;
 	}
 	public int getRespCode() {
 		return respCode;

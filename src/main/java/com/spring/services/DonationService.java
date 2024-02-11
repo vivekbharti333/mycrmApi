@@ -12,6 +12,7 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,11 @@ import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
+import com.spring.entities.PaymentDetails;
+import com.spring.entities.PaymentGatewayDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.PaymentMode;
 import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.SmsType;
@@ -31,11 +35,13 @@ import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.EmailHelper;
 import com.spring.helper.InvoiceHelper;
+import com.spring.helper.PaymentGatewayHelper;
 import com.spring.helper.SmsTemplateHelper;
 import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
+import com.spring.paymentgateway.PhonePePaymentGateway;
 
 
 @Service
@@ -57,6 +63,9 @@ public class DonationService {
 	private SendEmailHelper sendEmailHelper;
 	
 	@Autowired
+	private PhonePePaymentGateway phonePePaymentGateway;
+	
+	@Autowired
 	private UserHelper userHelper;
 	
 	@Autowired
@@ -64,6 +73,10 @@ public class DonationService {
 	
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	@Autowired
+	private PaymentGatewayHelper paymentGatewayHelper;
+	
 	
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 	
@@ -100,6 +113,9 @@ public class DonationService {
 				return donationRequest; 
 			}
 			
+			//Get Team leader Details
+			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
+
 			//Invoice Number Generate
 			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
 			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
@@ -111,28 +127,70 @@ public class DonationService {
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
 			donationRequest.setReceiptNumber(receiptNumber);
-			
-			
-			//Get Team leader Details
-			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
-			
+				
 			
 			//Save Donation Details
 			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 			
-			
 			// increase serial number by 1
 			invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
 	        invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
+	        
+	        //payment gateway
+			if(donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
+				PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminId(donationDetails.getSuperadminId(), "PHONEPE");
+				
+				System.out.println("paymentGatewayDetails : "+paymentGatewayDetails);
+				if(paymentGatewayDetails != null) {
+					
+					donationRequest.setMerchantId(paymentGatewayDetails.getMerchantId());
+					donationRequest.setSaltIndex(paymentGatewayDetails.getSaltIndex());
+					donationRequest.setSaltKey(paymentGatewayDetails.getSaltKey());
+					
+					//Save Payment Details
+					PaymentDetails paymentDetails = paymentGatewayHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
+					paymentDetails = paymentGatewayHelper.savePaymentDetails(paymentDetails);
+					
+					//Call Payment Gateway API
+					String param = phonePePaymentGateway.getPaymetGatewayParam(donationDetails, paymentGatewayDetails );
+					String jsonResponse = phonePePaymentGateway.getPaymentPageResponse(param, paymentGatewayDetails);
+					
+					
+//					String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
+					JSONObject jsonObject = new JSONObject(jsonResponse);
+					String code = jsonObject.getString("code");
+			        boolean success = jsonObject.getBoolean("success");
+					if(success) {
+//						JSONObject jsonObject = new JSONObject(jsonResponse);
+//						String code = jsonObject.getString("code");
+//				        boolean success = jsonObject.getBoolean("success");
+
+				        JSONObject data = jsonObject.getJSONObject("data");
+				        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
+				        JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
+				        String url = redirectInfo.getString("url");
+					     
+					     donationRequest.setPaymentMode(donationDetails.getPaymentMode());
+					     donationRequest.setPaymentGatewayPageRedirectUrl(url);
+					     donationRequest.setRespCode(Constant.SUCCESS_CODE);
+						 donationRequest.setRespMesg("Successfully Register");
+						 return donationRequest;
+					}else {
+						//payment Faild
+					}
+		
+				}
+			}else {
+				// send sms
+		        donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
+				
+				//send email
+		        donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
+			}
 			
 
-			// send sms
-	        donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
 			
-			//send email
-	        donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
-
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");

@@ -2,7 +2,6 @@ package com.spring.object.request;
 
 import java.util.Date;
 
-
 public class PaymentRequestObject {
 	
 	private Long id;
@@ -13,6 +12,20 @@ public class PaymentRequestObject {
 	private Date createdAt;
 	private String createdBy;
 	private String updatedBy;
+	
+	//Payment gateway
+	private String pgProvider;
+	private String merchantId;
+	private String saltIndex;
+	private String saltKey;
+
+	//Payment details
+	private String donorName;
+	private String mobileNumber;
+	private Double amount;
+	private String transactionId;
+	private String invoiceNumber;
+	
 	
 	private String requestedFor;
 	
@@ -66,6 +79,60 @@ public class PaymentRequestObject {
 	}
 	public void setUpdatedBy(String updatedBy) {
 		this.updatedBy = updatedBy;
+	}
+	public String getPgProvider() {
+		return pgProvider;
+	}
+	public void setPgProvider(String pgProvider) {
+		this.pgProvider = pgProvider;
+	}
+	public String getMerchantId() {
+		return merchantId;
+	}
+	public void setMerchantId(String merchantId) {
+		this.merchantId = merchantId;
+	}
+	public String getSaltIndex() {
+		return saltIndex;
+	}
+	public void setSaltIndex(String saltIndex) {
+		this.saltIndex = saltIndex;
+	}
+	public String getSaltKey() {
+		return saltKey;
+	}
+	public void setSaltKey(String saltKey) {
+		this.saltKey = saltKey;
+	}
+	public String getDonorName() {
+		return donorName;
+	}
+	public void setDonorName(String donorName) {
+		this.donorName = donorName;
+	}
+	public String getMobileNumber() {
+		return mobileNumber;
+	}
+	public void setMobileNumber(String mobileNumber) {
+		this.mobileNumber = mobileNumber;
+	}
+	public Double getAmount() {
+		return amount;
+	}
+	public void setAmount(Double amount) {
+		this.amount = amount;
+	}
+	public String getTransactionId() {
+		return transactionId;
+	}
+	public void setTransactionId(String transactionId) {
+		this.transactionId = transactionId;
+	}
+	public String getInvoiceNumber() {
+		return invoiceNumber;
+	}
+	public void setInvoiceNumber(String invoiceNumber) {
+		this.invoiceNumber = invoiceNumber;
 	}
 	public String getRequestedFor() {
 		return requestedFor;
