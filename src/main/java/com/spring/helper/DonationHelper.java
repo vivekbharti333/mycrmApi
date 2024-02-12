@@ -139,13 +139,13 @@ public class DonationHelper {
 		
 	}
 	
-	@SuppressWarnings("static-access")
-	public DonationRequestObject generateReceiptNumber(DonationRequestObject donationRequest) {
-		String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
-		String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
-		donationRequest.setReceiptNumber(receiptNumber);
-		return donationRequest;
-	}
+//	@SuppressWarnings("static-access")
+//	public DonationRequestObject generateReceiptNumber(DonationRequestObject donationRequest) {
+//		String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
+//		String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
+//		donationRequest.setReceiptNumber(receiptNumber);
+//		return donationRequest;
+//	}
 	
 	
 	public DonationRequestObject getTeamLeaderIdOfDonation(DonationRequestObject donationRequest) {

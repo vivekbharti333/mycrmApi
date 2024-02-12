@@ -1,7 +1,10 @@
 package com.spring.controller;
 
+import java.util.Base64;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -10,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.spring.constant.Constant;
 import com.spring.entities.CustomerDetails;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.DonationType;
 import com.spring.entities.PaymentGatewayDetails;
+import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentModeMaster;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.CustomerRequestObject;
@@ -60,6 +65,20 @@ public class PaymentGatewayController {
 			return response.createErrorResponse(400, e.getMessage());
 		}
 	}
+	
+
+	 @RequestMapping(path = "receiveResponse", method = RequestMethod.POST)
+	    public String receiveResponse(@RequestBody PaymentRequestObject paymentRequestObject) {
+
+	        byte[] decodedBytes = Base64.getDecoder().decode( paymentRequestObject.getResponse());
+	        String decodedString = new String(decodedBytes);
+	      
+	        JSONObject response = paymentGatewayService.updatePgResponseDetails(decodedString);
+	        		
+			
+	        // Return a response
+	        return "Response received successfully";
+	    }
 	
 	
 }

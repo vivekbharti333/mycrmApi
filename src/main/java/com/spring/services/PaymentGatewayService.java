@@ -7,6 +7,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
@@ -17,6 +18,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,7 @@ import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.PaymentGatewayDetails;
+import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentModeBySuperadmin;
 import com.spring.entities.PaymentModeMaster;
 import com.spring.entities.UserDetails;
@@ -54,9 +57,11 @@ public class PaymentGatewayService {
 		PaymentRequestObject paymentGatewayRequest = paymentRequestObject.getPayload();
 		paymentGatewayHelper.validatePaymentModeRequest(paymentGatewayRequest);
 
-		PaymentGatewayDetails existsPaymentGateway = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminId(paymentGatewayRequest.getSuperadminId(), paymentGatewayRequest.getPgProvider());
+		PaymentGatewayDetails existsPaymentGateway = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminId(
+				paymentGatewayRequest.getSuperadminId(), paymentGatewayRequest.getPgProvider());
 		if (existsPaymentGateway == null) {
-			PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayByReqObj(paymentGatewayRequest);
+			PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper
+					.getPaymentGatewayByReqObj(paymentGatewayRequest);
 			paymentGatewayDetails = paymentGatewayHelper.savePaymentGatewayDetails(paymentGatewayDetails);
 
 			paymentGatewayRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -69,14 +74,45 @@ public class PaymentGatewayService {
 		}
 	}
 
-	public List<PaymentGatewayDetails> getPaymentGatewayDetailsList(Request<PaymentRequestObject> paymentModeRequestObject) {
+	public List<PaymentGatewayDetails> getPaymentGatewayDetailsList(
+			Request<PaymentRequestObject> paymentModeRequestObject) {
 		PaymentRequestObject paymentModeRequest = paymentModeRequestObject.getPayload();
 
 		List<PaymentGatewayDetails> paymentGatewayDetails = new ArrayList<>();
 		paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayDetailsList(paymentModeRequest);
 		return paymentGatewayDetails;
 	}
-
 	
+
+	public JSONObject updatePgResponseDetails(String decodedString) {
+		
+		PaymentRequestObject paymentGatewayRequest = new PaymentRequestObject();
+
+		JSONObject jsonObject = new JSONObject(decodedString);
+		String code = jsonObject.getString("code");
+		boolean success = jsonObject.getBoolean("success");
+		
+		JSONObject data = jsonObject.getJSONObject("data");
+		String merchantId = data.getString("merchantId");
+		String merchantTransactionId = data.getString("merchantTransactionId");
+		String transactionId = data.getString("transactionId");
+		String state = data.getString("state");
+		String responseCode = data.getString("responseCode");
+		
+		paymentGatewayRequest.setResponseCode(data.getString("responseCode"));
+		paymentGatewayRequest.setStatus(data.getString("state"));
+		paymentGatewayRequest.setTransactionId(data.getString("transactionId"));
+		
+		PaymentGatewayResponseDetails paymentResponseDetails = paymentGatewayHelper.getPaymentGatewayResponseDetailsBySuperadminId(merchantId, merchantTransactionId);
+		if(paymentResponseDetails != null) {
+			
+			paymentGatewayHelper.getUpdatedPaymentDetailsByReqObj(paymentResponseDetails,paymentGatewayRequest);
+			paymentGatewayHelper.UpdatePaymentGatewayResponseDetails(paymentResponseDetails);
+			
+		}
+
+
+		return null;
+	}
 
 }

@@ -18,6 +18,8 @@ public class PaymentRequestObject {
 	private String merchantId;
 	private String saltIndex;
 	private String saltKey;
+	private String response;
+	private String responseCode;
 
 	//Payment details
 	private String donorName;
@@ -25,6 +27,8 @@ public class PaymentRequestObject {
 	private Double amount;
 	private String transactionId;
 	private String invoiceNumber;
+
+
 	
 	
 	private String requestedFor;
@@ -103,6 +107,18 @@ public class PaymentRequestObject {
 	}
 	public void setSaltKey(String saltKey) {
 		this.saltKey = saltKey;
+	}
+	public String getResponse() {
+		return response;
+	}
+	public void setResponse(String response) {
+		this.response = response;
+	}
+	public String getResponseCode() {
+		return responseCode;
+	}
+	public void setResponseCode(String responseCode) {
+		this.responseCode = responseCode;
 	}
 	public String getDonorName() {
 		return donorName;

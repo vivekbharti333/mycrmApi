@@ -11,8 +11,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "payment_details")
-public class PaymentDetails {
+@Table(name = "payment_gateway_response_details")
+public class PaymentGatewayResponseDetails {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -43,6 +43,9 @@ public class PaymentDetails {
 	@Column(name = "status")
 	private String status;
 	
+	@Column(name = "response_code")
+	private String responseCode;
+	
 	@Column(name = "created_by")
 	private String createdBy;
 	
@@ -51,6 +54,9 @@ public class PaymentDetails {
 	
 	@Column(name = "created_at")
 	private Date createdAt;
+	
+	@Column(name = "updated_at")
+	private Date updatedAt;
 
 	
 	public Long getId() {
@@ -125,6 +131,14 @@ public class PaymentDetails {
 		this.status = status;
 	}
 
+	public String getResponseCode() {
+		return responseCode;
+	}
+
+	public void setResponseCode(String responseCode) {
+		this.responseCode = responseCode;
+	}
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
@@ -147,6 +161,14 @@ public class PaymentDetails {
 
 	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
 	}
 
 	

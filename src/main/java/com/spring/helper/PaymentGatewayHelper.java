@@ -14,12 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.spring.constant.Constant;
-import com.spring.dao.PaymentDetailsDao;
+import com.spring.dao.PaymentGatewayResponseDetailsDao;
 import com.spring.dao.PaymentGatewayDetailsDao;
 import com.spring.dao.PaymentModeBySuperadminDao;
 import com.spring.dao.PaymentModeDetailsDao;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.PaymentDetails;
+import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentGatewayDetails;
 import com.spring.entities.PaymentModeBySuperadmin;
 import com.spring.entities.PaymentModeMaster;
@@ -35,7 +35,7 @@ public class PaymentGatewayHelper {
 	private PaymentGatewayDetailsDao paymentGatewayDetailsDao;
 	
 	@Autowired
-	private PaymentDetailsDao paymentDetailsDao;
+	private PaymentGatewayResponseDetailsDao paymentGatewayResponseDetailsDao;
 	
 
 
@@ -44,6 +44,20 @@ public class PaymentGatewayHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
+	@Transactional
+	public PaymentGatewayResponseDetails getPaymentGatewayResponseDetailsBySuperadminId(String merchantId, String merchantTransactionId) {
+
+		CriteriaBuilder criteriaBuilder = paymentGatewayResponseDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<PaymentGatewayResponseDetails> criteriaQuery = criteriaBuilder.createQuery(PaymentGatewayResponseDetails.class);
+		Root<PaymentGatewayResponseDetails> root = criteriaQuery.from(PaymentGatewayResponseDetails.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("merchantId"), merchantId);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("invoiceNumber"), merchantTransactionId);
+//		criteriaQuery.where(restriction1, restriction2);
+		PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayResponseDetailsDao.getSession().createQuery(criteriaQuery)
+				.uniqueResult();
+		return paymentGatewayResponseDetails;
+	}
+
 
 	@Transactional
 	public PaymentGatewayDetails getPaymentGatewayDetailsBySuperadminId(String superadminId, String pgProvider) {
@@ -90,29 +104,47 @@ public class PaymentGatewayHelper {
 	}
 	
 	
-	public PaymentDetails getPaymentDetailsByReqObj(DonationDetails donationDetails, DonationRequestObject donationRequest) {
+	public PaymentGatewayResponseDetails getPaymentDetailsByReqObj(DonationDetails donationDetails, DonationRequestObject donationRequest) {
 
-		PaymentDetails paymentDetails = new PaymentDetails();
+		PaymentGatewayResponseDetails paymentGatewayResponseDetails = new PaymentGatewayResponseDetails();
 
-		paymentDetails.setPgProvider(donationRequest.getPgProvider());
-		paymentDetails.setMerchantId(donationRequest.getMerchantId());
-		paymentDetails.setDonorName(donationDetails.getDonorName());
-		paymentDetails.setMobileNumber(donationDetails.getMobileNumber());
-		paymentDetails.setAmount(donationDetails.getAmount());
-		paymentDetails.setTransactionId(donationDetails.getTransactionId());
-		paymentDetails.setInvoiceNumber(donationDetails.getInvoiceNumber());
-		paymentDetails.setCreatedBy(donationDetails.getCreatedBy());
-		paymentDetails.setSuperadminId(donationDetails.getSuperadminId());
-		paymentDetails.setStatus(Status.INIT.name());
-		paymentDetails.setCreatedAt(new Date());
+		paymentGatewayResponseDetails.setPgProvider(donationRequest.getPgProvider());
+		paymentGatewayResponseDetails.setMerchantId(donationRequest.getMerchantId());
+		paymentGatewayResponseDetails.setDonorName(donationDetails.getDonorName());
+		paymentGatewayResponseDetails.setMobileNumber(donationDetails.getMobileNumber());
+		paymentGatewayResponseDetails.setAmount(donationDetails.getAmount());
+		paymentGatewayResponseDetails.setTransactionId(donationDetails.getTransactionId());
+		paymentGatewayResponseDetails.setInvoiceNumber(donationDetails.getInvoiceNumber());
+		paymentGatewayResponseDetails.setCreatedBy(donationDetails.getCreatedBy());
+		paymentGatewayResponseDetails.setSuperadminId(donationDetails.getSuperadminId());
+		paymentGatewayResponseDetails.setStatus(Status.INIT.name());
+		paymentGatewayResponseDetails.setCreatedAt(new Date());
+		paymentGatewayResponseDetails.setUpdatedAt(new Date());
 
-		return paymentDetails;
+		return paymentGatewayResponseDetails;
 	}
 	
 	@Transactional
-	public PaymentDetails savePaymentDetails(PaymentDetails paymentDetails) {
-		paymentDetailsDao.persist(paymentDetails);
-		return paymentDetails;
+	public PaymentGatewayResponseDetails savePaymentDetails(PaymentGatewayResponseDetails paymentGatewayResponseDetails) {
+		paymentGatewayResponseDetailsDao.persist(paymentGatewayResponseDetails);
+		return paymentGatewayResponseDetails;
+	}
+	
+	public PaymentGatewayResponseDetails getUpdatedPaymentDetailsByReqObj(PaymentGatewayResponseDetails paymentGatewayResponseDetails, PaymentRequestObject paymentGatewayRequest) {
+
+		paymentGatewayResponseDetails.setTransactionId(paymentGatewayRequest.getTransactionId());
+		paymentGatewayResponseDetails.setResponseCode(paymentGatewayRequest.getResponseCode());
+
+		paymentGatewayResponseDetails.setStatus(paymentGatewayRequest.getStatus());
+		paymentGatewayResponseDetails.setUpdatedAt(new Date());
+
+		return paymentGatewayResponseDetails;
+	}
+	
+	@Transactional
+	public PaymentGatewayResponseDetails UpdatePaymentGatewayResponseDetails(PaymentGatewayResponseDetails paymentGatewayResponseDetails) {
+		paymentGatewayResponseDetailsDao.update(paymentGatewayResponseDetails);
+		return paymentGatewayResponseDetails;
 	}
 	
 }

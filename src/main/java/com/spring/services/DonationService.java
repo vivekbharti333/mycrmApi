@@ -22,7 +22,7 @@ import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
-import com.spring.entities.PaymentDetails;
+import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentGatewayDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
@@ -141,7 +141,6 @@ public class DonationService {
 			if(donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
 				PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminId(donationDetails.getSuperadminId(), "PHONEPE");
 				
-				System.out.println("paymentGatewayDetails : "+paymentGatewayDetails);
 				if(paymentGatewayDetails != null) {
 					
 					donationRequest.setMerchantId(paymentGatewayDetails.getMerchantId());
@@ -149,8 +148,8 @@ public class DonationService {
 					donationRequest.setSaltKey(paymentGatewayDetails.getSaltKey());
 					
 					//Save Payment Details
-					PaymentDetails paymentDetails = paymentGatewayHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
-					paymentDetails = paymentGatewayHelper.savePaymentDetails(paymentDetails);
+					PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
+					paymentGatewayResponseDetails = paymentGatewayHelper.savePaymentDetails(paymentGatewayResponseDetails);
 					
 					//Call Payment Gateway API
 					String param = phonePePaymentGateway.getPaymetGatewayParam(donationDetails, paymentGatewayDetails );
@@ -162,9 +161,6 @@ public class DonationService {
 					String code = jsonObject.getString("code");
 			        boolean success = jsonObject.getBoolean("success");
 					if(success) {
-//						JSONObject jsonObject = new JSONObject(jsonResponse);
-//						String code = jsonObject.getString("code");
-//				        boolean success = jsonObject.getBoolean("success");
 
 				        JSONObject data = jsonObject.getJSONObject("data");
 				        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
@@ -178,8 +174,15 @@ public class DonationService {
 						 return donationRequest;
 					}else {
 						//payment Faild
+						donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+						donationRequest.setRespMesg("Donation Saved but paymentgateway Faild " + code);
+						return donationRequest;
 					}
 		
+				}else {
+					donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					donationRequest.setRespMesg("Please add Payment Gatways Details first");
+					return donationRequest;
 				}
 			}else {
 				// send sms
@@ -188,9 +191,6 @@ public class DonationService {
 				//send email
 		        donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
 			}
-			
-
-			
 			
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
