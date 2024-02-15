@@ -32,6 +32,7 @@ import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
 import com.spring.paymentgateway.PhonePePaymentGateway;
+import com.spring.services.AttendenceService;
 import com.spring.services.UserService;
 
 @CrossOrigin(origins = "*")
@@ -54,6 +55,9 @@ public class UserController {
 	
 	@Autowired
 	private PhonePePaymentGateway phonePePaymentGateway;
+	
+	@Autowired
+	private AttendenceService attendenceService;
 
 	
 	@Autowired
@@ -86,24 +90,25 @@ public class UserController {
 //		String param = phonePePaymentGateway.getPaymetGatewayParam();
 //		phonePePaymentGateway.paymentPageTest(param);
 		 
-		String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
-		
-		JSONObject jsonObject = new JSONObject(jsonResponse);
-		String code = jsonObject.getString("code");
-        boolean success = jsonObject.getBoolean("success");
-
-        JSONObject data = jsonObject.getJSONObject("data");
-        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
-        JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
-        String url = redirectInfo.getString("url");
+//		String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
 //		
-//	     
-	     System.out.println("code : "+code);
-	     System.out.println("success : "+success);
-	     System.out.println("data : "+data);
-	     System.out.println("instrumentResponse : "+instrumentResponse);
-	     System.out.println("url : "+url);
+//		JSONObject jsonObject = new JSONObject(jsonResponse);
+//		String code = jsonObject.getString("code");
+//        boolean success = jsonObject.getBoolean("success");
+//
+//        JSONObject data = jsonObject.getJSONObject("data");
+//        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
+//        JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
+//        String url = redirectInfo.getString("url");    
+//	     System.out.println("code : "+code);
+//	     System.out.println("success : "+success);
+//	     System.out.println("data : "+data);
+//	     System.out.println("instrumentResponse : "+instrumentResponse);
+//	     System.out.println("url : "+url);
 	     
+		
+		attendenceService.amazonApi();
+		
 		
 	return "Working : "+clientIp;
 	}

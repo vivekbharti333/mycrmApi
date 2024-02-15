@@ -198,6 +198,15 @@
 			<version>5.5.10</version>
 		</dependency>
 
+		<!-- Amazon -->
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-rekognition</artifactId>
+			<version>1.11.234</version>
+		</dependency>
+		<!-- Thanks for using https://jar-download.com -->
+
+
 		<!-- ///////////////////////////////////////////// -->
 
 		<dependency>
