@@ -1,20 +1,18 @@
 package com.spring.services;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.spring.constant.Constant;
 import com.spring.entities.ApplicationHeaderDetails;
-import com.spring.entities.DonationType;
 import com.spring.exceptions.BizException;
 import com.spring.helper.ApplicationHelper;
-import com.spring.helper.DonationTypeHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.ApplicationRequestObject;
-import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
 
 
@@ -27,11 +25,14 @@ public class ApplicationService {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	
+	@Autowired
+	public HttpServletRequest request;
+	
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 	
 	
 	@Transactional
-	public ApplicationRequestObject addApplicationHeader(Request<ApplicationRequestObject> applicationRequestObject)
+	public ApplicationRequestObject addUpdateApplicationHeader(Request<ApplicationRequestObject> applicationRequestObject)
 			throws BizException, Exception {
 		ApplicationRequestObject applicationRequest = applicationRequestObject.getPayload();
 		applicationHelper.validateApplicationRequest(applicationRequest);
@@ -87,6 +88,8 @@ public class ApplicationService {
 		ApplicationRequestObject applicationRequest = applicationRequestObject.getPayload();
 		applicationHelper.validateApplicationRequest(applicationRequest);
 		
+		applicationRequest.setIpAddress(request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr());
+		System.out.println(applicationRequest.getIpAddress()+" IP Address");
 		ApplicationHeaderDetails applicationHeaderdetails = applicationHelper.getApplicationHeaderDetailsByIpAddress(applicationRequest.getIpAddress());
 		if(applicationHeaderdetails != null) {
 			

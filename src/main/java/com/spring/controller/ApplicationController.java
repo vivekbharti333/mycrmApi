@@ -29,12 +29,12 @@ public class ApplicationController {
 	ApplicationService applicationService;
 	
 	
-	@RequestMapping(path = "addApplicationHeader", method = RequestMethod.POST)
-	public Response<ApplicationRequestObject>addApplicationHeader(@RequestBody Request<ApplicationRequestObject> applicationRequestObject, HttpServletRequest request)
+	@RequestMapping(path = "addUpdateApplicationHeader", method = RequestMethod.POST)
+	public Response<ApplicationRequestObject>addUpdateApplicationHeader(@RequestBody Request<ApplicationRequestObject> applicationRequestObject, HttpServletRequest request)
 	{
 		GenricResponse<ApplicationRequestObject> responseObj = new GenricResponse<ApplicationRequestObject>();
 		try {
-			ApplicationRequestObject responce =  applicationService.addApplicationHeader(applicationRequestObject);
+			ApplicationRequestObject responce =  applicationService.addUpdateApplicationHeader(applicationRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		}catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
