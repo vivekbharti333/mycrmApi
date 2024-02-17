@@ -29,12 +29,12 @@ public class EmailController {
 	EmailService emailService;
 	
 	
-	@RequestMapping(path = "addEmailServiceDetails", method = RequestMethod.POST)
-	public Response<EmailServiceRequestObject>addEmailServiceDetails(@RequestBody Request<EmailServiceRequestObject> emailServiceRequestObject, HttpServletRequest request)
+	@RequestMapping(path = "addUpdateEmailServiceDetails", method = RequestMethod.POST)
+	public Response<EmailServiceRequestObject>addUpdateEmailServiceDetails(@RequestBody Request<EmailServiceRequestObject> emailServiceRequestObject, HttpServletRequest request)
 	{
 		GenricResponse<EmailServiceRequestObject> responseObj = new GenricResponse<EmailServiceRequestObject>();
 		try {
-			EmailServiceRequestObject responce =  emailService.addEmailServiceDetails(emailServiceRequestObject);
+			EmailServiceRequestObject responce =  emailService.addUpdateEmailServiceDetails(emailServiceRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		}catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
@@ -45,21 +45,21 @@ public class EmailController {
 		}
 	}
 	
-	@RequestMapping(path = "updateEmailServiceDetails", method = RequestMethod.POST)
-	public Response<EmailServiceRequestObject>updateEmailServiceDetails(@RequestBody Request<EmailServiceRequestObject> emailServiceRequestObject, HttpServletRequest request)
-	{
-		GenricResponse<EmailServiceRequestObject> responseObj = new GenricResponse<EmailServiceRequestObject>();
-		try {
-			EmailServiceRequestObject responce =  emailService.updateEmailServiceDetails(emailServiceRequestObject);
-			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
-		}catch (BizException e) {
-			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
-		} 
- 		catch (Exception e) {
- 			e.printStackTrace();
-			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
-		}
-	}
+//	@RequestMapping(path = "updateEmailServiceDetails", method = RequestMethod.POST)
+//	public Response<EmailServiceRequestObject>updateEmailServiceDetails(@RequestBody Request<EmailServiceRequestObject> emailServiceRequestObject, HttpServletRequest request)
+//	{
+//		GenricResponse<EmailServiceRequestObject> responseObj = new GenricResponse<EmailServiceRequestObject>();
+//		try {
+//			EmailServiceRequestObject responce =  emailService.updateEmailServiceDetails(emailServiceRequestObject);
+//			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+//		}catch (BizException e) {
+//			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+//		} 
+// 		catch (Exception e) {
+// 			e.printStackTrace();
+//			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
 	
 	@RequestMapping(path = "getEmailServiceDetailsList", method = RequestMethod.POST)
 	public Response<EmailServiceDetails> getEmailServiceDetailsList(@RequestBody Request<EmailServiceRequestObject> optionRequestObject) {

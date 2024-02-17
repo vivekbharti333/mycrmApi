@@ -1,6 +1,11 @@
 package com.spring.controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -107,7 +112,23 @@ public class UserController {
 //	     System.out.println("url : "+url);
 	     
 		
-		attendenceService.amazonApi();
+//		attendenceService.amazonApi();
+		
+		
+		
+		 String endpoint = "http://tinyurl.com/api-create.php?url=" + URLEncoder.encode("https://datfuslab.com/gtrr656f/gytr6/tyrdsfvcvf", "UTF-8");
+	        URL url = new URL(endpoint);
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+	        conn.setRequestMethod("GET");
+
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        String shortUrl = reader.readLine();
+
+	        reader.close();
+	        conn.disconnect();
+
+	        System.out.println("hgh : "+shortUrl); 
 		
 		
 	return "Working : "+clientIp;

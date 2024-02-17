@@ -24,7 +24,7 @@ public class EmailService {
 	
 	
 
-	public EmailServiceRequestObject addEmailServiceDetails(Request<EmailServiceRequestObject> emailServiceRequestObject)
+	public EmailServiceRequestObject addUpdateEmailServiceDetails(Request<EmailServiceRequestObject> emailServiceRequestObject)
 			throws BizException, Exception {
 		EmailServiceRequestObject emailServiceRequest = emailServiceRequestObject.getPayload();
 		emailHelper.validateEmailServiceRequest(emailServiceRequest);
@@ -38,6 +38,9 @@ public class EmailService {
 			emailServiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
 			return emailServiceRequest;
 		} else {
+			existsEmailServiceDetails = emailHelper.getUpdatedEmailServiceDetailsByReqObj(emailServiceRequest, existsEmailServiceDetails);
+			existsEmailServiceDetails = emailHelper.updateEmailServiceDetails(existsEmailServiceDetails);
+			
 			emailServiceRequest.setRespCode(Constant.ALREADY_EXISTS);
 			emailServiceRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
 			return emailServiceRequest;
@@ -45,25 +48,25 @@ public class EmailService {
 	}
 	
 	
-	public EmailServiceRequestObject updateEmailServiceDetails(Request<EmailServiceRequestObject> emailServiceRequestObject)
-			throws BizException, Exception {
-		EmailServiceRequestObject emailServiceRequest = emailServiceRequestObject.getPayload();
-		emailHelper.validateEmailServiceRequest(emailServiceRequest);
-
-		EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(emailServiceRequest.getEmailType(), emailServiceRequest.getSuperadminId());
-		if (emailServiceDetails != null) {
-			emailServiceDetails = emailHelper.getUpdatedEmailServiceDetailsByReqObj(emailServiceRequest, emailServiceDetails);
-			emailServiceDetails = emailHelper.updateEmailServiceDetails(emailServiceDetails);
-
-			emailServiceRequest.setRespCode(Constant.SUCCESS_CODE);
-			emailServiceRequest.setRespMesg(Constant.UPDATED_SUCCESS);
-			return emailServiceRequest;
-		} else {
-			emailServiceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			emailServiceRequest.setRespMesg("Not Exists");
-			return emailServiceRequest;
-		}
-	}
+//	public EmailServiceRequestObject updateEmailServiceDetails(Request<EmailServiceRequestObject> emailServiceRequestObject)
+//			throws BizException, Exception {
+//		EmailServiceRequestObject emailServiceRequest = emailServiceRequestObject.getPayload();
+//		emailHelper.validateEmailServiceRequest(emailServiceRequest);
+//
+//		EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(emailServiceRequest.getEmailType(), emailServiceRequest.getSuperadminId());
+//		if (emailServiceDetails != null) {
+//			emailServiceDetails = emailHelper.getUpdatedEmailServiceDetailsByReqObj(emailServiceRequest, emailServiceDetails);
+//			emailServiceDetails = emailHelper.updateEmailServiceDetails(emailServiceDetails);
+//
+//			emailServiceRequest.setRespCode(Constant.SUCCESS_CODE);
+//			emailServiceRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+//			return emailServiceRequest;
+//		} else {
+//			emailServiceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			emailServiceRequest.setRespMesg("Not Exists");
+//			return emailServiceRequest;
+//		}
+//	}
 
 	public List<EmailServiceDetails> getEmailServiceDetailsList(Request<EmailServiceRequestObject> paymentModeRequestObject) {
 		EmailServiceRequestObject paymentModeRequest = paymentModeRequestObject.getPayload();

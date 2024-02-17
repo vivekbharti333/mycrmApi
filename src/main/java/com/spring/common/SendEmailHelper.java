@@ -28,6 +28,8 @@ import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.services.InvoiceService;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -40,15 +42,24 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
+import javax.mail.util.ByteArrayDataSource;
 
 @Component
 public class SendEmailHelper {
 
+
 	@Autowired
 	private SmsTemplateDetailsDao smsDetailsDao;
 
-	@Autowired
-	private static PdfInvoice pdfInvoice;
+//	@Autowired
+//	private PdfInvoice pdfInvoice;
+	
+    private static PdfInvoice pdfInvoice; // Keep 'static'
+
+    @Autowired
+    public void setPdfInvoice(PdfInvoice pdfInvoice) {
+        SendEmailHelper.pdfInvoice = pdfInvoice;
+    }
 
 	@Autowired
 	private InvoiceService invoiceService;
@@ -144,13 +155,12 @@ public class SendEmailHelper {
 		Transport.send(msg);
 	}
 
+
+	
 	public static void sendEmailWithInvoice(InvoiceHeaderDetails invoiceHeader, DonationDetails donationDetails, EmailServiceDetails emailServiceDetails) throws MessagingException, IOException {
 		
 		//Get details and generate pdf
-//		 DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
-//		 System.out.println(donationDetails+" khjhjkhjhj");
-        // InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
-//         System.out.println(invoiceHeader+" kgkugkgkj");
+
          ByteArrayOutputStream pdfContent = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 		
 		
@@ -164,8 +174,8 @@ public class SendEmailHelper {
 		String mailFrom = emailServiceDetails.getEmailFrom();
 		String mailTo = donationDetails.getEmailId();
 		String subject = emailServiceDetails.getSubject();
+//		String message = "Dear "+donationDetails.getDonorName()+",\n\n"+emailServiceDetails.getEmailBody();
 		String message = emailServiceDetails.getEmailBody();
-		
 
 		// Attachments
 		String[] attachFiles = {};
@@ -203,9 +213,16 @@ public class SendEmailHelper {
 		multipart.addBodyPart(messageBodyPart);
 
 		// Add PDF attachment
+//		MimeBodyPart pdfAttachment = new MimeBodyPart();
+//		pdfAttachment.setContent(pdfContent.toByteArray(), "application/pdf");
+//		pdfAttachment.setFileName("invoice.pdf");
+//		multipart.addBodyPart(pdfAttachment);
+		
 		MimeBodyPart pdfAttachment = new MimeBodyPart();
-		pdfAttachment.setContent(pdfContent.toByteArray(), "application/pdf");
-		pdfAttachment.setFileName("invoice.pdf");
+		pdfAttachment.setDisposition(MimeBodyPart.ATTACHMENT); // Set disposition to attachment
+		DataSource pdfDataSource = new ByteArrayDataSource(pdfContent.toByteArray(), "application/pdf");
+		pdfAttachment.setDataHandler(new DataHandler(pdfDataSource));
+		pdfAttachment.setFileName("ThankYou.pdf");
 		multipart.addBodyPart(pdfAttachment);
 
 		// Add other attachments

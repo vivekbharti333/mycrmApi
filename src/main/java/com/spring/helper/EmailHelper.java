@@ -31,6 +31,9 @@ public class EmailHelper {
 		if (emailServiceRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
+		if (emailServiceRequestObject.getEmailType() == null || emailServiceRequestObject.getEmailType().equalsIgnoreCase("") ) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Select Email Type");
+		}
 	}
 
 	@Transactional
@@ -99,7 +102,7 @@ public class EmailHelper {
 	public List<EmailServiceDetails> getEmailServiceDetailsList(EmailServiceRequestObject optionRequest) {
 		List<EmailServiceDetails> results = new ArrayList<>();
 		results = emailServiceDetailsDao.getEntityManager().createQuery(
-				"SELECT PM FROM EmailServiceDetails PM WHERE PM.superadminId =:superadminId ORDER BY PM.paymentMode ASC")
+				"SELECT PM FROM EmailServiceDetails PM WHERE PM.superadminId =:superadminId")
 				.setParameter("superadminId", optionRequest.getSuperadminId()).getResultList();
 		return results;
 	}

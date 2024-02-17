@@ -95,22 +95,37 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	
 	
 	
-	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
-			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
-		
-		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+//	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
+//			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
+//		
+//		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+//
+//		donationDetails.setInvoiceDownloadStatus("YES");
+//		donationHelper.updateDonationDetails(donationDetails);
+//
+//		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+//
+//		// Convert HTML to PDF and write it to the output stream
+//		HtmlConverter.convertToPdf(htmlContent, pdfStream);
+//
+//		return pdfStream;
+//	}
 
-		donationDetails.setInvoiceDownloadStatus("YES");
-		donationHelper.updateDonationDetails(donationDetails);
+public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
+        InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
+    
+    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+    donationDetails.setInvoiceDownloadStatus("YES");
+    donationHelper.updateDonationDetails(donationDetails);
 
-		// Convert HTML to PDF and write it to the output stream
-		HtmlConverter.convertToPdf(htmlContent, pdfStream);
+    String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
 
-		return pdfStream;
-	}
+    // Convert HTML to PDF and write it to the output stream
+    HtmlConverter.convertToPdf(htmlContent, pdfStream);
 
+    return pdfStream;
+}
 
 	
 
