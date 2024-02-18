@@ -43,7 +43,6 @@ public class UserService {
 		userHelper.validateUserRequest(userRequest);
 
 		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
-		System.out.println("User Details : "+userDetails.getLoginId());
 		if (userDetails != null) {
 			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				

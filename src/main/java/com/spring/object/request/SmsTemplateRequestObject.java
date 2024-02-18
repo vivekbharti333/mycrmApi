@@ -6,6 +6,7 @@ import java.util.Date;
 public class SmsTemplateRequestObject {
 	
 	private Long id;
+	private Long invoiceHeaderId;
 	private String smsUserId;
 	private String smsPassword;
 	private String service;	
@@ -36,6 +37,12 @@ public class SmsTemplateRequestObject {
 	}
 	public void setId(Long id) {
 		this.id = id;
+	}
+	public Long getInvoiceHeaderId() {
+		return invoiceHeaderId;
+	}
+	public void setInvoiceHeaderId(Long invoiceHeaderId) {
+		this.invoiceHeaderId = invoiceHeaderId;
 	}
 	public String getSmsUserId() {
 		return smsUserId;

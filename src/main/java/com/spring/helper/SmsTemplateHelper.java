@@ -37,9 +37,24 @@ public class SmsTemplateHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
+	
+	@Transactional
+	public SmsTemplateDetails getSmsDetailsBySuperadminIdAndSmsType(String superadminId, String smsType) {
+
+		CriteriaBuilder criteriaBuilder = smsDetailsTemplateDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<SmsTemplateDetails> criteriaQuery = criteriaBuilder.createQuery(SmsTemplateDetails.class);
+		Root<SmsTemplateDetails> root = criteriaQuery.from(SmsTemplateDetails.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("smsType"), smsType);
+//		Predicate restriction3 = criteriaBuilder.equal(root.get("status"), status);
+		criteriaQuery.where(restriction1,restriction2);
+		SmsTemplateDetails smsDetails = smsDetailsTemplateDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return smsDetails;
+	}
+
 
 	@Transactional
-	public SmsTemplateDetails getSmsDetailsBySuperadminId(String superadminId, Long invoiceHeaderId) {
+	public SmsTemplateDetails getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(String superadminId, Long invoiceHeaderId, String smsType) {
 
 		CriteriaBuilder criteriaBuilder = smsDetailsTemplateDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<SmsTemplateDetails> criteriaQuery = criteriaBuilder.createQuery(SmsTemplateDetails.class);

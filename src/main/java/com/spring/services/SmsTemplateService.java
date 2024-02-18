@@ -46,19 +46,19 @@ public class SmsTemplateService {
 
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(smsTemplateRequest.getCreatedBy(),smsTemplateRequest.getToken());
 //		if (isValid) {
-//			SmsTemplateDetails existsSmsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminId(smsTemplateRequest.getSuperadminId(), smsTemplateRequest.getSmsType());
-//			if (existsSmsTemplateDetails == null) {
+			SmsTemplateDetails existsSmsTemplateDetails = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(smsTemplateRequest.getSuperadminId(),smsTemplateRequest.getInvoiceHeaderId(), smsTemplateRequest.getSmsType());
+			if (existsSmsTemplateDetails == null) {
 				SmsTemplateDetails smsTemplateDetails = smsTemplateHelper.getSmsTemplateDetailsByReqObj(smsTemplateRequest);
 				smsTemplateHelper.saveSmsTemplateDetails(smsTemplateDetails);
 
 				smsTemplateRequest.setRespCode(Constant.SUCCESS_CODE);
 				smsTemplateRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
 				return smsTemplateRequest;
-//			} else {
-//				smsTemplateRequest.setRespCode(Constant.ALREADY_EXISTS);
-//				smsTemplateRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
-//				return smsTemplateRequest;
-//			}
+			} else {
+				smsTemplateRequest.setRespCode(Constant.ALREADY_EXISTS);
+				smsTemplateRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
+				return smsTemplateRequest;
+			}
 //		} else {
 //			smsTemplateRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
 //			smsTemplateRequest.setRespMesg(Constant.INVALID_TOKEN);

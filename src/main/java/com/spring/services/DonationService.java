@@ -1,5 +1,11 @@
 package com.spring.services;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -103,6 +109,9 @@ public class DonationService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 
 		if (isValid) {
+			
+			//Validate Fields
+			donationHelper.validateDonationRequestFields(donationRequest);
 		
 			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationRequest.getInvoiceHeaderDetailsId());
 			if(invoiceHeader != null) {
@@ -165,12 +174,17 @@ public class DonationService {
 				        JSONObject data = jsonObject.getJSONObject("data");
 				        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
 				        JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
-				        String url = redirectInfo.getString("url");
-					     
-					     donationRequest.setPaymentMode(donationDetails.getPaymentMode());
-					     donationRequest.setPaymentGatewayPageRedirectUrl(url);
+				        String paymentUrl = redirectInfo.getString("url");
+				        
+				        String paymentLink = this.shortUrl(paymentUrl);
+				        
+				        //Payment Gateway link SMS
+				        donationHelper.sendDonationPaymentLinkSms(donationDetails, invoiceHeader, paymentLink);
+						
+//					     donationRequest.setPaymentMode(donationDetails.getPaymentMode());
+//					     donationRequest.setPaymentGatewayPageRedirectUrl(paymentUrl);
 					     donationRequest.setRespCode(Constant.SUCCESS_CODE);
-						 donationRequest.setRespMesg("Successfully Register");
+						 donationRequest.setRespMesg("Successfully Register & Payment Link Send");
 						 return donationRequest;
 					}else {
 						//payment Faild
@@ -483,7 +497,22 @@ public class DonationService {
 		return donationList;
 	}
 
-	
+	public String shortUrl(String paymentUrl) throws IOException {
+		 String endpoint = "http://tinyurl.com/api-create.php?url=" + URLEncoder.encode(paymentUrl, "UTF-8");
+	        URL url = new URL(endpoint);
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+	        conn.setRequestMethod("GET");
+
+	        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        String shortUrl = reader.readLine();
+
+	        reader.close();
+	        conn.disconnect();
+
+	        System.out.println("hgh : "+shortUrl);
+			return shortUrl; 
+	}
 	
 
 }
