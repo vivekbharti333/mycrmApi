@@ -67,7 +67,7 @@ public class PaymentGatewayController {
 	}
 	
 
-	 @RequestMapping(path = "receiveResponse", method = RequestMethod.POST)
+	 @RequestMapping(path = "phonePePgResponse", method = RequestMethod.POST)
 	    public String receiveResponse(@RequestBody PaymentRequestObject paymentRequestObject) {
 
 	        byte[] decodedBytes = Base64.getDecoder().decode( paymentRequestObject.getResponse());

@@ -103,6 +103,15 @@ public class PaymentGatewayService {
 		paymentGatewayRequest.setStatus(data.getString("state"));
 		paymentGatewayRequest.setTransactionId(data.getString("transactionId"));
 		
+		System.out.println("code : "+code);
+		System.out.println("success : "+success);
+		System.out.println("merchantId : "+merchantId);
+		System.out.println("merchantTransactionId : "+merchantTransactionId);
+		System.out.println("transactionId : "+transactionId);
+		System.out.println("state : "+state);
+		System.out.println("responseCode : "+responseCode);
+		System.out.println();
+		
 		PaymentGatewayResponseDetails paymentResponseDetails = paymentGatewayHelper.getPaymentGatewayResponseDetailsBySuperadminId(merchantId, merchantTransactionId);
 		if(paymentResponseDetails != null) {
 			
