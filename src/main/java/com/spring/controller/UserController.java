@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.spring.common.SendEmailHelper;
 import com.spring.common.PdfInvoice;
+import com.spring.common.PdfThankYouLatter;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
@@ -56,6 +57,9 @@ public class UserController {
 	SendEmailHelper sendEmailHelper;
 	
 	@Autowired
+	private PdfThankYouLatter pdfThankYouLatter;
+	
+	@Autowired
 	private DonationHelper donationHelper;
 	
 	@Autowired
@@ -71,6 +75,7 @@ public class UserController {
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		
+		pdfThankYouLatter.pdf();
 		return new ModelAndView("home");
 	}
 	
