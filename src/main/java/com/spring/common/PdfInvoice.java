@@ -28,16 +28,16 @@ public class PdfInvoice {
 	
 public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) {
 		
-		if(donationDetails.getDonorName()== null) {
-			donationDetails.setDonorName("---");
-		}if(donationDetails.getAddress() == null) {
-			donationDetails.setAddress("---");
-		}if(donationDetails.getEmailId() == null) {
-			donationDetails.setEmailId("---");
-		}if(donationDetails.getMobileNumber() == null) {
-			donationDetails.setMobileNumber("---");
-		}if(donationDetails.getPanNumber() == null) {
-			donationDetails.setPanNumber("---");
+		if(donationDetails.getDonorName()== null || donationDetails.getDonorName().equalsIgnoreCase("")) {
+			donationDetails.setDonorName("XXXX");
+		}if(donationDetails.getAddress() == null || donationDetails.getAddress().equalsIgnoreCase("")) {
+			donationDetails.setAddress("XXXX");
+		}if(donationDetails.getEmailId() == null || donationDetails.getEmailId().equalsIgnoreCase("")) {
+			donationDetails.setEmailId("XXXX");
+		}if(donationDetails.getMobileNumber() == null || donationDetails.getMobileNumber().equalsIgnoreCase("")) {
+			donationDetails.setMobileNumber("XXXX");
+		}if(donationDetails.getPanNumber() == null || donationDetails.getPanNumber().equalsIgnoreCase("")) {
+			donationDetails.setPanNumber("XXXX");
 		}
 		
 		String basePath = filePath.getPathToUploadFile(Constant.invoiceImage);
@@ -54,7 +54,8 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 		
 		String HTML = "<div class=\"body-Container\" style=\" width: 100%; border: 1px solid black;\">\n"
 			    + "<table width=\"100%\">\n" + "<tr>\n" + "<td width=\"16%\" height=\"140px\">\n"
-			    + "<img src="+basePath+File.separator+invoiceHeaderDetails.getCompanyLogo()+" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
+//			    + "<img src="+basePath+File.separator+invoiceHeaderDetails.getCompanyLogo()+" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
+				+ "<img src=\"data:image/jpeg;base64," + invoiceHeaderDetails.getCompanyLogo() + "\" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
 			    + "</td>\n" + "<td width=\"60%\">\n" + "<center>\n"
 			    + "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: "+invoiceHeaderDetails.getCompanyFirstNameColor()+";\">"+invoiceHeaderDetails.getCompanyFirstName()+"</strong> <strong style=\"color: "+invoiceHeaderDetails.getCompanyLastNameColor()+";\">"+invoiceHeaderDetails.getCompanyLastName()+"</strong></h1>\n"
 			    + "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
@@ -68,12 +69,12 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 			    + "</strong> <span style=\"text-align: right; float: right;margin-right: 10px;\">Date:" + date
 			    + "</span> </p>\n"
 			    + "<p style=\"font-size: 19px;margin-right: 40px; margin-left: 40px;line-height: 30px; text-align: justify;\"><strong>"+invoiceHeaderDetails.getCompanyFirstName()+" "+invoiceHeaderDetails.getCompanyLastName()+"</strong> is thankful to <strong>"
-			    + donationDetails.getDonorName() + "</strong> &nbsp; &nbsp; Address:<strong> "
-			    + donationDetails.getAddress() + "</strong>&nbsp; &nbsp; Email:<strong> "
-			    + donationDetails.getEmailId() + "</strong>&nbsp;&nbsp;Contact No: <strong>"
-			    + donationDetails.getMobileNumber() + "</strong>&nbsp; &nbsp;Pan No: <strong>"
-			    + donationDetails.getPanNumber()
-			    + "</strong>&nbsp; &nbsp;<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
+			    + donationDetails.getDonorName() + "</strong> &nbsp;"
+			    + "Address: <strong>" + donationDetails.getAddress() + "</strong>&nbsp;"
+			    + "Email: <strong>"+ donationDetails.getEmailId() + "</strong>&nbsp;"
+			    + "Contact No: <strong>" + donationDetails.getMobileNumber() + "</strong>&nbsp;"
+			    + "Pan No: <strong> "+ donationDetails.getPanNumber() + "</strong>&nbsp;"
+			    		+ "<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
 			    + "/-</strong>. ("+ word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
 			    + "<img src=\""+basePath+File.separator+invoiceHeaderDetails.getCompanyStamp()+"\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
 			    + "<p style=\"font-size: 20px;letter-spacing: 0.6px;margin-top: -30px; margin-left:110px;\">Authorised Sign.</p>\n"
