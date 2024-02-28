@@ -28,15 +28,17 @@ public class DonationTypeService {
 	
 	
 	@Transactional
-	public DonationRequestObject addDonationType(Request<DonationRequestObject> donationRequestObject)
+	public DonationRequestObject addProgramDetails(Request<DonationRequestObject> donationRequestObject)
 			throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationTypeHelper.validateDonationRequest(donationRequest);
 		
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
-		logger.info("Add Donation. Is valid? : " + donationRequest.getLoginId() + " is " + isValid);
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 
-		if (isValid) {
+		logger.info(donationRequest.getSuperadminId()+" , "+donationRequest.getProgramName());
+		
+		DonationType existsDonationType = donationTypeHelper.getProgramDetailsBySuperadminId(donationRequest);
+		if (existsDonationType == null) {
 			
 			DonationType donationType = donationTypeHelper.getDonationTypeByReqObj(donationRequest);
 			donationType = donationTypeHelper.saveDonationType(donationType);
@@ -45,8 +47,8 @@ public class DonationTypeService {
 			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;
 		}else {
-			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
 			return donationRequest; 
 		}
 	}

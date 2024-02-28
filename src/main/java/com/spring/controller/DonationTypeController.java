@@ -26,12 +26,12 @@ public class DonationTypeController {
 	DonationTypeService donationService;
 	
 	
-	@RequestMapping(path = "addDonationType", method = RequestMethod.POST)
-	public Response<DonationRequestObject>addDonationType(@RequestBody Request<DonationRequestObject> donationRequestObject, HttpServletRequest request)
+	@RequestMapping(path = "addProgramDetails", method = RequestMethod.POST)
+	public Response<DonationRequestObject>addProgramDetails(@RequestBody Request<DonationRequestObject> donationRequestObject)
 	{
 		GenricResponse<DonationRequestObject> responseObj = new GenricResponse<DonationRequestObject>();
 		try {
-			DonationRequestObject responce =  donationService.addDonationType(donationRequestObject);
+			DonationRequestObject responce =  donationService.addProgramDetails(donationRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		}catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());

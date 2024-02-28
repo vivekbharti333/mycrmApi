@@ -3,11 +3,17 @@ package com.spring.helper;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationTypeDao;
+import com.spring.entities.ApplicationHeaderDetails;
 import com.spring.entities.DonationType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
@@ -30,6 +36,19 @@ public class DonationTypeHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null"); 
 		}
 	}
+	
+	@Transactional
+	public DonationType getProgramDetailsBySuperadminId(DonationRequestObject donationRequest) {
+		CriteriaBuilder criteriaBuilder = donationTypeDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<DonationType> criteriaQuery = criteriaBuilder.createQuery(DonationType.class);
+		Root<DonationType> root = criteriaQuery.from(DonationType.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("programName"), donationRequest.getProgramName());
+		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), donationRequest.getSuperadminId());
+		criteriaQuery.where(restriction1,restriction2);
+		DonationType donationType = donationTypeDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return donationType;
+	}
+
 	
 
 	public DonationType getDonationTypeByReqObj(DonationRequestObject donationRequest) {
