@@ -89,12 +89,12 @@ public class DonationTypeService {
 		
 		DonationType donationType = donationTypeHelper.getDonationTypeById(donationRequest);
 		if (donationType != null) {
+			System.out.println(donationType.getStatus());
 			if(donationType.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				donationType.setStatus(Status.ACTIVE.name());
 			}else {
 				donationType.setStatus(Status.INACTIVE.name());
 			}
-			
 			donationType = donationTypeHelper.updateDonationType(donationType);
 
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);

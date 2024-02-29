@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationTypeDao;
 import com.spring.entities.DonationType;
+import com.spring.enums.RequestFor;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.DonationRequestObject;
@@ -92,13 +93,22 @@ public class DonationTypeHelper {
 
 	@SuppressWarnings("unchecked")
 	public List<DonationType> getDonationTypeListBySuperadminId(DonationRequestObject donationRequest) {
-
 		List<DonationType> results = new ArrayList<>();
-		results = donationTypeDao.getEntityManager().createQuery(
-				"SELECT DD FROM DonationType DD WHERE DD.status =:status AND DD.superadminId =:superadminId ORDER BY DD.id DESC")
-				.setParameter("superadminId", donationRequest.getSuperadminId())
-				.setParameter("status", Status.ACTIVE.name()).getResultList();
-		return results;
+		if(donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.OPTION.name())) {
+			results = donationTypeDao.getEntityManager().createQuery(
+					"SELECT DD FROM DonationType DD WHERE DD.status =:status AND DD.superadminId =:superadminId ORDER BY DD.id DESC")
+					.setParameter("superadminId", donationRequest.getSuperadminId())
+					.setParameter("status", Status.ACTIVE.name()).getResultList();
+			return results;
+		}else {
+			results = donationTypeDao.getEntityManager().createQuery(
+					"SELECT DD FROM DonationType DD WHERE DD.superadminId =:superadminId ORDER BY DD.status, DD.id DESC")
+					.setParameter("superadminId", donationRequest.getSuperadminId())
+					.getResultList();
+			return results;
+		}
+		
+		
 	}
 
 }
