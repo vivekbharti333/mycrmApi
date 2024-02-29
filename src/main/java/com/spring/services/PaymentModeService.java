@@ -106,10 +106,7 @@ public class PaymentModeService {
 
 		List<PaymentModeMaster> optionTypeList = new ArrayList<>();
 		List<PaymentModeBySuperadmin> hi = optionTypeHelper.getPaymentModeListBySuperadminId1(paymentModeRequest);
-		System.out.println(hi.toString()+" hi");
 		optionTypeList = optionTypeHelper.getPaymentModeListBySuperadminId(paymentModeRequest, hi.get(0).getPaymentModeIds());
-
-		System.out.println("List : "+optionTypeList);
 		return optionTypeList;
 	}
 
