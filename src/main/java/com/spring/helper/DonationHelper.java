@@ -102,12 +102,17 @@ public class DonationHelper {
 	}
 	
 	public void sendDonationInvoiceSms(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
+		
+		System.out.println("Enter 1 "+donationDetails.getSuperadminId()+" , " +donationDetails.getInvoiceHeaderDetailsId());
 
 		SmsTemplateDetails donationSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),SmsType.DONATION_RECEIPT.name());
+		System.out.println("Enter 2 "+donationSmsTemplate);
 		if (donationSmsTemplate != null && donationSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-
+			System.out.println("Enter 3");
 			String messageBody = " We have received donation of Rs " + donationDetails.getAmount()+ " Click to Download your receipt " + donationSmsTemplate.getInvoiceDomain()+ donationDetails.getReceiptNumber() + " - " + donationSmsTemplate.getCompanyRegards();
 			String responce = smsHelper.sendSms(messageBody, donationSmsTemplate, donationDetails);
+			
+			System.out.println("res : "+responce);
 		}
 
 		//Product Sms 
@@ -405,7 +410,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			results = donationDetailsDao.getEntityManager().createQuery(
 				"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, "
-				+ "(SELECT d1.firstName, d1.lastName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
+				+ "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
 				+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
 				+ "AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.teamLeaderId, DD.createdbyName, UD.userPicture")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
