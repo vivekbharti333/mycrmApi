@@ -69,7 +69,7 @@ public class DonationHelper {
 		if(donationRequest.getInvoiceHeaderDetailsId() == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Receipt Type"); 
 		}
-		if(donationRequest.getMobileNumber() == null) {
+		if(donationRequest.getMobileNumber() == null || donationRequest.getMobileNumber().equalsIgnoreCase("")) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Enter Mobile Number"); 
 		}
 		if(donationRequest.getAmount() <= 0) {
@@ -97,22 +97,18 @@ public class DonationHelper {
 	        String messageBody = "CE Foundation has requested money. On approving Rs."+donationDetails.getAmount()+" will debited from your account. "+paymentLink;
 			String response = smsHelper.sendSms(messageBody, smsTemplate, donationDetails);
 		    
-			System.out.println("Payment Request : "+response);
+//			System.out.println("Payment Request : "+response);
 		}
 	}
 	
 	public void sendDonationInvoiceSms(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
 		
-		System.out.println("Enter 1 "+donationDetails.getSuperadminId()+" , " +donationDetails.getInvoiceHeaderDetailsId());
+		if(!donationDetails.getMobileNumber().equalsIgnoreCase("")) {
 
 		SmsTemplateDetails donationSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),SmsType.DONATION_RECEIPT.name());
-		System.out.println("Enter 2 "+donationSmsTemplate);
 		if (donationSmsTemplate != null && donationSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-			System.out.println("Enter 3");
 			String messageBody = " We have received donation of Rs " + donationDetails.getAmount()+ " Click to Download your receipt " + donationSmsTemplate.getInvoiceDomain()+ donationDetails.getReceiptNumber() + " - " + donationSmsTemplate.getCompanyRegards();
 			String responce = smsHelper.sendSms(messageBody, donationSmsTemplate, donationDetails);
-			
-			System.out.println("res : "+responce);
 		}
 
 		//Product Sms 
@@ -121,6 +117,8 @@ public class DonationHelper {
 			String messageBody = " We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber() + " For Receipt mail on help@mydonation.in - Mydonation ";
 			String responce = smsHelper.sendSms(messageBody, productSmsTemplate, donationDetails);
 		}
+		
+	}
 	}
 	
 	@SuppressWarnings("static-access")
