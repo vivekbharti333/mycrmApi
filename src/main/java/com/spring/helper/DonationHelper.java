@@ -112,11 +112,14 @@ public class DonationHelper {
 		}
 
 		//Product Sms 
-		SmsTemplateDetails productSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),SmsType.PRODUCT_RECEIPT.name());
-		if (productSmsTemplate != null && productSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-			String messageBody = " We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber() + " For Receipt mail on help@mydonation.in - Mydonation ";
-			String responce = smsHelper.sendSms(messageBody, productSmsTemplate, donationDetails);
+		if(donationDetails.getProgramName().equalsIgnoreCase("Sale")) {
+			SmsTemplateDetails productSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),SmsType.PRODUCT_RECEIPT.name());
+			if (productSmsTemplate != null && productSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+				String messageBody = " We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber() + " For Receipt mail on help@mydonation.in - Mydonation ";
+				String responce = smsHelper.sendSms(messageBody, productSmsTemplate, donationDetails);
+			}
 		}
+		
 		
 	}
 	}
