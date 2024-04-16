@@ -27,6 +27,13 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-rekognition -->
+<dependency>
+    <groupId>com.amazonaws</groupId>
+    <artifactId>aws-java-sdk-rekognition</artifactId>
+    <version>1.12.701</version>
+</dependency>
+		
 		<!-- Spring core & mvc -->
 		<dependency>
 			<groupId>org.springframework</groupId>

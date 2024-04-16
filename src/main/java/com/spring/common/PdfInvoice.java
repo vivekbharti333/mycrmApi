@@ -26,7 +26,7 @@ public class PdfInvoice {
 	
 //	src="data:image/jpeg;base64,[the value of your base64DataString]"
 	
-public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) {
+	public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeaderDetails) {
 		
 		if(donationDetails.getDonorName()== null || donationDetails.getDonorName().equalsIgnoreCase("")) {
 			donationDetails.setDonorName("XXXX");
@@ -96,37 +96,23 @@ public String htmlInvoice(DonationDetails donationDetails, InvoiceHeaderDetails 
 	
 	
 	
-//	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
-//			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
-//		
-//		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
-//
-//		donationDetails.setInvoiceDownloadStatus("YES");
-//		donationHelper.updateDonationDetails(donationDetails);
-//
-//		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
-//
-//		// Convert HTML to PDF and write it to the output stream
-//		HtmlConverter.convertToPdf(htmlContent, pdfStream);
-//
-//		return pdfStream;
-//	}
 
-public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
-        InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
-    
-    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-    donationDetails.setInvoiceDownloadStatus("YES");
-    donationHelper.updateDonationDetails(donationDetails);
+	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
+			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
 
-    String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-    // Convert HTML to PDF and write it to the output stream
-    HtmlConverter.convertToPdf(htmlContent, pdfStream);
+		donationDetails.setInvoiceDownloadStatus("YES");
+		donationHelper.updateDonationDetails(donationDetails);
 
-    return pdfStream;
-}
+		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+
+		// Convert HTML to PDF and write it to the output stream
+		HtmlConverter.convertToPdf(htmlContent, pdfStream);
+
+		return pdfStream;
+	}
 
 	
 

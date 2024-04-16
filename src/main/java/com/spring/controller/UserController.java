@@ -33,6 +33,7 @@ import com.spring.entities.DonationDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
+import com.spring.helper.FaceRecognitionHelper;
 import com.spring.object.request.Request;
 import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
@@ -67,6 +68,9 @@ public class UserController {
 	
 	@Autowired
 	private AttendenceService attendenceService;
+	
+	@Autowired
+	private FaceRecognitionHelper faceRecognitionHelper;
 
 	
 	@Autowired
@@ -81,7 +85,10 @@ public class UserController {
 	
 	
 	@RequestMapping(value = "version")
-	public String version(HttpServletResponse response) throws IOException {
+	public String version(HttpServletResponse response) throws Exception {
+		
+		faceRecognitionHelper.compareFace();
+		
 		return "1.2";
 	}
 
