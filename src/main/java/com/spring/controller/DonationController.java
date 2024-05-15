@@ -24,7 +24,7 @@ import com.spring.services.DonationService;
 public class DonationController {
 	
 	@Autowired
-	DonationService donationService;
+	private DonationService donationService;
 	
 	
 	@RequestMapping(path = "addDonation", method = RequestMethod.POST)
