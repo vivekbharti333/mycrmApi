@@ -1,14 +1,8 @@
 package com.spring.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -17,19 +11,18 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.spring.common.SendEmailHelper;
+import com.razorpay.PaymentLink;
+import com.razorpay.RazorpayClient;
 import com.spring.common.PdfInvoice;
 import com.spring.common.PdfThankYouLatter;
-import com.spring.common.SmsHelper;
+import com.spring.common.SendEmailHelper;
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
-import com.spring.entities.DonationDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
@@ -79,7 +72,7 @@ public class UserController {
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		
-		pdfThankYouLatter.pdf();
+//		pdfThankYouLatter.pdf();
 		return new ModelAndView("home");
 	}
 	
@@ -90,6 +83,37 @@ public class UserController {
 		faceRecognitionHelper.compareFace();
 		
 		return "1.2";
+	}
+	
+	@RequestMapping(value = "rozarpay")
+	public String rozarpay() throws Exception {
+
+		RazorpayClient razorpay = new RazorpayClient("FOm6kecVJSX7lp", "rzp_live_nGALlLllOEWX3I");
+		JSONObject paymentLinkRequest = new JSONObject();
+		paymentLinkRequest.put("upi_link", true);
+		paymentLinkRequest.put("amount", 1000);
+		paymentLinkRequest.put("currency", "INR");
+		paymentLinkRequest.put("accept_partial", false);
+		paymentLinkRequest.put("first_min_partial_amount", 100);
+		paymentLinkRequest.put("description", "Payment for policy no #23456");
+		JSONObject customer = new JSONObject();
+		customer.put("name", "+919000090000");
+		customer.put("contact", "Gaurav Kumar");
+		customer.put("email", "gaurav.kumar@example.com");
+		paymentLinkRequest.put("customer", customer);
+		JSONObject notify = new JSONObject();
+		notify.put("sms", true);
+		notify.put("email", true);
+		paymentLinkRequest.put("notify", notify);
+		paymentLinkRequest.put("reminder_enable", true);
+		JSONObject notes = new JSONObject();
+		notes.put("policy_name", "Jeevan Bima");
+		paymentLinkRequest.put("notes", notes);
+
+		PaymentLink payment = razorpay.paymentLink.create(paymentLinkRequest);
+		
+		System.out.println("Payment : "+payment);
+		return null;
 	}
 
 //	@Scheduled(fixedDelay = 5000)
@@ -162,7 +186,6 @@ public class UserController {
 	}
 	
 	@RequestMapping(path = "getUserDetailsByLoginId", method = RequestMethod.POST)
-//	public Response<UserRequestObject> getUserDetailsByLoginId(@RequestBody Request<UserRequestObject> userRequestObject, HttpServletRequest request, @RequestHeader("token") String token) {
 	public Response<UserRequestObject> getUserDetailsByLoginId(@RequestBody Request<UserRequestObject> userRequestObject, HttpServletRequest request) {
 		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
 		try {

@@ -150,8 +150,6 @@ public class UserService {
 					userRequest.setRespMesg("Enter Last Name");
 					return userRequest;
 				}
-				
-//				String userCode = userRequest.getFirstName().substring(0,1)+userRequest.getLastName().substring(0,1);
 
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);

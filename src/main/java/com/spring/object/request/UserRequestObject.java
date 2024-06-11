@@ -19,6 +19,7 @@ public class UserRequestObject {
 	private String firstName;
 	private String lastName;
 	private String mobileNo;
+	private String otp;
 	private String alternateMobile;
 	private String emailId;
 	private String aadharNumber;

@@ -28,12 +28,12 @@
 			<scope>provided</scope>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-rekognition -->
-<dependency>
-    <groupId>com.amazonaws</groupId>
-    <artifactId>aws-java-sdk-rekognition</artifactId>
-    <version>1.12.701</version>
-</dependency>
-		
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-rekognition</artifactId>
+			<version>1.12.701</version>
+		</dependency>
+
 		<!-- Spring core & mvc -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -173,6 +173,13 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.6.2</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/com.razorpay/razorpay-java -->
+		<dependency>
+			<groupId>com.razorpay</groupId>
+			<artifactId>razorpay-java</artifactId>
+			<version>1.4.6</version>
+		</dependency>
+
 
 		<!-- ///////////////////////////////////////////// -->
 		<dependency>
