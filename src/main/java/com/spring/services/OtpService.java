@@ -86,8 +86,6 @@ public class OtpService {
 			Long nowTime = new Date().getTime();
 			Long diffTime = nowTime - dbTime;
 			
-			logger.info("Diff : "+diffTime);
-			
 			boolean hi = (existsOtpDetails.getUpdatedAt() == new Date());
 			logger.info("hi "+hi);
 
