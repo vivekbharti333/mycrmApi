@@ -54,6 +54,9 @@ public class PhonePePaymentGateway {
 		String param = this.getPaymetGatewayParam(donationDetails, paymentGatewayDetails );
 		String jsonResponse = this.getPaymentPageResponse(param, paymentGatewayDetails);
 		
+		System.out.println("param : "+param);
+		System.out.println("Response : "+jsonResponse);
+		
 //		String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
 		JSONObject jsonObject = new JSONObject(jsonResponse);
 		String code = jsonObject.getString("code");
@@ -66,6 +69,9 @@ public class PhonePePaymentGateway {
 	        String paymentUrl = redirectInfo.getString("url");
 	        
 	        String paymentLink = shortUrl.shortUrl(paymentUrl);
+	        
+	        System.out.println("Link : "+paymentUrl);
+	        System.out.println("Link 2 : "+paymentLink);
 	        
 	        //Payment Gateway link SMS
 //	        donationHelper.sendDonationPaymentLinkSms(donationDetails, invoiceHeader, paymentLink);
@@ -90,22 +96,48 @@ public class PhonePePaymentGateway {
 
 		paymentInstrument.put("type", "PAY_PAGE");
 
-		parameters.put("merchantId", paymentGatewayDetails.getMerchantId());
-		parameters.put("merchantTransactionId", donationDetails.getInvoiceNumber());
-		parameters.put("merchantUserId", donationDetails.getCreatedBy());
-		parameters.put("amount", donationDetails.getAmount());
-		parameters.put("redirectUrl", "https://datfuslab.com/successfull");
+//		parameters.put("merchantId", paymentGatewayDetails.getMerchantId());
+//		parameters.put("merchantTransactionId", donationDetails.getInvoiceNumber());
+//		parameters.put("merchantUserId", donationDetails.getCreatedBy());
+//		parameters.put("amount", donationDetails.getAmount());
+//		parameters.put("redirectUrl", "https://datfuslab.com/successfull");
+//		parameters.put("redirectMode", "REDIRECT");
+//		parameters.put("callbackUrl", "https://datfuslab.com/successfull");
+//		parameters.put("mobileNumber", donationDetails.getMobileNumber());
+//		parameters.put("paymentInstrument", paymentInstrument);
+		
+		parameters.put("merchantId", "PGTESTPAYUAT");
+		parameters.put("merchantTransactionId", "MT7850590068188104");
+		parameters.put("merchantUserId", "MUID123");
+		parameters.put("amount", 1000);
+		parameters.put("redirectUrl", "https://webhook.site/redirect-url");
 		parameters.put("redirectMode", "REDIRECT");
-		parameters.put("callbackUrl", "https://datfuslab.com/successfull");
+		parameters.put("callbackUrl", "https://webhook.site/callback-url");
 		parameters.put("mobileNumber", donationDetails.getMobileNumber());
 		parameters.put("paymentInstrument", paymentInstrument);
+		
+		String hi = "{\r\n"
+				+ "  \"merchantId\": \"PGTESTPAYUAT\",\r\n"
+				+ "  \"merchantTransactionId\": \"MT7850590068188104\",\r\n"
+				+ "  \"merchantUserId\": \"MUID123\",\r\n"
+				+ "  \"amount\": 10000,\r\n"
+				+ "  \"redirectUrl\": \"https://webhook.site/redirect-url\",\r\n"
+				+ "  \"redirectMode\": \"REDIRECT\",\r\n"
+				+ "  \"callbackUrl\": \"https://webhook.site/callback-url\",\r\n"
+				+ "  \"mobileNumber\": \"9999999999\",\r\n"
+				+ "  \"paymentInstrument\": {\r\n"
+				+ "    \"type\": \"PAY_PAGE\"\r\n"
+				+ "  }\r\n"
+				+ "}";
 
-		return parameters.toString();
+		return hi.toString();
 	}
 
 	public String getSha256(String base64param, String saltKey) throws NoSuchAlgorithmException {
 
 		String originalString = base64param + "/pg/v1/pay" + saltKey;
+		
+		System.out.println("hhjg : "+base64param);
 		
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
 		byte[] hash = digest.digest(originalString.getBytes(StandardCharsets.UTF_8));
@@ -118,6 +150,7 @@ public class PhonePePaymentGateway {
 			}
 			hexString.append(hex);
 		}
+		System.out.println("jkh : "+hexString);
 		return hexString.toString();
 	}
 
@@ -130,15 +163,17 @@ public class PhonePePaymentGateway {
 
 		JSONObject requestedParam = new JSONObject();
 		requestedParam.put("request", encodedString);
+		
+//		System.out.println("request : "+encodedString);
 
 		// Build the request body with JSON content
 		RequestBody body = RequestBody.create(MediaType.parse("application/json"), requestedParam.toString());
 
 		// Build the request
-		Request request = new Request.Builder().url("https://api-preprod.phonepe.com/apis/hermes")
+		Request request = new Request.Builder().url("https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay")
 				.post(body).addHeader("accept", "application/json")
 				.addHeader("Content-Type", "application/json")
-				.addHeader("X-VERIFY", xVeryfy+"###"+paymentGatewayDetails.getSaltIndex()).build();
+				.addHeader("X-VERIFY", xVeryfy+"###"+1).build();
 		
 
 		// Execute the request

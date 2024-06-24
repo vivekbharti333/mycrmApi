@@ -127,6 +127,19 @@ public class DonationController {
 		}
 	}
 	
+	@RequestMapping(path = "getStartPerformer", method = RequestMethod.POST)
+	public Response<DonationDetails> getStartPerformer(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
+		try {
+			List<DonationDetails> startPerformerList = donationService.getStartPerformer(donationRequestObject);
+			return response.createListResponse(startPerformerList, Constant.SUCCESS_CODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	
 	
 	@RequestMapping(path = "getDonationCountAndAmountGroupByName", method = RequestMethod.POST)
 	public Response<DonationDetails> getDonationCountAndAmountGroupByName(@RequestBody Request<DonationRequestObject> donationRequestObject) {

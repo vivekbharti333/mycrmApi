@@ -25,6 +25,7 @@ import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.SmsType;
 import com.spring.enums.Status;
@@ -491,5 +492,43 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			}
 			return results;
 		}
+		
+		@SuppressWarnings("unchecked")
+		public List<DonationDetails> getStartPerformer(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
+			List<DonationDetails> results = new ArrayList<>();
+			if (donationRequest.getRequestedFor().equals(RequestFor.ALL.name())) {
+				results = donationDetailsDao.getEntityManager().createQuery(
+					"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, "
+					+ "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
+					+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
+					+ "AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.teamLeaderId, DD.createdbyName, UD.userPicture order by amount desc")
+						.setParameter("firstDate", firstDate, TemporalType.DATE)
+						.setParameter("lastDate", secondDate, TemporalType.DATE)
+						.setParameter("superadminId", donationRequest.getSuperadminId())
+						.setParameter("status", Status.ACTIVE.name())
+						.getResultList();
+				return results;
+			} else if (donationRequest.getRequestedFor().equals(RequestFor.TEAM.name())) {
+				results = donationDetailsDao.getEntityManager().createQuery(
+//						"SELECT DD.createdbyName, COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status =:status GROUP BY DD.createdbyName")
+						"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture FROM DonationDetails DD "
+						+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
+						+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture order by amount desc")
+						.setParameter("firstDate", firstDate, TemporalType.DATE)
+						.setParameter("lastDate", secondDate, TemporalType.DATE)
+						.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+						.setParameter("status", Status.ACTIVE.name())
+						.getResultList();
+				return results;
+			}else {
+				
+			}
+			return results;
+		}
+
+
+
+
+
 
 }
