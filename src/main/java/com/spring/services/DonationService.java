@@ -68,9 +68,6 @@ public class DonationService {
 
 	@Autowired
 	private SendEmailHelper sendEmailHelper;
-	
-	@Autowired
-	private ShortUrl shortUrl;
 
 	@Autowired
 	private PhonePePaymentGateway phonePePaymentGateway;
@@ -83,6 +80,9 @@ public class DonationService {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+
+	@Autowired
+	private ShortUrl shortUrl;
 
 	@Autowired
 	private PaymentGatewayHelper paymentGatewayHelper;
@@ -107,118 +107,102 @@ public class DonationService {
 			throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
-		
+
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 
 		if (isValid) {
-			
-			//Validate Fields
+
+			// Validate Fields
 			donationHelper.validateDonationRequestFields(donationRequest);
-		
+
 			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationRequest.getInvoiceHeaderDetailsId());
-			if(invoiceHeader != null) {
-				donationRequest.setInvoiceHeaderName(invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName());
-			}else {
+			if (invoiceHeader != null) {
+				donationRequest.setInvoiceHeaderName(invoiceHeader.getCompanyFirstName() + " " + invoiceHeader.getCompanyLastName());
+			} else {
 				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				donationRequest.setRespMesg("Add invoice header first");
-				return donationRequest; 
+				return donationRequest;
 			}
-			
-			//Get Team leader Details
+
+			// Get Team leader Details
 			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
 
-			//Invoice Number Generate
-			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
+			// Invoice Number Generate
+			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(
+					donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
 			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
-	      	String invoiceNumber = teamLeaderCode.getUserCode()+"/"+invoiceHeader.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeader.getSerialNumber() + 1);
+			String invoiceNumber = teamLeaderCode.getUserCode() + "/" + invoiceHeader.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeader.getSerialNumber() + 1);
 
-	      	donationRequest.setInvoiceNumber(invoiceNumber);
-	      	
-	      	//Generate Receipt Number
+			donationRequest.setInvoiceNumber(invoiceNumber);
+
+			// Generate Receipt Number
 			String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
-			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
+			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4) + rendomNumber + donationRequest.getMobileNumber().substring(7, 10);
 			donationRequest.setReceiptNumber(receiptNumber);
-				
-			
-			//Save Donation Details
-			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
-			donationDetails = donationHelper.saveDonationDetails(donationDetails);
-			
-			// increase serial number by 1
-			invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
-	        invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
-	        
-	        //payment gateway
-			if(donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
-				PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminId(donationDetails.getSuperadminId(), "PHONEPE");
-				
-				if(paymentGatewayDetails != null) {
-					
-					donationRequest.setMerchantId(paymentGatewayDetails.getMerchantId());
-					donationRequest.setSaltIndex(paymentGatewayDetails.getSaltIndex());
-					donationRequest.setSaltKey(paymentGatewayDetails.getSaltKey());
-					
-					//Save Payment Details
-					PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
-					paymentGatewayResponseDetails = paymentGatewayHelper.savePaymentDetails(paymentGatewayResponseDetails);
-					
-					//Call Payment Gateway API
-					String param = phonePePaymentGateway.getPaymetGatewayParam(donationDetails, paymentGatewayDetails );
-					String jsonResponse = phonePePaymentGateway.getPaymentPageResponse(param, paymentGatewayDetails);
-					
-					
-//					String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
-					JSONObject jsonObject = new JSONObject(jsonResponse);
-					String code = jsonObject.getString("code");
-			        boolean success = jsonObject.getBoolean("success");
-					if(success) {
 
-				        JSONObject data = jsonObject.getJSONObject("data");
-				        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
-				        JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
-				        String paymentUrl = redirectInfo.getString("url");
-				        
-				        String paymentLink = shortUrl.shortUrl(paymentUrl);
-				        
-				        System.out.println("link 1 : "+paymentUrl);
-				        System.out.println("link 2 : "+paymentLink);
-				        
-				        //Payment Gateway link SMS
-				        donationHelper.sendDonationPaymentLinkSms(donationDetails, invoiceHeader, paymentLink);
-						
-//					     donationRequest.setPaymentMode(donationDetails.getPaymentMode());
-//					     donationRequest.setPaymentGatewayPageRedirectUrl(paymentUrl);
-					     donationRequest.setRespCode(Constant.SUCCESS_CODE);
-						 donationRequest.setRespMesg("Successfully Register & Payment Link Send");
-						 return donationRequest;
-					}else {
-						//payment Faild
-						donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-						donationRequest.setRespMesg("Donation Saved but paymentgateway Faild " + code);
-						return donationRequest;
-					}
-		
-				}else {
-					donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-					donationRequest.setRespMesg("Please add Payment Gatways Details first");
-					return donationRequest;
-				}
-			}else {
-				// send sms
-		        donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
+			// payment gateway
+			if (donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
+				this.sendOnlinePaymentLink(donationRequest, invoiceHeader);
+			} else {
 				
-				//send email
-		        donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
+				// Save Donation Details
+				DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
+				donationDetails = donationHelper.saveDonationDetails(donationDetails);
+
+				// increase serial number by 1
+				invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
+				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
+
+				// send sms
+				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
+
+				// send email
+				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
 			}
-			
+
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;
-		}else {
+		} else {
 			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
 			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return donationRequest; 
+			return donationRequest;
 		}
+	}
+	
+	public DonationRequestObject sendOnlinePaymentLink(DonationRequestObject donationRequest, InvoiceHeaderDetails invoiceHeader) throws BizException, Exception {
+		
+		PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper
+				.getPaymentGatewayDetailsBySuperadminId(donationRequest.getSuperadminId(), "PHONEPE");
+
+		if (paymentGatewayDetails != null) {
+
+			// Save Donation Details
+			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
+			donationDetails = donationHelper.saveDonationDetails(donationDetails);
+
+			DonationRequestObject paymentGatewayRequest = new DonationRequestObject();
+			if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("PHONEPE")) {
+				paymentGatewayRequest = phonePePaymentGateway.getPhonePePaymentLink(donationRequest, donationDetails, paymentGatewayDetails);
+
+			} else if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("ROZARPAY")) {
+
+			} else if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("PAYTM")) {
+
+			}
+
+			// Payment Gateway link SMS
+			String paymentLink = shortUrl.shortUrl(paymentGatewayRequest.getPaymentGatewayPageRedirectUrl());
+			donationHelper.sendDonationPaymentLinkSms(donationDetails, invoiceHeader, paymentGatewayRequest.getPaymentGatewayPageRedirectUrl());
+
+		} else {
+			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			donationRequest.setRespMesg("Please add Payment Gatways Details first");
+			return donationRequest;
+		}
+		
+		
+		return null;
 	}
 
 	public List<DonationDetails> getDonationList(Request<DonationRequestObject> donationRequestObject) {
@@ -361,13 +345,11 @@ public class DonationService {
 		donationRequest.setMonthAmount((Double) month[1]);
 
 		// Active
-		Long activeUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(),
-				donationRequest.getCreatedBy(), Status.ACTIVE.name());
+		Long activeUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(), donationRequest.getCreatedBy(), Status.ACTIVE.name());
 		donationRequest.setActiveUserCount(activeUserCount);
 
 		// Inactive
-		Long inactiveUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(),
-				donationRequest.getCreatedBy(), Status.INACTIVE.name());
+		Long inactiveUserCount = userHelper.getActiveAndInactiveUserCount(donationRequest.getRoleType(), donationRequest.getCreatedBy(), Status.INACTIVE.name());
 		donationRequest.setInactiveUserCount(inactiveUserCount);
 
 		donationRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -439,18 +421,15 @@ public class DonationService {
 		List<DonationDetails> donationList = new ArrayList<>();
 
 		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
-			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, todayDate,
-					tomorrowDate);
+			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
 			return donationList;
 
 		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
-			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, previousDate,
-					todayDate);
+			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, previousDate, todayDate);
 			return donationList;
 
 		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
-			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, firstDateMonth,
-					lastDateMonth);
+			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, firstDateMonth, lastDateMonth);
 			return donationList;
 		}
 		return donationList;
@@ -465,78 +444,41 @@ public class DonationService {
 		List<DonationDetails> donationList = new ArrayList<>();
 
 		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
-			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, todayDate,
-					tomorrowDate);
+			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
 			return donationList;
 
 		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
-			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, previousDate,
-					todayDate);
+			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, previousDate, todayDate);
 			return donationList;
 
 		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
-			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest,
-					firstDateMonth, lastDateMonth);
+			donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByName(donationRequest, firstDateMonth, lastDateMonth);
 			return donationList;
 		}
 		return donationList;
 
 	}
 
-	public List<DonationDetails> getDonationProgramNameCountAndAmountGroupByName(
-			Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
+	public List<DonationDetails> getDonationProgramNameCountAndAmountGroupByName(Request<DonationRequestObject> donationRequestObject)
+			throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
 		List<DonationDetails> donationList = new ArrayList<>();
 
 		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
-			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, todayDate,
-					tomorrowDate);
+			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
 			return donationList;
 
 		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
-			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, previousDate,
-					todayDate);
+			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, previousDate, todayDate);
 			return donationList;
 
 		} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
-			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest,
-					firstDateMonth, lastDateMonth);
+			donationList = donationHelper.getDonationProgramNameCountAndAmountGroupByName(donationRequest, firstDateMonth, lastDateMonth);
 			return donationList;
 		}
 		return donationList;
-	}
-
-//	public String shortUrl(String paymentUrl) throws IOException {
-//		String endpoint = "http://tinyurl.com/api-create.php?url=" + URLEncoder.encode(paymentUrl, "UTF-8");
-//		URL url = new URL(endpoint);
-//		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//
-//		conn.setRequestMethod("GET");
-//
-//		BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//		String shortUrl = reader.readLine();
-//
-//		reader.close();
-//		conn.disconnect();
-//
-//		System.out.println("hgh : " + shortUrl);
-//		return shortUrl;
-//	}
-	
-	public List<DonationDetails> getStartPerformer(Request<DonationRequestObject> donationRequestObject)
-			throws BizException {
-		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-		donationHelper.validateDonationRequest(donationRequest);
-
-		List<DonationDetails> donationList = new ArrayList<>();
-
-//		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
-			donationList = donationHelper.getStartPerformer(donationRequest, firstDateMonth, lastDateMonth);
-			return donationList;
-//		}
-//		return donationList;
 	}
 
 }

@@ -165,8 +165,6 @@ public class DonationHelper {
 		return donationRequest;
 	}
 
-	
-	
 	@Transactional
 	public DonationDetails getDonationDetailsByIdAndSuperadminId(Long id, String superadminId) {
 
@@ -191,6 +189,18 @@ public class DonationHelper {
 		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return donationDetails;
 	}
+	
+//	@Transactional
+//	public DonationDetails getDonationDetailsByInvoiceNo(String invoiceNumber) {
+//
+//		CriteriaBuilder criteriaBuilder = donationDetailsDao.getSession().getCriteriaBuilder();
+//		CriteriaQuery<DonationDetails> criteriaQuery = criteriaBuilder.createQuery(DonationDetails.class);
+//		Root<DonationDetails> root = criteriaQuery.from(DonationDetails.class);
+//		Predicate restriction = criteriaBuilder.equal(root.get("invoiceNumber"), invoiceNumber);
+//		criteriaQuery.where(restriction);
+//		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+//		return donationDetails;
+//	}
 	
 
 	public DonationDetails getDonationDetailsByReqObj(DonationRequestObject donationRequest) {

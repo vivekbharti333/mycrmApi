@@ -37,6 +37,9 @@ public class PaymentGatewayResponseDetails {
 	@Column(name = "transaction_id")
 	private String transactionId;
 	
+	@Column(name = "receipt_number")
+	private String receiptNumber;
+	
 	@Column(name = "invoice_number")
 	private String invoiceNumber;
 	
@@ -113,6 +116,14 @@ public class PaymentGatewayResponseDetails {
 
 	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
+	}
+
+	public String getReceiptNumber() {
+		return receiptNumber;
+	}
+
+	public void setReceiptNumber(String receiptNumber) {
+		this.receiptNumber = receiptNumber;
 	}
 
 	public String getInvoiceNumber() {

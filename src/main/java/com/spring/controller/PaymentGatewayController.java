@@ -67,18 +67,18 @@ public class PaymentGatewayController {
 	}
 	
 
-	 @RequestMapping(path = "phonePePgResponse", method = RequestMethod.POST)
-	    public String receiveResponse(@RequestBody PaymentRequestObject paymentRequestObject) {
-
-	        byte[] decodedBytes = Base64.getDecoder().decode( paymentRequestObject.getResponse());
-	        String decodedString = new String(decodedBytes);
-	      
-	        JSONObject response = paymentGatewayService.updatePgResponseDetails(decodedString);
-	        		
-			
-	        // Return a response
-	        return "Response received successfully";
-	    }
+//	 @RequestMapping(path = "phonePePgResponse", method = RequestMethod.POST)
+//	    public String receiveResponse(@RequestBody PaymentRequestObject paymentRequestObject) {
+//		
+//	        byte[] decodedBytes = Base64.getDecoder().decode( paymentRequestObject.getResponse());
+//	        String decodedString = new String(decodedBytes);
+//	      
+//	        JSONObject response = paymentGatewayService.updatePgResponseDetails(decodedString);
+//	        
+////	        DonationDetails donationDetails = 
+//	       
+//	        return "Response received successfully";
+//	    }
 	
 	
 }

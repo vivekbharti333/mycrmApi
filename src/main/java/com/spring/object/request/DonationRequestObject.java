@@ -4,7 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Column;
 
+import lombok.Data;
 
+@Data
 public class DonationRequestObject {
 	
 	private String token;
@@ -21,6 +23,7 @@ public class DonationRequestObject {
 	private String notes;
 	private String receiptNumber;
 	private String invoiceDownloadStatus;
+	private String paymentStatus;
 	private String status;
 	private Date createdAt;
 	private Date updatedAt;
@@ -65,312 +68,312 @@ public class DonationRequestObject {
 	private String respMesg;
 	
 	
-	public String getToken() {
-		return token;
-	}
-	public void setToken(String token) {
-		this.token = token;
-	}
-	public Long getId() {
-		return id;
-	}
-	public void setId(Long id) {
-		this.id = id;
-	}
-	public String getDonorName() {
-		return donorName;
-	}
-	public void setDonorName(String donorName) {
-		this.donorName = donorName;
-	}
-	public String getMobileNumber() {
-		return mobileNumber;
-	}
-	public void setMobileNumber(String mobileNumber) {
-		this.mobileNumber = mobileNumber;
-	}
-	public String getEmailId() {
-		return emailId;
-	}
-	public void setEmailId(String emailId) {
-		this.emailId = emailId;
-	}
-	public String getPanNumber() {
-		return panNumber;
-	}
-	public void setPanNumber(String panNumber) {
-		this.panNumber = panNumber;
-	}
-	public String getAddress() {
-		return address;
-	}
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	public Double getAmount() {
-		return amount;
-	}
-	public void setAmount(Double amount) {
-		this.amount = amount;
-	}
-	public String getTransactionId() {
-		return transactionId;
-	}
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
-	public String getPaymentMode() {
-		return paymentMode;
-	}
-	public void setPaymentMode(String paymentMode) {
-		this.paymentMode = paymentMode;
-	}
-	public String getPaymentType() {
-		return paymentType;
-	}
-	public void setPaymentType(String paymentType) {
-		this.paymentType = paymentType;
-	}
-	public String getNotes() {
-		return notes;
-	}
-	public void setNotes(String notes) {
-		this.notes = notes;
-	}
-	public String getReceiptNumber() {
-		return receiptNumber;
-	}
-	public void setReceiptNumber(String receiptNumber) {
-		this.receiptNumber = receiptNumber;
-	}
-	public String getInvoiceDownloadStatus() {
-		return invoiceDownloadStatus;
-	}
-	public void setInvoiceDownloadStatus(String invoiceDownloadStatus) {
-		this.invoiceDownloadStatus = invoiceDownloadStatus;
-	}
-	public String getStatus() {
-		return status;
-	}
-	public void setStatus(String status) {
-		this.status = status;
-	}
-	public Date getCreatedAt() {
-		return createdAt;
-	}
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
-	}
-	public Date getUpdatedAt() {
-		return updatedAt;
-	}
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
-	}
-	public String getCreatedBy() {
-		return createdBy;
-	}
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
-	public String getCreatedbyName() {
-		return createdbyName;
-	}
-	public void setCreatedbyName(String createdbyName) {
-		this.createdbyName = createdbyName;
-	}
-	public String getLoginId() {
-		return loginId;
-	}
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
-	}
-	public String getTeamLeaderId() {
-		return teamLeaderId;
-	}
-	public void setTeamLeaderId(String teamLeaderId) {
-		this.teamLeaderId = teamLeaderId;
-	}
-	public String getSuperadminId() {
-		return superadminId;
-	}
-	public void setSuperadminId(String superadminId) {
-		this.superadminId = superadminId;
-	}
-	public String getSmsResponse() {
-		return smsResponse;
-	}
-	public void setSmsResponse(String smsResponse) {
-		this.smsResponse = smsResponse;
-	}
-	public String getRoleType() {
-		return roleType;
-	}
-	public void setRoleType(String roleType) {
-		this.roleType = roleType;
-	}
-	public String getRequestedFor() {
-		return requestedFor;
-	}
-	public void setRequestedFor(String requestedFor) {
-		this.requestedFor = requestedFor;
-	}
-	public Date getFirstDate() {
-		return firstDate;
-	}
-	public void setFirstDate(Date firstDate) {
-		this.firstDate = firstDate;
-	}
-	public Date getLastDate() {
-		return lastDate;
-	}
-	public void setLastDate(Date lastDate) {
-		this.lastDate = lastDate;
-	}
-	public String getProgramName() {
-		return programName;
-	}
-	public void setProgramName(String programName) {
-		this.programName = programName;
-	}
-	public Double getProgramAmount() {
-		return programAmount;
-	}
-	public void setProgramAmount(Double programAmount) {
-		this.programAmount = programAmount;
-	}
-	public Long getInvoiceHeaderDetailsId() {
-		return invoiceHeaderDetailsId;
-	}
-	public void setInvoiceHeaderDetailsId(Long invoiceHeaderDetailsId) {
-		this.invoiceHeaderDetailsId = invoiceHeaderDetailsId;
-	}
-	public String getInvoiceHeaderName() {
-		return invoiceHeaderName;
-	}
-	public void setInvoiceHeaderName(String invoiceHeaderName) {
-		this.invoiceHeaderName = invoiceHeaderName;
-	}
-	public String getInvoiceNumber() {
-		return invoiceNumber;
-	}
-	public void setInvoiceNumber(String invoiceNumber) {
-		this.invoiceNumber = invoiceNumber;
-	}
-	public Long getActiveUserCount() {
-		return activeUserCount;
-	}
-	public void setActiveUserCount(Long activeUserCount) {
-		this.activeUserCount = activeUserCount;
-	}
-	public Long getInactiveUserCount() {
-		return inactiveUserCount;
-	}
-	public void setInactiveUserCount(Long inactiveUserCount) {
-		this.inactiveUserCount = inactiveUserCount;
-	}
-	public Long getTodaysCount() {
-		return todaysCount;
-	}
-	public void setTodaysCount(Long todaysCount) {
-		this.todaysCount = todaysCount;
-	}
-	public Double getTodaysAmount() {
-		return todaysAmount;
-	}
-	public void setTodaysAmount(Double todaysAmount) {
-		this.todaysAmount = todaysAmount;
-	}
-	public Long getYesterdayCount() {
-		return yesterdayCount;
-	}
-	public void setYesterdayCount(Long yesterdayCount) {
-		this.yesterdayCount = yesterdayCount;
-	}
-	public Double getYesterdayAmount() {
-		return yesterdayAmount;
-	}
-	public void setYesterdayAmount(Double yesterdayAmount) {
-		this.yesterdayAmount = yesterdayAmount;
-	}
-	public Long getMonthCount() {
-		return monthCount;
-	}
-	public void setMonthCount(Long monthCount) {
-		this.monthCount = monthCount;
-	}
-	public Double getMonthAmount() {
-		return monthAmount;
-	}
-	public void setMonthAmount(Double monthAmount) {
-		this.monthAmount = monthAmount;
-	}
-	public String getSearchParam() {
-		return searchParam;
-	}
-	public void setSearchParam(String searchParam) {
-		this.searchParam = searchParam;
-	}
-	public String getPgProvider() {
-		return pgProvider;
-	}
-	public void setPgProvider(String pgProvider) {
-		this.pgProvider = pgProvider;
-	}
-	public String getMerchantId() {
-		return merchantId;
-	}
-	public void setMerchantId(String merchantId) {
-		this.merchantId = merchantId;
-	}  
-	public String getSaltIndex() {
-		return saltIndex;
-	}
-	public void setSaltIndex(String saltIndex) {
-		this.saltIndex = saltIndex;
-	}
-	public String getSaltKey() {
-		return saltKey;
-	}
-	public void setSaltKey(String saltKey) {
-		this.saltKey = saltKey;
-	}
-	public String getPaymentGatewayPageRedirectUrl() {
-		return paymentGatewayPageRedirectUrl;
-	}
-	public void setPaymentGatewayPageRedirectUrl(String paymentGatewayPageRedirectUrl) {
-		this.paymentGatewayPageRedirectUrl = paymentGatewayPageRedirectUrl;
-	}
-	public int getRespCode() {
-		return respCode;
-	}
-	public void setRespCode(int respCode) {
-		this.respCode = respCode;
-	}
-	public String getRespMesg() {
-		return respMesg;
-	}
-	public void setRespMesg(String respMesg) {
-		this.respMesg = respMesg;
-	}
-	
-	
-	@Override
-	public String toString() {
-		return "DonationRequestObject [token=" + token + ", id=" + id + ", donorName=" + donorName + ", mobileNumber="
-				+ mobileNumber + ", emailId=" + emailId + ", panNumber=" + panNumber + ", address=" + address
-				+ ", amount=" + amount + ", transactionId=" + transactionId + ", paymentMode=" + paymentMode
-				+ ", paymentType=" + paymentType + ", notes=" + notes + ", receiptNumber=" + receiptNumber
-				+ ", invoiceDownloadStatus=" + invoiceDownloadStatus + ", status=" + status + ", createdAt=" + createdAt
-				+ ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", createdbyName=" + createdbyName
-				+ ", loginId=" + loginId + ", teamLeaderId=" + teamLeaderId + ", superadminId=" + superadminId
-				+ ", roleType=" + roleType + ", requestedFor=" + requestedFor + ", firstDate=" + firstDate
-				+ ", lastDate=" + lastDate + ", programName=" + programName + ", programAmount=" + programAmount
-				+ ", activeUserCount=" + activeUserCount + ", inactiveUserCount=" + inactiveUserCount + ", todaysCount="
-				+ todaysCount + ", todaysAmount=" + todaysAmount + ", yesterdayCount=" + yesterdayCount
-				+ ", yesterdayAmount=" + yesterdayAmount + ", monthCount=" + monthCount + ", monthAmount=" + monthAmount
-				+ ", respCode=" + respCode + ", respMesg=" + respMesg + "]";
-	}
+//	public String getToken() {
+//		return token;
+//	}
+//	public void setToken(String token) {
+//		this.token = token;
+//	}
+//	public Long getId() {
+//		return id;
+//	}
+//	public void setId(Long id) {
+//		this.id = id;
+//	}
+//	public String getDonorName() {
+//		return donorName;
+//	}
+//	public void setDonorName(String donorName) {
+//		this.donorName = donorName;
+//	}
+//	public String getMobileNumber() {
+//		return mobileNumber;
+//	}
+//	public void setMobileNumber(String mobileNumber) {
+//		this.mobileNumber = mobileNumber;
+//	}
+//	public String getEmailId() {
+//		return emailId;
+//	}
+//	public void setEmailId(String emailId) {
+//		this.emailId = emailId;
+//	}
+//	public String getPanNumber() {
+//		return panNumber;
+//	}
+//	public void setPanNumber(String panNumber) {
+//		this.panNumber = panNumber;
+//	}
+//	public String getAddress() {
+//		return address;
+//	}
+//	public void setAddress(String address) {
+//		this.address = address;
+//	}
+//	public Double getAmount() {
+//		return amount;
+//	}
+//	public void setAmount(Double amount) {
+//		this.amount = amount;
+//	}
+//	public String getTransactionId() {
+//		return transactionId;
+//	}
+//	public void setTransactionId(String transactionId) {
+//		this.transactionId = transactionId;
+//	}
+//	public String getPaymentMode() {
+//		return paymentMode;
+//	}
+//	public void setPaymentMode(String paymentMode) {
+//		this.paymentMode = paymentMode;
+//	}
+//	public String getPaymentType() {
+//		return paymentType;
+//	}
+//	public void setPaymentType(String paymentType) {
+//		this.paymentType = paymentType;
+//	}
+//	public String getNotes() {
+//		return notes;
+//	}
+//	public void setNotes(String notes) {
+//		this.notes = notes;
+//	}
+//	public String getReceiptNumber() {
+//		return receiptNumber;
+//	}
+//	public void setReceiptNumber(String receiptNumber) {
+//		this.receiptNumber = receiptNumber;
+//	}
+//	public String getInvoiceDownloadStatus() {
+//		return invoiceDownloadStatus;
+//	}
+//	public void setInvoiceDownloadStatus(String invoiceDownloadStatus) {
+//		this.invoiceDownloadStatus = invoiceDownloadStatus;
+//	}
+//	public String getStatus() {
+//		return status;
+//	}
+//	public void setStatus(String status) {
+//		this.status = status;
+//	}
+//	public Date getCreatedAt() {
+//		return createdAt;
+//	}
+//	public void setCreatedAt(Date createdAt) {
+//		this.createdAt = createdAt;
+//	}
+//	public Date getUpdatedAt() {
+//		return updatedAt;
+//	}
+//	public void setUpdatedAt(Date updatedAt) {
+//		this.updatedAt = updatedAt;
+//	}
+//	public String getCreatedBy() {
+//		return createdBy;
+//	}
+//	public void setCreatedBy(String createdBy) {
+//		this.createdBy = createdBy;
+//	}
+//	public String getCreatedbyName() {
+//		return createdbyName;
+//	}
+//	public void setCreatedbyName(String createdbyName) {
+//		this.createdbyName = createdbyName;
+//	}
+//	public String getLoginId() {
+//		return loginId;
+//	}
+//	public void setLoginId(String loginId) {
+//		this.loginId = loginId;
+//	}
+//	public String getTeamLeaderId() {
+//		return teamLeaderId;
+//	}
+//	public void setTeamLeaderId(String teamLeaderId) {
+//		this.teamLeaderId = teamLeaderId;
+//	}
+//	public String getSuperadminId() {
+//		return superadminId;
+//	}
+//	public void setSuperadminId(String superadminId) {
+//		this.superadminId = superadminId;
+//	}
+//	public String getSmsResponse() {
+//		return smsResponse;
+//	}
+//	public void setSmsResponse(String smsResponse) {
+//		this.smsResponse = smsResponse;
+//	}
+//	public String getRoleType() {
+//		return roleType;
+//	}
+//	public void setRoleType(String roleType) {
+//		this.roleType = roleType;
+//	}
+//	public String getRequestedFor() {
+//		return requestedFor;
+//	}
+//	public void setRequestedFor(String requestedFor) {
+//		this.requestedFor = requestedFor;
+//	}
+//	public Date getFirstDate() {
+//		return firstDate;
+//	}
+//	public void setFirstDate(Date firstDate) {
+//		this.firstDate = firstDate;
+//	}
+//	public Date getLastDate() {
+//		return lastDate;
+//	}
+//	public void setLastDate(Date lastDate) {
+//		this.lastDate = lastDate;
+//	}
+//	public String getProgramName() {
+//		return programName;
+//	}
+//	public void setProgramName(String programName) {
+//		this.programName = programName;
+//	}
+//	public Double getProgramAmount() {
+//		return programAmount;
+//	}
+//	public void setProgramAmount(Double programAmount) {
+//		this.programAmount = programAmount;
+//	}
+//	public Long getInvoiceHeaderDetailsId() {
+//		return invoiceHeaderDetailsId;
+//	}
+//	public void setInvoiceHeaderDetailsId(Long invoiceHeaderDetailsId) {
+//		this.invoiceHeaderDetailsId = invoiceHeaderDetailsId;
+//	}
+//	public String getInvoiceHeaderName() {
+//		return invoiceHeaderName;
+//	}
+//	public void setInvoiceHeaderName(String invoiceHeaderName) {
+//		this.invoiceHeaderName = invoiceHeaderName;
+//	}
+//	public String getInvoiceNumber() {
+//		return invoiceNumber;
+//	}
+//	public void setInvoiceNumber(String invoiceNumber) {
+//		this.invoiceNumber = invoiceNumber;
+//	}
+//	public Long getActiveUserCount() {
+//		return activeUserCount;
+//	}
+//	public void setActiveUserCount(Long activeUserCount) {
+//		this.activeUserCount = activeUserCount;
+//	}
+//	public Long getInactiveUserCount() {
+//		return inactiveUserCount;
+//	}
+//	public void setInactiveUserCount(Long inactiveUserCount) {
+//		this.inactiveUserCount = inactiveUserCount;
+//	}
+//	public Long getTodaysCount() {
+//		return todaysCount;
+//	}
+//	public void setTodaysCount(Long todaysCount) {
+//		this.todaysCount = todaysCount;
+//	}
+//	public Double getTodaysAmount() {
+//		return todaysAmount;
+//	}
+//	public void setTodaysAmount(Double todaysAmount) {
+//		this.todaysAmount = todaysAmount;
+//	}
+//	public Long getYesterdayCount() {
+//		return yesterdayCount;
+//	}
+//	public void setYesterdayCount(Long yesterdayCount) {
+//		this.yesterdayCount = yesterdayCount;
+//	}
+//	public Double getYesterdayAmount() {
+//		return yesterdayAmount;
+//	}
+//	public void setYesterdayAmount(Double yesterdayAmount) {
+//		this.yesterdayAmount = yesterdayAmount;
+//	}
+//	public Long getMonthCount() {
+//		return monthCount;
+//	}
+//	public void setMonthCount(Long monthCount) {
+//		this.monthCount = monthCount;
+//	}
+//	public Double getMonthAmount() {
+//		return monthAmount;
+//	}
+//	public void setMonthAmount(Double monthAmount) {
+//		this.monthAmount = monthAmount;
+//	}
+//	public String getSearchParam() {
+//		return searchParam;
+//	}
+//	public void setSearchParam(String searchParam) {
+//		this.searchParam = searchParam;
+//	}
+//	public String getPgProvider() {
+//		return pgProvider;
+//	}
+//	public void setPgProvider(String pgProvider) {
+//		this.pgProvider = pgProvider;
+//	}
+//	public String getMerchantId() {
+//		return merchantId;
+//	}
+//	public void setMerchantId(String merchantId) {
+//		this.merchantId = merchantId;
+//	}  
+//	public String getSaltIndex() {
+//		return saltIndex;
+//	}
+//	public void setSaltIndex(String saltIndex) {
+//		this.saltIndex = saltIndex;
+//	}
+//	public String getSaltKey() {
+//		return saltKey;
+//	}
+//	public void setSaltKey(String saltKey) {
+//		this.saltKey = saltKey;
+//	}
+//	public String getPaymentGatewayPageRedirectUrl() {
+//		return paymentGatewayPageRedirectUrl;
+//	}
+//	public void setPaymentGatewayPageRedirectUrl(String paymentGatewayPageRedirectUrl) {
+//		this.paymentGatewayPageRedirectUrl = paymentGatewayPageRedirectUrl;
+//	}
+//	public int getRespCode() {
+//		return respCode;
+//	}
+//	public void setRespCode(int respCode) {
+//		this.respCode = respCode;
+//	}
+//	public String getRespMesg() {
+//		return respMesg;
+//	}
+//	public void setRespMesg(String respMesg) {
+//		this.respMesg = respMesg;
+//	}
+//	
+//	
+//	@Override
+//	public String toString() {
+//		return "DonationRequestObject [token=" + token + ", id=" + id + ", donorName=" + donorName + ", mobileNumber="
+//				+ mobileNumber + ", emailId=" + emailId + ", panNumber=" + panNumber + ", address=" + address
+//				+ ", amount=" + amount + ", transactionId=" + transactionId + ", paymentMode=" + paymentMode
+//				+ ", paymentType=" + paymentType + ", notes=" + notes + ", receiptNumber=" + receiptNumber
+//				+ ", invoiceDownloadStatus=" + invoiceDownloadStatus + ", status=" + status + ", createdAt=" + createdAt
+//				+ ", updatedAt=" + updatedAt + ", createdBy=" + createdBy + ", createdbyName=" + createdbyName
+//				+ ", loginId=" + loginId + ", teamLeaderId=" + teamLeaderId + ", superadminId=" + superadminId
+//				+ ", roleType=" + roleType + ", requestedFor=" + requestedFor + ", firstDate=" + firstDate
+//				+ ", lastDate=" + lastDate + ", programName=" + programName + ", programAmount=" + programAmount
+//				+ ", activeUserCount=" + activeUserCount + ", inactiveUserCount=" + inactiveUserCount + ", todaysCount="
+//				+ todaysCount + ", todaysAmount=" + todaysAmount + ", yesterdayCount=" + yesterdayCount
+//				+ ", yesterdayAmount=" + yesterdayAmount + ", monthCount=" + monthCount + ", monthAmount=" + monthAmount
+//				+ ", respCode=" + respCode + ", respMesg=" + respMesg + "]";
+//	}
 	
 	
 	

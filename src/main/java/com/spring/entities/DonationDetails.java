@@ -63,6 +63,9 @@ public class DonationDetails {
 	@Column(name = "invoice_download_status")
 	private String invoiceDownloadStatus;
 	
+	@Column(name = "payment_status")
+	private String paymentStatus;
+	
 	@Column(name = "status")
 	private String status;
 	
@@ -217,6 +220,14 @@ public class DonationDetails {
 
 	public void setInvoiceDownloadStatus(String invoiceDownloadStatus) {
 		this.invoiceDownloadStatus = invoiceDownloadStatus;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
 	}
 
 	public String getStatus() {

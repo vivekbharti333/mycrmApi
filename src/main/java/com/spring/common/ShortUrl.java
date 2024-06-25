@@ -27,7 +27,6 @@ public class ShortUrl {
 	        reader.close();
 	        conn.disconnect();
 
-	        System.out.println("hgh : "+shortUrl);
 			return shortUrl; 
 	}
 }
