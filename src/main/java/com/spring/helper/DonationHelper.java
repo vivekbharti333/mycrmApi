@@ -1,6 +1,8 @@
 package com.spring.helper;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -504,7 +506,20 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		}
 		
 		@SuppressWarnings("unchecked")
-		public List<DonationDetails> getStartPerformer(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
+		public List<DonationDetails> getStartPerformer(DonationRequestObject donationRequest) {
+			
+			LocalDate today = LocalDate.now();
+	        
+	        // Get the first date of the previous month
+	        LocalDate firstDateOfPreviousMonth = today.minusMonths(2).withDayOfMonth(1);
+	        
+	        // Get the last date of the previous month
+	        LocalDate lastDateOfPreviousMonth = today.withDayOfMonth(2).minusDays(1);
+	        
+	        // Convert LocalDate to Date
+	        Date firstDateMonth = Date.from(firstDateOfPreviousMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	        Date lastDateMonth = Date.from(lastDateOfPreviousMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+			
 			List<DonationDetails> results = new ArrayList<>();
 			if (donationRequest.getRequestedFor().equals(RequestFor.ALL.name())) {
 				results = donationDetailsDao.getEntityManager().createQuery(
@@ -512,8 +527,8 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 					+ "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
 					+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
 					+ "AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.teamLeaderId, DD.createdbyName, UD.userPicture order by amount desc")
-						.setParameter("firstDate", firstDate, TemporalType.DATE)
-						.setParameter("lastDate", secondDate, TemporalType.DATE)
+						.setParameter("firstDate", firstDateMonth, TemporalType.DATE)
+						.setParameter("lastDate", lastDateMonth, TemporalType.DATE)
 						.setParameter("superadminId", donationRequest.getSuperadminId())
 						.setParameter("status", Status.ACTIVE.name())
 						.getResultList();
@@ -524,8 +539,8 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 						"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture FROM DonationDetails DD "
 						+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
 						+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture order by amount desc")
-						.setParameter("firstDate", firstDate, TemporalType.DATE)
-						.setParameter("lastDate", secondDate, TemporalType.DATE)
+						.setParameter("firstDate", firstDateMonth, TemporalType.DATE)
+						.setParameter("lastDate", lastDateMonth, TemporalType.DATE)
 						.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
 						.setParameter("status", Status.ACTIVE.name())
 						.getResultList();

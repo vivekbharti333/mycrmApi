@@ -183,6 +183,7 @@ public class DonationService {
 
 			DonationRequestObject paymentGatewayRequest = new DonationRequestObject();
 			if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("PHONEPE")) {
+				
 				paymentGatewayRequest = phonePePaymentGateway.getPhonePePaymentLink(donationRequest, donationDetails, paymentGatewayDetails);
 
 			} else if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("ROZARPAY")) {
@@ -412,6 +413,18 @@ public class DonationService {
 			return donationRequest;
 		}
 	}
+	
+	public List<DonationDetails> getStartPerformer(Request<DonationRequestObject> donationRequestObject)
+			throws BizException {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		donationList = donationHelper.getStartPerformer(donationRequest);
+		return donationList;
+
+	}
 
 	public List<DonationDetails> getDonationCountAndAmountGroupByName(
 			Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
@@ -480,5 +493,7 @@ public class DonationService {
 		}
 		return donationList;
 	}
+
+
 
 }
