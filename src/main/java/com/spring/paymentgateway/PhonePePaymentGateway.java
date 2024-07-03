@@ -10,14 +10,11 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.spring.common.ShortUrl;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.PaymentGatewayDetails;
 import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.exceptions.BizException;
-import com.spring.helper.DonationHelper;
 import com.spring.helper.PhonePePgHelper;
 import com.spring.object.request.DonationRequestObject;
 import com.squareup.okhttp.MediaType;
@@ -33,11 +30,6 @@ public class PhonePePaymentGateway {
 	@Autowired
 	private PhonePePgHelper phonePePgHelper;
 
-	@Autowired
-	private DonationHelper donationHelper;
-
-	@Autowired
-	private ShortUrl shortUrl;
 
 	public DonationRequestObject getPhonePePaymentLink(DonationRequestObject donationRequest,
 			DonationDetails donationDetails, PaymentGatewayDetails paymentGatewayDetails) throws BizException, Exception {
@@ -49,10 +41,10 @@ public class PhonePePaymentGateway {
 		// Save Payment Details
 		PaymentGatewayResponseDetails paymentGatewayResponseDetails = phonePePgHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
 		paymentGatewayResponseDetails = phonePePgHelper.savePaymentDetails(paymentGatewayResponseDetails);
-		System.out.println("Enter : 2" + paymentGatewayDetails.getSaltKey());
+
 		// Call Payment Gateway API
 		String param = this.getPaymetGatewayParam(donationDetails, paymentGatewayDetails);
-		System.out.println("Enter : 3 "+param);
+
 		String jsonResponse = this.getPaymentPageRequest(param, paymentGatewayDetails);
 
 //		String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
@@ -66,11 +58,6 @@ public class PhonePePaymentGateway {
 			JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
 			JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
 			String paymentUrl = redirectInfo.getString("url");
-
-//			String paymentLink = shortUrl.shortUrl(paymentUrl);
-
-			// Payment Gateway link SMS
-//			donationHelper.sendDonationPaymentLinkSms(donationDetails, invoiceHeader, paymentLink);
 
 			donationRequest.setPaymentGatewayPageRedirectUrl(paymentUrl);
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
@@ -98,7 +85,6 @@ public class PhonePePaymentGateway {
 		parameters.put("redirectUrl", "https://datfuslab.com/successfull");
 		parameters.put("redirectMode", "REDIRECT");
 		parameters.put("callbackUrl", "https://datafusionlab.co.in:8080/mycrm/phonePePgResponse");
-//		parameters.put("callbackUrl", "https://datfuslab.com/successfull");
 		parameters.put("mobileNumber", donationDetails.getMobileNumber());
 		parameters.put("paymentInstrument", paymentInstrument);
 

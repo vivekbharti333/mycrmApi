@@ -92,7 +92,6 @@ public class UserService {
 				return userRequest;
 			}
 		} else {
-			System.out.println("ENter hia : "+userRequest);
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg(Constant.INVALID_LOGIN);
 			return userRequest;
@@ -367,6 +366,13 @@ public class UserService {
 		return userList;
 	}
 	
+
+	public List<UserDetails> getFundRisingOfficersBySuperadminId(Request<UserRequestObject> userRequestObject) {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		List<UserDetails> userList = userHelper.getFundRisingOfficersBySuperadminId(userRequest);
+		return userList;
+	}
+	
 	public List<UserDetails> getUserListForDropDown(Request<UserRequestObject> userRequestObject) {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		List<UserDetails> userList = userHelper.getUserListForDropDown(userRequest);
@@ -378,6 +384,7 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
 
 	
 }

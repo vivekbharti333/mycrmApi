@@ -17,27 +17,28 @@ import com.spring.entities.SmsTemplateDetails;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.PaymentRequestObject;
 import com.spring.object.request.Request;
+import com.spring.object.request.SubscriptionRequestObject;
 import com.spring.object.request.PaymentRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
-import com.spring.services.ProfileService;
+import com.spring.services.SubscriptionService;
 import com.spring.services.SmsTemplateService;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class ProfileController {
+public class SubscriptionController {
 	
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
-	private ProfileService profileService;
+	private SubscriptionService subscriptionService;
 
-	@RequestMapping(path = "getLinkToRecharge", method = RequestMethod.POST)
-	public Response<PaymentRequestObject> addSmsTemplate(@RequestBody Request<PaymentRequestObject> paymentRequestObject,
+	@RequestMapping(path = "buySubscription", method = RequestMethod.POST)
+	public Response<SubscriptionRequestObject> buySubscription(@RequestBody Request<SubscriptionRequestObject> subscriptionRequestObject,
 			HttpServletRequest request) {
-		GenricResponse<PaymentRequestObject> responseObj = new GenricResponse<PaymentRequestObject>();
+		GenricResponse<SubscriptionRequestObject> responseObj = new GenricResponse<SubscriptionRequestObject>();
 		try {
-			PaymentRequestObject responce = profileService.addSmsTemplate(paymentRequestObject);
+			SubscriptionRequestObject responce = subscriptionService.buySubscription(subscriptionRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());

@@ -42,25 +42,7 @@ public class UserController {
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
-	UserService userService;
-	
-	@Autowired
-	PdfInvoice pdfInvoice;
-	
-	@Autowired
-	SendEmailHelper sendEmailHelper;
-	
-	@Autowired
-	private PdfThankYouLatter pdfThankYouLatter;
-	
-	@Autowired
-	private DonationHelper donationHelper;
-	
-	@Autowired
-	private PhonePePaymentGateway phonePePaymentGateway;
-	
-	@Autowired
-	private AttendenceService attendenceService;
+	private	UserService userService;
 	
 	@Autowired
 	private FaceRecognitionHelper faceRecognitionHelper;
@@ -325,6 +307,18 @@ public class UserController {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
 		try {
 			List<UserDetails> userList = userService.getUserDetailsByUserRole(userRequestObject);
+			return response.createListResponse(userList, 200);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getFundRisingOfficersBySuperadminId", method = RequestMethod.POST)
+	public Response<UserDetails> getFundRisingOfficersBySuperadminId(@RequestBody Request<UserRequestObject> userRequestObject) {
+		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
+		try {
+			List<UserDetails> userList = userService.getFundRisingOfficersBySuperadminId(userRequestObject);
 			return response.createListResponse(userList, 200);
 		} catch (Exception e) {
 			e.printStackTrace();

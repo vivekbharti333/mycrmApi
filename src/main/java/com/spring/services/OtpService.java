@@ -85,15 +85,12 @@ public class OtpService {
 			Long dbTime = existsOtpDetails.getUpdatedAt().getTime();
 			Long nowTime = new Date().getTime();
 			Long diffTime = nowTime - dbTime;
-			
-			boolean hi = (existsOtpDetails.getUpdatedAt() == new Date());
-			logger.info("hi "+hi);
 
 			if (existsOtpDetails.getUpdatedAt() == new Date() && (diffTime <= 300000)) {
 				if (existsOtpDetails.getOtp().equalsIgnoreCase(userRequest.getOtp())) {
 
 					existsOtpDetails.setStatus(Status.VERIFIED.name());
-					otpHelper.updateOtpDetails(existsOtpDetails);
+					otpHelper.updateOtpDetails(existsOtpDetails); 
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
 					userRequest.setRespMesg("OTP Verified");

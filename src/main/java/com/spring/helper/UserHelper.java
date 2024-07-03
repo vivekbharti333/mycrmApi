@@ -118,7 +118,7 @@ public class UserHelper {
 		UserDetails userDetails = new UserDetails();
 		
 		userDetails.setUserCode(userRequest.getFirstName().substring(0,1)+userRequest.getLastName().substring(0,1));
-		userDetails.setLoginId(userRequest.getMobileNo());
+		userDetails.setLoginId(userRequest.getMobileNo().replace(" ", ""));
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
 		userDetails.setRoleType(userRequest.getRoleType());
@@ -126,8 +126,8 @@ public class UserHelper {
 		userDetails.setUserPicture(userRequest.getUserPicture());
 		userDetails.setFirstName(userRequest.getFirstName());
 		userDetails.setLastName(userRequest.getLastName());
-		userDetails.setMobileNo(userRequest.getMobileNo());
-		userDetails.setAlternateMobile(userRequest.getAlternateMobile());
+		userDetails.setMobileNo(userRequest.getMobileNo().replace(" ", ""));
+		userDetails.setAlternateMobile(userRequest.getAlternateMobile().replace(" ", ""));
 		userDetails.setEmailId(userRequest.getEmailId());
 		userDetails.setAadharNumber(userRequest.getAadharNumber());
 		userDetails.setPanNumber(userRequest.getPanNumber());
@@ -222,7 +222,6 @@ public class UserHelper {
 
 				return results;
 			} else {
-				System.out.println("Enter hai2");
 				List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
 						"SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND roleType NOT IN :roleType AND status NOT IN :REMOVED ORDER BY UD.id DESC")
 						.setParameter("superadminId", userRequest.getCreatedBy())
@@ -275,6 +274,19 @@ public class UserHelper {
 		return results;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<UserDetails> getFundRisingOfficersBySuperadminId(UserRequestObject userRequest) {
+		List<UserDetails> results = userDetailsDao.getEntityManager()
+				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
+				.setParameter("createdBy", userRequest.getLoginId())
+				.setParameter("superadminId", userRequest.getSuperadminId())
+				.setParameter("REMOVED", Status.REMOVED.name())
+				.getResultList();
+		return results;
+	}
+
+	
 
 	@SuppressWarnings("unchecked")
 	public List<AddressDetails> getAddressDetails(UserRequestObject userRequest) {
@@ -317,5 +329,6 @@ public class UserHelper {
 		}
 	}
 
+	
 
 }
