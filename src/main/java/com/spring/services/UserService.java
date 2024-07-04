@@ -76,6 +76,7 @@ public class UserService {
 					userRequest.setRoleType(userDetails.getRoleType());
 					userRequest.setSuperadminId(userDetails.getSuperadminId());
 					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
+					userRequest.setTeamLeaderId(userRequest.getCreatedBy());
 					userRequest.setToken(token);
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);

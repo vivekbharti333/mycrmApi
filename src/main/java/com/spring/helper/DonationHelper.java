@@ -535,13 +535,13 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 				return results;
 			} else if (donationRequest.getRequestedFor().equals(RequestFor.TEAM.name())) {
 				results = donationDetailsDao.getEntityManager().createQuery(
-//						"SELECT DD.createdbyName, COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status =:status GROUP BY DD.createdbyName")
 						"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture FROM DonationDetails DD "
 						+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
-						+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture order by amount desc")
+						+ "AND DD.teamLeaderId = :teamLeaderId AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture order by amount desc")
 						.setParameter("firstDate", firstDateMonth, TemporalType.DATE)
 						.setParameter("lastDate", lastDateMonth, TemporalType.DATE)
 						.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+						.setParameter("superadminId", donationRequest.getSuperadminId())
 						.setParameter("status", Status.ACTIVE.name())
 						.getResultList();
 				return results;
@@ -550,8 +550,6 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			}
 			return results;
 		}
-
-
 
 
 

@@ -64,94 +64,26 @@ public class UserController {
 		
 		faceRecognitionHelper.compareFace();
 		
-		return "1.2";
+		return "1.3";
 	}
 	
-	@RequestMapping(value = "rozarpay")
-	public String rozarpay() throws Exception {
-
-		RazorpayClient razorpay = new RazorpayClient("FOm6kecVJSX7lp", "rzp_live_nGALlLllOEWX3I");
-		JSONObject paymentLinkRequest = new JSONObject();
-		paymentLinkRequest.put("upi_link", true);
-		paymentLinkRequest.put("amount", 1000);
-		paymentLinkRequest.put("currency", "INR");
-		paymentLinkRequest.put("accept_partial", false);
-		paymentLinkRequest.put("first_min_partial_amount", 100);
-		paymentLinkRequest.put("description", "Payment for policy no #23456");
-		JSONObject customer = new JSONObject();
-		customer.put("name", "+919000090000");
-		customer.put("contact", "Gaurav Kumar");
-		customer.put("email", "gaurav.kumar@example.com");
-		paymentLinkRequest.put("customer", customer);
-		JSONObject notify = new JSONObject();
-		notify.put("sms", true);
-		notify.put("email", true);
-		paymentLinkRequest.put("notify", notify);
-		paymentLinkRequest.put("reminder_enable", true);
-		JSONObject notes = new JSONObject();
-		notes.put("policy_name", "Jeevan Bima");
-		paymentLinkRequest.put("notes", notes);
-
-		PaymentLink payment = razorpay.paymentLink.create(paymentLinkRequest);
-		
-		System.out.println("Payment : "+payment);
-		return null;
-	}
 
 //	@Scheduled(fixedDelay = 5000)
 	@RequestMapping(path = "test", method = RequestMethod.GET)
 	public String test() throws Exception {
-		
-		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For") : request.getRemoteAddr();
-		
-//		DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("123456789");
-//		System.out.println(donationDetails+" khjhjkhjhj");
-//		if(donationDetails != null) {
-//			sendEmailHelper.sendEmailWithInvoice(donationDetails);
-//		}
-		
+
+		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For")
+				: request.getRemoteAddr();
+
 //		String param = phonePePaymentGateway.getPaymetGatewayParam();
 //		phonePePaymentGateway.paymentPageTest(param);
-		 
-		String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
-		
-		JSONObject jsonObject = new JSONObject(jsonResponse);
-		String code = jsonObject.getString("code");
-        boolean success = jsonObject.getBoolean("success");
 
-        JSONObject data = jsonObject.getJSONObject("data");
-        JSONObject instrumentResponse = data.getJSONObject("instrumentResponse");
-        JSONObject redirectInfo = instrumentResponse.getJSONObject("redirectInfo");
-        String paymentUrl = redirectInfo.getString("url");    
-	     System.out.println("code : "+code);
-	     System.out.println("success : "+success);
-	     System.out.println("data : "+data);
-	     System.out.println("instrumentResponse : "+instrumentResponse);
-	     System.out.println("url : "+paymentUrl);
-	     
-		
 //		attendenceService.amazonApi();
-		
-		
-		
-//		 String endpoint = "http://tinyurl.com/api-create.php?url=" + URLEncoder.encode(paymentUrl, "UTF-8");
-//	        URL url = new URL(endpoint);
-//	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//
-//	        conn.setRequestMethod("GET");
-//
-//	        BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//	        String shortUrl = reader.readLine();
-//
-//	        reader.close();
-//	        conn.disconnect();
-//
-//	        System.out.println("hgh : "+shortUrl); 
-		
-		
-	return "Working : "+clientIp;
+
+		return "Working : " + clientIp;
 	}
 
+	
 	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
 	public Response<UserRequestObject> doLogin(@RequestBody Request<UserRequestObject> userRequestObject,
 			HttpServletRequest request) {
