@@ -1,7 +1,5 @@
 package com.spring.controller;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
@@ -13,16 +11,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.constant.Constant;
-import com.spring.entities.SmsTemplateDetails;
 import com.spring.exceptions.BizException;
-import com.spring.object.request.PaymentRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.request.SubscriptionRequestObject;
-import com.spring.object.request.PaymentRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
 import com.spring.services.SubscriptionService;
-import com.spring.services.SmsTemplateService;
 
 @CrossOrigin(origins = "*")
 @RestController

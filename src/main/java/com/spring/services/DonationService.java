@@ -418,12 +418,24 @@ public class DonationService {
 			throws BizException {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
-
+		
+		donationRequest.setRequestedFor(RequestFor.ALL.name());
 		List<DonationDetails> donationList = new ArrayList<>();
 
 		donationList = donationHelper.getStartPerformer(donationRequest);
 		return donationList;
+	}
+	
+	public List<DonationDetails> getStartTeam(Request<DonationRequestObject> donationRequestObject) 
+			throws BizException {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
 
+		donationRequest.setRequestedFor(RequestFor.TEAM.name());
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		donationList = donationHelper.getStartPerformer(donationRequest);
+		return donationList;
 	}
 
 	public List<DonationDetails> getDonationCountAndAmountGroupByName(
@@ -493,6 +505,8 @@ public class DonationService {
 		}
 		return donationList;
 	}
+
+	
 
 
 
