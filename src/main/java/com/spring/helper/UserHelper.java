@@ -277,7 +277,7 @@ public class UserHelper {
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getFundRisingOfficersBySuperadminId(UserRequestObject userRequest) {
 		List<UserDetails> results = userDetailsDao.getEntityManager()
-				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND UD.createdBy =:createdBy AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
 				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
 				.setParameter("createdBy", userRequest.getLoginId())
 				.setParameter("superadminId", userRequest.getSuperadminId())
