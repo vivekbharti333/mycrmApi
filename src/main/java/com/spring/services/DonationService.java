@@ -108,9 +108,18 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
+		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
+		
+//		System.out.println("Created By : "+donationRequest.getCreatedBy());
 
 		if (isValid) {
+			
+			System.out.println("Login id : "+donationRequest.getLoginId());
+			System.out.println("Created by : "+donationRequest.getCreatedBy());
+			
+			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
+				donationRequest.setCreatedBy(donationRequest.getLoginId());
+			}
 
 			// Validate Fields
 			donationHelper.validateDonationRequestFields(donationRequest);
@@ -146,6 +155,10 @@ public class DonationService {
 			} else {
 				
 				// Save Donation Details
+				UserDetails userDetails = userHelper.getUserDetailsByLoginId(donationRequest.getCreatedBy());
+				if(userDetails != null) {
+					donationRequest.setCreatedbyName(userDetails.getFirstName()+" "+userDetails.getLastName());
+				}
 				DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 				donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
@@ -157,7 +170,7 @@ public class DonationService {
 				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
 
 				// send email
-				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
+				//donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
 			}
 
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);

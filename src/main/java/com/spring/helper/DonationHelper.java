@@ -227,7 +227,7 @@ public class DonationHelper {
 		donationDetails.setLoginId(donationRequest.getLoginId());
 		donationDetails.setInvoiceHeaderDetailsId(donationRequest.getInvoiceHeaderDetailsId());
 		donationDetails.setInvoiceHeaderName(donationRequest.getInvoiceHeaderName());
-		donationDetails.setCreatedBy(donationRequest.getLoginId());
+		donationDetails.setCreatedBy(donationRequest.getCreatedBy());
 		donationDetails.setCreatedbyName(donationRequest.getCreatedbyName());
 		donationDetails.setTeamLeaderId(donationRequest.getTeamLeaderId());
 		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
