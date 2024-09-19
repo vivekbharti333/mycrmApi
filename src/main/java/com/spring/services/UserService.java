@@ -76,11 +76,20 @@ public class UserService {
 	        
 	        int isUpdate = userHelper.updateAllUserBySuperadminId(userRequest);
 	        
-	        System.out.println(isUpdate);
+	        if(isUpdate >0) {
+	        	userRequest.setRespCode(Constant.SUCCESS_CODE);
+				userRequest.setRespMesg(Constant.RENEW_SUCCESSFULLY);
+				return userRequest;
+	        } else {
+	        	userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				userRequest.setRespMesg(Constant.DATA_NOT_FOUND);
+				return userRequest;
+	        }
+	        
 			
 		}
-		
 		return userRequest;
+		
 	}
 
 	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject) throws BizException, Exception {

@@ -15,6 +15,7 @@ public class Constant {
 	 public static final String NOT_VERIFIED = "User Not Verified";
 	 public static final String EXIST_USER = "User Already registered";
 	 public static final String NOT_EXIST_USER = "User Not Exists";
+	 public static final String RENEW_SUCCESSFULLY = "Renew Successfully";
 	 
 	 /* Response code */
 	 public static final int SUCCESS_CODE = 200;
