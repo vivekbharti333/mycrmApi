@@ -197,8 +197,8 @@ public class UserHelper {
 				return results;
 			} else {
 				List<UserDetails> results = userDetailsDao.getEntityManager()
-						.createQuery("SELECT UD FROM UserDetails UD WHERE status NOT IN (:REMOVED) ORDER BY UD.id DESC")
-//						.setParameter("roleType", RoleType.SUPERADMIN.name())
+						.createQuery("SELECT UD FROM UserDetails UD WHERE status NOT IN (:REMOVED) AND roleType =:roleType ORDER BY UD.id DESC")
+						.setParameter("roleType", RoleType.SUPERADMIN.name())
 						.setParameter("REMOVED", Status.REMOVED.name()).getResultList();
 				return results;
 			}
