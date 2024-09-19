@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -83,6 +82,21 @@ public class UserController {
 		return "Working : " + clientIp;
 	}
 
+	@RequestMapping(path = "updateUserSubscription", method = RequestMethod.POST)
+	public Response<UserRequestObject> updateUserSubscription(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject response = userService.updateUserSubscription(userRequestObject);
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	
 	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
 	public Response<UserRequestObject> doLogin(@RequestBody Request<UserRequestObject> userRequestObject,

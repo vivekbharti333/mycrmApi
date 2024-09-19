@@ -28,7 +28,7 @@ public class Constant {
 	 public static final String INVALID_REQUEST = "Invalid Request";
 	 public static final String INVALID_LOGIN = "Invalid Login Details";
 	 public static final String INVALID_TOKEN = "Invalid Token";
-	 public static final String EXPIRED_LOGIN = "Validity Expired";
+	 public static final String EXPIRED_LOGIN = "Subscription Expired. Please Renew it";
 	 public static final String ALLREADY_EXISTS_MSG = "Already Exists";
 	 
 	 public static final String LOGIN_SUCCESS = "Login Successfully";

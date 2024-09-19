@@ -35,7 +35,7 @@ public class UserHelper {
 
 	@Autowired
 	private UserDetailsDao userDetailsDao;
-	
+
 	public void validateUserRequest(UserRequestObject userRequestObject) throws BizException {
 		if (userRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
@@ -50,7 +50,7 @@ public class UserHelper {
 		}
 		return sb.toString();
 	}
-	
+
 	public boolean checkValidityOfUser(Date validityDate) {
 
 		LocalDate nowDate = LocalDate.now();
@@ -69,8 +69,6 @@ public class UserHelper {
 		}
 	}
 
-
-
 	@Transactional
 	public UserDetails getUserDetailsByLoginId(String loginId) {
 
@@ -79,11 +77,11 @@ public class UserHelper {
 		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
 		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
-		criteriaQuery.where(restriction1,restriction2);
+		criteriaQuery.where(restriction1, restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
 	}
-	
+
 	@Transactional
 	public UserDetails getUserDetailsByLoginIdAndStatus(String loginId) {
 
@@ -94,10 +92,10 @@ public class UserHelper {
 		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1, restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-		System.out.println(userDetails+"yttyt");
+		System.out.println(userDetails + "yttyt");
 		return userDetails;
 	}
-	
+
 	@Transactional
 	public UserDetails getUserDetailsByLoginIdAndSuperadminId(String loginId, String superadminId) {
 
@@ -111,13 +109,12 @@ public class UserHelper {
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return userDetails;
 	}
-	
 
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
 
 		UserDetails userDetails = new UserDetails();
-		
-		userDetails.setUserCode(userRequest.getFirstName().substring(0,1)+userRequest.getLastName().substring(0,1));
+
+		userDetails.setUserCode(userRequest.getFirstName().substring(0, 1) + userRequest.getLastName().substring(0, 1));
 		userDetails.setLoginId(userRequest.getMobileNo().replace(" ", ""));
 		userDetails.setPassword(userRequest.getPassword());
 		userDetails.setStatus(Status.ACTIVE.name());
@@ -132,30 +129,30 @@ public class UserHelper {
 		userDetails.setAadharNumber(userRequest.getAadharNumber());
 		userDetails.setPanNumber(userRequest.getPanNumber());
 		userDetails.setCreatedBy(userRequest.getCreatedBy());
-		
+
 		userDetails.setDob(userRequest.getDob());
 		userDetails.setIsPassChanged("NO");
-		
+
 		userDetails.setCreatedAt(new Date());
 		userDetails.setUpdatedAt(new Date());
-		if(userDetails.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+		if (userDetails.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			userDetails.setSuperadminId(userDetails.getLoginId());
-			
+
 			Date date = new Date();
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(date);
 			calendar.add(Calendar.YEAR, 1);
 			Date oneYearLater = calendar.getTime();
-			
-		    userDetails.setValidityExpireOn(oneYearLater);
-		}else {
-			
+
+			userDetails.setValidityExpireOn(oneYearLater);
+		} else {
+
 			UserDetails existsUserDetails = this.getUserDetailsByLoginId(userRequest.getSuperadminId());
-			
+
 			userDetails.setSuperadminId(userRequest.getSuperadminId());
 			userDetails.setValidityExpireOn(existsUserDetails.getValidityExpireOn());
 		}
-	
+
 		return userDetails;
 	}
 
@@ -164,7 +161,6 @@ public class UserHelper {
 		userDetailsDao.persist(userDetails);
 		return userDetails;
 	}
-	
 
 	public UserDetails getUpdatedUserDetailsByReqObj(UserDetails userDetails, UserRequestObject userRequest) {
 
@@ -185,7 +181,6 @@ public class UserHelper {
 		userDetailsDao.update(userDetails);
 		return userDetails;
 	}
-	
 
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserDetails(UserRequestObject userRequest) {
@@ -215,7 +210,7 @@ public class UserHelper {
 						"SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND status NOT IN (:removed) AND"
 								+ " (userCode LIKE :searchParam OR firstName LIKE :searchParam OR lastName LIKE :searchParam "
 								+ "OR loginId LIKE :searchParam OR roleType LIKE :searchParam OR mobileNo LIKE :searchParam ) ORDER BY UD.id DESC")
-					    .setParameter("superadminId", userRequest.getSuperadminId())
+						.setParameter("superadminId", userRequest.getSuperadminId())
 //						.setParameter("roleType", RoleType.SUPERADMIN.name())
 						.setParameter("removed", Collections.singletonList(Status.REMOVED.name()))
 						.setParameter("searchParam", "%" + userRequest.getSearchParam() + "%").getResultList();
@@ -245,90 +240,86 @@ public class UserHelper {
 			return results;
 		}
 		return null;
-	}	
+	}
 
 	public List<UserDetails> getUserDetailsByUserRole(UserRequestObject userRequest) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserListForDropDown(UserRequestObject userRequest) {
-		
+
 		List<String> excludedRoleTypes = new ArrayList<String>();
-		if(userRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+		if (userRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
 			excludedRoleTypes = Arrays.asList(RoleType.FUNDRAISING_OFFICER.name(), RoleType.MAINADMIN.name());
-			
-		}else if(userRequest.getRoleType().equalsIgnoreCase(RoleType.FUNDRAISING_OFFICER.name())) {
-			excludedRoleTypes = Arrays.asList(RoleType.MAINADMIN.name(), RoleType.SUPERADMIN.name(), 
+
+		} else if (userRequest.getRoleType().equalsIgnoreCase(RoleType.FUNDRAISING_OFFICER.name())) {
+			excludedRoleTypes = Arrays.asList(RoleType.MAINADMIN.name(), RoleType.SUPERADMIN.name(),
 					RoleType.ADMIN.name(), RoleType.TEAM_LEADER.name());
 		}
-		
-		List<UserDetails> results = userDetailsDao.getEntityManager()
-				.createQuery("SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
-				.setParameter("roleType", excludedRoleTypes)
-				.setParameter("superadminId", userRequest.getSuperadminId())
-				.setParameter("REMOVED", Status.REMOVED.name())
-				.getResultList();
+
+		List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
+				"SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+				.setParameter("roleType", excludedRoleTypes).setParameter("superadminId", userRequest.getSuperadminId())
+				.setParameter("REMOVED", Status.REMOVED.name()).getResultList();
 		return results;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getFundRisingOfficersBySuperadminId(UserRequestObject userRequest) {
-		List<UserDetails> results = userDetailsDao.getEntityManager()
-				.createQuery("SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+		List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
+				"SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
 //				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
 				.setParameter("createdBy", userRequest.getLoginId())
 				.setParameter("superadminId", userRequest.getSuperadminId())
-				.setParameter("REMOVED", Status.REMOVED.name())
-				.getResultList();
+				.setParameter("REMOVED", Status.REMOVED.name()).getResultList();
 		return results;
 	}
 
-	
-
 	@SuppressWarnings("unchecked")
 	public List<AddressDetails> getAddressDetails(UserRequestObject userRequest) {
-		if(userRequest.getRequestedFor().equals("ALL")) {
-			List<AddressDetails> results = userDetailsDao.getEntityManager()
-					.createQuery("SELECT AD FROM AddressDetails AD WHERE AD.userId =:userId And AD.superadminId =:superadminId ORDER BY AD.id DESC")
+		if (userRequest.getRequestedFor().equals("ALL")) {
+			List<AddressDetails> results = userDetailsDao.getEntityManager().createQuery(
+					"SELECT AD FROM AddressDetails AD WHERE AD.userId =:userId And AD.superadminId =:superadminId ORDER BY AD.id DESC")
 					.setParameter("userId", userRequest.getId())
-					.setParameter("superadminId", userRequest.getSuperadminId())
-					.getResultList();
+					.setParameter("superadminId", userRequest.getSuperadminId()).getResultList();
 			return results;
 		}
 		return null;
 	}
-	
-	
+
 	public Long getActiveAndInactiveUserCount(String roleType, String createdBy, String status) {
 		Long count = 0L;
 		if (roleType.equals(RoleType.MAINADMIN.name())) {
 			count = (Long) userDetailsDao.getEntityManager().createQuery(
 					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND roleType NOT IN :roleType")
-					.setParameter("status", status)
-					.setParameter("roleType", RoleType.MAINADMIN.name())
+					.setParameter("status", status).setParameter("roleType", RoleType.MAINADMIN.name())
 					.getSingleResult();
 			return count;
 		} else if (roleType.equals(RoleType.SUPERADMIN.name())) {
 			count = (Long) userDetailsDao.getEntityManager().createQuery(
 					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND roleType NOT IN :roleType AND DD.superadminId = :superadminId")
-					.setParameter("status", status)
-					.setParameter("roleType", RoleType.SUPERADMIN.name())
-					.setParameter("superadminId", createdBy)
-					.getSingleResult();
+					.setParameter("status", status).setParameter("roleType", RoleType.SUPERADMIN.name())
+					.setParameter("superadminId", createdBy).getSingleResult();
 			return count;
 		} else {
 			count = (Long) userDetailsDao.getEntityManager().createQuery(
 					"SELECT COUNT(*) FROM UserDetails DD where DD.status =:status AND DD.createdBy = :createdBy")
-					.setParameter("status", status)
-					.setParameter("createdBy", createdBy)
-					.getSingleResult();
+					.setParameter("status", status).setParameter("createdBy", createdBy).getSingleResult();
 			return count;
 		}
 	}
 
-	
+	@Transactional
+	public int updateAllUserBySuperadminId(UserRequestObject userRequest) {
+	    String jpql = "UPDATE UserDetails UD SET UD.validityExpireOn = :validityExpireOn WHERE UD.superadminId = :superadminId";
+	    return userDetailsDao.getEntityManager().createQuery(jpql)
+	                        .setParameter("validityExpireOn", userRequest.getValidityExpireOn())
+	                        .setParameter("superadminId", userRequest.getLoginId())
+	                        .executeUpdate();
+	}
+
+
 
 }
