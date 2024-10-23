@@ -225,7 +225,7 @@ public class DonationService {
 
 		List<DonationDetails> donationList = new ArrayList<>();
 //		if (isValid) {
-		if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
+		if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) || donationRequest.getRoleType().equalsIgnoreCase(RoleType.DONOR_EXECUTIVE.name())) {
 
 			if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
 				donationRequest.setFirstDate(todayDate);
