@@ -1,5 +1,7 @@
 package com.spring.services;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.transaction.Transactional;
 import org.apache.log4j.Logger;
@@ -37,6 +39,58 @@ public class UserService {
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
+	
+	
+	public UserRequestObject updateUserSubscription(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+		
+		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
+		System.out.println(userDetails.getValidityExpireOn());
+		System.out.println(userRequest.getLoginId());
+		if (userDetails != null) {
+			
+			 // Current date
+			
+			Date validate = userDetails.getValidityExpireOn();
+			Date currentDate = new Date();
+
+			if (currentDate.before(validate)) {
+			    // currentDate is before validate date
+				currentDate = userDetails.getValidityExpireOn();
+			} 
+	        
+	        Calendar calendar = Calendar.getInstance();
+	        calendar.setTime(currentDate);
+	        
+	        // Add 365 days to the current date
+	        calendar.add(Calendar.DAY_OF_YEAR, 364);
+	        
+	        // Get the updated date
+	        Date dateAfter364Days = calendar.getTime();
+	        
+	        System.out.println("Current Date: " + currentDate);
+	        System.out.println("Date After 365 Days: " + dateAfter364Days);
+	        
+	        userRequest.setValidityExpireOn(dateAfter364Days);
+	        
+	        int isUpdate = userHelper.updateAllUserBySuperadminId(userRequest);
+	        
+	        if(isUpdate >0) {
+	        	userRequest.setRespCode(Constant.SUCCESS_CODE);
+				userRequest.setRespMesg(Constant.RENEW_SUCCESSFULLY);
+				return userRequest;
+	        } else {
+	        	userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				userRequest.setRespMesg(Constant.DATA_NOT_FOUND);
+				return userRequest;
+	        }
+	        
+			
+		}
+		return userRequest;
+		
+	}
 
 	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
@@ -78,6 +132,7 @@ public class UserService {
 					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
 					userRequest.setTeamLeaderId(userRequest.getCreatedBy());
 					userRequest.setToken(token);
+					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
 					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);

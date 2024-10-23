@@ -114,9 +114,6 @@ public class DonationService {
 
 		if (isValid) {
 			
-			System.out.println("Login id : "+donationRequest.getLoginId());
-			System.out.println("Created by : "+donationRequest.getCreatedBy());
-			
 			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
 			}

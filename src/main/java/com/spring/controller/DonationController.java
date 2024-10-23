@@ -151,8 +151,6 @@ public class DonationController {
 		}
 	}
 	
-	
-	
 	@RequestMapping(path = "getDonationCountAndAmountGroupByName", method = RequestMethod.POST)
 	public Response<DonationDetails> getDonationCountAndAmountGroupByName(@RequestBody Request<DonationRequestObject> donationRequestObject) {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
@@ -164,7 +162,6 @@ public class DonationController {
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
 	}
-
 	
 	@RequestMapping(path = "getDonationPaymentModeCountAndAmountGroupByName", method = RequestMethod.POST)
 	public Response<DonationDetails> getDonationPaymentModeCountAndAmountGroupByName(@RequestBody Request<DonationRequestObject> donationRequestObject) {
