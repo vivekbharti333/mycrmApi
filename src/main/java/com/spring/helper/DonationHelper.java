@@ -106,12 +106,16 @@ public class DonationHelper {
 	
 	public void sendDonationInvoiceSms(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
 		
+		double doubleAmount = donationDetails.getAmount();
+		int amount = (int) doubleAmount;
+//		System.out.println("enter : "+(int) donationDetails.getAmount());
 		if(!donationDetails.getMobileNumber().equalsIgnoreCase("")) {
 
 		SmsTemplateDetails donationSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),SmsType.DONATION_RECEIPT.name());
 		if (donationSmsTemplate != null && donationSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 			String messageBody = " We have received donation of Rs " + donationDetails.getAmount()+ " Click to Download your receipt " + donationSmsTemplate.getInvoiceDomain()+ donationDetails.getReceiptNumber() + " - " + donationSmsTemplate.getCompanyRegards();
 			String responce = smsHelper.sendSms(messageBody, donationSmsTemplate, donationDetails);
+			System.out.println("messageBody : "+messageBody);
 		}
 
 		//Product Sms 
@@ -129,10 +133,12 @@ public class DonationHelper {
 	
 	@SuppressWarnings("static-access")
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
+		System.out.println("Email");
 		if(donationDetails.getEmailId() != null && !donationDetails.getEmailId().equalsIgnoreCase("")) {
+			System.out.println("Email 1");
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
 			if(emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-				
+				System.out.println("Email2");
 				sendEmailHelper.sendEmailWithInvoice(invoiceHeader,donationDetails, emailServiceDetails);
 				
 				}
@@ -174,8 +180,9 @@ public class DonationHelper {
 		CriteriaQuery<DonationDetails> criteriaQuery = criteriaBuilder.createQuery(DonationDetails.class);
 		Root<DonationDetails> root = criteriaQuery.from(DonationDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("id"), id);
-		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-		criteriaQuery.where(restriction1,restriction2);
+//		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+//		criteriaQuery.where(restriction1,restriction2);
+		criteriaQuery.where(restriction1);
 		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return donationDetails;
 	}

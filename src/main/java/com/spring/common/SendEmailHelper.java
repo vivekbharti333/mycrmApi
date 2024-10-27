@@ -213,11 +213,6 @@ public class SendEmailHelper {
 		multipart.addBodyPart(messageBodyPart);
 
 		// Add PDF attachment
-//		MimeBodyPart pdfAttachment = new MimeBodyPart();
-//		pdfAttachment.setContent(pdfContent.toByteArray(), "application/pdf");
-//		pdfAttachment.setFileName("invoice.pdf");
-//		multipart.addBodyPart(pdfAttachment);
-		
 		MimeBodyPart pdfAttachment = new MimeBodyPart();
 		pdfAttachment.setDisposition(MimeBodyPart.ATTACHMENT); // Set disposition to attachment
 		DataSource pdfDataSource = new ByteArrayDataSource(pdfContent.toByteArray(), "application/pdf");
@@ -241,8 +236,9 @@ public class SendEmailHelper {
 		try (Transport transport = session.getTransport("smtp")) {
 			transport.connect(host, userId, password);
 			transport.sendMessage(msg, msg.getAllRecipients());
+			
+			System.out.println("transport : "+transport);
 		}
-
 	}
 
 }

@@ -21,11 +21,15 @@ import com.spring.common.PdfInvoice;
 import com.spring.common.PdfThankYouLatter;
 import com.spring.common.SendEmailHelper;
 import com.spring.constant.Constant;
+import com.spring.email.NetCoreEmail;
 import com.spring.entities.AddressDetails;
+import com.spring.entities.DonationDetails;
+import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.FaceRecognitionHelper;
+import com.spring.helper.InvoiceHelper;
 import com.spring.object.request.Request;
 import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
@@ -45,13 +49,29 @@ public class UserController {
 	
 	@Autowired
 	private FaceRecognitionHelper faceRecognitionHelper;
+	
+	@Autowired
+	private NetCoreEmail netCoreEmail;
 
 	
 	@Autowired
 	public HttpServletRequest request;
 	
+    
+    @Autowired 
+    private InvoiceHelper invoiceHelper;
+    
+    @Autowired 
+    private DonationHelper donationHelper;
+    
+	
+	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
+		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
+		
+		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
+		netCoreEmail.sendNetCoreEmail(donationDetails,invoiceHeader);
 		
 //		pdfThankYouLatter.pdf();
 		return new ModelAndView("home");
