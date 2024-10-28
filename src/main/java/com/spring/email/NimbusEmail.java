@@ -19,7 +19,7 @@ import com.spring.entities.EmailServiceDetails;
 @Component
 public class NimbusEmail {
 
-	public String getParameter(DonationDetails donationDetails) {
+	public String getParameter(DonationDetails donationDetails, EmailServiceDetails emailServiceDetails) {
 		JSONObject paramJson = new JSONObject();
 //		paramJson.put("DONOR", "Vivek Bharti");
 //		paramJson.put("COMPANY_NAME", "Datfuslab Technologies Pvt. Ltd.");
@@ -29,11 +29,11 @@ public class NimbusEmail {
 //		paramJson.put("EMAIL", "info@datfuslab.com");
 		
 		paramJson.put("DONOR", donationDetails.getDonorName());
-		paramJson.put("COMPANY_NAME", "Datfuslab Technologies Pvt. Ltd.");
+		paramJson.put("COMPANY_NAME", emailServiceDetails.getRegards());
 		paramJson.put("AMOUNT", "&#x20B9;" + donationDetails.getAmount());
 		paramJson.put("PROGRAM", donationDetails.getProgramName());
-        paramJson.put("RECIEPT_URL", "https://mydonation.co.in/#/receipt?receiptNo=HJUY79jhgju76");
-		paramJson.put("EMAIL", "info@datfuslab.com");
+        paramJson.put("RECIEPT_URL", "https://mydonation.co.in/#/receipt?receiptNo="+donationDetails.getReceiptNumber());
+		paramJson.put("EMAIL", emailServiceDetails.getWebsite());
 
 //		System.out.println("Param0 : " + paramJson.toString());
 //		System.out.println("Param : " + paramJson.toString(4)); 
@@ -66,7 +66,7 @@ public class NimbusEmail {
 			postData.put("TEMPLATE_UID", emailServiceDetails.getEmailBody());
 			postData.put("SENDER_UID", emailServiceDetails.getEmailFrom());
 			postData.put("TO", donationDetails.getEmailId());
-			postData.put("PARAMS", this.getParameter(donationDetails));
+			postData.put("PARAMS", this.getParameter(donationDetails, emailServiceDetails));
 //            postData.put("PARAMS", "{\"DONOR\":\"Vivek\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"AMOUNT\":\"&#x20B9;250\",\"PROGRAM\":\"Child Education\",\"RECIEPT\":\"HJUY79jhgju\76\",\"EMAIL\":\"info@datfuslab.com\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"EMAIL\":\"info@datfuslab.com\"}");
 			postData.put("FILE[0]", "");
 
@@ -95,7 +95,7 @@ public class NimbusEmail {
 			// Get the response
 			int responseCode = connection.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK || responseCode == HttpURLConnection.HTTP_CREATED) {
-				System.out.println("Request successful");
+//				System.out.println("Request successful");
 
 				try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
 					String inputLine;
@@ -107,8 +107,8 @@ public class NimbusEmail {
 
 					// Parse the response as JSON
 					JSONObject jsonObject = new JSONObject(response.toString());
-					System.out.println("status: " + jsonObject.getInt("status"));
-					System.out.println("message: " + jsonObject.getString("message"));
+//					System.out.println("status: " + jsonObject.getInt("status"));
+//					System.out.println("message: " + jsonObject.getString("message"));
 				}
 			} else {
 				System.out.println("Request failed with response code: " + responseCode);
