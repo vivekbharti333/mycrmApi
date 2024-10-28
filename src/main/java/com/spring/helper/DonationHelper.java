@@ -22,6 +22,7 @@ import com.spring.common.SendEmailHelper;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
+import com.spring.email.NimbusEmail;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
@@ -58,6 +59,7 @@ public class DonationHelper {
 	private SendEmailHelper sendEmailHelper;
 	
 	
+	
 	public void validateDonationRequest(DonationRequestObject donationRequest) throws BizException {
 		if (donationRequest == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
@@ -85,7 +87,6 @@ public class DonationHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Payment Mode");
 		}
 	}
-	
 	
 	
 	public void sendDonationPaymentLinkSms(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader, String paymentLink) {
@@ -143,7 +144,6 @@ public class DonationHelper {
 				
 				}
 			}
-		
 	}
 	
 //	@SuppressWarnings("static-access")
@@ -180,9 +180,8 @@ public class DonationHelper {
 		CriteriaQuery<DonationDetails> criteriaQuery = criteriaBuilder.createQuery(DonationDetails.class);
 		Root<DonationDetails> root = criteriaQuery.from(DonationDetails.class);
 		Predicate restriction1 = criteriaBuilder.equal(root.get("id"), id);
-//		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
-//		criteriaQuery.where(restriction1,restriction2);
-		criteriaQuery.where(restriction1);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		criteriaQuery.where(restriction1,restriction2);
 		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return donationDetails;
 	}

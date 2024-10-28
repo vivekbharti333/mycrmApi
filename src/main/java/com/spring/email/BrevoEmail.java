@@ -1,4 +1,4 @@
-package com.spring.common;
+package com.spring.email;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -18,6 +18,8 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.spring.common.PdfInvoice;
 import com.spring.dao.SmsTemplateDetailsDao;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.EmailServiceDetails;
@@ -45,22 +47,15 @@ import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
 
 @Component
-public class SendEmailHelper {
+public class BrevoEmail {
 
 
 	@Autowired
 	private SmsTemplateDetailsDao smsDetailsDao;
 
-//	@Autowired
-//	private PdfInvoice pdfInvoice;
+	@Autowired
+	private PdfInvoice pdfInvoice;
 	
-    private static PdfInvoice pdfInvoice; // Keep 'static'
-
-    @Autowired
-    public void setPdfInvoice(PdfInvoice pdfInvoice) {
-        SendEmailHelper.pdfInvoice = pdfInvoice;
-    }
-
 	@Autowired
 	private InvoiceService invoiceService;
 
@@ -85,7 +80,7 @@ public class SendEmailHelper {
 		return smsDetails;
 	}
 
-	public static void sendEmailWithAttachments() throws MessagingException {
+	public void sendEmailWithAttachments() throws MessagingException {
 
 		// SMTP server configuration
 		String host = "smtp-relay.brevo.com";
@@ -157,7 +152,7 @@ public class SendEmailHelper {
 
 
 	
-	public static void sendEmailWithInvoice(InvoiceHeaderDetails invoiceHeader, DonationDetails donationDetails, EmailServiceDetails emailServiceDetails) throws MessagingException, IOException {
+	public void sendEmailWithInvoice(InvoiceHeaderDetails invoiceHeader, DonationDetails donationDetails, EmailServiceDetails emailServiceDetails) throws MessagingException, IOException {
 		
 		//Get details and generate pdf
 

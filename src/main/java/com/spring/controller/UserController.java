@@ -1,5 +1,6 @@
 package com.spring.controller;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -18,10 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 import com.razorpay.PaymentLink;
 import com.razorpay.RazorpayClient;
 import com.spring.common.PdfInvoice;
-import com.spring.common.PdfThankYouLatter;
 import com.spring.common.SendEmailHelper;
 import com.spring.constant.Constant;
-import com.spring.email.NetCoreEmail;
+import com.spring.email.NimbusEmail;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
@@ -51,7 +51,7 @@ public class UserController {
 	private FaceRecognitionHelper faceRecognitionHelper;
 	
 	@Autowired
-	private NetCoreEmail netCoreEmail;
+	private NimbusEmail nimbusEmail;
 
 	
 	@Autowired
@@ -64,14 +64,23 @@ public class UserController {
     @Autowired 
     private DonationHelper donationHelper;
     
+    @Autowired
+    private PdfInvoice pdfInvoice;
+    
 	
-	@SuppressWarnings("static-access")
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
 		
+		 
+		
 		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
-		netCoreEmail.sendNetCoreEmail(donationDetails,invoiceHeader);
+//		
+//		ByteArrayOutputStream pdfContent = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+//		
+//		System.out.println("hujhj : "+pdfContent);
+		
+//		nimbusEmail.sendNimbusEmail(donationDetails);
 		
 //		pdfThankYouLatter.pdf();
 		return new ModelAndView("home");

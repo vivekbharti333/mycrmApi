@@ -48,6 +48,9 @@ public class EmailServiceDetails {
 	@Column(name = "email_body")
 	private String emailBody;
 	
+	@Column(name = "service_provider")
+	private String serviceProvider;
+	
 	@Column(name = "superadmin_id")
 	private String superadminId;
 	
