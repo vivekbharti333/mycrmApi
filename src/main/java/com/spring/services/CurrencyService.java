@@ -36,6 +36,7 @@ public class CurrencyService {
 
 			currencyRequest.setRespCode(Constant.SUCCESS_CODE);
 			currencyRequest.setRespMesg("Successfully Register");
+			
 			return currencyRequest;
 		} else {
 
