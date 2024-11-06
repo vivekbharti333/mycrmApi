@@ -151,6 +151,7 @@ public class UserHelper {
 
 			userDetails.setSuperadminId(userRequest.getSuperadminId());
 			userDetails.setValidityExpireOn(existsUserDetails.getValidityExpireOn());
+			userDetails.setCurrencyId(userRequest.getCurrencyId());
 		}
 
 		return userDetails;

@@ -46,6 +46,7 @@ public class UserRequestObject {
 	private String pincode; 
 	//address end
 	
+	private Long currencyId;
 	
 	private Date createdAt;
 	private Date updatedAt;
