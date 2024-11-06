@@ -56,7 +56,7 @@ public class DonationHelper {
 	private EmailHelper emailHelper;
 	
 	@Autowired
-	private SendEmailHelper sendEmailHelper;
+	private NimbusEmail nimbusEmail;
 	
 	
 	
@@ -132,7 +132,6 @@ public class DonationHelper {
 	}
 	}
 	
-	@SuppressWarnings("static-access")
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
 		System.out.println("Email");
 		if(donationDetails.getEmailId() != null && !donationDetails.getEmailId().equalsIgnoreCase("")) {
@@ -140,7 +139,7 @@ public class DonationHelper {
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
 			if(emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 				System.out.println("Email2");
-				sendEmailHelper.sendEmailWithInvoice(invoiceHeader,donationDetails, emailServiceDetails);
+				nimbusEmail.sendNimbusEmail(donationDetails, emailServiceDetails);
 				
 				}
 			}

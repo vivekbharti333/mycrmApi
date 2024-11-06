@@ -114,7 +114,7 @@ public class DonationService {
 		
 //		System.out.println("Created By : "+donationRequest.getCreatedBy());
 
-		if (1>0) {
+		if (isValid) {
 			
 			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
@@ -169,7 +169,7 @@ public class DonationService {
 				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
 
 				// send email
-				//donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
+				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
 			}
 
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);

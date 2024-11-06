@@ -62,6 +62,10 @@ public class EmailHelper {
 		emailServiceDetails.setEmailFrom(emailServiceRequest.getEmailFrom());
 		emailServiceDetails.setSubject(emailServiceRequest.getSubject());
 		emailServiceDetails.setEmailBody(emailServiceRequest.getEmailBody());
+		emailServiceDetails.setRegards(emailServiceRequest.getRegards());
+		emailServiceDetails.setWebsite(emailServiceRequest.getWebsite());
+		emailServiceDetails.setServiceProvider(emailServiceRequest.getServiceProvider());
+		
 		emailServiceDetails.setSuperadminId(emailServiceRequest.getSuperadminId());
 		emailServiceDetails.setCreatedAt(new Date());
 		emailServiceDetails.setUpdatedAt(new Date());
