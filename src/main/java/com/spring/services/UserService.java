@@ -11,11 +11,13 @@ import org.springframework.stereotype.Service;
 
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
+import com.spring.entities.CurrencyDetails;
 import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AddressHelper;
+import com.spring.helper.CurrencyHelper;
 import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.AddressRequestObject;
@@ -40,14 +42,17 @@ public class UserService {
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
 	
+	@Autowired
+	private CurrencyHelper currencyHelper;
+	
 	
 	public UserRequestObject updateUserSubscription(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
 		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
-		System.out.println(userDetails.getValidityExpireOn());
-		System.out.println(userRequest.getLoginId());
+//		System.out.println(userDetails.getValidityExpireOn());
+//		System.out.println(userRequest.getLoginId());
 		if (userDetails != null) {
 			
 			 // Current date
@@ -69,8 +74,8 @@ public class UserService {
 	        // Get the updated date
 	        Date dateAfter364Days = calendar.getTime();
 	        
-	        System.out.println("Current Date: " + currentDate);
-	        System.out.println("Date After 365 Days: " + dateAfter364Days);
+//	        System.out.println("Current Date: " + currentDate);
+//	        System.out.println("Date After 365 Days: " + dateAfter364Days);
 	        
 	        userRequest.setValidityExpireOn(dateAfter364Days);
 	        
@@ -133,6 +138,9 @@ public class UserService {
 					userRequest.setTeamLeaderId(userRequest.getCreatedBy());
 					userRequest.setToken(token);
 					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
+					
+					CurrencyDetails currencyDetails = currencyHelper.getCurrencyDetailsById(userDetails.getCurrencyId());
+					userRequest.setCurrencyDetails(currencyDetails);
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
 					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
