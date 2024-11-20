@@ -199,6 +199,7 @@ public class InvoiceHelper {
 		invoiceHeaderDetails.setCompanyFirstNameColor(invoiceRequest.getCompanyFirstNameColor());
 		invoiceHeaderDetails.setCompanyLastName(invoiceRequest.getCompanyLastName());
 		invoiceHeaderDetails.setCompanyLastNameColor(invoiceRequest.getCompanyLastNameColor());
+		invoiceHeaderDetails.setBackgroundColor(invoiceRequest.getBackgroundColor());
 		invoiceHeaderDetails.setRegAddress(invoiceRequest.getRegAddress());
 		invoiceHeaderDetails.setOfficeAddress(invoiceRequest.getOfficeAddress());
 		invoiceHeaderDetails.setMobileNo(invoiceRequest.getMobileNo());

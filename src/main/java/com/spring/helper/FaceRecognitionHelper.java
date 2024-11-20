@@ -49,8 +49,6 @@ public class FaceRecognitionHelper {
 	}
 	
 	
-	
-	
 	public String compareFace() throws Exception{
 	       Float similarityThreshold = 70F;
 	       String sourceImage = "C:\\Users\\HP\\Documents\\abc.png";
