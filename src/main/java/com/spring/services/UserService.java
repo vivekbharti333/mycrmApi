@@ -139,8 +139,8 @@ public class UserService {
 					userRequest.setToken(token);
 					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
 					
-					CurrencyMaster currencyMaster = currencyHelper.getCurrencyDetailsById(userDetails.getCurrencyId());
-					userRequest.setCurrencyDetails(currencyMaster);
+//					CurrencyMaster currencyMaster = currencyHelper.getCurrencyDetailsBy(userDetails.getCurrencyId());
+//					userRequest.setCurrencyDetails(currencyMaster);
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
 					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
@@ -177,7 +177,6 @@ public class UserService {
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			return userRequest;
 		}
-		
 		return userRequest;
 	}
 	
