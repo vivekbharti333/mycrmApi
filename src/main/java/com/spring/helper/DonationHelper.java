@@ -1,5 +1,6 @@
 package com.spring.helper;
 
+import java.awt.dnd.DnDConstants;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -222,6 +223,8 @@ public class DonationHelper {
 		donationDetails.setAddress(donationRequest.getAddress());
 		donationDetails.setProgramName(donationRequest.getProgramName());
 		donationDetails.setAmount(donationRequest.getAmount());
+		donationDetails.setCurrency(donationRequest.getCurrency());
+		donationDetails.setCurrencyCode(donationRequest.getCurrencyCode());
 		donationDetails.setReceiptNumber(donationRequest.getReceiptNumber());
 		donationDetails.setTransactionId(donationRequest.getTransactionId());
 		donationDetails.setPaymentMode(donationRequest.getPaymentMode());

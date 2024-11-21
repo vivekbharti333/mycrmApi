@@ -17,6 +17,8 @@ public class DonationRequestObject {
 	private String panNumber;
 	private String address;
 	private Double amount = 0D;
+	private String currency;
+    private String currencyCode;
 	private String transactionId;
 	private String paymentMode;
 	private String paymentType;	

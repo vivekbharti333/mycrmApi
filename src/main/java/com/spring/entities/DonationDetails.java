@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 
+import lombok.Data;
+
+@Data
 @Entity
 @Table(name = "donation_details")
 public class DonationDetails {
@@ -39,11 +42,11 @@ public class DonationDetails {
 	@Column(name = "amount")
 	private Double amount;
 	
-//	@Column(name = "currency")
-//	private String currency;
-//	
-//	@Column(name = "currency_code")
-//    private String currencyCode;
+	@Column(name = "currency")
+	private String currency;
+	
+	@Column(name = "currency_code")
+    private String currencyCode;
 	
 	@Column(name = "transaction_id")
 	private String transactionId;
