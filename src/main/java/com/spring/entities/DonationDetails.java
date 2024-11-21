@@ -39,6 +39,12 @@ public class DonationDetails {
 	@Column(name = "amount")
 	private Double amount;
 	
+//	@Column(name = "currency")
+//	private String currency;
+//	
+//	@Column(name = "currency_code")
+//    private String currencyCode;
+	
 	@Column(name = "transaction_id")
 	private String transactionId;
 	

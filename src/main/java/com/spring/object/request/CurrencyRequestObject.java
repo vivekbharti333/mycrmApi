@@ -16,6 +16,10 @@ public class CurrencyRequestObject {
 	private String htmlCode;
 	private String cssCode;
 	
+	private String currencyMasterIds;
+	private String superadminId;
+	
+	private String requestedFor;
 	private int respCode;
 	private String respMesg;
 	

@@ -3,7 +3,7 @@ package com.spring.object.request;
 import java.util.Date;
 import java.util.List;
 
-import com.spring.entities.CurrencyDetails;
+import com.spring.entities.CurrencyMaster;
 
 import lombok.Data;
 
@@ -50,7 +50,7 @@ public class UserRequestObject {
 	
 	private Long currencyId;
 	
-	private CurrencyDetails currencyDetails;
+	private CurrencyMaster currencyMaster;
 	
 	private Date createdAt;
 	private Date updatedAt;

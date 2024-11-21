@@ -133,8 +133,7 @@ public class PaymentModeHelper {
 	public List<PaymentModeMaster> getPaymentModeListBySuperadminId(PaymentRequestObject paymentModeRequest, String paymentModeIds) {
 	    List<PaymentModeMaster> results = new ArrayList<>();
 //	    String paymentModeIds = "1,2,3";
-	    String queryString = "SELECT pd FROM PaymentModeMaster pd " +
-	            "WHERE pd.id IN ("+paymentModeIds+")";
+	    String queryString = "SELECT pd FROM PaymentModeMaster pd WHERE pd.id IN ("+paymentModeIds+")";
 	    results = paymentModeDetailsDao.getEntityManager()
 	            .createQuery(queryString, PaymentModeMaster.class)
 	            .getResultList();

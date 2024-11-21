@@ -14,8 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.spring.constant.Constant;
-import com.spring.dao.CurrencyDetailsDao;
-import com.spring.entities.CurrencyDetails;
+import com.spring.dao.CurrencyDetailsBySuperadminDao;
+import com.spring.dao.CurrencyMasterDao;
+import com.spring.entities.CurrencyDetailsBySuperadmin;
+import com.spring.entities.CurrencyMaster;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.CurrencyRequestObject;
 
@@ -23,7 +25,10 @@ import com.spring.object.request.CurrencyRequestObject;
 public class CurrencyHelper {
 
 	@Autowired
-	private CurrencyDetailsDao currencyDetailsDao;
+	private CurrencyMasterDao currencyMasterDao;
+	
+	@Autowired
+	private CurrencyDetailsBySuperadminDao currencyDetailsBySuperadminDao;
 
 	public void validateCurrencyRequest(CurrencyRequestObject currencyRequest) throws BizException {
 		if (currencyRequest == null) {
@@ -32,64 +37,114 @@ public class CurrencyHelper {
 	}
 
 	@Transactional
-	public CurrencyDetails getCurrencyDetailsById(Long id) {
+	public CurrencyMaster getCurrencyMasterById(Long id) {
 
-		CriteriaBuilder criteriaBuilder = currencyDetailsDao.getSession().getCriteriaBuilder();
-		CriteriaQuery<CurrencyDetails> criteriaQuery = criteriaBuilder.createQuery(CurrencyDetails.class);
-		Root<CurrencyDetails> root = criteriaQuery.from(CurrencyDetails.class);
+		CriteriaBuilder criteriaBuilder = currencyMasterDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<CurrencyMaster> criteriaQuery = criteriaBuilder.createQuery(CurrencyMaster.class);
+		Root<CurrencyMaster> root = criteriaQuery.from(CurrencyMaster.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("id"), id);
 		criteriaQuery.where(restriction);
-		CurrencyDetails currencyDetails = currencyDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-		return currencyDetails;
+		CurrencyMaster currencyMaster = currencyMasterDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return currencyMaster;
+	}
+	
+	@Transactional
+	public CurrencyDetailsBySuperadmin getCurrencyDetailsBySuperadminById(String superadminId) {
+
+		CriteriaBuilder criteriaBuilder = currencyDetailsBySuperadminDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<CurrencyDetailsBySuperadmin> criteriaQuery = criteriaBuilder.createQuery(CurrencyDetailsBySuperadmin.class);
+		Root<CurrencyDetailsBySuperadmin> root = criteriaQuery.from(CurrencyDetailsBySuperadmin.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		criteriaQuery.where(restriction);
+		CurrencyDetailsBySuperadmin currencyDetailsBySuperadmin = currencyDetailsBySuperadminDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return currencyDetailsBySuperadmin;
 	}
 
-	public CurrencyDetails getCurrencyDetailsByReqObj(CurrencyRequestObject currencyRequest) {
+	public CurrencyMaster getCurrencyMasterByReqObj(CurrencyRequestObject currencyRequest) {
 
-		CurrencyDetails currencyDetails = new CurrencyDetails();
+		CurrencyMaster currencyMaster = new CurrencyMaster();
 
-		currencyDetails.setCountry(currencyRequest.getCountry());
-		currencyDetails.setCurrencyName(currencyRequest.getCurrencyName());
-		currencyDetails.setCurrencyCode(currencyRequest.getCurrencyCode());
-		currencyDetails.setUnicode(currencyRequest.getUnicode());
-		currencyDetails.setHexCode(currencyRequest.getHexCode());
-		currencyDetails.setHtmlCode(currencyRequest.getHtmlCode());
-		currencyDetails.setCssCode(currencyRequest.getCssCode());
-		currencyDetails.setCreatedAt(new Date());
+		currencyMaster.setCountry(currencyRequest.getCountry());
+		currencyMaster.setCurrencyName(currencyRequest.getCurrencyName());
+		currencyMaster.setCurrencyCode(currencyRequest.getCurrencyCode());
+		currencyMaster.setUnicode(currencyRequest.getUnicode());
+		currencyMaster.setHexCode(currencyRequest.getHexCode());
+		currencyMaster.setHtmlCode(currencyRequest.getHtmlCode());
+		currencyMaster.setCssCode(currencyRequest.getCssCode());
+		currencyMaster.setCreatedAt(new Date());
 
-		return currencyDetails;
+		return currencyMaster;
 	}
 
 	@Transactional
-	public CurrencyDetails saveCurrencyDetails(CurrencyDetails currencyDetails) {
-		currencyDetailsDao.persist(currencyDetails);
-		return currencyDetails;
+	public CurrencyMaster saveCurrencyMaster(CurrencyMaster currencyMaster) {
+		currencyMasterDao.persist(currencyMaster);
+		return currencyMaster;
 	}
 
-	public CurrencyDetails getUpdateCurrencyDetailsByReqObj(CurrencyRequestObject currencyRequest, CurrencyDetails currencyDetails) {
+	public CurrencyMaster getUpdateCurrencyMasterByReqObj(CurrencyRequestObject currencyRequest, CurrencyMaster currencyMaster) {
 
-		currencyDetails.setCountry(currencyRequest.getCountry());
-		currencyDetails.setCurrencyName(currencyRequest.getCurrencyName());
-		currencyDetails.setCurrencyCode(currencyRequest.getCurrencyCode());
-		currencyDetails.setUnicode(currencyRequest.getUnicode());
-		currencyDetails.setHexCode(currencyRequest.getHexCode());
-		currencyDetails.setHtmlCode(currencyRequest.getHtmlCode());
-		currencyDetails.setCssCode(currencyRequest.getCssCode());
+		currencyMaster.setCountry(currencyRequest.getCountry());
+		currencyMaster.setCurrencyName(currencyRequest.getCurrencyName());
+		currencyMaster.setCurrencyCode(currencyRequest.getCurrencyCode());
+		currencyMaster.setUnicode(currencyRequest.getUnicode());
+		currencyMaster.setHexCode(currencyRequest.getHexCode());
+		currencyMaster.setHtmlCode(currencyRequest.getHtmlCode());
+		currencyMaster.setCssCode(currencyRequest.getCssCode());
 
-		return currencyDetails;
+		return currencyMaster;
 	}
 
 	@Transactional
-	public CurrencyDetails updateCurrencyDetails(CurrencyDetails currencyDetails) {
-		currencyDetailsDao.update(currencyDetails);
-		return currencyDetails;
+	public CurrencyMaster updateCurrencyMaster(CurrencyMaster currencyMaster) {
+		currencyMasterDao.update(currencyMaster);
+		return currencyMaster;
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<CurrencyDetails> getCurrencyDetails() {
-		List<CurrencyDetails> results = new ArrayList<>();
-		results = currencyDetailsDao.getEntityManager().createQuery("SELECT CD FROM CurrencyDetails CD ")
-				.getResultList();
+	public List<CurrencyMaster> getCurrencyMaster(CurrencyRequestObject currencyRequest) {
+		List<CurrencyMaster> results = new ArrayList<>();
+		if(currencyRequest.getRequestedFor().equalsIgnoreCase("CURRENCY_MASTER")) {
+			results = currencyMasterDao.getEntityManager().createQuery("SELECT CD FROM CurrencyMaster CD ")
+					.getResultList();
+		}else {
+			results = currencyMasterDao.getEntityManager()
+					.createQuery("SELECT CD FROM CurrencyMaster CD WHERE CD.id IN  ("+currencyRequest.getCurrencyMasterIds()+")")
+					.getResultList();
+		}
+		
 		return results;
 	}
 
+	public CurrencyDetailsBySuperadmin getSuperadminCurrencyByReqObj(CurrencyRequestObject currencyRequest) {
+
+		CurrencyDetailsBySuperadmin currencyBySuperadmin = new CurrencyDetailsBySuperadmin();
+
+		currencyBySuperadmin.setCurrencyMasterIds(currencyRequest.getCurrencyMasterIds());
+		currencyBySuperadmin.setSuperadminId(currencyRequest.getSuperadminId());
+
+		return currencyBySuperadmin;
+	}
+
+	@Transactional
+	public CurrencyDetailsBySuperadmin saveSuperadminCurrencyDetails(CurrencyDetailsBySuperadmin currencyDetails) {
+		currencyDetailsBySuperadminDao.persist(currencyDetails);
+		return currencyDetails;
+	}
+	
+	public CurrencyDetailsBySuperadmin getUpdateSuperadminCurrencyByReqObj(CurrencyRequestObject currencyRequest, CurrencyDetailsBySuperadmin currencyBySuperadmin) {
+
+		currencyBySuperadmin.setCurrencyMasterIds(currencyRequest.getCurrencyMasterIds());
+		currencyBySuperadmin.setSuperadminId(currencyRequest.getSuperadminId());
+
+		return currencyBySuperadmin;
+	}
+	
+	@Transactional
+	public CurrencyDetailsBySuperadmin updateSuperadminCurrencyDetails(CurrencyDetailsBySuperadmin currencyDetailsBySuperadmin) {
+		currencyDetailsBySuperadminDao.update(currencyDetailsBySuperadmin);
+		return currencyDetailsBySuperadmin;
+	}
+
+	
 }

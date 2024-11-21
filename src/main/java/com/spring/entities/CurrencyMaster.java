@@ -13,8 +13,8 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "currency_details")
-public class CurrencyDetails {
+@Table(name = "currency_master")
+public class CurrencyMaster {
 	
 	@Id
 	@GeneratedValue(strategy= GenerationType.IDENTITY)

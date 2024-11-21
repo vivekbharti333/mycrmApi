@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
-import com.spring.entities.CurrencyDetails;
+import com.spring.entities.CurrencyMaster;
 import com.spring.entities.UserDetails;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
@@ -139,8 +139,8 @@ public class UserService {
 					userRequest.setToken(token);
 					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
 					
-					CurrencyDetails currencyDetails = currencyHelper.getCurrencyDetailsById(userDetails.getCurrencyId());
-					userRequest.setCurrencyDetails(currencyDetails);
+					CurrencyMaster currencyMaster = currencyHelper.getCurrencyDetailsById(userDetails.getCurrencyId());
+					userRequest.setCurrencyDetails(currencyMaster);
 
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
 					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);

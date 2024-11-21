@@ -26,7 +26,7 @@ import com.spring.common.SendEmailHelper;
 import com.spring.common.ShortUrl;
 import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
-import com.spring.entities.CurrencyDetails;
+import com.spring.entities.CurrencyMaster;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
