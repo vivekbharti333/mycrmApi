@@ -3,6 +3,8 @@ package com.spring.object.request;
 import java.util.Date;
 import java.util.List;
 
+import com.spring.entities.CurrencyDetails;
+
 import lombok.Data;
 
 @Data
@@ -47,6 +49,8 @@ public class UserRequestObject {
 	//address end
 	
 	private Long currencyId;
+	
+	private CurrencyDetails currencyDetails;
 	
 	private Date createdAt;
 	private Date updatedAt;
