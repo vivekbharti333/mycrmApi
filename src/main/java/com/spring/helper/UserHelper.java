@@ -223,6 +223,7 @@ public class UserHelper {
 						.setParameter("superadminId", userRequest.getCreatedBy())
 						.setParameter("roleType", RoleType.SUPERADMIN.name())
 						.setParameter("REMOVED", Status.REMOVED.name()).getResultList();
+				
 				return results;
 			}
 		} else if (userRequest.getRoleType().equals(RoleType.ADMIN.name())) {
