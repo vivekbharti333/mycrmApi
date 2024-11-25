@@ -386,7 +386,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		Object[] count = new Object[] {};
 		if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status =:status")
+					"SELECT COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status =:status")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
@@ -395,7 +395,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			return count;
 		} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.teamLeaderId =:teamLeaderId AND DD.status =:status")
+					"SELECT COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.teamLeaderId =:teamLeaderId AND DD.status =:status")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
@@ -405,7 +405,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			return count;
 		} else {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy AND DD.status =:status ")
+					"SELECT COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy AND DD.status =:status")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
@@ -431,10 +431,10 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		List<DonationDetails> results = new ArrayList<>();
 		if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 			results = donationDetailsDao.getEntityManager().createQuery(
-				"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, "
+				"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, DD.currencyCode,"
 				+ "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
 				+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
-				+ "AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.teamLeaderId, DD.createdbyName, UD.userPicture")
+				+ "AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.teamLeaderId, DD.createdbyName, UD.userPicture, DD.currencyCode")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("superadminId", donationRequest.getSuperadminId())
@@ -444,9 +444,9 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 			results = donationDetailsDao.getEntityManager().createQuery(
 //					"SELECT DD.createdbyName, COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status =:status GROUP BY DD.createdbyName")
-					"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture FROM DonationDetails DD "
+					"SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, DD.currencyCode FROM DonationDetails DD "
 					+ "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
-					+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture")
+					+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture, DD.currencyCode")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
 					.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
