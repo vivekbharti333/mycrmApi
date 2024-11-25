@@ -1,11 +1,5 @@
 package com.spring.services;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -15,41 +9,30 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.spring.common.SendEmailHelper;
 import com.spring.common.ShortUrl;
-import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
-import com.spring.entities.CurrencyMaster;
 import com.spring.entities.DonationDetails;
-import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
-import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentGatewayDetails;
-import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.enums.PaymentMode;
 import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
-import com.spring.enums.SmsType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
-import com.spring.helper.EmailHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.helper.PaymentGatewayHelper;
-import com.spring.helper.SmsTemplateHelper;
 import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
-import com.spring.object.request.CurrencyRequestObject;
 import com.spring.object.request.DonationRequestObject;
-import com.spring.object.request.PaymentRequestObject;
 import com.spring.object.request.Request;
 import com.spring.paymentgateway.PhonePePaymentGateway;
 
@@ -58,18 +41,6 @@ public class DonationService {
 
 	@Autowired
 	private DonationHelper donationHelper;
-
-	@Autowired
-	private SmsTemplateHelper smsTemplateHelper;
-
-	@Autowired
-	private SmsHelper smsHelper;
-
-	@Autowired
-	private EmailHelper emailHelper;
-
-	@Autowired
-	private SendEmailHelper sendEmailHelper;
 
 	@Autowired
 	private PhonePePaymentGateway phonePePaymentGateway;
@@ -111,8 +82,6 @@ public class DonationService {
 		donationHelper.validateDonationRequest(donationRequest);
 
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
-		
-//		System.out.println("Created By : "+donationRequest.getCreatedBy());
 
 		if (isValid) {
 			
@@ -213,8 +182,6 @@ public class DonationService {
 			donationRequest.setRespMesg("Please add Payment Gatways Details first");
 			return donationRequest;
 		}
-		
-		
 		return null;
 	}
 
@@ -457,6 +424,7 @@ public class DonationService {
 
 		List<DonationDetails> donationList = new ArrayList<>();
 
+		
 		if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
 			donationList = donationHelper.getDonationCountAndAmountGroupByName(donationRequest, todayDate, tomorrowDate);
 			return donationList;
