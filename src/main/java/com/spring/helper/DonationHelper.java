@@ -459,6 +459,46 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		}
 		return results;
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Object[][] getDonationCountAndAmountGroupByNameNew(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
+	    List<Object[]> resultsList = new ArrayList<>();
+	    
+	    if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+	        resultsList = donationDetailsDao.getEntityManager().createQuery(
+	            "SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount,  DD.currencyCode, "
+	            + "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
+	            + "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId "
+	            + "WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status = :status "
+	            + "GROUP BY DD.teamLeaderId, DD.createdbyName, DD.currencyCode")
+	            .setParameter("firstDate", firstDate, TemporalType.DATE)
+	            .setParameter("lastDate", secondDate, TemporalType.DATE)
+	            .setParameter("superadminId", donationRequest.getSuperadminId())
+	            .setParameter("status", Status.ACTIVE.name())
+	            .getResultList();
+	    } else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
+	        resultsList = donationDetailsDao.getEntityManager().createQuery(
+	            "SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, DD.currencyCode FROM DonationDetails DD "
+	            + "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status "
+	            + "GROUP BY DD.createdbyName, UD.userPicture, DD.currencyCode")
+	            .setParameter("firstDate", firstDate, TemporalType.DATE)
+	            .setParameter("lastDate", secondDate, TemporalType.DATE)
+	            .setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+	            .setParameter("status", Status.ACTIVE.name())
+	            .getResultList();
+	    } else {
+	        // Handle other cases or return empty if no role matches
+	        return new Object[0][0]; // Returning empty result for unhandled role types
+	    }
+
+	    // Convert the List<Object[]> to Object[][]
+	    Object[][] results = new Object[resultsList.size()][];
+	    for (int i = 0; i < resultsList.size(); i++) {
+	        results[i] = resultsList.get(i); // Assigning each row of the query result to the 2D array
+	    }
+
+	    return results;
+	}
 
 		@SuppressWarnings("unchecked")
 		public List<DonationDetails> getDonationPaymentModeCountAndAmountGroupByName(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
@@ -471,7 +511,6 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 						.setParameter("superadminId", donationRequest.getSuperadminId())
 						.setParameter("status", Status.ACTIVE.name())
 						.getResultList();
-				System.out.println("results : "+results);
 				return results;
 			} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 				results = donationDetailsDao.getEntityManager().createQuery(

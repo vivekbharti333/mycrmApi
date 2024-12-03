@@ -30,6 +30,9 @@ import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.FaceRecognitionHelper;
 import com.spring.helper.InvoiceHelper;
+import com.spring.helper.SubscriptionHelper;
+import com.spring.helper.TestHelper;
+import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
@@ -67,12 +70,14 @@ public class UserController {
     @Autowired
     private PdfInvoice pdfInvoice;
     
+    @Autowired
+    private TestHelper testHelper;
+    
+    
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
-		
-	 
 		
 		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
 //		
@@ -90,7 +95,15 @@ public class UserController {
 	@RequestMapping(value = "version")
 	public String version(HttpServletResponse response) throws Exception {
 		
-		faceRecognitionHelper.compareFace();
+		DonationRequestObject donationRequest = new DonationRequestObject();
+		
+		donationRequest.setSuperadminId("6289639160");
+		donationRequest.setRequestedFor("TODAY");
+		donationRequest.setRoleType("SUPERADMIN");
+		donationRequest.setCreatedBy("6289639160");
+		
+		testHelper.checkIt(donationRequest);
+//		faceRecognitionHelper.compareFace();
 		
 		return "1.3";
 	}
