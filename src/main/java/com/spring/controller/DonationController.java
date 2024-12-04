@@ -163,6 +163,18 @@ public class DonationController {
 		}
 	}
 	
+	@RequestMapping(path = "getDonationCountAndAmountGroupByCurrency", method = RequestMethod.POST)
+	public Response<DonationDetails> getDonationCountAndAmountGroupByCurrency(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
+		try {
+			List<DonationDetails> donationList = donationService.getDonationCountAndAmountGroupByCurrency(donationRequestObject);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getDonationPaymentModeCountAndAmountGroupByName", method = RequestMethod.POST)
 	public Response<DonationDetails> getDonationPaymentModeCountAndAmountGroupByName(@RequestBody Request<DonationRequestObject> donationRequestObject) {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();

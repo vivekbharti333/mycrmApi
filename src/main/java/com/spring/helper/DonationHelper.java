@@ -59,6 +59,8 @@ public class DonationHelper {
 	@Autowired
 	private NimbusEmail nimbusEmail;
 	
+	@Autowired CurrencyHelper currencyHelper;
+	
 	
 	
 	public void validateDonationRequest(DonationRequestObject donationRequest) throws BizException {
@@ -110,14 +112,12 @@ public class DonationHelper {
 		
 		double doubleAmount = donationDetails.getAmount();
 		int amount = (int) doubleAmount;
-//		System.out.println("enter : "+(int) donationDetails.getAmount());
 		if(!donationDetails.getMobileNumber().equalsIgnoreCase("")) {
 
 		SmsTemplateDetails donationSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),SmsType.DONATION_RECEIPT.name());
 		if (donationSmsTemplate != null && donationSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 			String messageBody = " We have received donation of Rs " + donationDetails.getAmount()+ " Click to Download your receipt " + donationSmsTemplate.getInvoiceDomain()+ donationDetails.getReceiptNumber() + " - " + donationSmsTemplate.getCompanyRegards();
 			String responce = smsHelper.sendSms(messageBody, donationSmsTemplate, donationDetails);
-			System.out.println("messageBody : "+messageBody);
 		}
 
 		//Product Sms 
@@ -134,25 +134,14 @@ public class DonationHelper {
 	}
 	
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
-		System.out.println("Email");
 		if(donationDetails.getEmailId() != null && !donationDetails.getEmailId().equalsIgnoreCase("")) {
-			System.out.println("Email 1");
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
 			if(emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-				System.out.println("Email2");
 				nimbusEmail.sendNimbusEmail(donationDetails, emailServiceDetails);
 				
 				}
 			}
 	}
-	
-//	@SuppressWarnings("static-access")
-//	public DonationRequestObject generateReceiptNumber(DonationRequestObject donationRequest) {
-//		String rendomNumber = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 4);
-//		String receiptNumber = donationRequest.getSuperadminId().substring(0, 4)+rendomNumber+donationRequest.getMobileNumber().substring(7, 10);
-//		donationRequest.setReceiptNumber(receiptNumber);
-//		return donationRequest;
-//	}
 	
 	
 	public DonationRequestObject getTeamLeaderIdOfDonation(DonationRequestObject donationRequest) {
@@ -198,18 +187,6 @@ public class DonationHelper {
 		return donationDetails;
 	}
 	
-//	@Transactional
-//	public DonationDetails getDonationDetailsByInvoiceNo(String invoiceNumber) {
-//
-//		CriteriaBuilder criteriaBuilder = donationDetailsDao.getSession().getCriteriaBuilder();
-//		CriteriaQuery<DonationDetails> criteriaQuery = criteriaBuilder.createQuery(DonationDetails.class);
-//		Root<DonationDetails> root = criteriaQuery.from(DonationDetails.class);
-//		Predicate restriction = criteriaBuilder.equal(root.get("invoiceNumber"), invoiceNumber);
-//		criteriaQuery.where(restriction);
-//		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-//		return donationDetails;
-//	}
-	
 
 	public DonationDetails getDonationDetailsByReqObj(DonationRequestObject donationRequest) {
 		
@@ -223,7 +200,7 @@ public class DonationHelper {
 		donationDetails.setAddress(donationRequest.getAddress());
 		donationDetails.setProgramName(donationRequest.getProgramName());
 		donationDetails.setAmount(donationRequest.getAmount());
-		donationDetails.setCurrency(donationRequest.getCurrency());
+		donationDetails.setCurrency(currencyHelper.getCurrencyMasterByCurrencyCode(donationRequest.getCurrencyCode()).getUnicode());
 		donationDetails.setCurrencyCode(donationRequest.getCurrencyCode());
 		donationDetails.setReceiptNumber(donationRequest.getReceiptNumber());
 		donationDetails.setTransactionId(donationRequest.getTransactionId());
@@ -461,6 +438,37 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<DonationDetails> getDonationCountAndAmountGroupByCurrency(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
+		List<DonationDetails> results = new ArrayList<>();
+		if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+			results = donationDetailsDao.getEntityManager().createQuery(
+				"SELECT DD.currencyCode, DD.currency, COUNT(DD.id) AS count, SUM(DD.amount) AS amount FROM DonationDetails DD  "
+				+ "WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status = :status GROUP BY DD.currencyCode, DD.currency")
+					.setParameter("firstDate", firstDate, TemporalType.DATE)
+					.setParameter("lastDate", secondDate, TemporalType.DATE)
+					.setParameter("superadminId", donationRequest.getSuperadminId())
+					.setParameter("status", Status.ACTIVE.name())
+					.getResultList();
+			System.out.println("jh");
+			return results;
+		} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
+			results = donationDetailsDao.getEntityManager().createQuery(
+//					"SELECT DD.createdbyName, COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status =:status GROUP BY DD.createdbyName")
+					"DD.currencyCode, DD.currency, COUNT(DD.id) AS count, SUM(DD.amount) AS amount FROM DonationDetails DD WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
+					+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.currencyCode, DD.currency")
+					.setParameter("firstDate", firstDate, TemporalType.DATE)
+					.setParameter("lastDate", secondDate, TemporalType.DATE)
+					.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+					.setParameter("status", Status.ACTIVE.name())
+					.getResultList();
+			return results;
+		}else {
+			
+		}
+		return results;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public Object[][] getDonationCountAndAmountGroupByNameNew(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
 	    List<Object[]> resultsList = new ArrayList<>();
 	    
@@ -505,7 +513,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			List<DonationDetails> results = new ArrayList<>();
 			if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
 				results = donationDetailsDao.getEntityManager().createQuery(
-						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode")
+						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode, DD.currency FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode, DD.currency")
 						.setParameter("firstDate", firstDate, TemporalType.DATE)
 						.setParameter("lastDate", secondDate, TemporalType.DATE)
 						.setParameter("superadminId", donationRequest.getSuperadminId())
@@ -514,7 +522,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 				return results;
 			} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
 				results = donationDetailsDao.getEntityManager().createQuery(
-						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND  DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode")
+						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode, DD.currency FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND  DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode, DD.currency")
 						.setParameter("firstDate", firstDate, TemporalType.DATE)
 						.setParameter("lastDate", secondDate, TemporalType.DATE)
 						.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
@@ -524,7 +532,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 				return results;
 			}else {
 				results = donationDetailsDao.getEntityManager().createQuery(
-						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.createdBy = :createdBy AND  DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode")
+						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode, DD.currency FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.createdBy = :createdBy AND  DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode, DD.currency")
 						.setParameter("firstDate", firstDate, TemporalType.DATE)
 						.setParameter("lastDate", secondDate, TemporalType.DATE)
 						.setParameter("createdBy", donationRequest.getCreatedBy())

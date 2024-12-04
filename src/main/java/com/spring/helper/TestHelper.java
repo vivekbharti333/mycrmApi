@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import com.spring.object.request.DashboardReportObject;
 import com.spring.object.request.DonationRequestObject;
 
 
@@ -53,7 +54,7 @@ public class TestHelper {
 //            {"Ahmedabad International Airport", 15, 2560L, null, "USD", "Ahmedabad International"}
 //        };
 
-        Object[][] inputData = donationHelper.getDonationCountAndAmountGroupByNameNew(donationRequest, todayDate, tomorrowDate);
+        Object[][] inputData = donationHelper.getDonationCountAndAmountGroupByNameNew(donationRequest, previousDate, todayDate);
         System.out.println("inputData : "+inputData.toString());
         // Map to store the processed data
         Map<String, Object> airportData = new LinkedHashMap<>();
@@ -125,6 +126,6 @@ public class TestHelper {
 
 	    return null;
 	}
-
+	
 
 }

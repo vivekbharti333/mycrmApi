@@ -49,6 +49,18 @@ public class CurrencyHelper {
 	}
 	
 	@Transactional
+	public CurrencyMaster getCurrencyMasterByCurrencyCode(String currencyCode) {
+
+		CriteriaBuilder criteriaBuilder = currencyMasterDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<CurrencyMaster> criteriaQuery = criteriaBuilder.createQuery(CurrencyMaster.class);
+		Root<CurrencyMaster> root = criteriaQuery.from(CurrencyMaster.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("currencyCode"), currencyCode);
+		criteriaQuery.where(restriction);
+		CurrencyMaster currencyMaster = currencyMasterDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return currencyMaster;
+	}
+	
+	@Transactional
 	public CurrencyDetailsBySuperadmin getCurrencyDetailsBySuperadminById(String superadminId) {
 
 		CriteriaBuilder criteriaBuilder = currencyDetailsBySuperadminDao.getSession().getCriteriaBuilder();

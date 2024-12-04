@@ -98,7 +98,7 @@ public class UserController {
 		DonationRequestObject donationRequest = new DonationRequestObject();
 		
 		donationRequest.setSuperadminId("6289639160");
-		donationRequest.setRequestedFor("TODAY");
+		donationRequest.setRequestedFor("YESTERDAY");
 		donationRequest.setRoleType("SUPERADMIN");
 		donationRequest.setCreatedBy("6289639160");
 		
