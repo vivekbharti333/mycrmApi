@@ -132,12 +132,24 @@ public class UserService {
 					userRequest.setFirstName(userDetails.getFirstName());
 					userRequest.setLastName(userDetails.getLastName());
 					userRequest.setService(userDetails.getService());
+					userRequest.setPermissions(userDetails.getPermissions());
 					userRequest.setRoleType(userDetails.getRoleType());
 					userRequest.setSuperadminId(userDetails.getSuperadminId());
 					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
 					userRequest.setTeamLeaderId(userRequest.getCreatedBy());
 					userRequest.setToken(token);
 					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
+					
+//					loginRequest.setUserPicture(user.getUserPicture());
+//					loginRequest.setFirstName(user.getFirstName());
+//					loginRequest.setLastName(user.getLastName());
+//					loginRequest.setService(user.getService());
+//					loginRequest.setPermissions(user.getPermissions());
+//					loginRequest.setRoleType(user.getRoleType());
+//					loginRequest.setSuperadminId(user.getSuperadminId());
+//					loginRequest.setAdminId(user.getAdminId());
+//					loginRequest.setTeamLeaderId(user.getTeamleaderId());
+//					loginRequest.setToken(token);
 					
 //					CurrencyMaster currencyMaster = currencyHelper.getCurrencyDetailsBy(userDetails.getCurrencyId());
 //					userRequest.setCurrencyDetails(currencyMaster);
