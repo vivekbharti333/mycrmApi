@@ -52,7 +52,7 @@ public class CustomerController {
 		GenricResponse<CustomerDetails> response = new GenricResponse<CustomerDetails>();
 		try {
 			List<CustomerDetails> customerList = customerService.getCustomerList(customerRequestObject);
-			return response.createListResponse(customerList, 200);
+			return response.createListResponse(customerList, 200, String.valueOf(customerList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

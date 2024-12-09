@@ -124,7 +124,7 @@ public class InvoiceController {
 		GenricResponse<InvoiceHeaderDetails> response = new GenricResponse<InvoiceHeaderDetails>();
 		try {
 			List<InvoiceHeaderDetails> invoiceDetails = invoiceService.getInvoiceHeaderList(invoiceRequestObject);
-			return response.createListResponse(invoiceDetails, Constant.SUCCESS_CODE);
+			return response.createListResponse(invoiceDetails, Constant.SUCCESS_CODE, String.valueOf(invoiceDetails.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -152,7 +152,7 @@ public class InvoiceController {
 		GenricResponse<InvoiceNumber> response = new GenricResponse<InvoiceNumber>();
 		try {
 			List<InvoiceNumber> invoiceNumber = invoiceService.getInvoiceNumberList(invoiceRequestObject);
-			return response.createListResponse(invoiceNumber, Constant.SUCCESS_CODE);
+			return response.createListResponse(invoiceNumber, Constant.SUCCESS_CODE, String.valueOf(invoiceNumber.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -164,7 +164,7 @@ public class InvoiceController {
 		GenricResponse<InvoiceDetails> response = new GenricResponse<InvoiceDetails>();
 		try {
 			List<InvoiceDetails> invoiceDetails = invoiceService.getInvoiceDetailsList(invoiceRequestObject);
-			return response.createListResponse(invoiceDetails, Constant.SUCCESS_CODE);
+			return response.createListResponse(invoiceDetails, Constant.SUCCESS_CODE, String.valueOf(invoiceDetails.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());

@@ -282,7 +282,7 @@ public class UserController {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
 		try {
 			List<UserDetails> userList = userService.getUserDetails(userRequestObject);
-			return response.createListResponse(userList, 200);
+			return response.createListResponse(userList, 200, String.valueOf(userList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
@@ -295,7 +295,7 @@ public class UserController {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
 		try {
 			List<UserDetails> userList = userService.getUserDetailsByUserRole(userRequestObject);
-			return response.createListResponse(userList, 200);
+			return response.createListResponse(userList, 200, String.valueOf(userList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
@@ -307,7 +307,7 @@ public class UserController {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
 		try {
 			List<UserDetails> userList = userService.getFundRisingOfficersBySuperadminId(userRequestObject);
-			return response.createListResponse(userList, 200);
+			return response.createListResponse(userList, 200, String.valueOf(userList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
@@ -320,7 +320,7 @@ public class UserController {
 		GenricResponse<UserDetails> response = new GenricResponse<UserDetails>();
 		try {
 			List<UserDetails> userList = userService.getUserListForDropDown(userRequestObject);
-			return response.createListResponse(userList, 200);
+			return response.createListResponse(userList, 200, String.valueOf(userList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
@@ -332,7 +332,7 @@ public class UserController {
 		GenricResponse<AddressDetails> response = new GenricResponse<AddressDetails>();
 		try {
 			List<AddressDetails> addressList = userService.getAddressDetails(userRequestObject);
-			return response.createListResponse(addressList, 200);
+			return response.createListResponse(addressList, 200, String.valueOf(addressList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());

@@ -66,7 +66,7 @@ public class EmailController {
 		GenricResponse<EmailServiceDetails> response = new GenricResponse<EmailServiceDetails>();
 		try {
 			List<EmailServiceDetails> emailServiceDetailsList = emailService.getEmailServiceDetailsList(optionRequestObject);
-			return response.createListResponse(emailServiceDetailsList, 200);
+			return response.createListResponse(emailServiceDetailsList, 200, String.valueOf(emailServiceDetailsList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

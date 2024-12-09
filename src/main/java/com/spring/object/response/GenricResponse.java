@@ -24,12 +24,13 @@ public class GenricResponse <T> {
     }
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public Response<T> createListResponse( List<T> responseObject ,Integer responseCode)
+	public Response<T> createListResponse( List<T> responseObject ,Integer responseCode, String totalNum)
 	{
         Response<T> response = new Response();
         if(!responseObject.isEmpty()) {
             response.setListPayload(responseObject);
             response.setResponseCode(responseCode);
+            response.setTotalNumber(totalNum);
             response.setResponseMessage("Fetch Successfully");
         }else {
         	response.setResponseCode(Constant.NO_CONTENT_CODE);

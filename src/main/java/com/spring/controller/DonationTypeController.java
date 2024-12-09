@@ -79,7 +79,7 @@ public class DonationTypeController {
 		GenricResponse<DonationType> response = new GenricResponse<DonationType>();
 		try {
 			List<DonationType> donationList = donationService.getDonationTypeListBySuperadminId(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());

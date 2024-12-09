@@ -53,7 +53,7 @@ public class EnquiryController {
 		GenricResponse<EnquiryDetails> response = new GenricResponse<EnquiryDetails>();
 		try {
 			List<EnquiryDetails> enquiryList = enquiryService.getEnquiryList(enquiryRequestObject);
-			return response.createListResponse(enquiryList, 200);
+			return response.createListResponse(enquiryList, 200, String.valueOf(enquiryList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

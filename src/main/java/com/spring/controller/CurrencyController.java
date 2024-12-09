@@ -52,7 +52,7 @@ public class CurrencyController {
 		GenricResponse<CurrencyMaster> response = new GenricResponse<CurrencyMaster>();
 		try {
 			List<CurrencyMaster> currencyList = currencyService.getCurrencyDetails(donationRequestObject);
-			return response.createListResponse(currencyList, Constant.SUCCESS_CODE);
+			return response.createListResponse(currencyList, Constant.SUCCESS_CODE, String.valueOf(currencyList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -80,7 +80,7 @@ public class CurrencyController {
 		GenricResponse<CurrencyMaster> response = new GenricResponse<CurrencyMaster>();
 		try {
 			List<CurrencyMaster> currencyList = currencyService.getCurrencyDetailsBySuperadmin(donationRequestObject);
-			return response.createListResponse(currencyList, Constant.SUCCESS_CODE);
+			return response.createListResponse(currencyList, Constant.SUCCESS_CODE, String.valueOf(currencyList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());

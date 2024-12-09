@@ -83,7 +83,7 @@ public class ApplicationController {
 		try {
 			System.out.println("Ente rhai");
 			List<ApplicationHeaderDetails> applicationHeaderDetails = applicationService.getApplicationHeaderDetails(applicationRequestObject);
-			return response.createListResponse(applicationHeaderDetails, Constant.SUCCESS_CODE);
+			return response.createListResponse(applicationHeaderDetails, Constant.SUCCESS_CODE, String.valueOf(applicationHeaderDetails.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());

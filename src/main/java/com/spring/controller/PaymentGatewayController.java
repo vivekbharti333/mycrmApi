@@ -59,7 +59,7 @@ public class PaymentGatewayController {
 		GenricResponse<PaymentGatewayDetails> response = new GenricResponse<PaymentGatewayDetails>();
 		try {
 			List<PaymentGatewayDetails> paymentGatewayDetailsList = paymentGatewayService.getPaymentGatewayDetailsList(paymentRequestObject);
-			return response.createListResponse(paymentGatewayDetailsList, 200);
+			return response.createListResponse(paymentGatewayDetailsList, 200, String.valueOf(paymentGatewayDetailsList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

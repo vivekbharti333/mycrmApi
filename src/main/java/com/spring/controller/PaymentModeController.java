@@ -52,7 +52,7 @@ public class PaymentModeController {
 		GenricResponse<PaymentModeMaster> response = new GenricResponse<PaymentModeMaster>();
 		try {
 			List<PaymentModeMaster> optionList = optionTypeService.getPaymentModeListBySuperadminId(optionRequestObject);
-			return response.createListResponse(optionList, 200);
+			return response.createListResponse(optionList, 200, String.valueOf(optionList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());
@@ -81,7 +81,7 @@ public class PaymentModeController {
 		GenricResponse<PaymentModeMaster> response = new GenricResponse<PaymentModeMaster>();
 		try {
 			List<PaymentModeMaster> optionList = optionTypeService.getPaymentModeListBySuperadminId(optionRequestObject);
-			return response.createListResponse(optionList, 200);
+			return response.createListResponse(optionList, 200, String.valueOf(optionList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

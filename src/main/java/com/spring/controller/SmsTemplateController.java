@@ -67,7 +67,7 @@ public class SmsTemplateController {
 		GenricResponse<SmsTemplateDetails> response = new GenricResponse<SmsTemplateDetails>();
 		try {
 			List<SmsTemplateDetails> smsTemplateList = smsTemplateService.getSmsTemplateList(smsTemplateRequestObject);
-			return response.createListResponse(smsTemplateList, 200);
+			return response.createListResponse(smsTemplateList, 200, String.valueOf(smsTemplateList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(400, e.getMessage());

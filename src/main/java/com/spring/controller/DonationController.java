@@ -80,7 +80,8 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationList(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+//			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -92,7 +93,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationListBySearchKey(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -104,7 +105,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationListByReceiptNumber(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -132,7 +133,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> startPerformerList = donationService.getStartPerformer(donationRequestObject);
-			return response.createListResponse(startPerformerList, Constant.SUCCESS_CODE);
+			return response.createListResponse(startPerformerList, Constant.SUCCESS_CODE, String.valueOf(startPerformerList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -144,7 +145,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> startPerformerList = donationService.getStartTeam(donationRequestObject);
-			return response.createListResponse(startPerformerList, Constant.SUCCESS_CODE);
+			return response.createListResponse(startPerformerList, Constant.SUCCESS_CODE, String.valueOf(startPerformerList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -156,7 +157,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationCountAndAmountGroupByName(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -168,7 +169,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationCountAndAmountGroupByCurrency(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -180,7 +181,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationPaymentModeCountAndAmountGroupByName(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
@@ -192,7 +193,7 @@ public class DonationController {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
 		try {
 			List<DonationDetails> donationList = donationService.getDonationProgramNameCountAndAmountGroupByName(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());

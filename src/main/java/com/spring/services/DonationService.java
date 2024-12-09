@@ -83,7 +83,7 @@ public class DonationService {
 
 		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
 
-		if (isValid) {
+//		if (isValid) {
 			
 			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
@@ -144,11 +144,11 @@ public class DonationService {
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");
 			return donationRequest;
-		} else {
-			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
-			return donationRequest;
-		}
+//		} else {
+//			donationRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
+//			donationRequest.setRespMesg(Constant.INVALID_TOKEN);
+//			return donationRequest;
+//		}
 	}
 	
 	public DonationRequestObject sendOnlinePaymentLink(DonationRequestObject donationRequest, InvoiceHeaderDetails invoiceHeader) throws BizException, Exception {

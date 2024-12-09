@@ -47,7 +47,7 @@ public class ResumeController {
 		GenricResponse<ResumeDetails> response = new GenricResponse<ResumeDetails>();
 		try {
 			List<ResumeDetails> leadList = resumeService.getResumeDetails(ResumeRequestObject);
-			return response.createListResponse(leadList, Constant.SUCCESS_CODE);
+			return response.createListResponse(leadList, Constant.SUCCESS_CODE, String.valueOf(leadList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());

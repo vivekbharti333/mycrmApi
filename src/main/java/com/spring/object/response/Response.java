@@ -20,6 +20,7 @@ public class Response<T> implements Serializable {
     private int responseCode;
     private String responseMessage;
     private String status;
+    private String totalNumber;
     private String comments;
     private Throwable throwable;
 
@@ -56,7 +57,15 @@ public class Response<T> implements Serializable {
         this.status = status;
     }
 
-    public String getComments() {
+    public String getTotalNumber() {
+		return totalNumber;
+	}
+
+	public void setTotalNumber(String totalNumber) {
+		this.totalNumber = totalNumber;
+	}
+
+	public String getComments() {
         return comments;
     }
 
