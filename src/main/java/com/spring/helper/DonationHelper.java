@@ -5,8 +5,12 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.persistence.TemporalType;
@@ -437,6 +441,76 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		return results;
 	}
 	
+	
+	@SuppressWarnings("unchecked")
+	public Object[][] getDonationCountAndAmountGroupByNameNew(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
+	    List<Object[]> resultsList = new ArrayList<>();
+	    
+	    if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
+	        resultsList = donationDetailsDao.getEntityManager().createQuery(
+	            "SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount,  DD.currencyCode, "
+	            + "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
+	            + "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId "
+	            + "WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status = :status "
+	            + "GROUP BY DD.teamLeaderId, DD.createdbyName, DD.currencyCode")
+	            .setParameter("firstDate", firstDate, TemporalType.DATE)
+	            .setParameter("lastDate", secondDate, TemporalType.DATE)
+	            .setParameter("superadminId", donationRequest.getSuperadminId())
+	            .setParameter("status", Status.ACTIVE.name())
+	            .getResultList();
+	    } else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
+	        resultsList = donationDetailsDao.getEntityManager().createQuery(
+	            "SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, DD.currencyCode FROM DonationDetails DD "
+	            + "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status "
+	            + "GROUP BY DD.createdbyName, UD.userPicture, DD.currencyCode")
+	            .setParameter("firstDate", firstDate, TemporalType.DATE)
+	            .setParameter("lastDate", secondDate, TemporalType.DATE)
+	            .setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+	            .setParameter("status", Status.ACTIVE.name())
+	            .getResultList();
+	        
+	        }
+	        
+	        
+
+
+	    // Convert the List<Object[]> to Object[][]
+	    Object[][] results = new Object[resultsList.size()][];
+	    for (int i = 0; i < resultsList.size(); i++) {
+	        results[i] = resultsList.get(i); // Assigning each row of the query result to the 2D array
+	    }
+	    
+	    
+	 // Map to store grouped data
+        Map<String, List<Object[]>> groupedData = new HashMap<>();
+
+        for (Object[] row : results) {
+            // Get the key (value at index 0)
+            String key = row[0].toString();
+
+            // If key does not exist, create a new list
+            if (!groupedData.containsKey(key)) {
+                groupedData.put(key, new ArrayList<>());
+            }
+
+            // Add the row to the group
+            groupedData.get(key).add(row);
+        }
+
+        // Print the grouped data
+        for (String key : groupedData.keySet()) {
+            System.out.println("Key: " + key);
+            for (Object[] row : groupedData.get(key)) {
+                System.out.println("  " + Arrays.toString(row));
+            }
+        }
+
+	    return results;
+	}
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	public List<DonationDetails> getDonationCountAndAmountGroupByCurrency(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
 		List<DonationDetails> results = new ArrayList<>();
@@ -468,45 +542,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		return results;
 	}
 	
-	@SuppressWarnings("unchecked")
-	public Object[][] getDonationCountAndAmountGroupByNameNew(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
-	    List<Object[]> resultsList = new ArrayList<>();
-	    
-	    if (donationRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
-	        resultsList = donationDetailsDao.getEntityManager().createQuery(
-	            "SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount,  DD.currencyCode, "
-	            + "(SELECT d1.firstName FROM UserDetails d1 WHERE d1.loginId = DD.teamLeaderId) AS teamLeaderName FROM DonationDetails DD "
-	            + "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId "
-	            + "WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status = :status "
-	            + "GROUP BY DD.teamLeaderId, DD.createdbyName, DD.currencyCode")
-	            .setParameter("firstDate", firstDate, TemporalType.DATE)
-	            .setParameter("lastDate", secondDate, TemporalType.DATE)
-	            .setParameter("superadminId", donationRequest.getSuperadminId())
-	            .setParameter("status", Status.ACTIVE.name())
-	            .getResultList();
-	    } else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
-	        resultsList = donationDetailsDao.getEntityManager().createQuery(
-	            "SELECT DD.createdbyName, COUNT(DD.id) AS count, SUM(DD.amount) AS amount, UD.userPicture, DD.currencyCode FROM DonationDetails DD "
-	            + "INNER JOIN UserDetails UD ON DD.loginId = UD.loginId WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status "
-	            + "GROUP BY DD.createdbyName, UD.userPicture, DD.currencyCode")
-	            .setParameter("firstDate", firstDate, TemporalType.DATE)
-	            .setParameter("lastDate", secondDate, TemporalType.DATE)
-	            .setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
-	            .setParameter("status", Status.ACTIVE.name())
-	            .getResultList();
-	    } else {
-	        // Handle other cases or return empty if no role matches
-	        return new Object[0][0]; // Returning empty result for unhandled role types
-	    }
-
-	    // Convert the List<Object[]> to Object[][]
-	    Object[][] results = new Object[resultsList.size()][];
-	    for (int i = 0; i < resultsList.size(); i++) {
-	        results[i] = resultsList.get(i); // Assigning each row of the query result to the 2D array
-	    }
-
-	    return results;
-	}
+	
 
 		@SuppressWarnings("unchecked")
 		public List<DonationDetails> getDonationPaymentModeCountAndAmountGroupByName(DonationRequestObject donationRequest, Date firstDate, Date secondDate) {
@@ -617,6 +653,8 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		}
 
 
+		
+		
 
 
 }

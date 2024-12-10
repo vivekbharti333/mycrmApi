@@ -4,7 +4,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -198,6 +201,25 @@ public class DonationController {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
+	}
+	
+	@RequestMapping(path = "getDonationCountAndAmountGroupByNameNew", method = RequestMethod.POST)
+	public Response<Object[]> getDonationCountAndAmountGroupByNameNew(
+	        @RequestBody Request<DonationRequestObject> donationRequestObject) {
+	    GenricResponse<Object[]> response = new GenricResponse<>();
+	    try {
+	        // Call the service method to fetch donation data
+	        List<Object[]> donationList = donationService.getDonationCountAndAmountGroupByNameNew(donationRequestObject);
+
+	        // Return the response with success code
+	        return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+
+	        // Return the error response in case of exception
+	        return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+	    }
 	}
 	
 }

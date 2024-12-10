@@ -10,7 +10,6 @@ public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherSe
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
-		logger.info("Enter into Intilizer");
 		return new Class[] {ApplicationConfiguration.class}; 
 	}
 

@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -439,6 +440,39 @@ public class DonationService {
 		}
 		return donationList;
 	}
+	
+	public List<Object[]> getDonationCountAndAmountGroupByNameNew(
+	        Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
+
+	    // Extract the payload from the request
+	    DonationRequestObject donationRequest = donationRequestObject.getPayload();
+
+	    // Validate the request using the helper method
+	    donationHelper.validateDonationRequest(donationRequest);
+
+	    List<Object[]> donationList = new ArrayList<>();
+
+	    // Determine the date range based on the requested type
+	    if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
+	        donationList = Arrays.asList(
+	                donationHelper.getDonationCountAndAmountGroupByNameNew(donationRequest, todayDate, tomorrowDate)
+	        );
+
+	    } else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.YESTERDAY.name())) {
+	        donationList = Arrays.asList(
+	                donationHelper.getDonationCountAndAmountGroupByNameNew(donationRequest, previousDate, todayDate)
+	        );
+
+	    } else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.MONTH.name())) {
+	        donationList = Arrays.asList(
+	                donationHelper.getDonationCountAndAmountGroupByNameNew(donationRequest, firstDateMonth, lastDateMonth)
+	        );
+	    }
+
+	    // Return the result
+	    return donationList;
+	}
+
 	
 	public List<DonationDetails> getDonationCountAndAmountGroupByCurrency(Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();

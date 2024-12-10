@@ -2,7 +2,11 @@ package com.spring.controller;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -88,6 +92,58 @@ public class UserController {
 //		nimbusEmail.sendNimbusEmail(donationDetails);
 		
 //		pdfThankYouLatter.pdf();
+		
+		
+		
+		
+		
+		
+		  List<Object[]> data = Arrays.asList(
+		            new Object[]{"Kaminee Chauhan", 1, 1008.0, "MUR", "Donation"},
+		            new Object[]{"Kaminee Chauhan", 1, 7865.0, "INR", "Donation"},
+		            new Object[]{"Donation Test", 2, 1458.0, "MUR", "Donation"},
+		            new Object[]{"Donation Test", 1, 100.0, "INR", "Donation"}
+		        );
+
+		        // Map to store grouped data
+		        Map<String, List<Object[]>> groupedData = new HashMap<>();
+
+		        for (Object[] row : data) {
+		            // Get the key (value at index 0)
+		            String key = row[0].toString();
+
+		            // If key does not exist, create a new list
+		            if (!groupedData.containsKey(key)) {
+		                groupedData.put(key, new ArrayList<>());
+		            }
+
+		            // Add the row to the group
+		            groupedData.get(key).add(row);
+		        }
+
+		        // Print the grouped data
+		        for (String key : groupedData.keySet()) {
+		            System.out.println("Key: " + key);
+		            for (Object[] row : groupedData.get(key)) {
+		                System.out.println("  " + Arrays.toString(row));
+		            }
+		        }
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		return new ModelAndView("home");
 	}
 	
