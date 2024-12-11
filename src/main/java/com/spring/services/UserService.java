@@ -132,6 +132,7 @@ public class UserService {
 					userRequest.setFirstName(userDetails.getFirstName());
 					userRequest.setLastName(userDetails.getLastName());
 					userRequest.setService(userDetails.getService());
+					userRequest.setUserPicture(userDetails.getUserPicture());
 					userRequest.setPermissions(userDetails.getPermissions());
 					userRequest.setRoleType(userDetails.getRoleType());
 					userRequest.setSuperadminId(userDetails.getSuperadminId());
@@ -181,10 +182,17 @@ public class UserService {
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
 			
+			UserDetails teamLeader= userHelper.getUserDetailsByLoginId(userDetails.getCreatedBy());
+			
 			userRequest.setFirstName(userDetails.getFirstName());
 			userRequest.setLastName(userDetails.getLastName());
 			userRequest.setUserPicture(userDetails.getUserPicture());
+			userRequest.setEmailId(userDetails.getEmailId());
+			userRequest.setMobileNo(userDetails.getMobileNo());
 			userRequest.setRoleType(userDetails.getRoleType());
+			userRequest.setTeamLeaderId(teamLeader.getFirstName()+" "+teamLeader.getLastName());
+//			System.out.println("(userDetails.getMobileNo() : "+(userDetails.getMobileNo()));
+//			System.out.println("(userRequest.setMobileNo : "+(userRequest.getMobileNo()));
 			
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
 			return userRequest;
