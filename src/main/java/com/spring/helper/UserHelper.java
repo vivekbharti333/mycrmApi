@@ -275,7 +275,10 @@ public class UserHelper {
 //				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
 				.setParameter("createdBy", userRequest.getLoginId())
 				.setParameter("superadminId", userRequest.getSuperadminId())
-				.setParameter("REMOVED", Status.REMOVED.name()).getResultList();
+				.setParameter("REMOVED", Status.REMOVED.name())
+				.getResultList();
+		
+		System.out.println("klnkl : "+results.toString());
 		return results;
 	}
 
