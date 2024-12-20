@@ -203,6 +203,20 @@ public class DonationController {
 		}
 	}
 	
+	@RequestMapping(path = "getDonationListForLead", method = RequestMethod.POST)
+	public Response<DonationDetails> getDonationListForLead(
+			@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
+		try {
+			List<DonationDetails> donationList = donationService.getDonationListForLead(donationRequestObject);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE,
+					String.valueOf(donationList.size()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getDonationCountAndAmountGroupByNameNew", method = RequestMethod.POST)
 	public Response<Object[]> getDonationCountAndAmountGroupByNameNew(
 	        @RequestBody Request<DonationRequestObject> donationRequestObject) {

@@ -1,24 +1,26 @@
 package com.spring.object.request;
 
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
-public class EnquiryRequestObject {
-	
+public class LeadRequestObject {
+
 	private Long id;
-	private String fullName;
+	private String donorName;
 	private String mobileNumber;
 	private String emailId;
-	private String enquiryFor;
 	private String status;
-	private String ipAddress;
-	
+	private String notes;
+	private String createdBy;
+	private String createdbyName;
+	private String superadminId;
+
 	private String requestedFor;
-	
+
 	private String token;
 	private int respCode;
 	private String respMesg;
-	
-	
-	
+
 }

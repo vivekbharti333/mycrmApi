@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -220,6 +221,7 @@ public class DonationHelper {
 		donationDetails.setCreatedbyName(donationRequest.getCreatedbyName());
 		donationDetails.setTeamLeaderId(donationRequest.getTeamLeaderId());
 		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
+		donationDetails.setCalled("NO");
 		donationDetails.setCreatedAt(new Date());
 		donationDetails.setUpdatedAt(new Date());
 		
@@ -652,6 +654,36 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			return results;
 		}
 
+
+		@SuppressWarnings("unchecked")
+		public List<DonationDetails> getDonationListForLead1(DonationRequestObject donationRequest) {
+			List<DonationDetails> results = new ArrayList<>();
+			results = donationDetailsDao.getEntityManager().createQuery(
+					"SELECT DD FROM DonationDetails DD \n"
+					+ "WHERE DD.superadminId = :superadminId \n"
+					+ "AND (DD.called IS NULL OR DD.called <> '' OR DD.called <> 'YES')")
+					.setParameter("superadminId", donationRequest.getSuperadminId())
+					.getResultList();
+			return results;
+		}
+
+		
+		public List<DonationDetails> getDonationListForLead(DonationRequestObject donationRequest) {
+		    List<DonationDetails> results = new ArrayList<>();
+		    try {
+		        results = donationDetailsDao.getEntityManager()
+		            .createQuery(
+		                "SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId AND (called NOT IN (:'YES') OR called IS NULL)", 
+		                DonationDetails.class
+		            )
+		            .setParameter("superadminId", donationRequest.getSuperadminId())
+		            //.setParameter("calledValues", Collections.singletonList("YES")) // Single value as a list
+		            .getResultList();
+		    } catch (Exception e) {
+		        e.printStackTrace(); 
+		    }
+		    return results;
+		}
 
 		
 		

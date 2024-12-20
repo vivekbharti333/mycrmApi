@@ -3,8 +3,9 @@ package com.spring.dao;
 import org.springframework.stereotype.Repository;
 
 import com.spring.entities.EnquiryDetails;
+import com.spring.entities.LeadDetails;
 
 @Repository
-public class EnquiryDetailsDao extends BaseDao<EnquiryDetails> {
+public class LeadDetailsDao extends BaseDao<LeadDetails> {
 
 }

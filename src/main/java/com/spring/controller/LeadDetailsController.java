@@ -14,29 +14,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.constant.Constant;
 import com.spring.entities.EnquiryDetails;
+import com.spring.entities.LeadDetails;
 import com.spring.exceptions.BizException;
-import com.spring.object.request.EnquiryRequestObject;
+import com.spring.object.request.LeadRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
-import com.spring.services.EnquiryService;
+import com.spring.services.LeadDetailsService;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class EnquiryController {
+public class LeadDetailsController {
 	
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
-	private EnquiryService enquiryService;
+	private LeadDetailsService leadDetailsService;
 
 	
-	@RequestMapping(path = "createEnquiry", method = RequestMethod.POST)
-	public Response<EnquiryRequestObject>createEnquiry(@RequestBody Request<EnquiryRequestObject> enquiryRequestObject, HttpServletRequest request) {
+	@RequestMapping(path = "createLead", method = RequestMethod.POST)
+	public Response<LeadRequestObject>createEnquiry(@RequestBody Request<LeadRequestObject> leadRequestObject, HttpServletRequest request) {
 		
-		GenricResponse<EnquiryRequestObject> responseObj = new GenricResponse<EnquiryRequestObject>();
+		GenricResponse<LeadRequestObject> responseObj = new GenricResponse<LeadRequestObject>();
 		try {
-			EnquiryRequestObject responce = enquiryService.createEnquiry(enquiryRequestObject);
+			LeadRequestObject responce = leadDetailsService.createLead(leadRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
@@ -48,11 +49,11 @@ public class EnquiryController {
 	
 
 
-	@RequestMapping(path = "getEnquiryList", method = RequestMethod.POST)
-	public Response<EnquiryDetails> getCustomerList(@RequestBody Request<EnquiryRequestObject> enquiryRequestObject) {
-		GenricResponse<EnquiryDetails> response = new GenricResponse<EnquiryDetails>();
+	@RequestMapping(path = "getLeadList", method = RequestMethod.POST)
+	public Response<LeadDetails> getLeadList(@RequestBody Request<LeadRequestObject> leadRequestObject) {
+		GenricResponse<LeadDetails> response = new GenricResponse<LeadDetails>();
 		try {
-			List<EnquiryDetails> enquiryList = enquiryService.getEnquiryList(enquiryRequestObject);
+			List<LeadDetails> enquiryList = leadDetailsService.getLeadList(leadRequestObject);
 			return response.createListResponse(enquiryList, 200, String.valueOf(enquiryList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();

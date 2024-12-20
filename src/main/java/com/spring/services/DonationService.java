@@ -517,7 +517,6 @@ public class DonationService {
 			return donationList;
 		}
 		return donationList;
-
 	}
 
 	public List<DonationDetails> getDonationProgramNameCountAndAmountGroupByName(Request<DonationRequestObject> donationRequestObject)
@@ -543,7 +542,20 @@ public class DonationService {
 	}
 
 
-	
+
+	public List<DonationDetails> getDonationListForLead(Request<DonationRequestObject> donationRequestObject)
+			throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+		System.out.println("Enter : ");
+
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		donationList = donationHelper.getDonationListForLead(donationRequest);
+		System.out.println("donationList : "+donationList);
+		return donationList;
+
+	}
 
 
 
