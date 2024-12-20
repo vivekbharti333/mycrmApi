@@ -204,9 +204,7 @@ public class UserHelper {
 				return results;
 			}
 		} else if (userRequest.getRoleType().equals(RoleType.SUPERADMIN.name())) {
-			System.out.println("Enter hai");
 			if (userRequest.getRequestedFor().equalsIgnoreCase(RequestFor.SEARCH.name())) {
-				System.out.println("Enter hai1");
 				List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
 						"SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND status NOT IN (:removed) AND"
 								+ " (userCode LIKE :searchParam OR firstName LIKE :searchParam OR lastName LIKE :searchParam "
