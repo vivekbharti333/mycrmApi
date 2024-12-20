@@ -38,6 +38,9 @@ public class LeadDetails {
 	@Column(name = "notes")
 	private String notes;
 	
+	@Column(name = "followup_date")
+	private Date followupDate;
+	
 	@Column(name = "created_at")
 	private Date createdAt;
 	

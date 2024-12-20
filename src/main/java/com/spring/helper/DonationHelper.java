@@ -673,10 +673,11 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		    try {
 		        results = donationDetailsDao.getEntityManager()
 		            .createQuery(
-		                "SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId AND (called NOT IN (:'YES') OR called IS NULL)", 
+		                "SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId", 
 		                DonationDetails.class
 		            )
-		            .setParameter("superadminId", donationRequest.getSuperadminId())
+//		            .setParameter("createdBy", donationRequest.getCreatedBy())
+		            .setParameter("superadminId", "1234567890")
 		            //.setParameter("calledValues", Collections.singletonList("YES")) // Single value as a list
 		            .getResultList();
 		    } catch (Exception e) {

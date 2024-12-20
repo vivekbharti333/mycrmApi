@@ -49,6 +49,7 @@ public class LeaddetailsHelper {
 		leadDetails.setMobileNumber(leadRequest.getMobileNumber());
 		leadDetails.setEmailId(leadRequest.getEmailId());
 		leadDetails.setStatus(leadRequest.getStatus());
+		leadDetails.setFollowupDate(leadRequest.getFollowupDate());
 		leadDetails.setNotes(leadRequest.getNotes());
 		leadDetails.setCreatedBy(leadRequest.getCreatedBy());
 		leadDetails.setCreatedbyName(leadRequest.getCreatedbyName());
