@@ -100,11 +100,10 @@ public class UserService {
 	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
-
+		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
 		if (userDetails != null) {
 			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
-				
 				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				userRequest.setRespMesg(Constant.INACTIVE_USER);
 				return userRequest;
@@ -132,29 +131,15 @@ public class UserService {
 					userRequest.setFirstName(userDetails.getFirstName());
 					userRequest.setLastName(userDetails.getLastName());
 					userRequest.setService(userDetails.getService());
-					userRequest.setUserPicture(userDetails.getUserPicture());
+//					userRequest.setUserPicture(userDetails.getUserPicture());
 					userRequest.setPermissions(userDetails.getPermissions());
 					userRequest.setRoleType(userDetails.getRoleType());
 					userRequest.setSuperadminId(userDetails.getSuperadminId());
 					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
-					userRequest.setTeamLeaderId(userRequest.getCreatedBy());
+					userRequest.setTeamLeaderId(userDetails.getCreatedBy());
 					userRequest.setToken(token);
 					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
 					
-//					loginRequest.setUserPicture(user.getUserPicture());
-//					loginRequest.setFirstName(user.getFirstName());
-//					loginRequest.setLastName(user.getLastName());
-//					loginRequest.setService(user.getService());
-//					loginRequest.setPermissions(user.getPermissions());
-//					loginRequest.setRoleType(user.getRoleType());
-//					loginRequest.setSuperadminId(user.getSuperadminId());
-//					loginRequest.setAdminId(user.getAdminId());
-//					loginRequest.setTeamLeaderId(user.getTeamleaderId());
-//					loginRequest.setToken(token);
-					
-//					CurrencyMaster currencyMaster = currencyHelper.getCurrencyDetailsBy(userDetails.getCurrencyId());
-//					userRequest.setCurrencyDetails(currencyMaster);
-
 					userRequest.setRespCode(Constant.SUCCESS_CODE);
 					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
 					return userRequest;

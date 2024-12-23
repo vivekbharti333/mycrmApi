@@ -388,7 +388,6 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 			return count;
 		} else {
 			count = (Object[]) donationDetailsDao.getEntityManager().createQuery(
-
 					"SELECT COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.createdBy =:createdBy AND DD.status =:status")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
@@ -655,29 +654,28 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		}
 
 
-		@SuppressWarnings("unchecked")
-		public List<DonationDetails> getDonationListForLead1(DonationRequestObject donationRequest) {
-			List<DonationDetails> results = new ArrayList<>();
-			results = donationDetailsDao.getEntityManager().createQuery(
-					"SELECT DD FROM DonationDetails DD \n"
-					+ "WHERE DD.superadminId = :superadminId \n"
-					+ "AND (DD.called IS NULL OR DD.called <> '' OR DD.called <> 'YES')")
-					.setParameter("superadminId", donationRequest.getSuperadminId())
-					.getResultList();
-			return results;
-		}
+//		@SuppressWarnings("unchecked")
+//		public List<DonationDetails> getDonationListForLead1(DonationRequestObject donationRequest) {
+//			List<DonationDetails> results = new ArrayList<>();
+//			results = donationDetailsDao.getEntityManager().createQuery(
+//					"SELECT DD FROM DonationDetails DD \n"
+//					+ "WHERE DD.superadminId = :superadminId \n"
+//					+ "AND (DD.called IS NULL OR DD.called <> '' OR DD.called <> 'YES')")
+//					.setParameter("superadminId", donationRequest.getSuperadminId())
+//					.getResultList();
+//			return results;
+//		}
 
 		
+		@SuppressWarnings("unchecked")
 		public List<DonationDetails> getDonationListForLead(DonationRequestObject donationRequest) {
 		    List<DonationDetails> results = new ArrayList<>();
 		    try {
 		        results = donationDetailsDao.getEntityManager()
-		            .createQuery(
-		                "SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId", 
-		                DonationDetails.class
-		            )
+		            .createQuery( "SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId AND called NOT IN :called")
 //		            .setParameter("createdBy", donationRequest.getCreatedBy())
 		            .setParameter("superadminId", "1234567890")
+		            .setParameter("called", "YES")
 		            //.setParameter("calledValues", Collections.singletonList("YES")) // Single value as a list
 		            .getResultList();
 		    } catch (Exception e) {

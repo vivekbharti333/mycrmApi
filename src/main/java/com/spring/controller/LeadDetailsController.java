@@ -47,8 +47,22 @@ public class LeadDetailsController {
 		}
 	}
 	
-
-
+	@RequestMapping(path = "getCountByStatus", method = RequestMethod.POST)
+	public Response<LeadRequestObject>getCountByStatus(@RequestBody Request<LeadRequestObject> leadRequestObject, HttpServletRequest request) {
+		
+		GenricResponse<LeadRequestObject> responseObj = new GenricResponse<LeadRequestObject>();
+		try {
+			LeadRequestObject responce = leadDetailsService.getCountByStatus(leadRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	
 	@RequestMapping(path = "getLeadList", method = RequestMethod.POST)
 	public Response<LeadDetails> getLeadList(@RequestBody Request<LeadRequestObject> leadRequestObject) {
 		GenricResponse<LeadDetails> response = new GenricResponse<LeadDetails>();

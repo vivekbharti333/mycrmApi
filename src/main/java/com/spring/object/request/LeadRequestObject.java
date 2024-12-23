@@ -18,9 +18,16 @@ public class LeadRequestObject {
 	private Date followupDate;
 	private String createdBy;
 	private String createdbyName;
+	private String teamLeaderId;
 	private String superadminId;
+	private String roleType;
 
 	private String requestedFor;
+	
+	private Long todayWin;
+	private Long todayLost;
+	private Long todayFollowup;
+	
 
 	private String token;
 	private int respCode;

@@ -53,6 +53,9 @@ public class LeadDetails {
 	@Column(name = "createdby_name")
 	private String createdbyName;
 	
+	@Column(name = "team_leader_id")
+	private String teamLeaderId;
+	
 	@Column(name = "superadmin_id")
 	private String superadminId;
 
