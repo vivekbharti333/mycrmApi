@@ -689,13 +689,13 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		public List<DonationDetails> getDonationListForLead(DonationRequestObject donationRequest) {
 		    List<DonationDetails> results = new ArrayList<>();
 		    try {
-		    	if(donationRequest.getRoleType().equalsIgnoreCase("SUPERADMIN")) {
-		    		results = donationDetailsDao.getEntityManager()
-				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId AND DD.called != :called")
-				            .setParameter("superadminId", donationRequest.getSuperadminId())
-				            .setParameter("called", "YES")
-				            .getResultList();
-		    	}else {
+//		    	if(donationRequest.getRoleType().equalsIgnoreCase("SUPERADMIN")) {
+//		    		results = donationDetailsDao.getEntityManager()
+//				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId AND DD.called != :called")
+//				            .setParameter("superadminId", donationRequest.getSuperadminId())
+//				            .setParameter("called", "YES")
+//				            .getResultList();
+//		    	}else {
 		    		results = donationDetailsDao.getEntityManager()
 				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.createdBy =:createdBy AND DD.superadminId = :superadminId AND DD.called != :called")
 				            .setParameter("superadminId", donationRequest.getSuperadminId())
@@ -703,7 +703,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 				            
 				            .setParameter("called", "YES")
 				            .getResultList();
-		    	}
+//		    	}
 		        
 		    } catch (Exception e) {
 		        // Use a proper logging framework
