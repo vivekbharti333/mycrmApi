@@ -27,6 +27,7 @@ public class LeadRequestObject {
 	private Long todayWin;
 	private Long todayLost;
 	private Long todayFollowup;
+	private Long todayLead;
 	
 
 	private String token;

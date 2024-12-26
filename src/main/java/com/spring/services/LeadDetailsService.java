@@ -76,19 +76,27 @@ public class LeadDetailsService {
 
 	}
 	
-	public LeadRequestObject getCountByStatus(Request<LeadRequestObject> leadRequestObject) 
-			throws BizException, Exception {
-		LeadRequestObject leadRequest = leadRequestObject.getPayload();
+	public LeadRequestObject getLeadCountByStatus(Request<LeadRequestObject> leadRequestObject) 
+	        throws BizException, Exception {
+	    LeadRequestObject leadRequest = leadRequestObject.getPayload();
 
-//		List<LeadRequestObject> leadList = new ArrayList<LeadRequestObject>();
-		if(leadRequest.getRequestedFor().equals("TODAY")) {	
-			 Object[] todays = leaddetailsHelper.getCountByStatus(leadRequest, todayDate, tomorrowDate);
-			 
-			 System.out.println("kkjhkkj : "+todays);
-//			leadRequest.setTodayWin((Long) todays);
-		}
-		return leadRequest; 
+	    if (leadRequest.getRequestedFor().equals("TODAY")) {
+	        Long todayWin = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "WIN");
+	        leadRequest.setTodayWin(todayWin);
+	        
+	        Long todayLost = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "LOST");
+	        leadRequest.setTodayLost(todayLost);
+	        
+	        Long todayFollowup = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "FOLLOWUP");
+	        leadRequest.setTodayFollowup(todayFollowup);
+	        
+	        Long todayLead = leaddetailsHelper.getTotalLeadCount(leadRequest, todayDate, tomorrowDate);
+	        leadRequest.setTodayLead(todayLead);
+	    }
+	    leadRequest.setRespCode(Constant.SUCCESS_CODE);
+	    return leadRequest;
 	}
+
 		
 
 	public List<LeadDetails> getLeadList(Request<LeadRequestObject> leadRequestObject) {
