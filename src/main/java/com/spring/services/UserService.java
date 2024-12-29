@@ -117,7 +117,7 @@ public class UserService {
 					logger.info("Login Successfully: " + userRequest);
 
 					// generate secret key.
-					String secretKey = jwtTokenUtil.generateSecretKey();
+					String secretKey = jwtTokenUtil.generateSecureSecretKey();
 
 					// update secret key in UserDetails.
 					userDetails.setSecretKey(secretKey);
