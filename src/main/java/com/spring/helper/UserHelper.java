@@ -111,6 +111,8 @@ public class UserHelper {
 	}
 
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
+		
+		System.out.println(userRequest.getPermissions()+" khjg");
 
 		UserDetails userDetails = new UserDetails();
 
