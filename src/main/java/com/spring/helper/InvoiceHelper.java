@@ -149,6 +149,7 @@ public class InvoiceHelper {
 
 		invoiceHeaderDetails.setLoginId(invoiceRequest.getCreatedBy());
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
+//		invoiceHeaderDetails.setReceiptDownloadUrl(invoiceRequest.getReceiptDownloadUrl());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setSerialNumber(0L);
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
@@ -193,6 +194,7 @@ public class InvoiceHelper {
 
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
+//		invoiceHeaderDetails.setReceiptDownloadUrl(invoiceRequest.getReceiptDownloadUrl());
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
 //		invoiceHeaderDetails.setCompanyStamp(invoiceRequest.getCompanyStamp());
 		invoiceHeaderDetails.setCompanyFirstName(invoiceRequest.getCompanyFirstName());

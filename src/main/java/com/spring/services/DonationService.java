@@ -140,6 +140,9 @@ public class DonationService {
 
 				// send email
 				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
+				
+				// whats app
+				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
 			}
 
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);

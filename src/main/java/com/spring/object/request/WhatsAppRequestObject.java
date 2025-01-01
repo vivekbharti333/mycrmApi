@@ -12,6 +12,7 @@ public class WhatsAppRequestObject {
 	private String whatsappUrl;
 	private String apiKey;
 	private String whatsAppNumber;
+	private String receiptDownloadUrl;
 	private String status;	
 	private String superadminId;
 	private Date createdAt;

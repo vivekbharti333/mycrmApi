@@ -1,5 +1,8 @@
 package com.spring.helper;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -10,11 +13,15 @@ import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
 import com.spring.constant.Constant;
 import com.spring.dao.CustomerDetailsDao;
 import com.spring.dao.SmsTemplateDetailsDao;
 import com.spring.dao.WhatsAppDetailsDao;
 import com.spring.entities.CustomerDetails;
+import com.spring.entities.DonationDetails;
+import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.entities.WhatsAppDetails;
@@ -26,6 +33,10 @@ import com.spring.object.request.SmsTemplateRequestObject;
 import com.spring.object.request.UserRequestObject;
 import com.spring.object.request.WhatsAppRequestObject;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 @Component
 public class WhatsAppHelper {
 
@@ -35,11 +46,41 @@ public class WhatsAppHelper {
 	@Autowired
 	private WhatsAppDetailsDao whatsAppDetailsDao;
 	
+	@Autowired
+    private RestTemplate restTemplate;
+	
 	public void validateSmsTemplateRequest(WhatsAppRequestObject whatsAppRequestObject) throws BizException {
 		if (whatsAppRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
+	
+	
+	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
+        try {
+            // Construct the message
+            String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". Please click to download your receipt: " 
+                    + whatsAppDetails.getReceiptDownloadUrl() + " " + donationDetails.getReceiptNumber();
+
+            // URL encode the message
+            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+
+            // Construct the URL
+            String url = "https://login.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c&mobile=8800689752&msg=" + encodedMessage;
+
+            // Send the request using RestTemplate (GET request)
+            String response = restTemplate.getForObject(url, String.class);
+
+            // Log the response
+            System.out.println(response);
+
+            return response;
+        } catch (UnsupportedEncodingException e) {
+            // Handle the exception properly, maybe return a custom error message
+            e.printStackTrace();
+            return "Error encoding message: " + e.getMessage();
+        }
+    }
 	
 	@Transactional
 	public WhatsAppDetails getWhatsAppBySuperadminId(String superadminId) {

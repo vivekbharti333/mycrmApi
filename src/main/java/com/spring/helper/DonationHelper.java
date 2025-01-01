@@ -34,6 +34,7 @@ import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
+import com.spring.entities.WhatsAppDetails;
 import com.spring.enums.RequestFor;
 import com.spring.enums.RoleType;
 import com.spring.enums.SmsType;
@@ -60,6 +61,9 @@ public class DonationHelper {
 	
 	@Autowired
 	private EmailHelper emailHelper;
+	
+	@Autowired
+	private WhatsAppHelper whatsAppHelper;
 	
 	@Autowired
 	private NimbusEmail nimbusEmail;
@@ -141,6 +145,20 @@ public class DonationHelper {
 		}
 	}
 	
+	public void sendDonationInvoiceWhatsApp(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
+		System.out.println("1");
+		if(donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
+			System.out.println("2");
+			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
+			System.out.println("3");
+			if(whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+				System.out.println("4");
+				whatsAppHelper.sendWhatsAppMessage(donationDetails, whatsAppDetails);
+				
+				}
+			}
+	}
+	
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
 		if(donationDetails.getEmailId() != null && !donationDetails.getEmailId().equalsIgnoreCase("")) {
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
@@ -150,6 +168,8 @@ public class DonationHelper {
 				}
 			}
 	}
+	
+	
 	
 	
 	public DonationRequestObject getTeamLeaderIdOfDonation(DonationRequestObject donationRequest) {

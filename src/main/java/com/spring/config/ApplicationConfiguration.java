@@ -10,6 +10,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import org.springframework.web.client.RestTemplate;
+
 
 @Configuration
 @ComponentScan(basePackages="com.spring.*")
@@ -34,4 +36,9 @@ public class ApplicationConfiguration implements WebMvcConfigurer {
 		vResolver.setSuffix(".jsp");
 		return vResolver;
 	}
+	
+	@Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 }

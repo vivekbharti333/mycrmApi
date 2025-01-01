@@ -30,6 +30,9 @@ public class WhatsAppDetails {
 	@Column(name = "whats_app_number")
 	private String whatsAppNumber;
 	
+	@Column(name = "receipt_download_url")
+	private String receiptDownloadUrl;
+	
 	@Column(name = "status")
 	private String status;	
 	
