@@ -59,14 +59,14 @@ public class WhatsAppHelper {
 	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
         try {
             // Construct the message
-            String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". Please click to download your receipt: " 
+            String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". Please click to download your receipt " 
                     + whatsAppDetails.getReceiptDownloadUrl() + " " + donationDetails.getReceiptNumber();
 
             // URL encode the message
             String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
 
             // Construct the URL
-            String url = "https://login.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c&mobile=8800689752&msg=" + encodedMessage;
+            String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c&mobile=8800689752&msg=" + encodedMessage;
 
             // Send the request using RestTemplate (GET request)
             String response = restTemplate.getForObject(url, String.class);
@@ -76,7 +76,6 @@ public class WhatsAppHelper {
 
             return response;
         } catch (UnsupportedEncodingException e) {
-            // Handle the exception properly, maybe return a custom error message
             e.printStackTrace();
             return "Error encoding message: " + e.getMessage();
         }

@@ -68,11 +68,11 @@ public class PaymentModeHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PaymentModeMaster> getPaymentModeList(PaymentRequestObject optionRequest) {
+	public List<PaymentModeMaster> getMasterPaymentModeList(PaymentRequestObject optionRequest) {
 		List<PaymentModeMaster> results = new ArrayList<>();
 		results = paymentModeDetailsDao.getEntityManager().createQuery(
-				"SELECT PM FROM paymentMode PM WHERE PM.superadminId =:superadminId ORDER BY PM.paymentMode ASC")
-				.setParameter("superadminId", optionRequest.getSuperadminId()).getResultList();
+				"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
+				.getResultList();
 		return results;
 	}
 	

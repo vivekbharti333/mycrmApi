@@ -47,11 +47,11 @@ public class PaymentModeController {
 		}
 	}
 	
-	@RequestMapping(path = "getPaymentModeList", method = RequestMethod.POST)
-	public Response<PaymentModeMaster> getOptionTypeDetailsList(@RequestBody Request<PaymentRequestObject> optionRequestObject) {
+	@RequestMapping(path = "getMasterPaymentModeList", method = RequestMethod.POST)
+	public Response<PaymentModeMaster> getMasterPaymentModeList(@RequestBody Request<PaymentRequestObject> optionRequestObject) {
 		GenricResponse<PaymentModeMaster> response = new GenricResponse<PaymentModeMaster>();
 		try {
-			List<PaymentModeMaster> optionList = optionTypeService.getPaymentModeListBySuperadminId(optionRequestObject);
+			List<PaymentModeMaster> optionList = optionTypeService.getMasterPaymentModeList(optionRequestObject);
 			return response.createListResponse(optionList, 200, String.valueOf(optionList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();

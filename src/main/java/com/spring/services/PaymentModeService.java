@@ -67,11 +67,11 @@ public class PaymentModeService {
 		}
 	}
 
-	public List<PaymentModeMaster> getPaymentModeList(Request<PaymentRequestObject> paymentModeRequestObject) {
+	public List<PaymentModeMaster> getMasterPaymentModeList(Request<PaymentRequestObject> paymentModeRequestObject) {
 		PaymentRequestObject paymentModeRequest = paymentModeRequestObject.getPayload();
 
 		List<PaymentModeMaster> optionTypeList = new ArrayList<>();
-		optionTypeList = optionTypeHelper.getPaymentModeList(paymentModeRequest);
+		optionTypeList = optionTypeHelper.getMasterPaymentModeList(paymentModeRequest);
 
 		return optionTypeList;
 	}
