@@ -55,7 +55,7 @@ public class PaymentModeService {
 		PaymentModeMaster existsPaymentModeDetails = optionTypeHelper.getPaymentModeMasterByPaymentMode(paymentModeRequest.getPaymentMode());
 		if (existsPaymentModeDetails == null) {
 			PaymentModeMaster optionTypeDetails = optionTypeHelper.getPaymentModeByReqObj(paymentModeRequest);
-			optionTypeDetails = optionTypeHelper.savePaymentModeDetails(optionTypeDetails);
+			optionTypeDetails = optionTypeHelper.savePaymentModeMaster(optionTypeDetails);
 
 			paymentModeRequest.setRespCode(Constant.SUCCESS_CODE);
 			paymentModeRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
@@ -66,6 +66,34 @@ public class PaymentModeService {
 			return paymentModeRequest;
 		}
 	}
+	
+
+	public PaymentRequestObject changeStatusOfPaymentModeMaster(Request<PaymentRequestObject> paymentModeRequestObject) 
+			throws BizException, Exception {
+		PaymentRequestObject paymentModeRequest = paymentModeRequestObject.getPayload();
+		optionTypeHelper.validatePaymentModeRequest(paymentModeRequest);
+		
+		PaymentModeMaster paymentModeMaster = optionTypeHelper.getPaymentModeMasterByPaymentMode(paymentModeRequest.getPaymentMode());
+		if (paymentModeMaster != null) {
+			if(paymentModeMaster.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+				paymentModeMaster.setStatus(Status.ACTIVE.name());
+			}else {
+				paymentModeMaster.setStatus(Status.INACTIVE.name());
+			}
+			
+			paymentModeMaster = optionTypeHelper.updatePaymentModeMaster(paymentModeMaster);
+			
+			paymentModeRequest.setRespCode(Constant.SUCCESS_CODE);
+			paymentModeRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return paymentModeRequest;
+		}else {
+			paymentModeRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			paymentModeRequest.setRespMesg("Not Found");
+			return paymentModeRequest;
+		}
+		
+	}
+	
 
 	public List<PaymentModeMaster> getMasterPaymentModeList(Request<PaymentRequestObject> paymentModeRequestObject) {
 		PaymentRequestObject paymentModeRequest = paymentModeRequestObject.getPayload();
@@ -109,5 +137,6 @@ public class PaymentModeService {
 		optionTypeList = optionTypeHelper.getPaymentModeListBySuperadminId(paymentModeRequest, hi.get(0).getPaymentModeIds());
 		return optionTypeList;
 	}
+
 
 }

@@ -17,7 +17,7 @@ import com.spring.constant.Constant;
 import com.spring.dao.PaymentGatewayResponseDetailsDao;
 import com.spring.dao.PaymentGatewayDetailsDao;
 import com.spring.dao.PaymentModeBySuperadminDao;
-import com.spring.dao.PaymentModeDetailsDao;
+import com.spring.dao.PaymentModeMasterDao;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentGatewayDetails;

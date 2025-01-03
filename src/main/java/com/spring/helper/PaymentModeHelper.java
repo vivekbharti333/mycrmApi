@@ -15,7 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.spring.constant.Constant;
 import com.spring.dao.PaymentModeBySuperadminDao;
-import com.spring.dao.PaymentModeDetailsDao;
+import com.spring.dao.PaymentModeMasterDao;
 import com.spring.entities.PaymentModeBySuperadmin;
 import com.spring.entities.PaymentModeMaster;
 import com.spring.enums.Status;
@@ -26,7 +26,7 @@ import com.spring.object.request.PaymentRequestObject;
 public class PaymentModeHelper {
 
 	@Autowired
-	private PaymentModeDetailsDao paymentModeDetailsDao;
+	private PaymentModeMasterDao paymentModeMasterDao;
 	
 	@Autowired
 	private PaymentModeBySuperadminDao paymentModeBySuperadminDao;
@@ -40,12 +40,12 @@ public class PaymentModeHelper {
 	@Transactional
 	public PaymentModeMaster getPaymentModeMasterByPaymentMode(String paymentMode) {
 
-		CriteriaBuilder criteriaBuilder = paymentModeDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaBuilder criteriaBuilder = paymentModeMasterDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<PaymentModeMaster> criteriaQuery = criteriaBuilder.createQuery(PaymentModeMaster.class);
 		Root<PaymentModeMaster> root = criteriaQuery.from(PaymentModeMaster.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("paymentMode"), paymentMode);
 		criteriaQuery.where(restriction);
-		PaymentModeMaster optionTypeDetails = paymentModeDetailsDao.getSession().createQuery(criteriaQuery)
+		PaymentModeMaster optionTypeDetails = paymentModeMasterDao.getSession().createQuery(criteriaQuery)
 				.uniqueResult();
 		return optionTypeDetails;
 	}
@@ -62,15 +62,22 @@ public class PaymentModeHelper {
 	}
 
 	@Transactional
-	public PaymentModeMaster savePaymentModeDetails(PaymentModeMaster optionTypeDetails) {
-		paymentModeDetailsDao.persist(optionTypeDetails);
+	public PaymentModeMaster savePaymentModeMaster(PaymentModeMaster optionTypeDetails) {
+		paymentModeMasterDao.persist(optionTypeDetails);
 		return optionTypeDetails;
 	}
+	
+	@Transactional
+	public PaymentModeMaster updatePaymentModeMaster(PaymentModeMaster optionTypeDetails) {
+		paymentModeMasterDao.update(optionTypeDetails);
+		return optionTypeDetails;
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public List<PaymentModeMaster> getMasterPaymentModeList(PaymentRequestObject optionRequest) {
 		List<PaymentModeMaster> results = new ArrayList<>();
-		results = paymentModeDetailsDao.getEntityManager().createQuery(
+		results = paymentModeMasterDao.getEntityManager().createQuery(
 				"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
 				.getResultList();
 		return results;
@@ -85,7 +92,7 @@ public class PaymentModeHelper {
 		Root<PaymentModeBySuperadmin> root = criteriaQuery.from(PaymentModeBySuperadmin.class);
 		Predicate restriction = criteriaBuilder.equal(root.get("superadminId"), superadminId);
 		criteriaQuery.where(restriction);
-		PaymentModeBySuperadmin optionTypeDetails = paymentModeDetailsDao.getSession().createQuery(criteriaQuery)
+		PaymentModeBySuperadmin optionTypeDetails = paymentModeMasterDao.getSession().createQuery(criteriaQuery)
 				.uniqueResult();
 		return optionTypeDetails;
 	}
@@ -134,7 +141,7 @@ public class PaymentModeHelper {
 	    List<PaymentModeMaster> results = new ArrayList<>();
 //	    String paymentModeIds = "1,2,3";
 	    String queryString = "SELECT pd FROM PaymentModeMaster pd WHERE pd.id IN ("+paymentModeIds+")";
-	    results = paymentModeDetailsDao.getEntityManager()
+	    results = paymentModeMasterDao.getEntityManager()
 	            .createQuery(queryString, PaymentModeMaster.class)
 	            .getResultList();
 	    
