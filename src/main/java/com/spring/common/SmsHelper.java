@@ -71,6 +71,8 @@ public class SmsHelper {
 			
 			String testUrl = providerUrl+"UserID="+ username +"&Password="+password+"&SenderID="+sender+"&Phno="+sendto+"&Msg="+message+"&EntityID="+entityid+"&TemplateID="+templateId;	
 			
+			System.out.println(testUrl);
+			
 			URL url = new URL(testUrl);
 			URLConnection conn = url.openConnection();
 			conn.setDoOutput(true);

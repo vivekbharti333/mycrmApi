@@ -32,7 +32,8 @@ public class NimbusEmail {
 		paramJson.put("COMPANY_NAME", emailServiceDetails.getRegards());
 		paramJson.put("AMOUNT", "&#x20B9;" + donationDetails.getAmount());
 		paramJson.put("PROGRAM", donationDetails.getProgramName());
-        paramJson.put("RECIEPT_URL", "https://mydonation.co.in/#/receipt?receiptNo="+donationDetails.getReceiptNumber());
+//        paramJson.put("RECIEPT_URL", "https://mydonation.co.in/#/receipt?receiptNo="+donationDetails.getReceiptNumber());
+        paramJson.put("RECIEPT_URL", "https://mydonation.co.in/#/thank-you/letter/"+donationDetails.getReceiptNumber());
 		paramJson.put("EMAIL", emailServiceDetails.getWebsite());
 
 //		System.out.println("Param0 : " + paramJson.toString());

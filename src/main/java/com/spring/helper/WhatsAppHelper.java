@@ -56,30 +56,66 @@ public class WhatsAppHelper {
 	}
 	
 	
+//	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
+//        try {
+//            // Construct the message
+////            String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". Please click to download your receipt " 
+////                    + whatsAppDetails.getReceiptDownloadUrl() + " " + donationDetails.getReceiptNumber();
+//        	
+//        	String message = "We have received a donation of Rs " + donationDetails.getAmount() + "."
+//        			+ " Please click below url to download your receipt. https://mydonation.in/#/thank-you/letter/" + donationDetails.getReceiptNumber();
+//        	
+////        	String message = "We have received a donation of Rs " + donationDetails.getAmount() + "."
+////        			+ " Please click below url to download your receipt. "+whatsAppDetails.getReceiptDownloadUrl() + donationDetails.getReceiptNumber();
+//
+//            // URL encode the message
+//            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+//
+//            // Construct the URL
+////            String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c&mobile="+donationDetails.getMobileNumber()+"&msg=" + encodedMessage;
+//            String url = whatsAppDetails.getWhatsappUrl()+whatsAppDetails.getApiKey()+"&mobile="+donationDetails.getMobileNumber()+"&msg=" + encodedMessage;
+//
+//            // Send the request using RestTemplate (GET request)
+//            String response = restTemplate.getForObject(url, String.class);
+//
+//            // Log the response
+//            System.out.println(response);
+//
+//            return response;
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//            return "Error encoding message: " + e.getMessage();
+//        }
+//    }
+	
 	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
-        try {
-            // Construct the message
-            String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". Please click to download your receipt " 
-                    + whatsAppDetails.getReceiptDownloadUrl() + " " + donationDetails.getReceiptNumber();
+	    try {
+	        // Construct the plain message
+	        String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". "
+	                + "Please click below URL to download your receipt: https://mydonation.in/#/thank-you/letter/" 
+	                + donationDetails.getReceiptNumber();
 
-            // URL encode the message
-            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
+	        // URL encode only the message text (excluding the preformatted URL)
+//	        String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
 
-            // Construct the URL
-            String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c&mobile=8800689752&msg=" + encodedMessage;
+	        // Construct the full API URL
+	        String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c"
+	                + "&mobile=" + donationDetails.getMobileNumber()
+	                + "&msg=" + message;
 
-            // Send the request using RestTemplate (GET request)
-            String response = restTemplate.getForObject(url, String.class);
+	        // Send the GET request using RestTemplate
+	        RestTemplate restTemplate = new RestTemplate();
+	        String response = restTemplate.getForObject(url, String.class);
 
-            // Log the response
-            System.out.println(response);
+	        // Log the response
+	        System.out.println(response);
 
-            return response;
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return "Error encoding message: " + e.getMessage();
-        }
-    }
+	        return response;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "Error sending WhatsApp message: " + e.getMessage();
+	    }
+	}
 	
 	@Transactional
 	public WhatsAppDetails getWhatsAppBySuperadminId(String superadminId) {
@@ -102,6 +138,7 @@ public class WhatsAppHelper {
 		whatsAppDetails.setWhatsappUrl(whatsAppRequest.getWhatsappUrl());
 		whatsAppDetails.setApiKey(whatsAppRequest.getApiKey());
 		whatsAppDetails.setWhatsAppNumber(whatsAppRequest.getWhatsAppNumber());
+		whatsAppDetails.setReceiptDownloadUrl(whatsAppRequest.getReceiptDownloadUrl());
 		whatsAppDetails.setStatus(Status.ACTIVE.name());
 		whatsAppDetails.setSuperadminId(whatsAppRequest.getSuperadminId());
 		whatsAppDetails.setUpdatedBy(whatsAppRequest.getUpdatedBy());

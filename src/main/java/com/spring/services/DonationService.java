@@ -82,7 +82,7 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
-		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
 
 //		if (isValid) {
 			
