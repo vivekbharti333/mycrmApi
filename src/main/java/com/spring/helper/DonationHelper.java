@@ -92,6 +92,9 @@ public class DonationHelper {
 		if(donationRequest.getAmount() <= 0) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Amount can not be null or Zero"); 
 		}
+		if(donationRequest.getCurrencyCode() == null || donationRequest.getCurrencyCode().equalsIgnoreCase("")) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Currency"); 
+		}
 		if(donationRequest.getProgramName() == null || donationRequest.getProgramName().isEmpty() || donationRequest.getProgramName().equals("")) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Please Select Program"); 
 		}

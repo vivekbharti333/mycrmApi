@@ -116,8 +116,6 @@ public class LeadDetailsService {
 			return leadList;
 		}
 		return leadList; 
-		
-		
 	}
 	
 	
