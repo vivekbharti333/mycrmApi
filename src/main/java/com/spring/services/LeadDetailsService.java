@@ -49,6 +49,7 @@ public class LeadDetailsService {
 	private Date lastDateMonth = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
 	
+	
 
 	@Transactional
 	public LeadRequestObject createLead(Request<LeadRequestObject> leadRequestObject)
@@ -73,7 +74,25 @@ public class LeadDetailsService {
 		leadRequest.setRespCode(Constant.SUCCESS_CODE);
 		leadRequest.setRespMesg("Submited Successfully");
 		return leadRequest;
-
+	}
+	
+	public LeadRequestObject updateLead(Request<LeadRequestObject> leadRequestObject) throws BizException, Exception {
+		LeadRequestObject leadRequest = leadRequestObject.getPayload();
+		leaddetailsHelper.validateEnquiryRequest(leadRequest);
+		
+		LeadDetails leadDetails = leaddetailsHelper.getLeadDetailsById(leadRequest.getId());
+		if(leadDetails != null) {
+			leadDetails = leaddetailsHelper.getUpdatedLeadDetailsByReqObj(leadRequest, leadDetails);
+			leadDetails = leaddetailsHelper.updateLeadDetails(leadDetails);
+			
+			leadRequest.setRespCode(Constant.SUCCESS_CODE);
+			leadRequest.setRespMesg("Updated Successfully");
+			return leadRequest;
+		}else {
+			leadRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			leadRequest.setRespMesg("Does not exists");
+			return leadRequest;
+		}
 	}
 	
 	public LeadRequestObject getLeadCountByStatus(Request<LeadRequestObject> leadRequestObject) 
@@ -117,6 +136,8 @@ public class LeadDetailsService {
 		}
 		return leadList; 
 	}
+
+
 	
 	
 

@@ -4,6 +4,10 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.TemporalType;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Component;
 
 import com.spring.constant.Constant;
 import com.spring.dao.LeadDetailsDao;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.LeadDetails;
 import com.spring.enums.RoleType;
 import com.spring.exceptions.BizException;
@@ -27,8 +32,21 @@ public class LeaddetailsHelper {
 		if (leadRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
+
 	}
 
+	@Transactional
+	public LeadDetails getLeadDetailsById(Long id) {
+
+		CriteriaBuilder criteriaBuilder = leadDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<LeadDetails> criteriaQuery = criteriaBuilder.createQuery(LeadDetails.class);
+		Root<LeadDetails> root = criteriaQuery.from(LeadDetails.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("id"), id);
+		criteriaQuery.where(restriction);
+		LeadDetails leadDetails = leadDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return leadDetails;
+	}
+	
 
 	public LeadDetails getLeadDetailsByReqObj(LeadRequestObject leadRequest) {
 
@@ -54,6 +72,26 @@ public class LeaddetailsHelper {
 	@Transactional
 	public LeadDetails saveLeadDetails(LeadDetails leadDetails) {
 		leadDetailsDao.persist(leadDetails);
+		return leadDetails;
+	}
+	
+	public LeadDetails getUpdatedLeadDetailsByReqObj(LeadRequestObject leadRequest, LeadDetails leadDetails) {
+
+		leadDetails.setDonorName(leadRequest.getDonorName());
+//		leadDetails.setMobileNumber(leadRequest.getMobileNumber());
+		leadDetails.setEmailId(leadRequest.getEmailId());
+		leadDetails.setStatus(leadRequest.getStatus());
+		leadDetails.setFollowupDate(leadRequest.getFollowupDate());
+		leadDetails.setNotes(leadRequest.getNotes());
+		
+		leadDetails.setUpdatedAt(new Date());
+
+		return leadDetails;
+	}
+	
+	@Transactional
+	public LeadDetails updateLeadDetails(LeadDetails leadDetails) {
+		leadDetailsDao.update(leadDetails);
 		return leadDetails;
 	}
 	
