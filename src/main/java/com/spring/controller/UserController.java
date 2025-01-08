@@ -195,7 +195,7 @@ public class UserController {
 			HttpServletRequest request) {
 		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
 		try {
-			
+			System.out.println("Enter");
 			UserRequestObject responce = userService.updateUserDetails(userRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {

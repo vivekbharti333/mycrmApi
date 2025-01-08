@@ -95,9 +95,6 @@ public class WhatsAppHelper {
 	                + "Please click below URL to download your receipt: https://mydonation.in/#/thank-you/letter/" 
 	                + donationDetails.getReceiptNumber();
 
-	        // URL encode only the message text (excluding the preformatted URL)
-//	        String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
-
 	        // Construct the full API URL
 	        String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c"
 	                + "&mobile=" + donationDetails.getMobileNumber()

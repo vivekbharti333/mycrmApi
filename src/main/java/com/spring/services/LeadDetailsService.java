@@ -69,6 +69,7 @@ public class LeadDetailsService {
 		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId( leadRequest.getId(), leadRequest.getSuperadminId());
 		if(donationDetails != null) {
 			donationDetails.setCalled("YES");
+			donationHelper.updateDonationDetails(donationDetails);
 		}
 		
 		leadRequest.setRespCode(Constant.SUCCESS_CODE);

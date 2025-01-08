@@ -174,6 +174,7 @@ public class UserHelper {
 		userDetails.setMobileNo(userRequest.getMobileNo());
 		userDetails.setAlternateMobile(userRequest.getAlternateMobile());
 		userDetails.setEmailId(userRequest.getEmailId());
+		userDetails.setPermissions(userRequest.getPermissions());
 		userDetails.setUpdatedAt(new Date());
 
 		return userDetails;

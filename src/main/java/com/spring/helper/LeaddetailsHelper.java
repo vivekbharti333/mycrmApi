@@ -76,12 +76,18 @@ public class LeaddetailsHelper {
 	}
 	
 	public LeadDetails getUpdatedLeadDetailsByReqObj(LeadRequestObject leadRequest, LeadDetails leadDetails) {
+		
+		if(leadRequest.getStatus().equalsIgnoreCase("FOLLOWUP")) {
+			leadDetails.setFollowupDate(leadRequest.getFollowupDate());
+		} else {
+			leadDetails.setFollowupDate(null);
+		}
 
 		leadDetails.setDonorName(leadRequest.getDonorName());
 //		leadDetails.setMobileNumber(leadRequest.getMobileNumber());
 		leadDetails.setEmailId(leadRequest.getEmailId());
 		leadDetails.setStatus(leadRequest.getStatus());
-		leadDetails.setFollowupDate(leadRequest.getFollowupDate());
+		
 		leadDetails.setNotes(leadRequest.getNotes());
 		
 		leadDetails.setUpdatedAt(new Date());
