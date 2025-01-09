@@ -68,6 +68,7 @@ public class UserHelper {
 			return false;
 		}
 	}
+
 	
 	public UserRequestObject getPerissionByRoleType(UserRequestObject userRequest) {
 		
