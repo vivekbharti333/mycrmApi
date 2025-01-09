@@ -2,4 +2,6 @@ package com.spring.enums;
 
 public enum RoleType {
 	MAINADMIN,SUPERADMIN,ADMIN,TEAM_LEADER,FUNDRAISING_OFFICER,DONOR_EXECUTIVE,CUSTOMER;
+	
+
 }

@@ -96,9 +96,11 @@ public class WhatsAppHelper {
 	                + donationDetails.getReceiptNumber();
 
 	        // Construct the full API URL
-	        String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c"
+	        String url = "https://demo.digitalsms.biz/api?apikey=239de43d69f56d702d92112792ed4c36"
 	                + "&mobile=" + donationDetails.getMobileNumber()
-	                + "&msg=" + message;
+	                + "&msg=" + "kjhjh"+"&pdf=http://localhost/mycrm/donationinvoice12/6202cx41893";
+	        
+	        System.out.println("Url : "+url);
 
 	        // Send the GET request using RestTemplate
 	        RestTemplate restTemplate = new RestTemplate();

@@ -42,6 +42,7 @@ public class NimbusEmail {
 	}
 
 	public void sendNimbusEmail(DonationDetails donationDetails, EmailServiceDetails emailServiceDetails) {
+		System.out.println("Email");
 //	public void sendNimbusEmail(DonationDetails donationDetails) {
 		try {
 
@@ -69,6 +70,7 @@ public class NimbusEmail {
 			postData.put("TO", donationDetails.getEmailId());
 			postData.put("PARAMS", this.getParameter(donationDetails, emailServiceDetails));
 //            postData.put("PARAMS", "{\"DONOR\":\"Vivek\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"AMOUNT\":\"&#x20B9;250\",\"PROGRAM\":\"Child Education\",\"RECIEPT\":\"HJUY79jhgju\76\",\"EMAIL\":\"info@datfuslab.com\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"EMAIL\":\"info@datfuslab.com\"}");
+//			postData.put("FILE[0]", "http://localhost/mycrm/donationinvoice12/6202cx41893");
 			postData.put("FILE[0]", "");
 
 			// Encode the PDF content as Base64

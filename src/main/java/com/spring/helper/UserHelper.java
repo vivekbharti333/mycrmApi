@@ -68,6 +68,23 @@ public class UserHelper {
 			return false;
 		}
 	}
+	
+	public UserRequestObject getPerissionByRoleType(UserRequestObject userRequest) {
+		
+		if(userRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
+			userRequest.setPermissions("['dashboard','create-user','user-list','add-donation','all-donation-list','payment-mode','program']");
+			
+		}if(userRequest.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name())) {
+			userRequest.setPermissions("['dashboard','create-user','user-list','add-donation','all-donation-list','payment-mode','program']");
+		}if(userRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+			userRequest.setPermissions("['dashboard','add-donation','all-donation-list']");
+		}if(userRequest.getRoleType().equalsIgnoreCase(RoleType.FUNDRAISING_OFFICER.name())) {
+			userRequest.setPermissions("['dashboard','add-donation','all-donation-list']");
+		}if(userRequest.getRoleType().equalsIgnoreCase(RoleType.DONOR_EXECUTIVE.name())) {
+			userRequest.setPermissions("['call-dashboard','create-lead','lead-list']");
+		}
+		return userRequest;
+	}
 
 	@Transactional
 	public UserDetails getUserDetailsByLoginId(String loginId) {
@@ -92,7 +109,6 @@ public class UserHelper {
 		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1, restriction2);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-		System.out.println(userDetails + "yttyt");
 		return userDetails;
 	}
 
@@ -111,8 +127,6 @@ public class UserHelper {
 	}
 
 	public UserDetails getUserDetailsByReqObj(UserRequestObject userRequest) {
-		
-		System.out.println(userRequest.getPermissions()+" khjg");
 
 		UserDetails userDetails = new UserDetails();
 
@@ -131,6 +145,7 @@ public class UserHelper {
 		userDetails.setAadharNumber(userRequest.getAadharNumber());
 		userDetails.setPanNumber(userRequest.getPanNumber());
 		userDetails.setCreatedBy(userRequest.getCreatedBy());
+		userDetails.setPermissions(this.getPerissionByRoleType(userRequest).getPermissions());
 
 		userDetails.setDob(userRequest.getDob());
 		userDetails.setIsPassChanged("NO");

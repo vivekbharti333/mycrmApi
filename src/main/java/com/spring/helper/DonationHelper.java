@@ -149,13 +149,13 @@ public class DonationHelper {
 	}
 	
 	public void sendDonationInvoiceWhatsApp(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws MessagingException, IOException {
-		System.out.println("yuty");
+
 		if(donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
 			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
-			System.out.println("yutyhg : "+whatsAppDetails);
+
 			if(whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 				whatsAppHelper.sendWhatsAppMessage(donationDetails, whatsAppDetails);
-				System.out.println("hih");
+
 				}
 			}
 	}
