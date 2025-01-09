@@ -92,7 +92,7 @@ public class WhatsAppHelper {
 	    try {
 	        // Construct the plain message
 	        String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". "
-	                + "Please click below URL to download your receipt: https://mydonation.in/#/thank-you/letter/" 
+	                + "Please click below URL to download your receipt: https://mydonation.in/#/thanku?receiptNo="
 	                + donationDetails.getReceiptNumber();
 
 	        // Construct the full API URL

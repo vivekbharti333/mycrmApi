@@ -213,7 +213,7 @@ public class LeaddetailsHelper {
 					.getResultList();
 			return results;
 		} else if (leadRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
-			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.superadminId =:superadminId AND LD.createdBy =:createdBy";
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
 			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
@@ -222,7 +222,7 @@ public class LeaddetailsHelper {
 					.getResultList();
 			return results;
 		}else {
-			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.createdAt BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy";
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.createdAt BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
 			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
