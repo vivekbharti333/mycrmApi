@@ -71,7 +71,7 @@ public class NimbusEmail {
 			postData.put("PARAMS", this.getParameter(donationDetails, emailServiceDetails));
 //            postData.put("PARAMS", "{\"DONOR\":\"Vivek\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"AMOUNT\":\"&#x20B9;250\",\"PROGRAM\":\"Child Education\",\"RECIEPT\":\"HJUY79jhgju\76\",\"EMAIL\":\"info@datfuslab.com\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"EMAIL\":\"info@datfuslab.com\"}");
 //			postData.put("FILE[0]", "http://localhost/mycrm/donationinvoice12/6202cx41893");
-			postData.put("FILE[0]", "");
+			postData.put("FILE[0]", "D://"+donationDetails.getReceiptNumber().toString()+".pdf");
 
 			// Encode the PDF content as Base64
 //            String pdfBase64 = Base64.getEncoder().encodeToString(pdfContent.toByteArray());

@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.spring.common.PdfInvoice;
 import com.spring.common.ShortUrl;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
@@ -57,6 +58,9 @@ public class DonationService {
 
 	@Autowired
 	private ShortUrl shortUrl;
+	
+	@Autowired
+	private PdfInvoice pdfInvoice;
 
 	@Autowired
 	private PaymentGatewayHelper paymentGatewayHelper;
@@ -134,6 +138,9 @@ public class DonationService {
 				// increase serial number by 1
 				invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
+				
+				//Generate invoice
+				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
 				// send sms
 				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
@@ -143,7 +150,11 @@ public class DonationService {
 				
 				// whats app
 				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
+				
+				//Delete Invoice
+				pdfInvoice.deleteInvoiceFile(donationDetails);
 			}
+			
 
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
 			donationRequest.setRespMesg("Successfully Register");

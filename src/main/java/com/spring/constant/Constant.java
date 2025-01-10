@@ -2,8 +2,8 @@ package com.spring.constant;
 
 public class Constant {
 	 /* Document path */
-	 public static final String docLocation = "/opt/tomcat-8.5/webapps/DonationDocument";
-//	 public static final String docLocation = "D:\\DonationDocument";
+//	 public static final String baseDocLocation = "/opt/tomcat-8.5/webapps/DonationDocument";
+	 public static final String baseDocLocation = "D:///DonationDocument";
 	 
 	 public static final String invoiceImage = "/InvoiceImage";	
 	 public static final String receipt = "/Receipt";

@@ -2,6 +2,7 @@ package com.spring.common;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 
@@ -95,8 +96,6 @@ public class PdfInvoice {
 	}
 	
 	
-	
-
 
 	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
 			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
@@ -111,8 +110,49 @@ public class PdfInvoice {
 		// Convert HTML to PDF and write it to the output stream
 		HtmlConverter.convertToPdf(htmlContent, pdfStream);
 
+		//Coment it if dont want to save in local storage
+		try (FileOutputStream fileOutputStream = new FileOutputStream("D://"+donationDetails.getReceiptNumber().toString()+".pdf")) {
+	        pdfStream.writeTo(fileOutputStream);
+	        
+	    }
+		
 		return pdfStream;
 	}
+	
+	public boolean deleteInvoiceFile(DonationDetails donationDetails) {
+	    File file = new File("D://"+donationDetails.getReceiptNumber().toString()+".pdf");
+	    if (file.exists()) {
+	        return file.delete(); // Returns true if the file is successfully deleted
+	    } else {
+	        System.out.println("File not found: " + filePath);
+	        return false;
+	    }
+	}
+	
+//	public ByteArrayOutputStream generatePdfInvoiceAndSave(DonationDetails donationDetails,
+//	        InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
+//
+//	    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+//
+//	    // Update the invoice download status
+//	    donationDetails.setInvoiceDownloadStatus("YES");
+//	    donationHelper.updateDonationDetails(donationDetails);
+//
+//	    // Generate HTML content
+//	    String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+//
+//	    // Convert HTML to PDF and write it to the output stream
+//	    HtmlConverter.convertToPdf(htmlContent, pdfStream);
+//
+//	    // Save the PDF to local storage
+//	    try (FileOutputStream fileOutputStream = new FileOutputStream("D://invoice123.pdf")) {
+//	        pdfStream.writeTo(fileOutputStream);
+//	    }
+//
+//	    return pdfStream;
+//	}
+	
+	
 
 	
 

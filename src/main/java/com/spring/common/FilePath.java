@@ -14,9 +14,11 @@ public class FilePath {
 	public String getPathToUploadFile(String Type) { // Use
 		String pathtoUploads;
 		if (Type.equalsIgnoreCase(Constant.invoiceImage)) {
-			pathtoUploads = Constant.docLocation + Constant.invoiceImage;
+			pathtoUploads = Constant.baseDocLocation + Constant.invoiceImage;
+		} else if (Type.equalsIgnoreCase(Constant.receipt)) {
+			pathtoUploads = Constant.baseDocLocation + Constant.receipt;
 		} else {
-			pathtoUploads = Constant.docLocation + Constant.defaultPath;
+			pathtoUploads = Constant.baseDocLocation + Constant.defaultPath;
 		}
 
 		if (!new File(pathtoUploads).exists()) {
