@@ -56,7 +56,7 @@ public class NimbusEmail {
 			connection.setDoInput(true);
 			connection.setDoOutput(true);
 
-			// Prepare POST data
+			// Prepare POST data 
 			Map<String, String> postData = new HashMap<>();
 //			postData.put("APP-ID", "ZpbQ9krjJl2DenhUsIdGTwVFLtOKq0mA");
 //			postData.put("SECRET-KEY", "5wW01PchK23b6UmCDBpadOTzIRsLXyot");
