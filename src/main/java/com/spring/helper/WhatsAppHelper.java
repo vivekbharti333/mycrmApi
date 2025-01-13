@@ -96,9 +96,9 @@ public class WhatsAppHelper {
 	                + donationDetails.getReceiptNumber();
 
 	        // Construct the full API URL
-	        String url = "https://demo.digitalsms.biz/api?apikey=239de43d69f56d702d92112792ed4c36"
+	        String url = "https://demo.digitalsms.biz/api?apikey=b6db26a0a14255763c32d4fb7f931f03"
 	                + "&mobile=" + donationDetails.getMobileNumber()
-	                + "&msg=" + "kjhjh"+"&pdf=http://localhost/mycrm/donationinvoice12/6202cx41893";
+	                + "&msg=We have received a donation of Rs " + donationDetails.getAmount()+"&pdf=http://localhost/mycrm/invoiceFromStorage/"+donationDetails.getReceiptNumber()+".pdf";
 	        
 	        System.out.println("Url : "+url);
 

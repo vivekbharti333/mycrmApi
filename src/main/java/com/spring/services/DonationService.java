@@ -140,7 +140,7 @@ public class DonationService {
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
 				
 				//Generate invoice
-				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+//				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
 				// send sms
 				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
@@ -152,7 +152,7 @@ public class DonationService {
 				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
 				
 				//Delete Invoice
-				pdfInvoice.deleteInvoiceFile(donationDetails);
+//				pdfInvoice.deleteInvoiceFile(donationDetails);
 			}
 			
 
