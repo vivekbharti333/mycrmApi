@@ -2,7 +2,11 @@ package com.spring.controller;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
@@ -210,5 +215,39 @@ public class InvoiceController {
 	        return modelAndView;
 	    }
 	}
+	
+//	private final String storageDirectory = "D://"; 
+	
+//	http://localhost:8080/mycrm/getreceipt?fileName=example.pdf
+	@RequestMapping("/getreceipt")
+	    public ResponseEntity<?> getPdf(@RequestParam String fileName) {
+		try {
+            // Construct the file path
+            Path filePath = Paths.get(Constant.baseDocLocation+Constant.receipt, fileName);
+
+            // Validate if the file exists and is a PDF
+            File file = filePath.toFile();
+            if (!file.exists() || !file.isFile() || !file.getName().endsWith(".pdf")) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("File not found or not a valid PDF.");
+            }
+
+            // Read file as a byte array
+            byte[] pdfBytes = Files.readAllBytes(filePath);
+
+            // Set the response headers for inline display
+            HttpHeaders headers = new HttpHeaders();
+            headers.add(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.getName() + "\"");
+            headers.add(HttpHeaders.CONTENT_TYPE, "application/pdf");
+
+            return ResponseEntity.ok()
+                    .headers(headers)
+                    .body(pdfBytes);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error retrieving PDF: " + e.getMessage());
+        }
+    }
 	
 }
