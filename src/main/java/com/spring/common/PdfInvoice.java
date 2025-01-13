@@ -111,7 +111,7 @@ public class PdfInvoice {
 		HtmlConverter.convertToPdf(htmlContent, pdfStream);
 
 		//Coment it if dont want to save in local storage
-		try (FileOutputStream fileOutputStream = new FileOutputStream("D://"+donationDetails.getReceiptNumber().toString()+".pdf")) {
+		try (FileOutputStream fileOutputStream = new FileOutputStream(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf")) {
 	        pdfStream.writeTo(fileOutputStream);
 	        
 	    }
@@ -120,7 +120,7 @@ public class PdfInvoice {
 	}
 	
 	public boolean deleteInvoiceFile(DonationDetails donationDetails) {
-	    File file = new File("D://"+donationDetails.getReceiptNumber().toString()+".pdf");
+	    File file = new File(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf");
 	    if (file.exists()) {
 	        return file.delete(); // Returns true if the file is successfully deleted
 	    } else {

@@ -91,16 +91,13 @@ public class WhatsAppHelper {
 	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
 	    try {
 	        // Construct the plain message
-	        String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". "
-	                + "Please click below URL to download your receipt: https://mydonation.in/#/thanku?receiptNo="
-	                + donationDetails.getReceiptNumber();
+//	        String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". "
+//	                + "Please click below URL to download your receipt: https://mydonation.in/#/thanku?receiptNo="
+//	                + donationDetails.getReceiptNumber();
 
 	        // Construct the full API URL
-	        String url = "https://demo.digitalsms.biz/api?apikey=b6db26a0a14255763c32d4fb7f931f03"
-	                + "&mobile=" + donationDetails.getMobileNumber()
-	                + "&msg=We have received a donation of Rs " + donationDetails.getAmount()+"&pdf=http://localhost/mycrm/invoiceFromStorage/"+donationDetails.getReceiptNumber()+".pdf";
-	        
-	        System.out.println("Url : "+url);
+	        String url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
+	                + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt"+"&pdf=https://datfuslab.in/drmapinew/getreceipt?fileName="+donationDetails.getReceiptNumber()+".pdf";
 
 	        // Send the GET request using RestTemplate
 	        RestTemplate restTemplate = new RestTemplate();
