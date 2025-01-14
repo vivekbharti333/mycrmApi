@@ -213,7 +213,7 @@ public class LeaddetailsHelper {
 					.getResultList();
 			return results;
 		} else if (leadRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
-			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.createdAt BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
 			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
@@ -226,6 +226,74 @@ public class LeaddetailsHelper {
 			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
+					.setParameter("superadminId", leadRequest.getSuperadminId())
+					.setParameter("createdBy", leadRequest.getCreatedBy())
+					.getResultList();
+			return results;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LeadDetails> getLeadListByStatus(LeadRequestObject leadRequest, Date firstDate, Date secondDate) {		
+		if (leadRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.status =:status AND LD.createdAt BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId ORDER BY LD.id DESC";
+			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
+					.setParameter("status", leadRequest.getStatus())
+					.setParameter("firstDate", firstDate, TemporalType.DATE)
+					.setParameter("lastDate", secondDate, TemporalType.DATE)
+					.setParameter("superadminId", leadRequest.getSuperadminId())
+					.getResultList();
+			return results;
+		} else if (leadRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.status =:status AND LD.createdAt BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
+			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
+					.setParameter("status", leadRequest.getStatus())
+					.setParameter("firstDate", firstDate, TemporalType.DATE)
+					.setParameter("lastDate", secondDate, TemporalType.DATE)
+					.setParameter("superadminId", leadRequest.getSuperadminId())
+					.setParameter("createdBy", leadRequest.getCreatedBy())
+					.getResultList();
+			return results;
+		}else {
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.status =:status AND LD.createdAt BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
+			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
+					.setParameter("status", leadRequest.getStatus())
+					.setParameter("firstDate", firstDate, TemporalType.DATE)
+					.setParameter("lastDate", secondDate, TemporalType.DATE)
+					.setParameter("superadminId", leadRequest.getSuperadminId())
+					.setParameter("createdBy", leadRequest.getCreatedBy())
+					.getResultList();
+			return results;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<LeadDetails> getFollowupLeadList(LeadRequestObject leadRequest) {		
+		if (leadRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name())) {
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.status =:status AND LD.followupDate BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId ORDER BY LD.id DESC";
+			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
+					.setParameter("status", leadRequest.getStatus())
+					.setParameter("firstDate", leadRequest.getFirstDate(), TemporalType.DATE)
+					.setParameter("lastDate", leadRequest.getLastDate(), TemporalType.DATE)
+					.setParameter("superadminId", leadRequest.getSuperadminId())
+					.getResultList();
+			return results;
+		} else if (leadRequest.getRoleType().equalsIgnoreCase(RoleType.TEAM_LEADER.name())) {
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.status =:status AND LD.followupDate BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
+			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
+					.setParameter("status", leadRequest.getStatus())
+					.setParameter("firstDate", leadRequest.getFirstDate(), TemporalType.DATE)
+					.setParameter("lastDate", leadRequest.getLastDate(), TemporalType.DATE)
+					.setParameter("superadminId", leadRequest.getSuperadminId())
+					.setParameter("createdBy", leadRequest.getCreatedBy())
+					.getResultList();
+			return results;
+		}else {
+			String hqlQuery = "SELECT LD FROM LeadDetails LD WHERE LD.status =:status AND LD.followupDate BETWEEN :firstDate AND :lastDate AND LD.superadminId =:superadminId AND LD.createdBy =:createdBy ORDER BY LD.id DESC";
+			List<LeadDetails> results = leadDetailsDao.getEntityManager().createQuery(hqlQuery)
+					.setParameter("status", leadRequest.getStatus())
+					.setParameter("firstDate", leadRequest.getFirstDate(), TemporalType.DATE)
+					.setParameter("lastDate", leadRequest.getLastDate(), TemporalType.DATE)
 					.setParameter("superadminId", leadRequest.getSuperadminId())
 					.setParameter("createdBy", leadRequest.getCreatedBy())
 					.getResultList();

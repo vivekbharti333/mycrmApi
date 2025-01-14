@@ -29,7 +29,9 @@ public class LeadRequestObject {
 	private Long todayFollowup;
 	private Long todayLead;
 	
-
+	private Date firstDate;
+	private Date lastDate;
+	
 	private String token;
 	private int respCode;
 	private String respMesg;

@@ -24,18 +24,17 @@ import com.spring.helper.LeaddetailsHelper;
 import com.spring.object.request.LeadRequestObject;
 import com.spring.object.request.Request;
 
-
 @Service
 public class LeadDetailsService {
-	
+
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
 	private LeaddetailsHelper leaddetailsHelper;
-	
+
 	@Autowired
 	private DonationHelper donationHelper;
-	
+
 	private LocalDate localDate = LocalDate.now();
 	private LocalDate nextday = localDate.plus(1, ChronoUnit.DAYS);
 	private LocalDate preday = localDate.minus(1, ChronoUnit.DAYS);
@@ -48,98 +47,123 @@ public class LeadDetailsService {
 	private Date firstDateMonth = Date.from(firstDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	private Date lastDateMonth = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
-	
-	
-
 	@Transactional
-	public LeadRequestObject createLead(Request<LeadRequestObject> leadRequestObject)
-			throws BizException, Exception {
+	public LeadRequestObject createLead(Request<LeadRequestObject> leadRequestObject) throws BizException, Exception {
 		LeadRequestObject leadRequest = leadRequestObject.getPayload();
 		leaddetailsHelper.validateEnquiryRequest(leadRequest);
 
-		if(leadRequest.getStatus().equals("")) {
+		if (leadRequest.getStatus().equals("")) {
 			leadRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			leadRequest.setRespMesg("Select Status");
 			return leadRequest;
 		}
-		
+
 		LeadDetails leadDetails = leaddetailsHelper.getLeadDetailsByReqObj(leadRequest);
 		leaddetailsHelper.saveLeadDetails(leadDetails);
-		
-		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId( leadRequest.getId(), leadRequest.getSuperadminId());
-		if(donationDetails != null) {
+
+		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(leadRequest.getId(),
+				leadRequest.getSuperadminId());
+		if (donationDetails != null) {
 			donationDetails.setCalled("YES");
 			donationHelper.updateDonationDetails(donationDetails);
 		}
-		
+
 		leadRequest.setRespCode(Constant.SUCCESS_CODE);
 		leadRequest.setRespMesg("Submited Successfully");
 		return leadRequest;
 	}
-	
+
 	public LeadRequestObject updateLead(Request<LeadRequestObject> leadRequestObject) throws BizException, Exception {
 		LeadRequestObject leadRequest = leadRequestObject.getPayload();
 		leaddetailsHelper.validateEnquiryRequest(leadRequest);
-		
+
 		LeadDetails leadDetails = leaddetailsHelper.getLeadDetailsById(leadRequest.getId());
-		if(leadDetails != null) {
+		if (leadDetails != null) {
 			leadDetails = leaddetailsHelper.getUpdatedLeadDetailsByReqObj(leadRequest, leadDetails);
 			leadDetails = leaddetailsHelper.updateLeadDetails(leadDetails);
-			
+
 			leadRequest.setRespCode(Constant.SUCCESS_CODE);
 			leadRequest.setRespMesg("Updated Successfully");
 			return leadRequest;
-		}else {
+		} else {
 			leadRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			leadRequest.setRespMesg("Does not exists");
 			return leadRequest;
 		}
 	}
-	
-	public LeadRequestObject getLeadCountByStatus(Request<LeadRequestObject> leadRequestObject) 
-	        throws BizException, Exception {
-	    LeadRequestObject leadRequest = leadRequestObject.getPayload();
 
-	    if (leadRequest.getRequestedFor().equals("TODAY")) {
-	        Long todayWin = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "WIN");
-	        leadRequest.setTodayWin(todayWin);
-	        
-	        Long todayLost = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "LOST");
-	        leadRequest.setTodayLost(todayLost);
-	        
-	        Long todayFollowup = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "FOLLOWUP");
-	        leadRequest.setTodayFollowup(todayFollowup);
-	        
-	        Long todayLead = leaddetailsHelper.getTotalLeadCount(leadRequest, todayDate, tomorrowDate);
-	        leadRequest.setTodayLead(todayLead);
-	    }
-	    leadRequest.setRespCode(Constant.SUCCESS_CODE);
-	    return leadRequest;
+	public LeadRequestObject getLeadCountByStatus(Request<LeadRequestObject> leadRequestObject)
+			throws BizException, Exception {
+		LeadRequestObject leadRequest = leadRequestObject.getPayload();
+
+		if (leadRequest.getRequestedFor().equals("TODAY")) {
+			Long todayWin = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "WIN");
+			leadRequest.setTodayWin(todayWin);
+
+			Long todayLost = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate, "LOST");
+			leadRequest.setTodayLost(todayLost);
+
+			Long todayFollowup = leaddetailsHelper.getLeadCountByStatus(leadRequest, todayDate, tomorrowDate,
+					"FOLLOWUP");
+			leadRequest.setTodayFollowup(todayFollowup);
+
+			Long todayLead = leaddetailsHelper.getTotalLeadCount(leadRequest, todayDate, tomorrowDate);
+			leadRequest.setTodayLead(todayLead);
+		}
+		leadRequest.setRespCode(Constant.SUCCESS_CODE);
+		return leadRequest;
 	}
-
-		
 
 	public List<LeadDetails> getLeadList(Request<LeadRequestObject> leadRequestObject) {
 		LeadRequestObject leadRequest = leadRequestObject.getPayload();
 
 		List<LeadDetails> leadList = new ArrayList<LeadDetails>();
-		if(leadRequest.getRequestedFor().equals("TODAY")) {	
+		if (leadRequest.getRequestedFor().equals("TODAY")) {
 			leadList = leaddetailsHelper.getLeadList(leadRequest, todayDate, tomorrowDate);
 			return leadList;
-			
-		} else if(leadRequest.getRequestedFor().equals("YESTERDAY")) {
+
+		} else if (leadRequest.getRequestedFor().equals("YESTERDAY")) {
 			leadList = leaddetailsHelper.getLeadList(leadRequest, previousDate, todayDate);
 			return leadList;
-			
-		} else if(leadRequest.getRequestedFor().equals("MONTH")) {
-			leadList = leaddetailsHelper.getLeadList(leadRequest,firstDateMonth, lastDateMonth);
+
+		} else if (leadRequest.getRequestedFor().equals("MONTH")) {
+			leadList = leaddetailsHelper.getLeadList(leadRequest, firstDateMonth, lastDateMonth);
 			return leadList;
 		}
-		return leadList; 
+		return leadList;
 	}
 
+	public List<LeadDetails> getLeadListByStatus(Request<LeadRequestObject> leadRequestObject) {
+		LeadRequestObject leadRequest = leadRequestObject.getPayload();
 
-	
-	
+		List<LeadDetails> leadList = new ArrayList<LeadDetails>();
+
+//		if(leadRequest.getRequestedFor().equals("TODAY")) {	
+//			leadList = leaddetailsHelper.getLeadListByStatus(leadRequest, todayDate, tomorrowDate);
+//			return leadList;
+//			
+//		} else if(leadRequest.getRequestedFor().equals("YESTERDAY")) {
+//			leadList = leaddetailsHelper.getLeadListByStatus(leadRequest, previousDate, todayDate);
+//			return leadList;
+//			
+//		} else if(leadRequest.getRequestedFor().equals("MONTH")) {
+//			leadList = leaddetailsHelper.getLeadListByStatus(leadRequest,firstDateMonth, lastDateMonth);
+//			return leadList;
+//		}
+
+		leadList = leaddetailsHelper.getLeadListByStatus(leadRequest, firstDateMonth, lastDateMonth);
+		return leadList;
+	}
+
+	public List<LeadDetails> getFollowupLeadList(Request<LeadRequestObject> leadRequestObject) {
+
+		LeadRequestObject leadRequest = leadRequestObject.getPayload();
+
+		List<LeadDetails> leadList = new ArrayList<LeadDetails>();
+
+		leadList = leaddetailsHelper.getFollowupLeadList(leadRequest);
+		return leadList;
+
+	}
 
 }

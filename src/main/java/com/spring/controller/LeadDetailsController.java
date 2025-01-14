@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.spring.constant.Constant;
-import com.spring.entities.EnquiryDetails;
 import com.spring.entities.LeadDetails;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.LeadRequestObject;
@@ -83,6 +82,30 @@ public class LeadDetailsController {
 		GenricResponse<LeadDetails> response = new GenricResponse<LeadDetails>();
 		try {
 			List<LeadDetails> enquiryList = leadDetailsService.getLeadList(leadRequestObject);
+			return response.createListResponse(enquiryList, 200, String.valueOf(enquiryList.size()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(400, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getLeadListByStatus", method = RequestMethod.POST)
+	public Response<LeadDetails> getLeadListByStatus(@RequestBody Request<LeadRequestObject> leadRequestObject) {
+		GenricResponse<LeadDetails> response = new GenricResponse<LeadDetails>();
+		try {
+			List<LeadDetails> enquiryList = leadDetailsService.getLeadListByStatus(leadRequestObject);
+			return response.createListResponse(enquiryList, 200, String.valueOf(enquiryList.size()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(400, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getFollowupLeadList", method = RequestMethod.POST)
+	public Response<LeadDetails> getFollowupLeadList(@RequestBody Request<LeadRequestObject> leadRequestObject) {
+		GenricResponse<LeadDetails> response = new GenricResponse<LeadDetails>();
+		try {
+			List<LeadDetails> enquiryList = leadDetailsService.getFollowupLeadList(leadRequestObject);
 			return response.createListResponse(enquiryList, 200, String.valueOf(enquiryList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
