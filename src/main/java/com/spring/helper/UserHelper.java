@@ -261,10 +261,18 @@ public class UserHelper {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserDetailsByUserRole(UserRequestObject userRequest) {
-		// TODO Auto-generated method stub
-		return null;
+
+		List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
+				"SELECT UD FROM UserDetails UD WHERE roleType =:roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+				.setParameter("roleType", userRequest.getRoleType())
+				.setParameter("superadminId", userRequest.getSuperadminId())
+				.setParameter("REMOVED", Status.REMOVED.name())
+				.getResultList();
+		return results;
 	}
+	
 
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getUserListForDropDown(UserRequestObject userRequest) {
@@ -280,7 +288,8 @@ public class UserHelper {
 
 		List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
 				"SELECT UD FROM UserDetails UD WHERE roleType NOT IN :roleType AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
-				.setParameter("roleType", excludedRoleTypes).setParameter("superadminId", userRequest.getSuperadminId())
+				.setParameter("roleType", excludedRoleTypes)
+				.setParameter("superadminId", userRequest.getSuperadminId())
 				.setParameter("REMOVED", Status.REMOVED.name()).getResultList();
 		return results;
 	}

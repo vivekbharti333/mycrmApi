@@ -75,7 +75,7 @@ public class PaymentModeController {
 		}
 	}
 	
-	@RequestMapping(path = "addPaymentModeBySuperadmin", method = RequestMethod.POST)
+	@RequestMapping(path = "addOrUpdatePaymentModeBySuperadmin", method = RequestMethod.POST)
 	public Response<PaymentRequestObject>addPaymentModeBySuperadmin(@RequestBody Request<PaymentRequestObject> optionRequestObject, HttpServletRequest request)
 	{
 		GenricResponse<PaymentRequestObject> responseObj = new GenricResponse<PaymentRequestObject>();

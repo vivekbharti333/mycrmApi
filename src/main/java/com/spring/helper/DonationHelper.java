@@ -221,7 +221,7 @@ public class DonationHelper {
 		
 		DonationDetails donationDetails = new DonationDetails();
 		
-		donationDetails.setInvoiceNumber(donationRequest.getInvoiceNumber());	
+		donationDetails.setInvoiceNumber(donationRequest.getInvoiceNumber().toUpperCase());	
 		donationDetails.setDonorName(donationRequest.getDonorName());
 		donationDetails.setMobileNumber(donationRequest.getMobileNumber());
 		donationDetails.setEmailId(donationRequest.getEmailId());

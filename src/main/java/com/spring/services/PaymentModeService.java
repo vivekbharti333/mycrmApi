@@ -120,7 +120,6 @@ public class PaymentModeService {
 		} else {
 			existsPaymentMode = optionTypeHelper.getUpdatePaymentModeBySuperadminIdByReqObj(paymentModeRequest, existsPaymentMode);
 			existsPaymentMode = optionTypeHelper.updatePaymentModeBySuperadmin(existsPaymentMode);
-
 			
 			paymentModeRequest.setRespCode(Constant.SUCCESS_CODE);
 			paymentModeRequest.setRespMesg(Constant.UPDATED_SUCCESS);

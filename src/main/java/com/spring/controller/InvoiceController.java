@@ -50,6 +50,7 @@ import com.spring.object.request.InvoiceRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
+import com.spring.receipt.ItextInvoice;
 import com.spring.services.DonationService;
 import com.spring.services.InvoiceService;
 
@@ -257,5 +258,58 @@ public class InvoiceController {
         }
     }
 
+	///Just for testing
+	
+	@Autowired
+	private ItextInvoice itextInvoice;
+	
+	@SuppressWarnings("rawtypes")
+	@RequestMapping(value = "/paymentreceipt/{reffNo}", method = RequestMethod.GET)
+	public Object paymentreceipt(@PathVariable String reffNo) throws Exception {
+		 DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo("6202wn45160");
+
+		Response respObj = new Response();
+
+		if (donationDetails != null) {
+
+			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
+	       
+			if (invoiceHeader != null) {
+
+//				if (!leadDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+
+//					ByteArrayOutputStream pdfStream = itextInvoice.invoice(leadDetails, invoiceHeader);
+					 ByteArrayOutputStream pdfStream = itextInvoice.invoice(donationDetails, invoiceHeader);
+
+					HttpHeaders headers = new HttpHeaders();
+					headers.setContentType(MediaType.APPLICATION_PDF);
+					headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+					headers.add("Pragma", "no-cache");
+					headers.add("Expires", "0");
+					headers.setContentLength(pdfStream.size());
+
+//	        String fileName = invoiceHeader.getCompanyFirstName()+"-invoice.pdf";
+					headers.setContentDispositionFormData("attachment", "invoice.pdf");
+
+					InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(pdfStream.toByteArray()));
+
+					return new ResponseEntity<>(isr, headers, HttpStatus.OK);
+//				} else {
+//					respObj.setResponseCode(401);
+//					respObj.setResponseMessage("Cancelled request. Please contact admin for details.");
+//					return respObj;
+//				}
+			} else {
+				respObj.setResponseCode(401);
+				respObj.setResponseMessage("Please add invoice header.");
+				return respObj;
+			}
+		} else {
+			// Handle the case when donationDetails is null by returning an error view
+			respObj.setResponseCode(404);
+			respObj.setResponseMessage("Invalid request. Please contact admin for details.");
+			return respObj;
+		}
+	}
 	
 }
