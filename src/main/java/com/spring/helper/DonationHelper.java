@@ -260,7 +260,7 @@ public class DonationHelper {
 	
 public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject donationRequest, DonationDetails donationDetails) {
 		
-//		donationDetails.setDonorName(donationRequest.getDonorName());
+		donationDetails.setDonorName(donationRequest.getDonorName());
 		donationDetails.setMobileNumber(donationRequest.getMobileNumber());
 		donationDetails.setEmailId(donationRequest.getEmailId());
 		donationDetails.setPanNumber(donationRequest.getPanNumber());
