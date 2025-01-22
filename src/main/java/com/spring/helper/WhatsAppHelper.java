@@ -90,15 +90,17 @@ public class WhatsAppHelper {
 	
 	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
 	    try {
-	        // Construct the plain message
-//	        String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". "
-//	                + "Please click below URL to download your receipt: https://mydonation.in/#/thanku?receiptNo="
-//	                + donationDetails.getReceiptNumber();
+	    	 String url = "";
 
-	        // Construct the full API URL
-	        String url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
-	                + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt"+"&pdf=https://datfuslab.in/drmapinew/getreceipt?fileName="+donationDetails.getReceiptNumber()+".pdf";
+	    	if (donationDetails.getProgramName().equalsIgnoreCase("Sale")) {
+	    		url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
+                + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber()+ " For Receipt mail on help@mydonation.in - Mydonation ";
+	    	}else {
+	    		url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
+                + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt"+"&pdf=https://datfuslab.in/drmapinew/getreceipt?fileName="+donationDetails.getReceiptNumber()+".pdf";
 
+	    	}
+	        
 	        // Send the GET request using RestTemplate
 	        RestTemplate restTemplate = new RestTemplate();
 	        String response = restTemplate.getForObject(url, String.class);
