@@ -32,6 +32,7 @@ import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
+import com.spring.helper.EmailHelper;
 import com.spring.helper.FaceRecognitionHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.helper.SubscriptionHelper;
@@ -77,6 +78,9 @@ public class UserController {
     @Autowired
     private TestHelper testHelper;
     
+    @Autowired
+    private EmailHelper emailHelper;
+    
     
 	
 	@RequestMapping(value = "/")
@@ -93,6 +97,8 @@ public class UserController {
 		
 //		pdfThankYouLatter.pdf();
 		
+		
+		
 		return new ModelAndView("home");
 	}
 	
@@ -107,11 +113,19 @@ public class UserController {
 		donationRequest.setRoleType("SUPERADMIN");
 		donationRequest.setCreatedBy("6289639160");
 		
-		testHelper.checkIt(donationRequest);
+		emailHelper.sendeMail();
+//		emailHelper.SMTPBrevoEmailSender ();
+		
+//		testHelper.checkIt(donationRequest);
 //		faceRecognitionHelper.compareFace();
 		
 		return "1.3";
 	}
+	
+	
+	
+	
+	
 	
 
 //	@Scheduled(fixedDelay = 5000)

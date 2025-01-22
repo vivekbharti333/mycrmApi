@@ -29,6 +29,22 @@ public class DonationController {
 	@Autowired
 	private DonationService donationService;
 	
+	@RequestMapping(path = "updateDonationCurrency", method = RequestMethod.POST)
+	public Response<DonationRequestObject>updateDonationCurrency(@RequestBody Request<DonationRequestObject> donationRequestObject, HttpServletRequest request)
+	{
+		GenricResponse<DonationRequestObject> responseObj = new GenricResponse<DonationRequestObject>();
+		try {
+			DonationRequestObject responce =  donationService.updateDonationCurrency(donationRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	
 	@RequestMapping(path = "addDonation", method = RequestMethod.POST)
 	public Response<DonationRequestObject>addDonation(@RequestBody Request<DonationRequestObject> donationRequestObject, HttpServletRequest request)

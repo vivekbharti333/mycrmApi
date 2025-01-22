@@ -78,6 +78,19 @@ public class DonationService {
 	private Date previousDate = Date.from(preday.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	private Date firstDateMonth = Date.from(firstDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
 	private Date lastDateMonth = Date.from(lastDateOfMonth.atStartOfDay(ZoneId.systemDefault()).toInstant());
+	
+	
+	
+	public DonationRequestObject updateDonationCurrency(Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+
+		int re = donationHelper.updateCurrencyAndCode(donationRequest);
+			
+		
+		return null;
+	}
+	
 
 	@SuppressWarnings("static-access")
 	@Transactional
@@ -570,6 +583,8 @@ public class DonationService {
 		return donationList;
 
 	}
+
+
 
 
 

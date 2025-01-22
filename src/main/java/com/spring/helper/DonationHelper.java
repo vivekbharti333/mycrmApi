@@ -71,13 +71,23 @@ public class DonationHelper {
 	@Autowired CurrencyHelper currencyHelper;
 	
 	
+	@Transactional
+	public int updateCurrencyAndCode(DonationRequestObject donationRequest) {
+	    int updatedCount = donationDetailsDao.getEntityManager().createQuery(
+	            "UPDATE DonationDetails DD SET DD.currency = :currency, DD.currencyCode = :currencyCode WHERE DD.superadminId = :superadminId")
+	            .setParameter("currency", donationRequest.getCurrency())
+	            .setParameter("currencyCode", donationRequest.getCurrencyCode())
+	            .setParameter("superadminId", donationRequest.getSuperadminId())
+	            .executeUpdate();
+	    return updatedCount;
+	}
+	
 	
 	public void validateDonationRequest(DonationRequestObject donationRequest) throws BizException {
 		if (donationRequest == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
-		
 			
 	
 	public void validateDonationRequestFields(DonationRequestObject donationRequest) 
