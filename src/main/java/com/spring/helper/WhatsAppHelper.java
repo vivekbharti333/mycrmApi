@@ -96,9 +96,7 @@ public class WhatsAppHelper {
 	    		url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
                 + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber()+ " For Receipt mail on help@mydonation.in - Mydonation ";
 	    	}else {
-	    		url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
-                + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt"+"&pdf=https://datfuslab.in/drmapinew/getreceipt?fileName="+donationDetails.getReceiptNumber()+".pdf";
-
+	    		url = "https://demo.digitalsms.biz/api?apikey=" + whatsAppDetails.getApiKey() + "&mobile=" + donationDetails.getMobileNumber() + "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt" + "&pdf=https://datfuslab.in/drmapinew/getPdfreceipt/" + donationDetails.getReceiptNumber() + ".pdf";
 	    	}
 	        
 	        // Send the GET request using RestTemplate

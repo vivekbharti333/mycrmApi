@@ -116,6 +116,8 @@ public class PdfInvoice {
 	        
 	    }
 		
+		System.out.println(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf");
+		
 		return pdfStream;
 	}
 	

@@ -466,7 +466,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 					+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.createdbyName, UD.userPicture, DD.currencyCode")
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
-					.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+					.setParameter("teamLeaderId", donationRequest.getCreatedBy())
 					.setParameter("status", Status.ACTIVE.name())
 					.getResultList();
 			return results;
@@ -558,16 +558,16 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 					.setParameter("superadminId", donationRequest.getSuperadminId())
 					.setParameter("status", Status.ACTIVE.name())
 					.getResultList();
-			System.out.println("jh");
 			return results;
 		} else if (donationRequest.getRoleType().equals(RoleType.TEAM_LEADER.name())) {
+			System.out.println("ent");
 			results = donationDetailsDao.getEntityManager().createQuery(
-//					"SELECT DD.createdbyName, COUNT(id) AS count, SUM(amount) AS amount FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status =:status GROUP BY DD.createdbyName")
-					"DD.currencyCode, DD.currency, COUNT(DD.id) AS count, SUM(DD.amount) AS amount FROM DonationDetails DD WHERE DD.createdAt BETWEEN :firstDate AND :lastDate "
-					+ "AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.currencyCode, DD.currency")
+					"SELECT DD.currencyCode, DD.currency, COUNT(DD.id) AS count, SUM(DD.amount) AS amount FROM DonationDetails DD  "
+					+ "WHERE DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND DD.status = :status GROUP BY DD.currencyCode, DD.currency"			
+					)
 					.setParameter("firstDate", firstDate, TemporalType.DATE)
 					.setParameter("lastDate", secondDate, TemporalType.DATE)
-					.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+					.setParameter("teamLeaderId", donationRequest.getCreatedBy())
 					.setParameter("status", Status.ACTIVE.name())
 					.getResultList();
 			return results;
@@ -596,7 +596,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 						"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode, DD.currency FROM DonationDetails DD where DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.teamLeaderId = :teamLeaderId AND  DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode, DD.currency")
 						.setParameter("firstDate", firstDate, TemporalType.DATE)
 						.setParameter("lastDate", secondDate, TemporalType.DATE)
-						.setParameter("teamLeaderId", donationRequest.getTeamLeaderId())
+						.setParameter("teamLeaderId", donationRequest.getCreatedBy())
 						.setParameter("superadminId", donationRequest.getSuperadminId())
 						.setParameter("status", Status.ACTIVE.name())
 						.getResultList();
