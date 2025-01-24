@@ -746,6 +746,25 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		    return results;
 		}
 
+		
+		@SuppressWarnings("unchecked")
+		public List<DonationDetails> getDonationListForLead12(DonationRequestObject donationRequest) {
+		    List<DonationDetails> results = new ArrayList<>();
+		    try {
+		        // Creating the query using the entity manager
+		        results = donationDetailsDao.getEntityManager()
+		                .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.createdBy = :createdBy AND DD.superadminId = :superadminId AND DD.called != :called")
+		                .setParameter("superadminId", donationRequest.getSuperadminId())
+		                .setParameter("createdBy", donationRequest.getCreatedBy())
+		                .setParameter("called", "YES")
+		                .setMaxResults(10)
+		                .getResultList();  
+		    } catch (Exception e) {
+		        
+		        e.printStackTrace();  
+		    }
+		    return results;
+		}
 
 		
 		
