@@ -720,36 +720,28 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 //		}
 
 		
-		@SuppressWarnings("unchecked")
-		public List<DonationDetails> getDonationListForLead(DonationRequestObject donationRequest) {
-		    List<DonationDetails> results = new ArrayList<>();
-		    try {
-//		    	if(donationRequest.getRoleType().equalsIgnoreCase("SUPERADMIN")) {
+//		@SuppressWarnings("unchecked")
+//		public List<DonationDetails> getDonationListForLead1234(DonationRequestObject donationRequest) {
+//		    List<DonationDetails> results = new ArrayList<>();
+//		    try {
 //		    		results = donationDetailsDao.getEntityManager()
-//				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.superadminId = :superadminId AND DD.called != :called")
+//				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.createdBy =:createdBy AND DD.superadminId = :superadminId AND DD.called != :called")
 //				            .setParameter("superadminId", donationRequest.getSuperadminId())
+//				            .setParameter("createdBy", donationRequest.getCreatedBy())
+//				            
 //				            .setParameter("called", "YES")
 //				            .getResultList();
-//		    	}else {
-		    		results = donationDetailsDao.getEntityManager()
-				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.createdBy =:createdBy AND DD.superadminId = :superadminId AND DD.called != :called")
-				            .setParameter("superadminId", donationRequest.getSuperadminId())
-				            .setParameter("createdBy", donationRequest.getCreatedBy())
-				            
-				            .setParameter("called", "YES")
-				            .getResultList();
-//		    	}
-		        
-		    } catch (Exception e) {
-		        // Use a proper logging framework
-		        e.printStackTrace(); 
-		    }
-		    return results;
-		}
+////		    	}
+//		        
+//		    } catch (Exception e) {
+//		        e.printStackTrace(); 
+//		    }
+//		    return results;
+//		}
 
 		
 		@SuppressWarnings("unchecked")
-		public List<DonationDetails> getDonationListForLead12(DonationRequestObject donationRequest) {
+		public List<DonationDetails> getDonationListForLead(DonationRequestObject donationRequest) {
 		    List<DonationDetails> results = new ArrayList<>();
 		    try {
 		        // Creating the query using the entity manager
@@ -758,7 +750,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 		                .setParameter("superadminId", donationRequest.getSuperadminId())
 		                .setParameter("createdBy", donationRequest.getCreatedBy())
 		                .setParameter("called", "YES")
-		                .setMaxResults(10)
+		                .setMaxResults(5)
 		                .getResultList();  
 		    } catch (Exception e) {
 		        
