@@ -720,24 +720,7 @@ public DonationDetails getUpdatedDonationDetailsByReqObj(DonationRequestObject d
 //		}
 
 		
-//		@SuppressWarnings("unchecked")
-//		public List<DonationDetails> getDonationListForLead1234(DonationRequestObject donationRequest) {
-//		    List<DonationDetails> results = new ArrayList<>();
-//		    try {
-//		    		results = donationDetailsDao.getEntityManager()
-//				            .createQuery("SELECT DD FROM DonationDetails DD WHERE DD.createdBy =:createdBy AND DD.superadminId = :superadminId AND DD.called != :called")
-//				            .setParameter("superadminId", donationRequest.getSuperadminId())
-//				            .setParameter("createdBy", donationRequest.getCreatedBy())
-//				            
-//				            .setParameter("called", "YES")
-//				            .getResultList();
-////		    	}
-//		        
-//		    } catch (Exception e) {
-//		        e.printStackTrace(); 
-//		    }
-//		    return results;
-//		}
+
 
 		
 		@SuppressWarnings("unchecked")
