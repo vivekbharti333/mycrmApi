@@ -163,6 +163,7 @@ public class DonationHelper {
 		if(donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
 			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
 
+			System.out.println("Whats App Status : " +whatsAppDetails.getStatus());
 			if(whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 				whatsAppHelper.sendWhatsAppMessage(donationDetails, whatsAppDetails);
 

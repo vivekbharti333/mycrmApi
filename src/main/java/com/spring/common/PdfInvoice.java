@@ -102,8 +102,8 @@ public class PdfInvoice {
 
 		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-		donationDetails.setInvoiceDownloadStatus("YES");
-		donationHelper.updateDonationDetails(donationDetails);
+//		donationDetails.setInvoiceDownloadStatus("YES");
+//		donationHelper.updateDonationDetails(donationDetails);
 
 		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
 

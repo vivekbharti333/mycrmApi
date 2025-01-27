@@ -296,16 +296,25 @@ public class UserHelper {
 
 	@SuppressWarnings("unchecked")
 	public List<UserDetails> getFundRisingOfficersBySuperadminId(UserRequestObject userRequest) {
-		List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
-				"SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
-//				.setParameter("roleType", RoleType.FUNDRAISING_OFFICER.name())
-				.setParameter("createdBy", userRequest.getLoginId())
-				.setParameter("superadminId", userRequest.getSuperadminId())
-				.setParameter("REMOVED", Status.REMOVED.name())
-				.getResultList();
 		
-		System.out.println("klnkl : "+results.toString());
-		return results;
+		if(userRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) || userRequest.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name())) {
+			List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
+					"SELECT UD FROM UserDetails UD WHERE UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+					.setParameter("superadminId", userRequest.getSuperadminId())
+					.setParameter("REMOVED", Status.REMOVED.name())
+					.getResultList();
+			return results;
+		}else {
+			List<UserDetails> results = userDetailsDao.getEntityManager().createQuery(
+					"SELECT UD FROM UserDetails UD WHERE UD.createdBy =:createdBy AND UD.superadminId =:superadminId AND status NOT IN :REMOVED")
+					.setParameter("createdBy", userRequest.getLoginId())
+					.setParameter("superadminId", userRequest.getSuperadminId())
+					.setParameter("REMOVED", Status.REMOVED.name())
+					.getResultList();
+			return results;
+		}
+		
+		
 	}
 
 	@SuppressWarnings("unchecked")

@@ -11,6 +11,8 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -48,6 +50,9 @@ public class WhatsAppHelper {
 	
 	@Autowired
     private RestTemplate restTemplate;
+	
+	@Autowired
+	private DonationHelper donationHelper;
 	
 	public void validateSmsTemplateRequest(WhatsAppRequestObject whatsAppRequestObject) throws BizException {
 		if (whatsAppRequestObject == null) {
@@ -98,13 +103,37 @@ public class WhatsAppHelper {
 	    	}else {
 	    		url = "https://demo.digitalsms.biz/api?apikey=" + whatsAppDetails.getApiKey() + "&mobile=" + donationDetails.getMobileNumber() + "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt" + "&pdf=https://datfuslab.in/drmapinew/getPdfreceipt/" + donationDetails.getReceiptNumber() + ".pdf";
 	    	}
-	        
+	    	
 	        // Send the GET request using RestTemplate
 	        RestTemplate restTemplate = new RestTemplate();
 	        String response = restTemplate.getForObject(url, String.class);
+	        
+	        
+	        // JSON string
+//	        String response = "{\"status\":0,\"errormsg\":\"Invalid API Key\",\"statuscode\":403}";
+
+	        // Parse JSON
+	        JSONObject jsonObject = new JSONObject(response);
+
+	        // Extract values
+	        int status = jsonObject.getInt("status");
+	        int statusCode = jsonObject.getInt("statuscode");
+	        
+	        if(statusCode == 200) {
+	        	donationDetails.setInvoiceDownloadStatus("YES");
+				donationHelper.updateDonationDetails(donationDetails);
+	        } else {
+//	        	donationDetails.setInvoiceDownloadStatus("NO");
+//				donationHelper.updateDonationDetails(donationDetails);
+	        }
+
+	        System.out.println("Status: " + status);
+	        System.out.println("StatusCode: " + statusCode);
+	        
+            
 
 	        // Log the response
-	        System.out.println(response);
+	        System.out.println("Response : "+response);
 
 	        return response;
 	    } catch (Exception e) {
@@ -157,15 +186,12 @@ public class WhatsAppHelper {
 			whatsAppDetails.setApiKey(whatsAppRequest.getApiKey());
 			whatsAppDetails.setWhatsAppNumber(whatsAppRequest.getWhatsAppNumber());
 			whatsAppDetails.setStatus(Status.ACTIVE.name());
-			whatsAppDetails.setSuperadminId(whatsAppRequest.getSuperadminId());
-			whatsAppDetails.setUpdatedBy(whatsAppRequest.getUpdatedBy());
-			whatsAppDetails.setCreatedAt(new Date());
 			whatsAppDetails.setUpdatedAt(new Date());
 			return whatsAppDetails;
 		}
 
 	@Transactional
-	public WhatsAppDetails UpdateWhatsAppDetails(WhatsAppDetails whatsAppDetails) {
+	public WhatsAppDetails updateWhatsAppDetails(WhatsAppDetails whatsAppDetails) {
 		whatsAppDetailsDao.update(whatsAppDetails);
 		return whatsAppDetails;
 	}

@@ -55,9 +55,14 @@ public class WhatsAppService {
 				whatsAppRequest.setRespCode(Constant.SUCCESS_CODE);
 				whatsAppRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
 				return whatsAppRequest;
+				
 			} else {
-				whatsAppRequest.setRespCode(Constant.ALREADY_EXISTS);
-				whatsAppRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
+				
+				existsWhatsApp = whatsAppHelper.getUpdatedWhatsAppDetailsByReqObj(whatsAppRequest, existsWhatsApp);
+				whatsAppHelper.updateWhatsAppDetails(existsWhatsApp);
+				
+				whatsAppRequest.setRespCode(Constant.SUCCESS_CODE);
+				whatsAppRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 				return whatsAppRequest;
 			}
 //		} else {
