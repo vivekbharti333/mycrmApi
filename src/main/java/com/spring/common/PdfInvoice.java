@@ -114,16 +114,17 @@ public class PdfInvoice {
 		try (FileOutputStream fileOutputStream = new FileOutputStream(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf")) {
 	        pdfStream.writeTo(fileOutputStream);
 	        
+	        System.out.println("Pdf Done");
+	        
 	    }
-		
-		System.out.println(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf");
-		
+			
 		return pdfStream;
 	}
 	
 	public boolean deleteInvoiceFile(DonationDetails donationDetails) {
 	    File file = new File(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf");
 	    if (file.exists()) {
+	    	System.out.println("Delete Successfully");
 	        return file.delete(); // Returns true if the file is successfully deleted
 	    } else {
 	        System.out.println("File not found: " + filePath);

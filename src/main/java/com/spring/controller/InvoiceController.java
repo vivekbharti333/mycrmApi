@@ -1,6 +1,7 @@
 package com.spring.controller;
 
 import com.spring.common.PdfInvoice;
+import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
@@ -193,8 +194,10 @@ public class InvoiceController {
 
    @RequestMapping({"/getPdfreceipt/{fileName:.+}"})
    public ResponseEntity<?> getPdfreceipt(@PathVariable String fileName) {
+	   System.out.println("Enter into getPdfreceipt");
       try {
-         Path filePath = Paths.get("/opt/apache-tomcat-9.0/webapps/DonationDocument/Receipt/", fileName);
+//         Path filePath = Paths.get("/opt/apache-tomcat-9.0/webapps/DonationDocument/Receipt/", fileName);
+         Path filePath = Paths.get(Constant.baseDocLocation+Constant.receipt, fileName);
          File file = filePath.toFile();
          if (file.exists() && file.isFile() && file.getName().endsWith(".pdf")) {
             byte[] pdfBytes = Files.readAllBytes(filePath);
