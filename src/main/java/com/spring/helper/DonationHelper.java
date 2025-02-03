@@ -169,8 +169,7 @@ public class DonationHelper {
 			throws MessagingException, IOException {
 
 		if (donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
-			WhatsAppDetails whatsAppDetails = whatsAppHelper
-					.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
+			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
 
 			if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 

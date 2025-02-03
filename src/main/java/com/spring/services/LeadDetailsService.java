@@ -128,6 +128,10 @@ public class LeadDetailsService {
 
 		} else if (leadRequest.getRequestedFor().equals("MONTH")) {
 			leadList = leaddetailsHelper.getLeadList(leadRequest, firstDateMonth, lastDateMonth);
+			return leadList; 
+			
+		} else if (leadRequest.getRequestedFor().equals("CUSTOM")) {
+			leadList = leaddetailsHelper.getLeadList(leadRequest, leadRequest.getFirstDate(), leadRequest.getLastDate());
 			return leadList;
 		}
 		return leadList;
