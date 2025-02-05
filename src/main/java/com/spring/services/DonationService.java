@@ -153,7 +153,7 @@ public class DonationService {
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
 				
 				//Generate invoice
-//				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
 				// send sms
 //				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);

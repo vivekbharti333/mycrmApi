@@ -94,12 +94,12 @@ public class NimbusEmail {
 						response.append(inputLine);
 					}
 					
-//					if(response != null || !response.isEmpty()) {
+//					if(response != null) {
 //						pdfInvoice.deleteInvoiceFile(donationDetails);
 //					}
 
 					// Parse the response as JSON
-					JSONObject jsonObject = new JSONObject(response.toString());
+//					JSONObject jsonObject = new JSONObject(response.toString());
 					
 //					System.out.println("response : "+response);
 //					System.out.println("status: " + jsonObject.getInt("status"));
