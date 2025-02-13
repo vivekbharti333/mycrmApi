@@ -1,12 +1,9 @@
 package com.spring.config;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 	
-	 private static final Logger logger = LogManager.getLogger(ApplicationInitializer.class);
 
 	@Override
 	protected Class<?>[] getRootConfigClasses() {

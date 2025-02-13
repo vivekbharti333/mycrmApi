@@ -14,18 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.spring.constant.Constant;
-import com.spring.dao.PaymentGatewayResponseDetailsDao;
 import com.spring.dao.PaymentGatewayDetailsDao;
-import com.spring.dao.PaymentModeBySuperadminDao;
-import com.spring.dao.PaymentModeMasterDao;
-import com.spring.entities.DonationDetails;
-import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.entities.PaymentGatewayDetails;
-import com.spring.entities.PaymentModeBySuperadmin;
-import com.spring.entities.PaymentModeMaster;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
-import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.PaymentRequestObject;
 
 @Component
@@ -35,14 +27,12 @@ public class PaymentGatewayHelper {
 	private PaymentGatewayDetailsDao paymentGatewayDetailsDao;
 	
 
-
 	public void validatePaymentModeRequest(PaymentRequestObject optionRequestObject) throws BizException {
 		if (optionRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
 	
-
 
 	@Transactional
 	public PaymentGatewayDetails getPaymentGatewayDetailsBySuperadminId(String superadminId, String pgProvider) {

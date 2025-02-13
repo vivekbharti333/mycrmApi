@@ -4,13 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.spring.constant.Constant;
 import com.spring.entities.PaymentGatewayDetails;
-import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.PaymentGatewayHelper;
 import com.spring.helper.PhonePePgHelper;
@@ -23,8 +21,8 @@ public class PaymentGatewayService {
 	@Autowired
 	private PaymentGatewayHelper paymentGatewayHelper;
 	
-	@Autowired
-	private PhonePePgHelper phonePePgHelper;
+//	@Autowired
+//	private PhonePePgHelper phonePePgHelper;
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
