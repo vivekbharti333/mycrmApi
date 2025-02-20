@@ -62,7 +62,7 @@ public class NimbusEmail {
 			postData.put("TO", donationDetails.getEmailId());
 			postData.put("PARAMS", this.getParameter(donationDetails, emailServiceDetails));
 //            postData.put("PARAMS", "{\"DONOR\":\"Vivek\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"AMOUNT\":\"&#x20B9;250\",\"PROGRAM\":\"Child Education\",\"RECIEPT\":\"HJUY79jhgju\76\",\"EMAIL\":\"info@datfuslab.com\",\"COMPANY_NAME\":\"Datfuslab Technologies Pvt. Ltd.\",\"EMAIL\":\"info@datfuslab.com\"}");
-			postData.put("FILE[0]", "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
+//			postData.put("FILE[0]", "https://morth.nic.in/sites/default/files/dd12-13_0.pdf");
 //			postData.put("FILE[0]", Constant.baseURL+"getPdfreceipt/" + donationDetails.getReceiptNumber() +".pdf");
 
 			// Convert postData map to URL encoded string
