@@ -153,10 +153,10 @@ public class DonationService {
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
 				
 				//Generate invoice
-				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+//				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
 				// send sms
-//				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
+				donationHelper.sendDonationInvoiceSms(donationDetails, invoiceHeader);
 
 				// send email
 				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
@@ -219,7 +219,10 @@ public class DonationService {
 
 		List<DonationDetails> donationList = new ArrayList<>();
 //		if (isValid) {
-		if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) || donationRequest.getRoleType().equalsIgnoreCase(RoleType.DONOR_EXECUTIVE.name())) {
+		if (donationRequest.getRoleType().equalsIgnoreCase(RoleType.SUPERADMIN.name()) 
+				|| donationRequest.getRoleType().equalsIgnoreCase(RoleType.DONOR_EXECUTIVE.name()) 
+				|| donationRequest.getRoleType().equalsIgnoreCase(RoleType.ADMIN.name()) 
+				|| donationRequest.getRoleType().equalsIgnoreCase(RoleType.LEADADMIN.name())) {
 
 			if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.TODAY.name())) {
 				donationRequest.setFirstDate(todayDate);

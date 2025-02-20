@@ -113,22 +113,22 @@ public class WhatsAppHelper {
 //	        String response = "{\"status\":0,\"errormsg\":\"Invalid API Key\",\"statuscode\":403}";
 
 	        // Parse JSON
-	        JSONObject jsonObject = new JSONObject(response);
-
-	        // Extract values
-	        int status = jsonObject.getInt("status");
-	        int statusCode = jsonObject.getInt("statuscode");
-	        
-	        if(statusCode == 200) {
-	        	donationDetails.setInvoiceDownloadStatus("YES");
-				donationHelper.updateDonationDetails(donationDetails);
-	        } else {
+//	        JSONObject jsonObject = new JSONObject(response);
+//
+//	        // Extract values
+//	        int status = jsonObject.getInt("status");
+//	        int statusCode = jsonObject.getInt("statuscode");
+//	        
+//	        if(statusCode == 200) {
+//	        	donationDetails.setInvoiceDownloadStatus("YES");
+//				donationHelper.updateDonationDetails(donationDetails);
+//	        } else {
 //	        	donationDetails.setInvoiceDownloadStatus("NO");
 //				donationHelper.updateDonationDetails(donationDetails);
-	        }
+//	        }
 
-	        System.out.println("Status: " + status);
-	        System.out.println("StatusCode: " + statusCode);
+//	        System.out.println("Status: " + status);
+//	        System.out.println("StatusCode: " + statusCode);
 	        
             
 

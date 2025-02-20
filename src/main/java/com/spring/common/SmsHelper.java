@@ -49,9 +49,9 @@ public class SmsHelper {
 //			smsDetails.setSmsPassword("eqpu2598EQ");
 //			smsDetails.setSmsSender("AARINE");
 //			smsDetails.setEntityId("1201161467507592526");
-//			smsDetails.setTemplateId("1207167835475038639");
+//			smsDetails.setTemplateId("1207173960344682420");
 			
-//			String messageBody = "Thank you for donating Rs. 1000 at CEF INDIA. Click to download Receipt within 10 days. https://datafusionlab.co.in:8080/mycrm/donationinvoice/1234 CE FOUNDATION";
+//			messageBody = "We have received donation of Rs. 100 Click to Download your receipt https:// mydonation.in/#/thank-you/receipt?receiptNo=1234567890 - Aarine Foundation";
 			
 //			smsDetails.setSmsUrl("http://nimbusit.biz/api/SmsApi/SendSingleApi?");
 //			smsDetails.setSmsUserId("cefoundation");

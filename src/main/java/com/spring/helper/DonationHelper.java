@@ -137,32 +137,30 @@ public class DonationHelper {
 
 		double doubleAmount = donationDetails.getAmount();
 		int amount = (int) doubleAmount;
+
 		if (!donationDetails.getMobileNumber().equalsIgnoreCase("")) {
-
-			SmsTemplateDetails donationSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(
-					donationDetails.getSuperadminId(), donationDetails.getInvoiceHeaderDetailsId(),
-					SmsType.DONATION_RECEIPT.name());
-			if (donationSmsTemplate != null && donationSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-				String messageBody = " We have received donation of Rs " + donationDetails.getAmount()
-						+ " Click to Download your receipt " + donationSmsTemplate.getInvoiceDomain()
-						+ donationDetails.getReceiptNumber() + " - " + donationSmsTemplate.getCompanyRegards();
-				String responce = smsHelper.sendSms(messageBody, donationSmsTemplate, donationDetails);
-			}
-
-			// Product Sms
 			if (donationDetails.getProgramName().equalsIgnoreCase("Sale")) {
-				SmsTemplateDetails productSmsTemplate = smsTemplateHelper
-						.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(),
-								donationDetails.getInvoiceHeaderDetailsId(), SmsType.PRODUCT_RECEIPT.name());
-				if (productSmsTemplate != null
-						&& productSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-					String messageBody = " We have received Rs " + donationDetails.getAmount() + " through receipt no "
-							+ donationDetails.getInvoiceNumber()
-							+ " For Receipt mail on help@mydonation.in - Mydonation ";
+				SmsTemplateDetails productSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(),
+						donationDetails.getInvoiceHeaderDetailsId(), SmsType.PRODUCT_RECEIPT.name());
+
+				if (productSmsTemplate != null && productSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+					String messageBody = "We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber()+ " For Receipt mail on help@mydonation.in - Mydonation ";
+
 					String responce = smsHelper.sendSms(messageBody, productSmsTemplate, donationDetails);
+				}
+
+			} else {
+				SmsTemplateDetails donationSmsTemplate = smsTemplateHelper.getSmsDetailsBySuperadminIdAndHeaderIdAndSmsType(donationDetails.getSuperadminId(),
+								donationDetails.getInvoiceHeaderDetailsId(), SmsType.DONATION_RECEIPT.name());
+
+				if (donationSmsTemplate != null && donationSmsTemplate.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+					String messageBody = "We have received donation of Rs " + donationDetails.getAmount()+ " Click to Download your receipt " + donationSmsTemplate.getInvoiceDomain()+ donationDetails.getReceiptNumber() + " - " + donationSmsTemplate.getCompanyRegards();
+
+					String responce = smsHelper.sendSms(messageBody, donationSmsTemplate, donationDetails);
 				}
 			}
 		}
+
 	}
 
 	public void sendDonationInvoiceWhatsApp(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
