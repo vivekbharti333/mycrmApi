@@ -4,7 +4,7 @@ public class Constant {
 	 /* Document path */
 	 public static final String baseDocLocation = "/opt/apache-tomcat-9.0/webapps/DonationDocument";
 //	 public static final String baseDocLocation = "D:/";
-//	 public static final String baseURL = "https://datfuslab.in/drmapinew/";
+	 public static final String baseURL = "https://datfuslab.in/drmapinew/";
 //	 public static final String baseURL = "http://localhost/mycrm/";
 	 
 	 public static final String invoiceImage = "/InvoiceImage";	
