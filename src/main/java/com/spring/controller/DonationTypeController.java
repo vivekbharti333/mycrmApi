@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import com.spring.constant.Constant;
 import com.spring.entities.DonationType;
+import com.spring.entities.DonationTypeAmount;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
@@ -86,5 +87,49 @@ public class DonationTypeController {
 		}
 	}
 	
+	
+	@RequestMapping(path = "addDonationTypeAmount", method = RequestMethod.POST)
+	public Response<DonationRequestObject>addDonationTypeAmount(@RequestBody Request<DonationRequestObject> donationRequestObject)
+	{
+		GenricResponse<DonationRequestObject> responseObj = new GenricResponse<DonationRequestObject>();
+		try {
+			DonationRequestObject responce =  donationService.addDonationTypeAmount(donationRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "updateDonationTypeAmount", method = RequestMethod.POST)
+	public Response<DonationRequestObject>updateDonationTypeAmount(@RequestBody Request<DonationRequestObject> donationRequestObject)
+	{
+		GenricResponse<DonationRequestObject> responseObj = new GenricResponse<DonationRequestObject>();
+		try {
+			DonationRequestObject responce =  donationService.updateDonationTypeAmount(donationRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "getDonationTypeAmountListBySuperadminId", method = RequestMethod.POST)
+	public Response<DonationTypeAmount> getDonationTypeAmountListBySuperadminId(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationTypeAmount> response = new GenricResponse<DonationTypeAmount>();
+		try {
+			List<DonationTypeAmount> donationTypeAmountList = donationService.getDonationTypeAmountListBySuperadminId(donationRequestObject);
+			return response.createListResponse(donationTypeAmountList, Constant.SUCCESS_CODE, String.valueOf(donationTypeAmountList.size()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
 	
 }

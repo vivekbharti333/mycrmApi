@@ -43,6 +43,9 @@ public class DonationRequestObject {
 	
 	private String programName;
 	private Double programAmount;
+	private Long programId;
+	private Long currencyMasterId;
+	private String currencyName;
 	
 	private Long invoiceHeaderDetailsId;
 	private String invoiceHeaderName;

@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.spring.constant.Constant;
 import com.spring.entities.DonationType;
+import com.spring.entities.DonationTypeAmount;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationTypeHelper;
@@ -120,6 +121,62 @@ public class DonationTypeService {
 //		return donationTypeList;
 
 	}
+
+
+		@Transactional
+		public DonationRequestObject addDonationTypeAmount(Request<DonationRequestObject> donationRequestObject)
+				throws BizException, Exception {
+			DonationRequestObject donationRequest = donationRequestObject.getPayload();
+			donationTypeHelper.validateDonationRequest(donationRequest);
+			
+			
+			DonationTypeAmount existsDonationTypeAmount = donationTypeHelper.getDonationTypeAmountByProgramIdCurrencyIdAndSuperadminId(donationRequest);
+			if (existsDonationTypeAmount == null) {
+				
+				DonationTypeAmount donationTypeAmount = donationTypeHelper.getDonationTypeAmountByReqObj(donationRequest);
+				donationTypeAmount = donationTypeHelper.saveDonationTypeAmount(donationTypeAmount);
+
+				donationRequest.setRespCode(Constant.SUCCESS_CODE);
+				donationRequest.setRespMesg("Successfully Register");
+				return donationRequest;
+			}else {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
+				return donationRequest; 
+			}
+		}
+
+
+		public DonationRequestObject updateDonationTypeAmount(Request<DonationRequestObject> donationRequestObject) 
+			throws BizException, Exception {
+				DonationRequestObject donationRequest = donationRequestObject.getPayload();
+				donationTypeHelper.validateDonationRequest(donationRequest);
+				
+				
+				DonationTypeAmount donationTypeAmount = donationTypeHelper.getDonationTypeAmountById(donationRequest);
+				if (donationTypeAmount != null) {
+					
+					donationTypeAmount = donationTypeHelper.getUpdatedDonationTypeAmountByReqObj(donationRequest, donationTypeAmount);
+					donationTypeAmount = donationTypeHelper.updateDonationTypeAmount(donationTypeAmount);
+
+					donationRequest.setRespCode(Constant.SUCCESS_CODE);
+					donationRequest.setRespMesg("Update Register");
+					return donationRequest;
+				}else {
+					donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					donationRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
+					return donationRequest; 
+				}
+			}
+
+
+			public List<DonationTypeAmount> getDonationTypeAmountListBySuperadminId(Request<DonationRequestObject> donationRequestObject) {
+				DonationRequestObject donationRequest = donationRequestObject.getPayload();
+				
+				List<DonationTypeAmount> donationTypeAmountList = donationTypeHelper.getDonationTypeAmountListBySuperadminId(donationRequest);
+				return donationTypeAmountList;
+
+			}
 
 
 	
