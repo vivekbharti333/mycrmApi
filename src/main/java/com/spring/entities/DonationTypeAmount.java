@@ -26,11 +26,8 @@ public class DonationTypeAmount {
 	@Column(name = "program_amount")
 	private Double programAmount;
 	
-	@Column(name = "currency_master_id")
-	private Long currencyMasterId;
-	
-	@Column(name = "currency_name")
-	private String currencyName;
+	@Column(name = "currency_code")
+	private String currencyCode;
 	
 	@Column(name = "status")
 	private String status;

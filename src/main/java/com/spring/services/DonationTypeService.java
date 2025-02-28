@@ -15,6 +15,7 @@ import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationTypeHelper;
 import com.spring.jwt.JwtTokenUtil;
+import com.spring.model.ProgramDetails;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
 
@@ -109,16 +110,19 @@ public class DonationTypeService {
 	}
 
 
-	public List<DonationType> getDonationTypeListBySuperadminId(Request<DonationRequestObject> donationRequestObject) {
+//	public List<DonationType> getDonationTypeListBySuperadminId(Request<DonationRequestObject> donationRequestObject) {
+//		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+//
+//		List<DonationType> donationTypeList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
+//			return donationTypeList;
+//	}
+	
+	public List<ProgramDetails> getDonationTypeListBySuperadminId(Request<DonationRequestObject> donationRequestObject) {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
-//		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getCreatedBy(), donationRequest.getToken());
 
-//		List<DonationType> donationTypeList = new ArrayList<>();
-//		if (isValid) {
-		List<DonationType> donationTypeList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
-			return donationTypeList;
-//		}
-//		return donationTypeList;
+		List<ProgramDetails> programDetailsList = donationTypeHelper.getDonationTypeListBySuperadminId(donationRequest);
+		
+			return programDetailsList;
 
 	}
 

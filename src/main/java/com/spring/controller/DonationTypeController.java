@@ -12,6 +12,7 @@ import com.spring.constant.Constant;
 import com.spring.entities.DonationType;
 import com.spring.entities.DonationTypeAmount;
 import com.spring.exceptions.BizException;
+import com.spring.model.ProgramDetails;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.response.GenricResponse;
@@ -75,12 +76,24 @@ public class DonationTypeController {
 		}
 	}
 	
+//	@RequestMapping(path = "getDonationTypeListBySuperadminId", method = RequestMethod.POST)
+//	public Response<DonationType> getDonationTypeListBySuperadminId(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+//		GenricResponse<DonationType> response = new GenricResponse<DonationType>();
+//		try {
+//			List<DonationType> donationList = donationService.getDonationTypeListBySuperadminId(donationRequestObject);
+//			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
+//	
 	@RequestMapping(path = "getDonationTypeListBySuperadminId", method = RequestMethod.POST)
-	public Response<DonationType> getDonationTypeListBySuperadminId(@RequestBody Request<DonationRequestObject> donationRequestObject) {
-		GenricResponse<DonationType> response = new GenricResponse<DonationType>();
+	public Response<ProgramDetails> getDonationTypeAndAmtListBySuperadminId(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<ProgramDetails> response = new GenricResponse<ProgramDetails>();
 		try {
-			List<DonationType> donationList = donationService.getDonationTypeListBySuperadminId(donationRequestObject);
-			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
+			List<ProgramDetails> programDetailsList = donationService.getDonationTypeListBySuperadminId(donationRequestObject);
+			return response.createListResponse(programDetailsList, Constant.SUCCESS_CODE, String.valueOf(programDetailsList.size()));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
