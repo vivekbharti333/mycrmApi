@@ -51,7 +51,23 @@ public class PdfInvoice {
 		long finalValue = Math.round(amount); 
 			
 		String word = convertNumber(finalValue);
-
+		
+		String regAdd = "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>";
+		if(invoiceHeaderDetails.getRegAddress().equals("N/A") || invoiceHeaderDetails.getRegAddress().equals("") || invoiceHeaderDetails.getRegAddress().isEmpty()) {
+			regAdd = "";
+		} 
+		
+		String panNo = ",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber();
+		
+		if(invoiceHeaderDetails.getPanNumber().equals("N/A") || invoiceHeaderDetails.getPanNumber().equals("") || invoiceHeaderDetails.getPanNumber().isEmpty()) {
+			panNo = "";
+		} 
+		
+		String mobileNo = "Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+",";
+		if(invoiceHeaderDetails.getMobileNo().equals("N/A") || invoiceHeaderDetails.getMobileNo().equals("") || invoiceHeaderDetails.getMobileNo().isEmpty()) {
+			mobileNo = "";
+		} 
+		
 		
 		String HTML = "<div class=\"body-Container\" style=\" width: 100%; border: 1px solid black;\">\n"
 			    + "<table width=\"100%\">\n" + "<tr>\n" + "<td width=\"16%\" height=\"140px\">\n"
@@ -59,9 +75,11 @@ public class PdfInvoice {
 //				+ "<img src=\"data:image/jpeg;base64," + invoiceHeaderDetails.getCompanyLogo() + "\" alt=\"Image\" width=\"100%\" height=\"100%\">\n"
 			    + "</td>\n" + "<td width=\"60%\">\n" + "<center>\n"
 			    + "<h1 style=\"font-size: 40px; margin: 0;\"><strong style=\"color: "+invoiceHeaderDetails.getCompanyFirstNameColor()+";\">"+invoiceHeaderDetails.getCompanyFirstName()+"</strong> <strong style=\"color: "+invoiceHeaderDetails.getCompanyLastNameColor()+";\">"+invoiceHeaderDetails.getCompanyLastName()+"</strong></h1>\n"
-			    + "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
+//			    + "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+",&nbsp; PAN NO.: "+invoiceHeaderDetails.getPanNumber()+"</h5>\n"
+			    + "<h5 style=\"margin: 2px;font-size: 14px;\">Registration No.: "+invoiceHeaderDetails.getGstNumber()+ panNo +"</h5>\n"
 			    + "<h6 style=\"margin: 2px; font-size: 14px;\">Off. Add:"+invoiceHeaderDetails.getOfficeAddress()+"</h6>\n"
-			    + "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
+//			    + "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
+			    + regAdd 
 			    + "</td></tr></table></center>"
 			    + "<center><p><strong style=\"font-size: 18px;\">Tax Benefit Receipt</strong> </p>\n</center>\n"
 			    + "<div class=\"form-container\" style=\"width: 100%; height: auto; background-color: "+invoiceHeaderDetails.getBackgroundColor()+";\">\n"
@@ -89,7 +107,8 @@ public class PdfInvoice {
 			HTML += "<hr>\n" + "</div>\n" + "<div style=\"\">\n"
 			    + "<p style=\"font-weight: bold;margin-right: 20px;line-height: 1.6; margin-left: 20px; text-align: justify;\">"+invoiceHeaderDetails.getFooter()+"</p>\n"
 			    + "</div>\n" + "</div>\n" + "<center>\n"
-			    + "<h6 style=\"margin: 2px;font-size: 14px;\">Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+", &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
+//			    + "<h6 style=\"margin: 2px;font-size: 14px;\">Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+", &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
+			    + "<h6 style=\"margin: 2px;font-size: 14px;\">"+mobileNo+" &nbsp;&nbsp;<strong>Email:</strong> "+invoiceHeaderDetails.getEmailId()+", &nbsp;&nbsp; Website: "+invoiceHeaderDetails.getWebsite()+"</h6>\n"
 			    + "</center>";
 
 			return HTML;
