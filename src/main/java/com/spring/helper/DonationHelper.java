@@ -229,6 +229,7 @@ public class DonationHelper {
 		DonationDetails donationDetails = donationDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
 		return donationDetails;
 	}
+	
 
 	public DonationDetails getDonationDetailsByReqObj(DonationRequestObject donationRequest) {
 
