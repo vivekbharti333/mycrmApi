@@ -236,14 +236,14 @@ public class DonationHelper {
 
 		donationDetails.setInvoiceNumber(donationRequest.getInvoiceNumber().toUpperCase());
 		donationDetails.setDonorName(donationRequest.getDonorName());
+		donationDetails.setIsdCode(donationRequest.getIsdCode());
 		donationDetails.setMobileNumber(donationRequest.getMobileNumber());
 		donationDetails.setEmailId(donationRequest.getEmailId());
 		donationDetails.setPanNumber(donationRequest.getPanNumber());
 		donationDetails.setAddress(donationRequest.getAddress());
 		donationDetails.setProgramName(donationRequest.getProgramName());
 		donationDetails.setAmount(donationRequest.getAmount());
-		donationDetails.setCurrency(
-				currencyHelper.getCurrencyMasterByCurrencyCode(donationRequest.getCurrencyCode()).getUnicode());
+		donationDetails.setCurrency(currencyHelper.getCurrencyMasterByCurrencyCode(donationRequest.getCurrencyCode()).getUnicode());
 		donationDetails.setCurrencyCode(donationRequest.getCurrencyCode());
 		donationDetails.setReceiptNumber(donationRequest.getReceiptNumber());
 		donationDetails.setTransactionId(donationRequest.getTransactionId());

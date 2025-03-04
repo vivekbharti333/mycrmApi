@@ -24,6 +24,9 @@ public class DonationDetails {
 	@Column(name = "donor_name")
 	private String donorName;
 	
+	@Column(name = "isd_code")
+	private String isdCode;
+	
 	@Column(name = "mobile_number")
 	private String mobileNumber;
 	
