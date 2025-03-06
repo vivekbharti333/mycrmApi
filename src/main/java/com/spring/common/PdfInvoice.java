@@ -100,7 +100,7 @@ public class PdfInvoice {
 //			    + "Pan No: <strong> "+ donationDetails.getPanNumber() + "</strong>&nbsp;"
 			    + donorPan
 			    		+ "<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
-			    + "/-</strong>. ("+ word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
+			    + "/-</strong>. ("+ word + " Only in "+donationDetails.getCurrencyCode()+") for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
 			    + "<img src=\""+basePath+File.separator+invoiceHeaderDetails.getCompanyStamp()+"\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
 			    + "<p style=\"font-size: 20px;letter-spacing: 0.6px;margin-top: -30px; margin-left:110px;\">Authorised Sign.</p>\n"
 			    + "\n" + "\n";
