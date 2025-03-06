@@ -66,7 +66,12 @@ public class PdfInvoice {
 		String mobileNo = "Mobile No.</strong> "+invoiceHeaderDetails.getMobileNo()+",";
 		if(invoiceHeaderDetails.getMobileNo().equals("N/A") || invoiceHeaderDetails.getMobileNo().equals("") || invoiceHeaderDetails.getMobileNo().isEmpty()) {
 			mobileNo = "";
-		} 
+		}
+		
+		String donorPan = "Pan No: <strong> "+ donationDetails.getPanNumber() + "</strong>&nbsp;";
+		if(donationDetails.getPanNumber().equalsIgnoreCase("N/A") || donationDetails.getPanNumber().equalsIgnoreCase("") || donationDetails.getPanNumber().isEmpty()) {
+			
+		}
 		
 		
 		String HTML = "<div class=\"body-Container\" style=\" width: 100%; border: 1px solid black;\">\n"
@@ -92,7 +97,8 @@ public class PdfInvoice {
 			    + "Address: <strong>" + donationDetails.getAddress() + "</strong>&nbsp;"
 			    + "Email: <strong>"+ donationDetails.getEmailId() + "</strong>&nbsp;"
 			    + "Contact No: <strong>" + donationDetails.getMobileNumber() + "</strong>&nbsp;"
-			    + "Pan No: <strong> "+ donationDetails.getPanNumber() + "</strong>&nbsp;"
+//			    + "Pan No: <strong> "+ donationDetails.getPanNumber() + "</strong>&nbsp;"
+			    + donorPan
 			    		+ "<strong>for kind</strong> donation of <strong>Rs: " + donationDetails.getAmount()
 			    + "/-</strong>. ("+ word + " Only/-) for "+donationDetails.getProgramName()+".\n" + "\n" + "\n" + "<br>\n"
 			    + "<img src=\""+basePath+File.separator+invoiceHeaderDetails.getCompanyStamp()+"\" style=\"width: 115px;margin-left: 100px; height: 115px;\">\n"
@@ -121,8 +127,8 @@ public class PdfInvoice {
 
 		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-//		donationDetails.setInvoiceDownloadStatus("YES");
-//		donationHelper.updateDonationDetails(donationDetails);
+		donationDetails.setInvoiceDownloadStatus("YES");
+		donationHelper.updateDonationDetails(donationDetails);
 
 		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
 
