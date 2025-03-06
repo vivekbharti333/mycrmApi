@@ -282,7 +282,7 @@ public class DonationHelper {
 		donationDetails.setPanNumber(donationRequest.getPanNumber());
 		donationDetails.setAddress(donationRequest.getAddress());
 //		donationDetails.setProgramName(donationRequest.getProgramName());
-//		donationDetails.setAmount(donationRequest.getAmount());
+		donationDetails.setAmount(donationRequest.getAmount());
 //		donationDetails.setReceiptNumber(donationRequest.getReceiptNumber());
 		donationDetails.setTransactionId(donationRequest.getTransactionId());
 		donationDetails.setPaymentMode(donationRequest.getPaymentMode());
