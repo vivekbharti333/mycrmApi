@@ -407,11 +407,15 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
-		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(donationRequest.getId(),
-				donationRequest.getSuperadminId());
+		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(donationRequest.getId(), donationRequest.getSuperadminId());
 
 		if (donationDetails != null) {
-			donationDetails.setStatus(donationRequest.getStatus());
+			if(donationDetails.getStatus().equals("INACTIVE")) {
+				donationDetails.setStatus("ACTIVE");
+			} else {
+				donationDetails.setStatus("INACTIVE");
+			}
+			
 			donationHelper.updateDonationDetails(donationDetails);
 
 			donationRequest.setRespCode(Constant.SUCCESS_CODE);
