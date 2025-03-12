@@ -47,6 +47,9 @@ public class EmailServiceDetails {
 	@Column(name = "subject")
 	private String subject;
 	
+	@Column(name = "receipt_url")
+	private String receiptUrl;
+	
 	@Lob
 	@Column(name = "email_body")
 	private String emailBody;
