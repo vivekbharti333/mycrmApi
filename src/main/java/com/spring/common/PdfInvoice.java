@@ -86,7 +86,7 @@ public class PdfInvoice {
 //			    + "<h6 style=\"margin: 2px; font-size: 14px;\">Reg. Add:"+invoiceHeaderDetails.getRegAddress()+"</h6>"
 			    + regAdd 
 			    + "</td></tr></table></center>"
-			    + "<center><p><strong style=\"font-size: 18px;\">Tax Benefit Receipt</strong> </p>\n</center>\n"
+			    + "<center><p><strong style=\"font-size: 18px;\">Donation Receipt</strong> </p>\n</center>\n"
 			    + "<div class=\"form-container\" style=\"width: 100%; height: auto; background-color: "+invoiceHeaderDetails.getBackgroundColor()+";\">\n"
 			    + "<hr>\n" + "<p style=\"padding: 10px;font-size: 22px \">Receipt No: <strong>"
 			    + donationDetails.getInvoiceNumber()
