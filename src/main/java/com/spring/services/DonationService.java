@@ -552,6 +552,18 @@ public class DonationService {
 		}
 		return donationList;
 	}
+	
+	public List<DonationDetails> getDonationPaymentModeCountAndAmountGroupByPaymentMode(
+			Request<DonationRequestObject> donationRequestObject) throws BizException, Exception {
+		DonationRequestObject donationRequest = donationRequestObject.getPayload();
+		donationHelper.validateDonationRequest(donationRequest);
+
+		List<DonationDetails> donationList = new ArrayList<>();
+
+		donationList = donationHelper.getDonationPaymentModeCountAndAmountGroupByPaymentMode(donationRequest);
+		return donationList;
+
+	}
 
 	public List<DonationDetails> getDonationProgramNameCountAndAmountGroupByName(Request<DonationRequestObject> donationRequestObject)
 			throws BizException, Exception {

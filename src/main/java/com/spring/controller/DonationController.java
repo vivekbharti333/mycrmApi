@@ -207,6 +207,18 @@ public class DonationController {
 		}
 	}
 	
+	@RequestMapping(path = "getDonationPaymentModeCountAndAmountGroupByPaymentMode", method = RequestMethod.POST)
+	public Response<DonationDetails> getDonationPaymentModeCountAndAmountGroupByPaymentMode(@RequestBody Request<DonationRequestObject> donationRequestObject) {
+		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
+		try {
+			List<DonationDetails> donationList = donationService.getDonationPaymentModeCountAndAmountGroupByPaymentMode(donationRequestObject);
+			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
 	@RequestMapping(path = "getDonationProgramNameCountAndAmountGroupByName", method = RequestMethod.POST)
 	public Response<DonationDetails> getDonationProgramNameCountAndAmountGroupByName(@RequestBody Request<DonationRequestObject> donationRequestObject) {
 		GenricResponse<DonationDetails> response = new GenricResponse<DonationDetails>();
