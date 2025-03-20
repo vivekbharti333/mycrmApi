@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -607,12 +608,21 @@ public class DonationHelper {
 	
 	@SuppressWarnings("unchecked")
 	public List<DonationDetails> getDonationPaymentModeCountAndAmountGroupByPaymentMode(DonationRequestObject donationRequest) {
+		
+		Calendar calendar = Calendar.getInstance();
+        calendar.setTime(donationRequest.getLastDate());
+        calendar.add(Calendar.DATE, 1); // Add 1 day
+
+        Date increamentLastDate = calendar.getTime();
+        
+//        System.out.println(increamentLastDate+" hkjh");
+        
 		List<DonationDetails> results = new ArrayList<>();
 
 		results = donationDetailsDao.getEntityManager().createQuery(
 				"SELECT DD.paymentMode, COUNT(id) AS count, SUM(amount) AS amount, DD.currencyCode, DD.currency FROM DonationDetails DD where DD.createdBy =:createdBy AND DD.createdAt BETWEEN :firstDate AND :lastDate AND DD.superadminId = :superadminId AND DD.status =:status GROUP BY DD.paymentMode, DD.currencyCode, DD.currency")
 				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
-				.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+				.setParameter("lastDate", increamentLastDate, TemporalType.DATE)
 				.setParameter("createdBy", donationRequest.getCreatedBy())
 				.setParameter("superadminId", donationRequest.getSuperadminId())
 				.setParameter("status", Status.ACTIVE.name())
