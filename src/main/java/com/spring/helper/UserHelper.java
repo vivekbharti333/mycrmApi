@@ -191,6 +191,7 @@ public class UserHelper {
 		userDetails.setAlternateMobile(userRequest.getAlternateMobile());
 		userDetails.setEmailId(userRequest.getEmailId());
 		userDetails.setPermissions(userRequest.getPermissions());
+		userDetails.setCreatedBy(userRequest.getCreatedBy());
 		userDetails.setUpdatedAt(new Date());
 
 		return userDetails;

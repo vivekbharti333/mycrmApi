@@ -121,10 +121,9 @@ public class DonationService {
 
 			// Get Team leader Details
 			donationRequest = donationHelper.getTeamLeaderIdOfDonation(donationRequest);
-
+			
 			// Invoice Number Generate
-			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(
-					donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
+			UserDetails teamLeaderCode = userHelper.getUserDetailsByLoginIdAndSuperadminId(donationRequest.getTeamLeaderId(), donationRequest.getSuperadminId());
 			String currentYear = new SimpleDateFormat("MMyyyy").format(new Date());
 			String invoiceNumber = teamLeaderCode.getUserCode() + "/" + invoiceHeader.getInvoiceInitial().toUpperCase() + "/" + currentYear + "/" + (invoiceHeader.getSerialNumber() + 1);
 
