@@ -17,7 +17,7 @@ import com.spring.object.request.Request;
 @Service
 public class PaymentGatewayService {
 
-	@Autowired
+	@Autowired 
 	private PaymentGatewayHelper paymentGatewayHelper;
 	
 //	@Autowired
