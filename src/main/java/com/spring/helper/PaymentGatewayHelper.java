@@ -33,9 +33,22 @@ public class PaymentGatewayHelper {
 		}
 	}
 	
+	@Transactional
+	public PaymentGatewayDetails getPaymentGatewayDetailsBySuperadminIdNStatus(String superadminId, String status) {
+
+		CriteriaBuilder criteriaBuilder = paymentGatewayDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<PaymentGatewayDetails> criteriaQuery = criteriaBuilder.createQuery(PaymentGatewayDetails.class);
+		Root<PaymentGatewayDetails> root = criteriaQuery.from(PaymentGatewayDetails.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("superadminId"), superadminId);
+		Predicate restriction2 = criteriaBuilder.equal(root.get("status"), status);
+		criteriaQuery.where(restriction1, restriction2);
+		PaymentGatewayDetails paymentGatewayDetails = paymentGatewayDetailsDao.getSession().createQuery(criteriaQuery)
+				.uniqueResult();
+		return paymentGatewayDetails;
+	}
 
 	@Transactional
-	public PaymentGatewayDetails getPaymentGatewayDetailsBySuperadminId(String superadminId, String pgProvider) {
+	public PaymentGatewayDetails getPaymentGatewayDetailsBySuperadminIdNpg(String superadminId, String pgProvider) {
 
 		CriteriaBuilder criteriaBuilder = paymentGatewayDetailsDao.getSession().getCriteriaBuilder();
 		CriteriaQuery<PaymentGatewayDetails> criteriaQuery = criteriaBuilder.createQuery(PaymentGatewayDetails.class);

@@ -43,9 +43,9 @@ public class PhonePePaymentGateway {
 		paymentGatewayResponseDetails = phonePePgHelper.savePaymentDetails(paymentGatewayResponseDetails);
 
 		// Call Payment Gateway API
-		String param = this.getPaymetGatewayParam(donationDetails, paymentGatewayDetails);
+		String param = this.getPhonePePaymentGatewayParam(donationDetails, paymentGatewayDetails);
 
-		String jsonResponse = this.getPaymentPageRequest(param, paymentGatewayDetails);
+		String jsonResponse = this.getPhonePePaymentPageRequest(param, paymentGatewayDetails);
 
 //		String jsonResponse = "{\"success\":true,\"code\":\"PAYMENT_INITIATED\",\"message\":\"Payment initiated\",\"data\":{\"merchantId\":\"M22XLI1BBSR4N\",\"merchantTransactionId\":\"CI/CEF/022024/4697\",\"instrumentResponse\":{\"type\":\"PAY_PAGE\",\"redirectInfo\":{\"url\":\"https://mercury-t2.phonepe.com/transact/pg?token=NGMzYzdhZDM5ODkwMWNiM2U0OTc4NmY2MGVhMDU2N2Y5NzM0M2I1MTJkYmZiNDc3MDVhNDYwNjdjNzY3YTc5YjFlNGNkOTkyZTlmYTZhZmRhZjZjYjczOThjYTQ1ODM1OjQ2NWNlYmE3YjIxZDJjNDM3NmMzNWYxMTMxYjdjNDdm\",\"method\":\"GET\"}}}}";
 
@@ -71,7 +71,7 @@ public class PhonePePaymentGateway {
 		}
 	}
 
-	public String getPaymetGatewayParam(DonationDetails donationDetails, PaymentGatewayDetails paymentGatewayDetails)
+	public String getPhonePePaymentGatewayParam(DonationDetails donationDetails, PaymentGatewayDetails paymentGatewayDetails)
 			throws Exception {
 		JSONObject parameters = new JSONObject();
 		JSONObject paymentInstrument = new JSONObject();
@@ -109,7 +109,7 @@ public class PhonePePaymentGateway {
 		return hexString.toString();
 	}
 
-	public String getPaymentPageRequest(String param, PaymentGatewayDetails paymentGatewayDetails)
+	public String getPhonePePaymentPageRequest(String param, PaymentGatewayDetails paymentGatewayDetails)
 			throws NoSuchAlgorithmException, IOException {
 		String result = "";
 		String encodedString = Base64.getEncoder().encodeToString(param.getBytes());

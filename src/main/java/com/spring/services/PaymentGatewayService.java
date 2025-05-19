@@ -11,7 +11,6 @@ import com.spring.constant.Constant;
 import com.spring.entities.PaymentGatewayDetails;
 import com.spring.exceptions.BizException;
 import com.spring.helper.PaymentGatewayHelper;
-import com.spring.helper.PhonePePgHelper;
 import com.spring.object.request.PaymentRequestObject;
 import com.spring.object.request.Request;
 
@@ -31,7 +30,7 @@ public class PaymentGatewayService {
 		PaymentRequestObject paymentGatewayRequest = paymentRequestObject.getPayload();
 		paymentGatewayHelper.validatePaymentModeRequest(paymentGatewayRequest);
 
-		PaymentGatewayDetails existsPaymentGateway = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminId(
+		PaymentGatewayDetails existsPaymentGateway = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminIdNpg(
 				paymentGatewayRequest.getSuperadminId(), paymentGatewayRequest.getPgProvider());
 		if (existsPaymentGateway == null) {
 			PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper

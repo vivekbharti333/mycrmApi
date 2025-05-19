@@ -43,6 +43,7 @@ import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
 import com.spring.paymentgateway.PhonePePaymentGateway;
+import com.spring.pdf.ItextPdfReceipt;
 import com.spring.services.AttendenceService;
 import com.spring.services.UserService;
 
@@ -81,13 +82,18 @@ public class UserController {
     @Autowired
     private EmailHelper emailHelper;
     
+    @Autowired
+    private ItextPdfReceipt itextPdfReceipt;
+    
     
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
 		
-		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
+		itextPdfReceipt.createReceipt();
+		
+//		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
 //		
 //		ByteArrayOutputStream pdfContent = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 //		
@@ -97,8 +103,7 @@ public class UserController {
 		
 //		pdfThankYouLatter.pdf();
 		
-		
-		
+
 		return new ModelAndView("home");
 	}
 	

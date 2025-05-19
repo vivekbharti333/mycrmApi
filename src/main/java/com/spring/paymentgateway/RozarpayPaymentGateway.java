@@ -12,21 +12,21 @@ import com.spring.object.request.DonationRequestObject;
 public class RozarpayPaymentGateway {
 
 
-	public String getRozarpayPaymentLink(DonationRequestObject vehicleRequest )
+	public String getRozarpayPaymentLink(DonationRequestObject donationRequest )
 			throws BizException, Exception {
 		
 		
 		RazorpayClient razorpay = new RazorpayClient("rzp_test_KiREBJNBMR41TP", "It78jFUUZQZl7f3d6I6iUAI2");
 		JSONObject paymentLinkRequest = new JSONObject();
-		paymentLinkRequest.put("amount", vehicleRequest.getAmount());
+		paymentLinkRequest.put("amount", donationRequest.getAmount());
 		paymentLinkRequest.put("currency","INR");
 		paymentLinkRequest.put("accept_partial",false);
 		paymentLinkRequest.put("expire_by",1750346930);
-		paymentLinkRequest.put("reference_id", vehicleRequest.getInvoiceNumber());
+		paymentLinkRequest.put("reference_id", donationRequest.getInvoiceNumber());
 		JSONObject customer = new JSONObject();
-		customer.put("name", vehicleRequest.getDonorName());
-		customer.put("contact", vehicleRequest.getMobileNumber());
-		customer.put("email", vehicleRequest.getEmailId());
+		customer.put("name", donationRequest.getDonorName());
+		customer.put("contact", donationRequest.getMobileNumber());
+		customer.put("email", donationRequest.getEmailId());
 		paymentLinkRequest.put("customer",customer);
 		JSONObject notify = new JSONObject();
 		notify.put("sms",true);

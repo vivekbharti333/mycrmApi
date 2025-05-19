@@ -36,6 +36,7 @@ import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
+import com.spring.paymentgateway.CashfreePaymentGateway;
 import com.spring.paymentgateway.PhonePePaymentGateway;
 
 @Service
@@ -46,6 +47,9 @@ public class DonationService {
 
 	@Autowired
 	private PhonePePaymentGateway phonePePaymentGateway;
+	
+	@Autowired
+	private CashfreePaymentGateway cashfreePaymentGateway;
 
 	@Autowired
 	private UserHelper userHelper;
@@ -180,8 +184,7 @@ public class DonationService {
 	
 	public DonationRequestObject sendOnlinePaymentLink(DonationRequestObject donationRequest, InvoiceHeaderDetails invoiceHeader) throws BizException, Exception {
 		
-		PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper
-				.getPaymentGatewayDetailsBySuperadminId(donationRequest.getSuperadminId(), "PHONEPE");
+		PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminIdNStatus(donationRequest.getSuperadminId(), "ACTIVE");
 
 		if (paymentGatewayDetails != null) {
 
@@ -196,8 +199,8 @@ public class DonationService {
 
 			} else if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("ROZARPAY")) {
 
-			} else if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("PAYTM")) {
-
+			} else if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("CASHFREE")) {
+				paymentGatewayRequest = cashfreePaymentGateway.getCashfreePaymentLink(donationRequest, donationDetails, paymentGatewayDetails);
 			}
 
 			// Payment Gateway link SMS
