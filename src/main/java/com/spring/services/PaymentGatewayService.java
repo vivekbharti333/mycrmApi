@@ -21,7 +21,7 @@ public class PaymentGatewayService {
 	private PaymentGatewayHelper paymentGatewayHelper;
 	
 //	@Autowired
-//	private PhonePePgHelper phonePePgHelper;
+//	private PhonePePgHelper phonePePgHelper; 
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
