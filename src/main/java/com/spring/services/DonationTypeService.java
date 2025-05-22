@@ -144,8 +144,11 @@ public class DonationTypeService {
 				donationRequest.setRespMesg("Successfully Register");
 				return donationRequest;
 			}else {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg(Constant.ALLREADY_EXISTS_MSG);
+				existsDonationTypeAmount = donationTypeHelper.getUpdatedDonationTypeAmountByReqObj(donationRequest, existsDonationTypeAmount);
+				existsDonationTypeAmount = donationTypeHelper.updateDonationTypeAmount(existsDonationTypeAmount);
+				
+				donationRequest.setRespCode(Constant.SUCCESS_CODE);
+				donationRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 				return donationRequest; 
 			}
 		}

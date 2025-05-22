@@ -233,8 +233,9 @@ public class DonationTypeHelper {
 	
 	public DonationTypeAmount getUpdatedDonationTypeAmountByReqObj(DonationRequestObject donationRequest, DonationTypeAmount donationTypeAmount) {
 
-		donationTypeAmount.setProgramId(donationRequest.getProgramId());
+//		donationTypeAmount.setProgramId(donationRequest.getProgramId());
 		donationTypeAmount.setProgramAmount(donationRequest.getProgramAmount());
+		donationTypeAmount.setCurrencyCode(donationRequest.getCurrencyCode());
 		donationTypeAmount.setStatus(Status.ACTIVE.name());
 
 		donationTypeAmount.setCreatedBy(donationRequest.getCreatedBy());
