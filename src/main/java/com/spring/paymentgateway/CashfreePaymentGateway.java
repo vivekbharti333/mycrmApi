@@ -95,8 +95,8 @@ public class CashfreePaymentGateway {
 
 		Request request = new Request.Builder().url("https://sandbox.cashfree.com/pg/links").post(body)
 				.addHeader("x-api-version", "2025-01-01")
-				.addHeader("x-client-id", "TEST1038556454ac878f90710ba455b346558301")
-				.addHeader("x-client-secret", "cfsk_ma_test_fc973179a5b977a40b86bb1ebef5ebaa_651458f7")
+				.addHeader("x-client-id", "")
+				.addHeader("x-client-secret", "")
 				.addHeader("Content-Type", "application/json").build();
 
 //		Prod
