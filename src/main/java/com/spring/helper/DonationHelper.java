@@ -261,6 +261,14 @@ public class DonationHelper {
 		donationDetails.setCreatedbyName(donationRequest.getCreatedbyName());
 		donationDetails.setTeamLeaderId(donationRequest.getTeamLeaderId());
 		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
+		
+		if(donationRequest.getPaymentMode().equalsIgnoreCase("PAYMENT GATEAY")) {
+			donationDetails.setPaymentStatus(Status.INIT.name());
+		} else {
+			donationDetails.setPaymentStatus(Status.INIT.name());
+		}
+		
+		
 		donationDetails.setCalled("NO");
 		donationDetails.setCreatedAt(new Date());
 		donationDetails.setUpdatedAt(new Date());

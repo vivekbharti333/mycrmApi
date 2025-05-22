@@ -37,6 +37,7 @@ import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.helper.PaymentGatewayHelper;
+import com.spring.helper.PaymentGatewayResponseHelper;
 import com.spring.helper.PaymentModeHelper;
 import com.spring.helper.PhonePePgHelper;
 import com.spring.helper.UserHelper;
@@ -54,6 +55,9 @@ public class PhonePePgService {
 	
 	@Autowired
 	private DonationHelper donationHelper;
+	
+	@Autowired
+	private PaymentGatewayResponseHelper paymentGatewayResponseHelper;
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -72,11 +76,11 @@ public class PhonePePgService {
 
 		paymentGatewayRequest.setMerchantId(data.getString("merchantId"));
 
-		PaymentGatewayResponseDetails paymentResponseDetails = phonePePgHelper.getPaymentGatewayResponseDetailsBySuperadminId(data.getString("merchantId"),data.getString("merchantTransactionId"));
+		PaymentGatewayResponseDetails paymentResponseDetails = paymentGatewayResponseHelper.getPaymentGatewayResponseDetailsBySuperadminId(data.getString("merchantId"),data.getString("merchantTransactionId"));
 		if (paymentResponseDetails != null) {
 
-			phonePePgHelper.getUpdatedPaymentDetailsByReqObj(paymentResponseDetails, paymentGatewayRequest);
-			phonePePgHelper.UpdatePaymentGatewayResponseDetails(paymentResponseDetails);
+			paymentGatewayResponseHelper.getUpdatedPaymentDetailsByReqObj(paymentResponseDetails, paymentGatewayRequest);
+			paymentGatewayResponseHelper.UpdatePaymentGatewayResponseDetails(paymentResponseDetails);
 			
 			//Status Update on donation details
 			DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(data.getString("merchantTransactionId"));

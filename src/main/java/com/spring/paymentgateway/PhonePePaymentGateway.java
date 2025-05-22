@@ -15,6 +15,7 @@ import com.spring.entities.DonationDetails;
 import com.spring.entities.PaymentGatewayDetails;
 import com.spring.entities.PaymentGatewayResponseDetails;
 import com.spring.exceptions.BizException;
+import com.spring.helper.PaymentGatewayResponseHelper;
 import com.spring.helper.PhonePePgHelper;
 import com.spring.object.request.DonationRequestObject;
 import com.squareup.okhttp.MediaType;
@@ -28,7 +29,7 @@ public class PhonePePaymentGateway {
 
 	
 	@Autowired
-	private PhonePePgHelper phonePePgHelper;
+	private PaymentGatewayResponseHelper paymentGatewayResponseHelper;
 
 
 	public DonationRequestObject getPhonePePaymentLink(DonationRequestObject donationRequest,
@@ -39,8 +40,8 @@ public class PhonePePaymentGateway {
 		donationRequest.setSaltKey(paymentGatewayDetails.getSaltKey());
 
 		// Save Payment Details
-		PaymentGatewayResponseDetails paymentGatewayResponseDetails = phonePePgHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
-		paymentGatewayResponseDetails = phonePePgHelper.savePaymentDetails(paymentGatewayResponseDetails);
+		PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayResponseHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
+		paymentGatewayResponseDetails = paymentGatewayResponseHelper.savePaymentDetails(paymentGatewayResponseDetails);
 
 		// Call Payment Gateway API
 		String param = this.getPhonePePaymentGatewayParam(donationDetails, paymentGatewayDetails);

@@ -1,27 +1,36 @@
 package com.spring.paymentgateway;
 
-import java.net.http.HttpResponse;
-
-import okhttp3.*;
-
 import java.io.IOException;
+
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.PaymentGatewayDetails;
 import com.spring.entities.PaymentGatewayResponseDetails;
+import com.spring.helper.PaymentGatewayResponseHelper;
 import com.spring.object.request.DonationRequestObject;
-import org.json.JSONObject;
+
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 @Component
 public class CashfreePaymentGateway {
+	
+	@Autowired
+	private PaymentGatewayResponseHelper paymentGatewayResponseHelper;
 
 	public DonationRequestObject getCashfreePaymentLink(DonationRequestObject donationRequest,
 			DonationDetails donationDetails, PaymentGatewayDetails paymentGatewayDetails) throws IOException {
 
 		// Save Payment Details
-//		PaymentGatewayResponseDetails paymentGatewayResponseDetails = phonePePgHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
-//		paymentGatewayResponseDetails = phonePePgHelper.savePaymentDetails(paymentGatewayResponseDetails);
+		PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayResponseHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
+		paymentGatewayResponseDetails = paymentGatewayResponseHelper.savePaymentDetails(paymentGatewayResponseDetails);
 
 		String param = this.getCashfreePaymentParam(donationRequest, donationDetails, paymentGatewayDetails);
 		Response response = this.getCashfreePaymentRequestPage(param); // Now returns Response
@@ -29,21 +38,19 @@ public class CashfreePaymentGateway {
 		try {
 			if (response.isSuccessful()) {
 				String responseBody = response.body().string();
-				System.out.println("Success: " + responseBody);
 
 				JSONObject json = new JSONObject(responseBody);
 				String linkUrl = json.optString("link_url");
 				String thankYouMsg = json.optString("thank_you_msg");
 
-				System.out.println("Link URL: " + linkUrl);
-				System.out.println("Thank You Message: " + thankYouMsg);
-
-				// Store values in donationRequest object
 				donationRequest.setPaymentGatewayPageRedirectUrl(linkUrl);
+				
+				donationRequest.setRespCode(Constant.SUCCESS_CODE);
 				donationRequest.setRespMesg(thankYouMsg);
 			} else {
-				System.out.println("Error Code: " + response.code());
-				System.out.println("Error Body: " + response.body().string());
+				
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Something Went Wrong");
 			}
 		} finally {
 			response.close(); // Always close response
