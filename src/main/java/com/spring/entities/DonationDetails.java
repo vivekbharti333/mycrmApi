@@ -64,7 +64,7 @@ public class DonationDetails {
 	private String receiptNumber;
 	
 	@Column(name = "invoice_header_details_id")
-	private Long invoiceHeaderDetailsId;
+	private Long invoiceHeaderDetailsId; 
 	
 	@Column(name = "invoice_header_name")
 	private String invoiceHeaderName;
