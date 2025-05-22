@@ -102,8 +102,8 @@ public class CashfreePaymentGateway {
 //		Prod
 //		Request request = new Request.Builder().url("https://api.cashfree.com/pg").post(body)
 //				.addHeader("x-api-version", "2025-01-01")
-//				.addHeader("x-client-id", "832905b57475c4b1ad51bb93b4509238")
-//				.addHeader("x-client-secret", "cfsk_ma_prod_beed9e2b6edc6faff775151499be323a_877cd69c")
+//				.addHeader("x-client-id", "")
+//				.addHeader("x-client-secret", "")
 //				.addHeader("Content-Type", "application/json").build();
 
 		return client.newCall(request).execute(); // return full Response object
