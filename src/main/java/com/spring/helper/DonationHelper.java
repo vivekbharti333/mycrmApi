@@ -265,9 +265,8 @@ public class DonationHelper {
 		if(donationRequest.getPaymentMode().equalsIgnoreCase("PAYMENT GATEAY")) {
 			donationDetails.setPaymentStatus(Status.INIT.name());
 		} else {
-			donationDetails.setPaymentStatus(Status.INIT.name());
+			donationDetails.setPaymentStatus(Status.COMPLITED_OFFLINE.name());
 		}
-		
 		
 		donationDetails.setCalled("NO");
 		donationDetails.setCreatedAt(new Date());
