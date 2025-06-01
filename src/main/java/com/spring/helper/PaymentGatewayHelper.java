@@ -66,6 +66,7 @@ public class PaymentGatewayHelper {
 		PaymentGatewayDetails paymentGatewayDetails = new PaymentGatewayDetails();
 
 		paymentGatewayDetails.setPgProvider(paymentGatewayRequest.getPgProvider());
+		paymentGatewayDetails.setUrl(paymentGatewayRequest.getUrl());
 		paymentGatewayDetails.setMerchantId(paymentGatewayRequest.getMerchantId());
 		paymentGatewayDetails.setSaltIndex(paymentGatewayRequest.getSaltIndex());
 		paymentGatewayDetails.setSaltKey(paymentGatewayRequest.getSaltKey());

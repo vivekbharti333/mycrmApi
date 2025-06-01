@@ -103,6 +103,7 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
+		System.out.println("Enter");
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
 
 //		if (isValid) {
@@ -138,10 +139,11 @@ public class DonationService {
 			String receiptNumber = donationRequest.getSuperadminId().substring(0, 4) + rendomNumber + donationRequest.getMobileNumber().substring(7, 10);
 			donationRequest.setReceiptNumber(receiptNumber);
 
+			System.out.println("Payment Mode : "+donationRequest.getPaymentMode());
 			// payment gateway
-			if (donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
-				this.sendOnlinePaymentLink(donationRequest, invoiceHeader);
-			} else {
+//			if (donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
+//				this.sendOnlinePaymentLink(donationRequest, invoiceHeader);
+//			} else {
 				
 				// Save Donation Details
 				UserDetails userDetails = userHelper.getUserDetailsByLoginId(donationRequest.getCreatedBy());
@@ -155,6 +157,9 @@ public class DonationService {
 				invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
 				
+				if (donationRequest.getPaymentMode().equalsIgnoreCase(PaymentMode.PAYMENT_GATEWAY.name())) {
+					this.sendOnlinePaymentLink(donationRequest, invoiceHeader, donationDetails);
+				} else {
 				//Generate invoice
 //				pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
@@ -182,15 +187,15 @@ public class DonationService {
 //		}
 	}
 	
-	public DonationRequestObject sendOnlinePaymentLink(DonationRequestObject donationRequest, InvoiceHeaderDetails invoiceHeader) throws BizException, Exception {
+	public DonationRequestObject sendOnlinePaymentLink(DonationRequestObject donationRequest, InvoiceHeaderDetails invoiceHeader, DonationDetails donationDetails) throws BizException, Exception {
 		
 		PaymentGatewayDetails paymentGatewayDetails = paymentGatewayHelper.getPaymentGatewayDetailsBySuperadminIdNStatus(donationRequest.getSuperadminId(), "ACTIVE");
 
 		if (paymentGatewayDetails != null) {
 
 			// Save Donation Details
-			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
-			donationDetails = donationHelper.saveDonationDetails(donationDetails);
+//			DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
+//			donationDetails = donationHelper.saveDonationDetails(donationDetails);
 
 			DonationRequestObject paymentGatewayRequest = new DonationRequestObject();
 			if (paymentGatewayDetails.getPgProvider().equalsIgnoreCase("PHONEPE")) {

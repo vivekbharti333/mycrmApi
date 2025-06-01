@@ -3,7 +3,7 @@ package com.spring.controller.paymentgateway;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
-
+import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,9 +26,13 @@ import com.spring.services.ApplicationService;
 	@RestController
 	public class CashfreeController {
 
+	private static final Logger log  = Logger.getLogger(CashfreeController.class);
 
 	@PostMapping("cashfreeWebhook")
 	public String handleWebhook(@RequestBody String jsonString) {
+		
+		log.info("Payment Gateway response"+jsonString+"\n\n\n");
+		
 		JSONObject root = new JSONObject(jsonString);
 
 		System.out.println("== Root Level ==");

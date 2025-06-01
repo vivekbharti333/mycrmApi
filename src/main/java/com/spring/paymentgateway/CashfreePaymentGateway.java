@@ -19,6 +19,12 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+
 @Component
 public class CashfreePaymentGateway {
 	
@@ -26,45 +32,46 @@ public class CashfreePaymentGateway {
 	private PaymentGatewayResponseHelper paymentGatewayResponseHelper;
 
 	public DonationRequestObject getCashfreePaymentLink(DonationRequestObject donationRequest,
-			DonationDetails donationDetails, PaymentGatewayDetails paymentGatewayDetails) throws IOException {
+			DonationDetails donationDetails, PaymentGatewayDetails paymentGatewayDetails) throws IOException, InterruptedException {
+		
+		System.out.println("Enter into payment gateway 1");
 
-		// Save Payment Details
-		PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayResponseHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
-		paymentGatewayResponseDetails = paymentGatewayResponseHelper.savePaymentDetails(paymentGatewayResponseDetails);
+        // Save Payment Details
+        PaymentGatewayResponseDetails paymentGatewayResponseDetails = paymentGatewayResponseHelper.getPaymentDetailsByReqObj(donationDetails, donationRequest);
+        paymentGatewayResponseDetails = paymentGatewayResponseHelper.savePaymentDetails(paymentGatewayResponseDetails);
 
-		String param = this.getCashfreePaymentParam(donationRequest, donationDetails, paymentGatewayDetails);
-		Response response = this.getCashfreePaymentRequestPage(param); // Now returns Response
+        System.out.println("Enter into payment gateway 2");
 
-		try {
-			if (response.isSuccessful()) {
-				String responseBody = response.body().string();
+        String param = this.getCashfreePaymentParam(donationRequest, donationDetails, paymentGatewayDetails);
+        HttpResponse<String> response = this.getCashfreePaymentRequestPage(param, paymentGatewayDetails); // Now returns HttpResponse<String>
 
-				JSONObject json = new JSONObject(responseBody);
-				String linkUrl = json.optString("link_url");
-				String thankYouMsg = json.optString("thank_you_msg");
+        System.out.println("Enter into payment gateway 3: " + response.statusCode());
 
-				donationRequest.setPaymentGatewayPageRedirectUrl(linkUrl);
-				
-				donationRequest.setRespCode(Constant.SUCCESS_CODE);
-				donationRequest.setRespMesg(thankYouMsg);
-			} else {
-				
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Something Went Wrong");
-			}
-		} finally {
-			response.close(); // Always close response
-		}
+        if (response.statusCode() == 200) {
+            String responseBody = response.body();
 
-		return donationRequest;
-	}
+            JSONObject json = new JSONObject(responseBody);
+            String linkUrl = json.optString("link_url");
+            String thankYouMsg = json.optString("thank_you_msg");
 
+            donationRequest.setPaymentGatewayPageRedirectUrl(linkUrl);
+            donationRequest.setRespCode(Constant.SUCCESS_CODE);
+            donationRequest.setRespMesg(thankYouMsg);
+        } else {
+            donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+            donationRequest.setRespMesg("Something went wrong");
+        }
+
+        return donationRequest;
+    }
+	
+	
 	public String getCashfreePaymentParam(DonationRequestObject donationRequest, DonationDetails donationDetails,
 			PaymentGatewayDetails paymentGatewayDetails) {
 
 		JSONObject jsonBody = new JSONObject();
 
-		jsonBody.put("link_id", "");
+		jsonBody.put("link_id", donationRequest.getReceiptNumber());
 		jsonBody.put("link_amount", donationDetails.getAmount());
 		jsonBody.put("link_currency", "INR");
 		jsonBody.put("link_purpose", "Donation");
@@ -82,32 +89,35 @@ public class CashfreePaymentGateway {
 
 		// Added link_meta JSON object with return_url
 		JSONObject linkMeta = new JSONObject();
-		linkMeta.put("return_url", "http://datfuslab.in");
+		linkMeta.put("return_url", "https://datfuslab.in/drmapinew/cashfreeWebhook");
 		jsonBody.put("link_meta", linkMeta);
 
-		return null;
+		return jsonBody.toString();
 	}
 
-	public Response getCashfreePaymentRequestPage(String param) throws IOException {
-		OkHttpClient client = new OkHttpClient();
-		MediaType mediaType = MediaType.parse("application/json");
-		RequestBody body = RequestBody.create(mediaType, param);
+	    public HttpResponse<String> getCashfreePaymentRequestPage(String param, PaymentGatewayDetails paymentGatewayDetails) throws IOException, InterruptedException {
+	        // Create HttpClient
+	        HttpClient client = HttpClient.newHttpClient();
 
-		Request request = new Request.Builder().url("https://sandbox.cashfree.com/pg/links").post(body) 
-				.addHeader("x-api-version", "2025-01-01")
-				.addHeader("x-client-id", "")
-				.addHeader("x-client-secret", "")
-				.addHeader("Content-Type", "application/json").build();
+	        // Create request
+	        HttpRequest request = HttpRequest.newBuilder()
+	                .uri(URI.create(paymentGatewayDetails.getUrl()))
+	                .header("Content-Type", "application/json")
+	                .header("x-api-version", "2025-01-01")
+	                .header("x-client-id", paymentGatewayDetails.getMerchantId())
+	                .header("x-client-secret", paymentGatewayDetails.getSaltKey())
+	                .POST(HttpRequest.BodyPublishers.ofString(param))
+	                .build();
 
-//		Prod
-//		Request request = new Request.Builder().url("https://api.cashfree.com/pg").post(body)
-//				.addHeader("x-api-version", "2025-01-01")
-//				.addHeader("x-client-id", "")
-//				.addHeader("x-client-secret", "")
-//				.addHeader("Content-Type", "application/json").build();
+	        // Send request
+	        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-		return client.newCall(request).execute(); // return full Response object
-	}
+	        // Log and return
+	        System.out.println("Response: " + response.body());
+	        return response;
+	    }
+	
+
 
 //	response
 //	---------

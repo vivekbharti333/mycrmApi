@@ -262,7 +262,7 @@ public class DonationHelper {
 		donationDetails.setTeamLeaderId(donationRequest.getTeamLeaderId());
 		donationDetails.setSuperadminId(donationRequest.getSuperadminId());
 		
-		if(donationRequest.getPaymentMode().equalsIgnoreCase("PAYMENT GATEAY")) {
+		if(donationRequest.getPaymentMode().equalsIgnoreCase("PAYMENT_GATEWAY")) {
 			donationDetails.setPaymentStatus(Status.INIT.name());
 		} else {
 			donationDetails.setPaymentStatus(Status.COMPLITED_OFFLINE.name());
