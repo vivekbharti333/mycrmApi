@@ -89,7 +89,7 @@ public class CashfreePaymentGateway {
 
 		// Added link_meta JSON object with return_url
 		JSONObject linkMeta = new JSONObject();
-		linkMeta.put("return_url", "https://datfuslab.in/drmapinew/cashfreeWebhook");
+		linkMeta.put("return_url", "http://localhost:4200/#/pg/cashfree-response");
 		jsonBody.put("link_meta", linkMeta);
 
 		return jsonBody.toString();

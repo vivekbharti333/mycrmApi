@@ -91,7 +91,7 @@ public class UserController {
 	public ModelAndView test(HttpServletResponse response) throws IOException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
 		
-		itextPdfReceipt.createReceipt();
+//		itextPdfReceipt.createReceipt();
 		
 //		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
 //		
@@ -126,11 +126,6 @@ public class UserController {
 		
 		return "1.3";
 	}
-	
-	
-	
-	
-	
 	
 
 //	@Scheduled(fixedDelay = 5000)

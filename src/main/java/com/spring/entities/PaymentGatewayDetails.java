@@ -36,6 +36,9 @@ public class PaymentGatewayDetails {
 	@Column(name = "salt_key")
 	private String saltKey;
 	
+	@Column(name = "redirect_url")
+	private String redirectUrl;
+	
 	@Column(name = "status")
 	private String status;
 	
