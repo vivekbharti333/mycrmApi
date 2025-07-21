@@ -25,14 +25,13 @@ public class PaymentGatewayHelper {
 
 	@Autowired
 	private PaymentGatewayDetailsDao paymentGatewayDetailsDao;
-	
 
 	public void validatePaymentModeRequest(PaymentRequestObject optionRequestObject) throws BizException {
 		if (optionRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
-	
+
 	@Transactional
 	public PaymentGatewayDetails getPaymentGatewayDetailsBySuperadminIdNStatus(String superadminId, String status) {
 
@@ -84,13 +83,40 @@ public class PaymentGatewayHelper {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PaymentGatewayDetails> getPaymentGatewayDetailsList(PaymentRequestObject optionRequest) {
+	public List<PaymentGatewayDetails> getPaymentGatewayDetailsList(PaymentRequestObject paymentGatewayRequest, String requestFor) {
 		List<PaymentGatewayDetails> results = new ArrayList<>();
-		results = paymentGatewayDetailsDao.getEntityManager().createQuery(
-				"SELECT PM FROM PaymentGatewayDetails PM WHERE PM.superadminId =:superadminId")
-				.setParameter("superadminId", optionRequest.getSuperadminId()).getResultList();
+		if(requestFor.equalsIgnoreCase("ALL")) {
+			results = paymentGatewayDetailsDao.getEntityManager()
+					.createQuery("SELECT PM FROM PaymentGatewayDetails PM")
+					.getResultList();
+			return results;
+		} else if(requestFor.equalsIgnoreCase("SUPERADMIN")) {
+			results = paymentGatewayDetailsDao.getEntityManager()
+					.createQuery("SELECT PM FROM PaymentGatewayDetails PM WHERE PM.superadminId =:superadminId")
+					.setParameter("superadminId", paymentGatewayRequest.getSuperadminId()).getResultList();
+			return results;
+		}
 		return results;
+		
+		
 	}
-	
-	
+
+	public PaymentGatewayDetails getUpdatedPaymentGatewayByReqObj(PaymentRequestObject paymentGatewayRequest,
+			PaymentGatewayDetails paymentGatewayDetails) {
+
+		paymentGatewayDetails.setUrl(paymentGatewayRequest.getUrl());
+		paymentGatewayDetails.setMerchantId(paymentGatewayRequest.getMerchantId());
+		paymentGatewayDetails.setSaltIndex(paymentGatewayRequest.getSaltIndex());
+		paymentGatewayDetails.setSaltKey(paymentGatewayRequest.getSaltKey());
+		paymentGatewayDetails.setCreatedAt(new Date());
+
+		return paymentGatewayDetails;
+	}
+
+	@Transactional
+	public PaymentGatewayDetails updatePaymentGatewayDetails(PaymentGatewayDetails paymentGatewayDetails) {
+		paymentGatewayDetailsDao.update(paymentGatewayDetails);
+		return paymentGatewayDetails;
+	}
+
 }
