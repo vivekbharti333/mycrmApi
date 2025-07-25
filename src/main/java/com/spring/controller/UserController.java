@@ -7,7 +7,13 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,6 +53,16 @@ import com.spring.pdf.ItextPdfReceipt;
 import com.spring.services.AttendenceService;
 import com.spring.services.UserService;
 
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.json.JSONObject;
+
+
 @CrossOrigin(origins = "*")
 @RestController
 public class UserController {
@@ -85,6 +101,38 @@ public class UserController {
     @Autowired
     private ItextPdfReceipt itextPdfReceipt;
     
+    
+    
+  
+    @RequestMapping(value = "sendEmail")
+	public ModelAndView sendEmail(HttpServletResponse response) throws IOException {
+    	Properties properties = System.getProperties();
+        properties.setProperty("mail.smtp.host", "smtp.zeptomail.in");
+        properties.put("mail.smtp.port", "587");
+        properties.put("mail.smtp.auth", "true");
+        properties.put("mail.smtp.starttls.enable", "true");
+        properties.put("mail.smtp.from", "fromaddress");
+        properties.put("mail.smtp.ssl.protocols", "TLS v1.2");
+        Session session = Session.getDefaultInstance(properties);
+
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress("noreply@datfuslab.com"));
+                message.addRecipient(Message.RecipientType.TO, new InternetAddress("datafusionlabs@gmail.com"));
+            message.setSubject("Test Email");
+                message.setText("Test email sent successfully.");
+            Transport transport = session.getTransport("smtp");
+            transport.connect("smtp.zeptomail.in", 587, "emailapikey", "PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+            System.out.println("Mail successfully sent");
+        } catch (Exception ex) {
+            System.out.print(ex.getMessage());
+        }
+		return null;
+    
+    }
+   
     
 	
 	@RequestMapping(value = "/")
