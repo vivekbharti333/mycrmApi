@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
@@ -32,6 +33,7 @@ import com.spring.common.PdfInvoice;
 import com.spring.common.SendEmailHelper;
 import com.spring.constant.Constant;
 import com.spring.email.NimbusEmail;
+import com.spring.email.ZeptoEmail;
 import com.spring.entities.AddressDetails;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
@@ -101,43 +103,15 @@ public class UserController {
     @Autowired
     private ItextPdfReceipt itextPdfReceipt;
     
-    
-    
-  
-    @RequestMapping(value = "sendEmail")
-	public ModelAndView sendEmail(HttpServletResponse response) throws IOException {
-    	Properties properties = System.getProperties();
-        properties.setProperty("mail.smtp.host", "smtp.zeptomail.in");
-        properties.put("mail.smtp.port", "587");
-        properties.put("mail.smtp.auth", "true");
-        properties.put("mail.smtp.starttls.enable", "true");
-        properties.put("mail.smtp.from", "fromaddress");
-        properties.put("mail.smtp.ssl.protocols", "TLS v1.2");
-        Session session = Session.getDefaultInstance(properties);
-
-        try {
-            MimeMessage message = new MimeMessage(session);
-            message.setFrom(new InternetAddress("noreply@datfuslab.com"));
-                message.addRecipient(Message.RecipientType.TO, new InternetAddress("datafusionlabs@gmail.com"));
-            message.setSubject("Test Email");
-                message.setText("Test email sent successfully.");
-            Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.zeptomail.in", 587, "emailapikey", "PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
-            transport.sendMessage(message, message.getAllRecipients());
-            transport.close();
-            System.out.println("Mail successfully sent");
-        } catch (Exception ex) {
-            System.out.print(ex.getMessage());
-        }
-		return null;
-    
-    }
-   
-    
+    @Autowired
+    private ZeptoEmail zeptoEmail;
+     
 	
 	@RequestMapping(value = "/")
-	public ModelAndView test(HttpServletResponse response) throws IOException {
+	public ModelAndView test(HttpServletResponse response) throws IOException, MessagingException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
+		
+		zeptoEmail.sendEmailWithAttachments();
 		
 //		itextPdfReceipt.createReceipt();
 		
@@ -148,6 +122,8 @@ public class UserController {
 //		System.out.println("hujhj : "+pdfContent);
 		
 //		nimbusEmail.sendNimbusEmail(donationDetails);
+		
+		
 		
 //		pdfThankYouLatter.pdf();
 		
