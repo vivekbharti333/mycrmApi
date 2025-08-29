@@ -111,7 +111,11 @@ public class UserController {
 	public ModelAndView test(HttpServletResponse response) throws IOException, MessagingException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
 		
-		zeptoEmail.sendEmailWithAttachments();
+		UserDetails userDetails = new UserDetails();
+		userDetails.setFirstName("Vivek");
+		userDetails.setLastName("Bharti");
+		userDetails.setEmailId("info@datfuslab.com");
+		zeptoEmail.sendZeptoEmail(userDetails);
 		
 //		itextPdfReceipt.createReceipt();
 		

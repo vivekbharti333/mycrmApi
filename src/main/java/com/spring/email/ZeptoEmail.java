@@ -21,7 +21,9 @@ import org.springframework.stereotype.Component;
 
 import com.spring.common.PdfInvoice;
 import com.spring.dao.SmsTemplateDetailsDao;
+import com.spring.email.template.DatfuslabWelcome;
 import com.spring.entities.SmsTemplateDetails;
+import com.spring.entities.UserDetails;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.services.InvoiceService;
@@ -31,19 +33,17 @@ public class ZeptoEmail {
 
 
 	@Autowired
-	private SmsTemplateDetailsDao smsDetailsDao;
+	private DatfuslabWelcome datfuslabWelcome;
 
 	
-//	StringUtils.substring(RandomStringUtils.random(64, false, true), 0,6)
-	
-	public JSONObject setParameter() {
+	public JSONObject setParameter(UserDetails userDetails) {
         JSONObject from = new JSONObject();
         from.put("address", "noreply@datfuslab.com");
-        from.put("name", "Datfuslab Technologies Pvt. Ltd.");
+        from.put("name", "Datfuslab Technologies ");
 
         JSONObject toEmailAddress = new JSONObject();
-        toEmailAddress.put("address", "vivekbharti333@gmail.com");
-        toEmailAddress.put("name", "Datfuslab");
+        toEmailAddress.put("address", userDetails.getEmailId());
+//        toEmailAddress.put("name", "Datfuslab");
 
         JSONObject toObj = new JSONObject();
         toObj.put("email_address", toEmailAddress);
@@ -54,15 +54,15 @@ public class ZeptoEmail {
         JSONObject emailJson = new JSONObject();
         emailJson.put("from", from);
         emailJson.put("to", toArray);
-        emailJson.put("subject", "This is Test Email");
-        emailJson.put("htmlbody", "<div><b> Test email sent successfully.  </b></div>");
+        emailJson.put("subject", "We’re Excited to Have You at MyDonation");
+        emailJson.put("htmlbody", datfuslabWelcome.getTemplate(userDetails));
 
         System.out.println(emailJson.toString(2)); // Pretty print
 		return emailJson;
     }
 
 
-	public void sendEmailWithAttachments() throws MessagingException, IOException {
+	public void sendZeptoEmail(UserDetails userDetails) throws MessagingException, IOException {
 
 	        String postUrl = "https://api.zeptomail.in/v1.1/email";
 	        BufferedReader br = null;
@@ -79,7 +79,7 @@ public class ZeptoEmail {
 	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
 //	            JSONObject object = new JSONObject(this.setParameter());
 	            OutputStream os = conn.getOutputStream();
-	            os.write(this.setParameter().toString().getBytes());
+	            os.write(this.setParameter(userDetails).toString().getBytes());
 	            os.flush();
 	            br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 	            while ((output = br.readLine()) != null) {
