@@ -152,6 +152,8 @@ public class DonationService {
 				}
 				DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 				donationDetails = donationHelper.saveDonationDetails(donationDetails);
+				
+				System.out.println("Donation Successfully saved");
 
 				// increase serial number by 1
 				invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
@@ -169,8 +171,10 @@ public class DonationService {
 				// send email
 				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
 				
+				
 				// whats app
-				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
+//				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
+				
 				
 				//Delete Invoice
 //				pdfInvoice.deleteInvoiceFile(donationDetails);
