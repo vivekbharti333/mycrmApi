@@ -20,7 +20,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -51,6 +55,7 @@ import com.spring.object.request.UserRequestObject;
 import com.spring.object.response.GenricResponse;
 import com.spring.object.response.Response;
 import com.spring.paymentgateway.PhonePePaymentGateway;
+import com.spring.pdf.InvoiceGenerator;
 import com.spring.pdf.ItextPdfReceipt;
 import com.spring.services.AttendenceService;
 import com.spring.services.UserService;
@@ -61,6 +66,14 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 import org.json.JSONObject;
 
@@ -104,7 +117,21 @@ public class UserController {
     private ItextPdfReceipt itextPdfReceipt;
     
     @Autowired
+    private InvoiceGenerator invoiceGenerator;
+    
+    @Autowired
     private ZeptoEmail zeptoEmail;
+    
+    
+    @GetMapping("/download/invoice")
+    public ResponseEntity<byte[]> downloadInvoice() throws IOException {
+        byte[] pdf = invoiceGenerator.generateInvoice();
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Invoice_DEF-10_002.pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
      
 	
 	@RequestMapping(value = "/")
