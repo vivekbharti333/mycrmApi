@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import com.spring.common.PdfInvoice;
 import com.spring.dao.SmsTemplateDetailsDao;
 import com.spring.email.template.DatfuslabWelcome;
+import com.spring.email.template.DonationThankYou;
+import com.spring.entities.DonationDetails;
 import com.spring.entities.SmsTemplateDetails;
 import com.spring.entities.UserDetails;
 import com.spring.helper.DonationHelper;
@@ -33,16 +35,18 @@ public class ZeptoEmail {
 
 
 	@Autowired
-	private DatfuslabWelcome datfuslabWelcome;
+	private DonationThankYou donationThankYou;
 
 	
-	public JSONObject setParameter(UserDetails userDetails) {
+	public JSONObject setParameter(DonationDetails donationDetails) {
         JSONObject from = new JSONObject();
-        from.put("address", "noreply@datfuslab.com");
-        from.put("name", "Datfuslab Technologies ");
+        from.put("address", "noreply@cefinternational.org");
+        from.put("name", "Cef International");
+//        from.put("address", "noreply@datfuslab.com");
+//        from.put("name", "Datfuslab Technologies ");
 
         JSONObject toEmailAddress = new JSONObject();
-        toEmailAddress.put("address", userDetails.getEmailId());
+        toEmailAddress.put("address", donationDetails.getEmailId());
 //        toEmailAddress.put("name", "Datfuslab");
 
         JSONObject toObj = new JSONObject();
@@ -54,15 +58,15 @@ public class ZeptoEmail {
         JSONObject emailJson = new JSONObject();
         emailJson.put("from", from);
         emailJson.put("to", toArray);
-        emailJson.put("subject", "We’re Excited to Have You at MyDonation");
-        emailJson.put("htmlbody", datfuslabWelcome.getTemplate(userDetails));
+        emailJson.put("subject", "We’re Grateful for Your Support — Download Your 80G Receipt");
+        emailJson.put("htmlbody", donationThankYou.getDonationThankYouTemplate(donationDetails));
 
-        System.out.println(emailJson.toString(2)); // Pretty print
+//        System.out.println(emailJson.toString(2)); // Pretty print
 		return emailJson;
     }
 
 
-	public void sendZeptoEmail(UserDetails userDetails) throws MessagingException, IOException {
+	public void sendZeptoEmail(DonationDetails donationDetails) throws MessagingException, IOException {
 
 	        String postUrl = "https://api.zeptomail.in/v1.1/email";
 	        BufferedReader br = null;
@@ -76,10 +80,11 @@ public class ZeptoEmail {
 	            conn.setRequestMethod("POST");
 	            conn.setRequestProperty("Content-Type", "application/json");
 	            conn.setRequestProperty("Accept", "application/json");
-	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
+	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1bQ73u2GJ+pxFV7KXuEJOiMt4s/OIyLgYS5NlGWPcLSk1T+t8tx2Dm+Rh4V/dDHaGcwIthubzP5rnRdm/oYD1LVGqyqK3sx/VYSPOZsbq6x00fsFgbf0bZVITpcdBq1yXVv9zYNA==");
+//	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
 //	            JSONObject object = new JSONObject(this.setParameter());
 	            OutputStream os = conn.getOutputStream();
-	            os.write(this.setParameter(userDetails).toString().getBytes());
+	            os.write(this.setParameter(donationDetails).toString().getBytes());
 	            os.flush();
 	            br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 	            while ((output = br.readLine()) != null) {

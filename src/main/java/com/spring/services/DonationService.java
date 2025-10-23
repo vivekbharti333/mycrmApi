@@ -103,14 +103,14 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
-		UserDetails userDetails1 = userHelper.getUserDetailsByLoginIdAndStatus(donationRequest.getCreatedBy());
-		boolean isValid = userHelper.checkValidityOfUser(userDetails1.getValidityExpireOn());
-
-		if (!isValid) {
-			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			donationRequest.setRespMesg(Constant.EXPIRED_LOGIN);
-			return donationRequest;
-		}
+//		UserDetails userDetails1 = userHelper.getUserDetailsByLoginIdAndStatus(donationRequest.getCreatedBy());
+//		boolean isValid = userHelper.checkValidityOfUser(userDetails1.getValidityExpireOn());
+//
+//		if (!isValid) {
+//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			donationRequest.setRespMesg(Constant.EXPIRED_LOGIN);
+//			return donationRequest;
+//		}
 
 	
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());

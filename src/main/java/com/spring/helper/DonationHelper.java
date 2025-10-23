@@ -31,6 +31,7 @@ import com.spring.common.SmsHelper;
 import com.spring.constant.Constant;
 import com.spring.dao.DonationDetailsDao;
 import com.spring.email.NimbusEmail;
+import com.spring.email.ZeptoEmail;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.EmailServiceDetails;
 import com.spring.entities.InvoiceHeaderDetails;
@@ -70,6 +71,9 @@ public class DonationHelper {
 
 	@Autowired
 	private NimbusEmail nimbusEmail;
+	
+	@Autowired
+	private ZeptoEmail zeptomail;
 
 	@Autowired
 	CurrencyHelper currencyHelper;
@@ -183,7 +187,8 @@ public class DonationHelper {
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(
 					SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
 			if (emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-				nimbusEmail.sendNimbusEmail(donationDetails, emailServiceDetails);
+//				nimbusEmail.sendNimbusEmail(donationDetails, emailServiceDetails);
+				zeptomail.sendZeptoEmail(donationDetails);
 			}
 		}
 	}
