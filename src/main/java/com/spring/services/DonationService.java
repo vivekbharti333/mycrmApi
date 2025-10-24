@@ -264,12 +264,12 @@ public class DonationService {
 
 			} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
 
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(donationRequest.getLastDate());
-				calendar.add(Calendar.DAY_OF_YEAR, 1);
-				Date nextDate = calendar.getTime();
-
-				donationRequest.setLastDate(nextDate);
+//				Calendar calendar = Calendar.getInstance();
+//				calendar.setTime(donationRequest.getLastDate());
+//				calendar.add(Calendar.DAY_OF_YEAR, 1);
+//				Date nextDate = calendar.getTime();
+//
+//				donationRequest.setLastDate(nextDate);
 
 				donationList = donationHelper.getDonationListBySuperadmin(donationRequest);
 				return donationList;
@@ -297,12 +297,12 @@ public class DonationService {
 
 			} else if (donationRequest.getRequestedFor().equalsIgnoreCase(RequestFor.CUSTOM.name())) {
 
-				Calendar calendar = Calendar.getInstance();
-				calendar.setTime(donationRequest.getLastDate());
-				calendar.add(Calendar.DAY_OF_YEAR, 1);
-				Date nextDate = calendar.getTime();
-
-				donationRequest.setLastDate(nextDate);
+//				Calendar calendar = Calendar.getInstance();
+//				calendar.setTime(donationRequest.getLastDate());
+//				calendar.add(Calendar.DAY_OF_YEAR, 1);
+//				Date nextDate = calendar.getTime();
+//
+//				donationRequest.setLastDate(nextDate);
 
 				donationList = donationHelper.getDonationListByTeamLeaderId(donationRequest);
 				return donationList;
