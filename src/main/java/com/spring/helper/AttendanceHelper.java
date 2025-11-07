@@ -1,26 +1,22 @@
 package com.spring.helper;
 
+import java.time.temporal.Temporal;
 import java.util.Date;
-import java.util.List;
-import java.util.Random;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import com.spring.constant.Constant;
-import com.spring.dao.AddressDetailsDao;
 import com.spring.dao.AttendanceDetailsDao;
-import com.spring.entities.AddressDetails;
 import com.spring.entities.AttendanceDetails;
-import com.spring.entities.UserDetails;
 import com.spring.exceptions.BizException;
-import com.spring.object.request.AddressRequestObject;
 import com.spring.object.request.AttendanceRequestObject;
-import com.spring.object.request.UserRequestObject;
 
 @Component
 public class AttendanceHelper {
@@ -33,6 +29,24 @@ public class AttendanceHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
+	
+	@Transactional
+	public AttendanceDetails getAttendanceByDate() {
+
+	    CriteriaBuilder cb = attendanceDetailsDao.getSession().getCriteriaBuilder();
+	    CriteriaQuery<AttendanceDetails> cq = cb.createQuery(AttendanceDetails.class);
+	    Root<AttendanceDetails> root = cq.from(AttendanceDetails.class);
+
+	    // ✅ Extract only date part (ignores time)
+	    Predicate restriction = cb.equal(
+	        cb.function("date", Date.class, root.get("createdAt")),
+	        cb.function("date", Date.class, cb.literal(new Date()))
+	    );
+	    cq.where(restriction);
+
+	    return attendanceDetailsDao.getSession().createQuery(cq).uniqueResult();
+	}
+
 
 	public AttendanceDetails markPunchInAttendance(AttendanceRequestObject attendanceRequest) {
 		
@@ -42,18 +56,18 @@ public class AttendanceHelper {
 		attendanceDetails.setCreatedBy(attendanceRequest.getCreatedBy());
 		attendanceDetails.setSuperadminId(attendanceRequest.getSuperadminId());
 		attendanceDetails.setPunchInLocation(attendanceRequest.getPunchInLocation());
-		attendanceDetails.setPunchInImage(attendanceRequest.getPunchInImage());
+//		attendanceDetails.setPunchInImage(attendanceRequest.getPunchInImage());
 		attendanceDetails.setPunchInStatus(attendanceRequest.getPunchInStatus());
 		
 		return attendanceDetails;
 	}
 	
 	
-	public AttendanceDetails markPunchInAttendance(AttendanceDetails attendanceDetails, AttendanceRequestObject attendanceRequest) {
+	public AttendanceDetails markPunchOutAttendance(AttendanceDetails attendanceDetails, AttendanceRequestObject attendanceRequest) {
 			
 		attendanceDetails.setPunchOutDateTime(new Date());
 		attendanceDetails.setPunchOutLocation(attendanceRequest.getPunchOutLocation());
-		attendanceDetails.setPunchOutImage(attendanceRequest.getPunchOutImage());
+//		attendanceDetails.setPunchOutImage(attendanceRequest.getPunchOutImage());
 		attendanceDetails.setPunchOutStatus(attendanceRequest.getPunchOutStatus());
 		
 		return attendanceDetails;
@@ -63,6 +77,11 @@ public class AttendanceHelper {
 	@Transactional
 	public AttendanceDetails saveAttendanceDetails(AttendanceDetails attendanceDetails) {
 		attendanceDetailsDao.persist(attendanceDetails);
+		return attendanceDetails;
+	}
+	@Transactional
+	public AttendanceDetails updateAttendanceDetails(AttendanceDetails attendanceDetails) {
+		attendanceDetailsDao.update(attendanceDetails);
 		return attendanceDetails;
 	}
 }

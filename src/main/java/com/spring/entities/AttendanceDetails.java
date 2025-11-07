@@ -50,6 +50,9 @@ public class AttendanceDetails {
 	@Column(name = "created_by")
 	private String createdBy;
 	
+	@Column(name = "created_at")
+	private Date createdAt;
+	
 	@Column(name = "superadmin_id")
 	private String superadminId;
 

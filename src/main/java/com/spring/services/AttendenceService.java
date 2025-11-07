@@ -37,28 +37,42 @@ public class AttendenceService {
 	
 	  
 
-	public AttendanceRequestObject markAttendance(Request<AttendanceRequestObject> attendanceRequestObject) 
-		throws BizException, Exception {
+	public AttendanceRequestObject markAttendance(Request<AttendanceRequestObject> attendanceRequestObject)
+			throws BizException, Exception {
 		AttendanceRequestObject attendenceRequest = attendanceRequestObject.getPayload();
-			attendanceHelper.validateAttendanceRequest(attendenceRequest);
-			
-			UserDetails userDetails = userHelper.getUserDetailsByLoginId(attendenceRequest.getCreatedBy());
-			if(userDetails != null) {
+		attendanceHelper.validateAttendanceRequest(attendenceRequest);
+
+		UserDetails userDetails = userHelper.getUserDetailsByLoginId(attendenceRequest.getCreatedBy());
+		if (userDetails != null) {
+
+			if (userDetails.getUserPicture() == null) {
+				attendenceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				attendenceRequest.setRespMesg("Not allow to mark attencende");
+				return attendenceRequest;
+			}
+
+			attendenceRequest.setOriginalImage(userDetails.getUserPicture());
+			attendenceRequest = amazonFaceCompare.amazonFaceCompare(attendenceRequest);
+
+			AttendanceDetails chekAttendence = attendanceHelper.getAttendanceByDate();
+			if (chekAttendence == null) {
+				AttendanceDetails attendanceDetails = attendanceHelper.markPunchInAttendance(attendenceRequest);
+				attendanceHelper.saveAttendanceDetails(attendanceDetails);
 				
-				if(userDetails.getUserPicture() == null) {
-					attendenceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-					attendenceRequest.setRespMesg("Not allow to mark attencende");
-					return attendenceRequest;
-				}
+				attendenceRequest.setRespCode(Constant.SUCCESS_CODE);
+				attendenceRequest.setRespMesg("Mark Successfully");
 				
-				attendenceRequest =  amazonFaceCompare.amazonFaceCompare(attendenceRequest);
-				 
-				 
-				 AttendanceDetails attendanceDetails = attendanceHelper.markPunchInAttendance(attendenceRequest);
-				 attendanceHelper.saveAttendanceDetails(attendanceDetails);			}
+			} else {
+				attendanceHelper.markPunchOutAttendance(chekAttendence, attendenceRequest);
+				attendanceHelper.updateAttendanceDetails(chekAttendence);
+				
+				attendenceRequest.setRespCode(Constant.SUCCESS_CODE);
+				attendenceRequest.setRespMesg("Mark Successfully");
+			}
+
+		}
 
 		return attendenceRequest;
 	}
-	
 
 }

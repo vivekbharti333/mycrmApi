@@ -21,8 +21,7 @@ public class AmazonFaceCompare {
 //	    Map<String, Object> resultMap = new HashMap<>();
 		try {
 			// AWS credentials
-			BasicAWSCredentials awsCreds = new BasicAWSCredentials();
-
+			
 			AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.standard()
 					.withRegion(Regions.US_EAST_1).withCredentials(new AWSStaticCredentialsProvider(awsCreds)).build();
 
