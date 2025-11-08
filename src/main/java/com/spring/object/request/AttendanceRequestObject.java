@@ -2,6 +2,8 @@ package com.spring.object.request;
 
 import java.util.Date;
 
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
@@ -19,9 +21,11 @@ public class AttendanceRequestObject {
 	private Date punchInDateTime;
 	private String punchInLocation;
 	
+	private String latitudeIn;
+	private String longitudeIn;
+	private String latitudeOut;
+	private String longitudeOut;
 	
-	private String punchOutStatus;
-	private Date punchOutDateTime;
 	private String punchOutLocation;
 	
 	private Date createdAt;

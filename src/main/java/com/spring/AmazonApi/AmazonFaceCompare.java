@@ -4,6 +4,9 @@ import java.nio.ByteBuffer;
 import java.util.Base64;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
@@ -13,14 +16,28 @@ import com.amazonaws.services.rekognition.model.CompareFacesMatch;
 import com.amazonaws.services.rekognition.model.CompareFacesRequest;
 import com.amazonaws.services.rekognition.model.CompareFacesResult;
 import com.amazonaws.services.rekognition.model.Image;
+import com.spring.common.Base64Image;
+import com.spring.entities.ApiDetails;
+import com.spring.enums.Status;
+import com.spring.helper.APIHelper;
 import com.spring.object.request.AttendanceRequestObject;
 
+@Component
 public class AmazonFaceCompare {
+	
+	@Autowired
+	private APIHelper apiHelper;
+	
+	@Autowired
+	private Base64Image base64Image;
 
 	public AttendanceRequestObject amazonFaceCompare(AttendanceRequestObject attendanceRequest) {
 //	    Map<String, Object> resultMap = new HashMap<>();
 		try {
 			// AWS credentials
+			ApiDetails apiDetails = apiHelper.getApiDetailsByServiceProvider("AMAZON" , "FACE_COMPARE");
+			
+			BasicAWSCredentials awsCreds = new BasicAWSCredentials(apiDetails.getApiKeys(), apiDetails.getApiValue());
 			
 			AmazonRekognition rekognitionClient = AmazonRekognitionClientBuilder.standard()
 					.withRegion(Regions.US_EAST_1).withCredentials(new AWSStaticCredentialsProvider(awsCreds)).build();
@@ -28,6 +45,8 @@ public class AmazonFaceCompare {
 			// Convert source and target images
 			byte[] sourceBytes = decodeBase64Image(attendanceRequest.getOriginalImage());
 			byte[] targetBytes = decodeBase64Image(attendanceRequest.getClickImage());
+//			byte[] sourceBytes = decodeBase64Image(base64Image.base64FirstImage());
+//			byte[] targetBytes = decodeBase64Image(base64Image.base64SecondImage());
 
 			Image source = new Image().withBytes(ByteBuffer.wrap(sourceBytes));
 			Image target = new Image().withBytes(ByteBuffer.wrap(targetBytes));
@@ -41,11 +60,11 @@ public class AmazonFaceCompare {
 
 			if (!matches.isEmpty()) {
 				attendanceRequest.setSimilarity(matches.get(0).getSimilarity());
-				attendanceRequest.setStatus("MATCH");
+				attendanceRequest.setStatus(Status.MATCH.name());
 				attendanceRequest.setRespMesg("Face matched successfully");
 			} else {
 				attendanceRequest.setSimilarity(matches.get(0).getSimilarity());
-				attendanceRequest.setStatus("MATCH");
+				attendanceRequest.setStatus(Status.NOT_MATCH.name());
 				attendanceRequest.setRespMesg("No face matched");
 			}
 

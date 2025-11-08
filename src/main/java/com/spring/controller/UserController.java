@@ -33,6 +33,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.razorpay.PaymentLink;
 import com.razorpay.RazorpayClient;
+import com.spring.AmazonApi.AmazonFaceCompare;
 import com.spring.common.PdfInvoice;
 import com.spring.common.SendEmailHelper;
 import com.spring.constant.Constant;
@@ -49,6 +50,7 @@ import com.spring.helper.FaceRecognitionHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.helper.SubscriptionHelper;
 import com.spring.helper.TestHelper;
+import com.spring.object.request.AttendanceRequestObject;
 import com.spring.object.request.DonationRequestObject;
 import com.spring.object.request.Request;
 import com.spring.object.request.UserRequestObject;
@@ -122,6 +124,10 @@ public class UserController {
     @Autowired
     private ZeptoEmail zeptoEmail;
     
+    @Autowired
+    private AmazonFaceCompare amazonFaceCompare;
+    
+    
     
     @GetMapping("/download/invoice")
     public ResponseEntity<byte[]> downloadInvoice() throws IOException {
@@ -193,7 +199,8 @@ public class UserController {
 //		String param = phonePePaymentGateway.getPaymetGatewayParam();
 //		phonePePaymentGateway.paymentPageTest(param);
 
-//		attendenceService.amazonApi();
+		AttendanceRequestObject attendanceRequest = new AttendanceRequestObject();
+		amazonFaceCompare.amazonFaceCompare(attendanceRequest);
 
 		return "Working : " + clientIp;
 	}

@@ -1,7 +1,7 @@
 package com.spring.helper;
 
-import java.time.temporal.Temporal;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -32,32 +32,28 @@ public class AttendanceHelper {
 	
 	@Transactional
 	public AttendanceDetails getAttendanceByDate() {
-
 	    CriteriaBuilder cb = attendanceDetailsDao.getSession().getCriteriaBuilder();
 	    CriteriaQuery<AttendanceDetails> cq = cb.createQuery(AttendanceDetails.class);
 	    Root<AttendanceDetails> root = cq.from(AttendanceDetails.class);
-
-	    // ✅ Extract only date part (ignores time)
-	    Predicate restriction = cb.equal(
-	        cb.function("date", Date.class, root.get("createdAt")),
-	        cb.function("date", Date.class, cb.literal(new Date()))
-	    );
+	    Predicate restriction = cb.equal(root.get("attendanceDate"), java.time.LocalDate.now());
 	    cq.where(restriction);
 
 	    return attendanceDetailsDao.getSession().createQuery(cq).uniqueResult();
 	}
 
-
 	public AttendanceDetails markPunchInAttendance(AttendanceRequestObject attendanceRequest) {
 		
 		AttendanceDetails attendanceDetails = new AttendanceDetails();
 		
-		attendanceDetails.setPunchInDateTime(new Date());
+		attendanceDetails.setAttendanceDate(LocalDate.now());
+		attendanceDetails.setPunchInTime(LocalTime.now());
 		attendanceDetails.setCreatedBy(attendanceRequest.getCreatedBy());
 		attendanceDetails.setSuperadminId(attendanceRequest.getSuperadminId());
+		attendanceDetails.setLongitudeIn(attendanceRequest.getLongitudeIn());
+		attendanceDetails.setLatitudeIn(attendanceRequest.getLatitudeIn());
 		attendanceDetails.setPunchInLocation(attendanceRequest.getPunchInLocation());
-//		attendanceDetails.setPunchInImage(attendanceRequest.getPunchInImage());
-		attendanceDetails.setPunchInStatus(attendanceRequest.getPunchInStatus());
+		attendanceDetails.setPunchInImage(attendanceRequest.getClickImage());
+		attendanceDetails.setPunchInStatus(attendanceRequest.getStatus());
 		
 		return attendanceDetails;
 	}
@@ -65,10 +61,12 @@ public class AttendanceHelper {
 	
 	public AttendanceDetails markPunchOutAttendance(AttendanceDetails attendanceDetails, AttendanceRequestObject attendanceRequest) {
 			
-		attendanceDetails.setPunchOutDateTime(new Date());
+		attendanceDetails.setPunchOutTime(LocalTime.now());
+		attendanceDetails.setLongitudeOut(attendanceRequest.getLongitudeOut());
+		attendanceDetails.setLatitudeOut(attendanceRequest.getLatitudeOut());
 		attendanceDetails.setPunchOutLocation(attendanceRequest.getPunchOutLocation());
-//		attendanceDetails.setPunchOutImage(attendanceRequest.getPunchOutImage());
-		attendanceDetails.setPunchOutStatus(attendanceRequest.getPunchOutStatus());
+		attendanceDetails.setPunchOutImage(attendanceRequest.getClickImage());
+		attendanceDetails.setPunchOutStatus(attendanceRequest.getStatus());
 		
 		return attendanceDetails;
 	}

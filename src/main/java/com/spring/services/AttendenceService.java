@@ -1,5 +1,7 @@
 package com.spring.services;
 
+import java.time.LocalTime;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,6 +10,7 @@ import com.spring.AmazonApi.AmazonFaceCompare;
 import com.spring.constant.Constant;
 import com.spring.entities.AttendanceDetails;
 import com.spring.entities.UserDetails;
+import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AttendanceHelper;
 import com.spring.helper.UserHelper;
@@ -23,9 +26,6 @@ public class AttendenceService {
 
 	@Autowired
 	private AmazonFaceCompare amazonFaceCompare;
-	
-	
-	
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
@@ -34,14 +34,15 @@ public class AttendenceService {
 	private UserHelper userHelper;
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
-	
-	  
 
 	public AttendanceRequestObject markAttendance(Request<AttendanceRequestObject> attendanceRequestObject)
 			throws BizException, Exception {
 		AttendanceRequestObject attendenceRequest = attendanceRequestObject.getPayload();
 		attendanceHelper.validateAttendanceRequest(attendenceRequest);
 
+		LocalTime now = LocalTime.now();
+        LocalTime noon = LocalTime.NOON; 
+		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(attendenceRequest.getCreatedBy());
 		if (userDetails != null) {
 
@@ -55,23 +56,30 @@ public class AttendenceService {
 			attendenceRequest = amazonFaceCompare.amazonFaceCompare(attendenceRequest);
 
 			AttendanceDetails chekAttendence = attendanceHelper.getAttendanceByDate();
-			if (chekAttendence == null) {
+			if (chekAttendence != null) {
+				if (chekAttendence.getPunchInStatus().equalsIgnoreCase(Status.MATCH.name())) {
+
+					attendanceHelper.markPunchOutAttendance(chekAttendence, attendenceRequest);
+					attendanceHelper.updateAttendanceDetails(chekAttendence);
+
+					attendenceRequest.setRespCode(Constant.SUCCESS_CODE);
+					attendenceRequest.setRespMesg("Mark Successfully");
+				} else {
+					chekAttendence.setPunchInStatus(attendenceRequest.getStatus());
+					attendanceHelper.updateAttendanceDetails(chekAttendence);
+
+					attendenceRequest.setRespCode(Constant.SUCCESS_CODE);
+					attendenceRequest.setRespMesg("Mark Successfully");
+				}
+			} else {
 				AttendanceDetails attendanceDetails = attendanceHelper.markPunchInAttendance(attendenceRequest);
 				attendanceHelper.saveAttendanceDetails(attendanceDetails);
-				
-				attendenceRequest.setRespCode(Constant.SUCCESS_CODE);
-				attendenceRequest.setRespMesg("Mark Successfully");
-				
-			} else {
-				attendanceHelper.markPunchOutAttendance(chekAttendence, attendenceRequest);
-				attendanceHelper.updateAttendanceDetails(chekAttendence);
-				
+
+				attendenceRequest.setClickImage(null);
 				attendenceRequest.setRespCode(Constant.SUCCESS_CODE);
 				attendenceRequest.setRespMesg("Mark Successfully");
 			}
-
 		}
-
 		return attendenceRequest;
 	}
 
