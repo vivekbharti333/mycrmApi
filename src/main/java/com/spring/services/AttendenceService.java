@@ -80,6 +80,8 @@ public class AttendenceService {
 				attendenceRequest.setRespMesg("Mark Successfully");
 			}
 		}
+		attendenceRequest.setClickImage(null);
+		attendenceRequest.setOriginalImage(null);
 		return attendenceRequest;
 	}
 
