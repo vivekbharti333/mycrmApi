@@ -166,14 +166,35 @@
 			<version>7.1.9</version>
 			<type>pom</type>
 		</dependency>
-		
+
 		<dependency>
-  <groupId>org.apache.pdfbox</groupId>
-  <artifactId>pdfbox</artifactId>
-  <version>2.0.27</version>
-</dependency>
-		
-		
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>2.0.27</version>
+		</dependency>
+
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>textract</artifactId>
+			<version>2.25.0</version>
+		</dependency>
+
+		<!-- Optional: If you want to use S3 later -->
+		<dependency>
+			<groupId>software.amazon.awssdk</groupId>
+			<artifactId>s3</artifactId>
+			<version>2.25.0</version>
+		</dependency>
+
+		<!-- Logging (recommended for AWS SDK) -->
+		<!-- <dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+			<version>2.23.1</version>
+		</dependency> -->
+
+
+
 
 		<!-- iText pdfHTML add-on -->
 		<dependency>
