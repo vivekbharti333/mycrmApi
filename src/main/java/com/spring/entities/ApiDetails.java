@@ -34,5 +34,8 @@ public class ApiDetails {
 	@Column(name = "api_value")
 	private String apiValue;
 	
+	@Column(name = "superadmin_id")
+	private String superadminId;
+	
 	
 }
