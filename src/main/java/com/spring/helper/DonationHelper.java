@@ -77,6 +77,27 @@ public class DonationHelper {
 
 	@Autowired
 	CurrencyHelper currencyHelper;
+	
+	public Date atStartOfDay(Date date) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    cal.set(Calendar.HOUR_OF_DAY, 0);
+	    cal.set(Calendar.MINUTE, 0);
+	    cal.set(Calendar.SECOND, 0);
+	    cal.set(Calendar.MILLISECOND, 0);
+	    return cal.getTime();
+	}
+
+	public Date atEndOfDay(Date date) {
+	    Calendar cal = Calendar.getInstance();
+	    cal.setTime(date);
+	    cal.set(Calendar.HOUR_OF_DAY, 23);
+	    cal.set(Calendar.MINUTE, 59);
+	    cal.set(Calendar.SECOND, 59);
+	    cal.set(Calendar.MILLISECOND, 999);
+	    return cal.getTime();
+	}
+
 
 	@Transactional
 	public int updateCurrencyAndCode(DonationRequestObject donationRequest) {
@@ -322,18 +343,35 @@ public class DonationHelper {
 		return donationDetails;
 	}
 
+//	@SuppressWarnings("unchecked")
+//	public List<DonationDetails> getDonationListBySuperadmin(DonationRequestObject donationRequest) {
+//
+//		List<DonationDetails> results = new ArrayList<>();
+//		results = donationDetailsDao.getEntityManager().createQuery(
+////				"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
+//			"SELECT dd FROM DonationDetails dd WHERE dd.superadminId = :superadminId AND dd.createdAt >= :firstDate AND dd.createdAt <= :lastDate ORDER BY dd.id DESC")
+//				.setParameter("superadminId", donationRequest.getSuperadminId())
+//				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
+//				.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
+//				.getResultList();
+//		return results;
+//	}
+	
 	@SuppressWarnings("unchecked")
 	public List<DonationDetails> getDonationListBySuperadmin(DonationRequestObject donationRequest) {
 
-		List<DonationDetails> results = new ArrayList<>();
-		results = donationDetailsDao.getEntityManager().createQuery(
-				"SELECT DD FROM DonationDetails DD WHERE DD.superadminId =:superadminId AND DD.createdAt BETWEEN :firstDate AND :lastDate ORDER BY DD.id DESC")
-				.setParameter("superadminId", donationRequest.getSuperadminId())
-				.setParameter("firstDate", donationRequest.getFirstDate(), TemporalType.DATE)
-				.setParameter("lastDate", donationRequest.getLastDate(), TemporalType.DATE)
-				.getResultList();
-		return results;
+	    // Convert java.util.Date to start of day
+	    Date firstDateStart = atStartOfDay(donationRequest.getFirstDate());
+	    Date lastDateEnd = atEndOfDay(donationRequest.getLastDate());
+
+	    return donationDetailsDao.getEntityManager()
+	            .createQuery("SELECT dd FROM DonationDetails dd WHERE dd.superadminId = :superadminId AND dd.createdAt BETWEEN :firstDate AND :lastDate ORDER BY dd.id DESC")
+	            .setParameter("superadminId", donationRequest.getSuperadminId())
+	            .setParameter("firstDate", firstDateStart)
+	            .setParameter("lastDate", lastDateEnd)
+	            .getResultList();
 	}
+
 
 	@SuppressWarnings("unchecked")
 	public List<DonationDetails> getDonationListByTeamLeaderId(DonationRequestObject donationRequest) {

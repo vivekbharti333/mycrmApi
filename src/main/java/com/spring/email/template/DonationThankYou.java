@@ -7,7 +7,7 @@ import com.spring.entities.DonationDetails;
 @Component
 public class DonationThankYou {
 	
-public String getDonationThankYouTemplate(DonationDetails donationDetails) {
+    public String getDonationThankYouTemplate(DonationDetails donationDetails) {
         
         String template = "<body style=\"font-family: Arial, sans-serif; background-color: #f5f6fa; margin: 0; padding: 0;\">\r\n"
         		+ "  <div style=\"max-width:600px; background-color:#ffffff; margin:30px auto; padding:30px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1);\">\r\n"
@@ -17,12 +17,12 @@ public String getDonationThankYouTemplate(DonationDetails donationDetails) {
         		+ "    </div>\r\n"
         		+ "\r\n"
         		+ "    <div style=\"font-size:16px; line-height:1.6; color:#333333;\">\r\n"
-        		+ "      <p style=\"margin-bottom:15px;\">Dear <strong>"+donationDetails.getDonorName()+"</strong>,</p>\r\n"
+        		+ "      <p style=\"margin-bottom:15px;\">Dear <strong>" + donationDetails.getDonorName() + "</strong>,</p>\r\n"
         		+ "\r\n"
         		+ "      <p style=\"margin-bottom:15px;\">\r\n"
         		+ "        I hope this message finds you well. On behalf of everyone at <strong>Cef International</strong>, \r\n"
         		+ "        I would like to extend our heartfelt gratitude for your generous contribution of \r\n"
-        		+ "        <strong>₹"+donationDetails.getAmount()+"</strong>. Your support makes a significant impact on our mission to <strong>"+donationDetails.getProgramName()+"</strong>.\r\n"
+        		+ "        <strong>₹" + donationDetails.getAmount() + "</strong>. Your support makes a significant impact on our mission to <strong>" + donationDetails.getProgramName() + "</strong>.\r\n"
         		+ "      </p>\r\n"
         		+ "\r\n"
         		+ "      <p style=\"margin-bottom:15px;\">\r\n"
@@ -34,7 +34,8 @@ public String getDonationThankYouTemplate(DonationDetails donationDetails) {
         		+ "      <p style=\"margin-bottom:15px;\">To access and download your donation receipt, please click the button below:</p>\r\n"
         		+ "\r\n"
         		+ "      <div style=\"text-align:center; margin:30px 0;\">\r\n"
-        		+ "        <a href=\"https://mydonation.in/#/thank-you/receipt?receiptNo="+donationDetails.getReceiptNumber()
+        		+ "        <a href=\"https://mydonation.in/#/thank-you/receipt?receiptNo=" 
+        		+ donationDetails.getReceiptNumber() + "\" "
         		+ "           style=\"background-color:#4CAF50; color:#ffffff; text-decoration:none; padding:12px 25px; border-radius:6px; font-weight:bold; display:inline-block;\">\r\n"
         		+ "          Download Receipt\r\n"
         		+ "        </a>\r\n"
@@ -55,8 +56,7 @@ public String getDonationThankYouTemplate(DonationDetails donationDetails) {
         		+ "      This is an automated email, please do not reply.\r\n"
         		+ "    </div>\r\n"
         		+ "  </div>\r\n"
-        		+ "</body>\r\n"
-        		+ "";
+        		+ "</body>\r\n";
         
         return template;
     }
