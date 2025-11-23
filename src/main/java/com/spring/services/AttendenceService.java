@@ -42,9 +42,17 @@ public class AttendenceService {
 
 		LocalTime now = LocalTime.now();
         LocalTime noon = LocalTime.NOON; 
+        
+        System.out.println("Details : "+attendenceRequest.getCreatedBy());
+        System.out.println("Details : "+attendenceRequest.getSuperadminId());
+        System.out.println("Details : "+attendenceRequest.getToken());
+        System.out.println("Details : "+attendenceRequest.getRequestFor());
+ 
 		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(attendenceRequest.getCreatedBy());
 		if (userDetails != null) {
+			
+			System.out.println("userDetails.getUserPicture() : "+userDetails.getUserPicture());
 
 			if (userDetails.getUserPicture() == null) {
 				attendenceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
@@ -54,6 +62,8 @@ public class AttendenceService {
 
 			attendenceRequest.setOriginalImage(userDetails.getUserPicture());
 			attendenceRequest = amazonFaceCompare.amazonFaceCompare(attendenceRequest);
+			
+			System.out.println("Attendence : "+attendenceRequest);
 
 			AttendanceDetails chekAttendence = attendanceHelper.getAttendanceByDate();
 			if (chekAttendence != null) {

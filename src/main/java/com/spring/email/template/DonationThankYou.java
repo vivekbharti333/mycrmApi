@@ -34,7 +34,7 @@ public String getDonationThankYouTemplate(DonationDetails donationDetails) {
         		+ "      <p style=\"margin-bottom:15px;\">To access and download your donation receipt, please click the button below:</p>\r\n"
         		+ "\r\n"
         		+ "      <div style=\"text-align:center; margin:30px 0;\">\r\n"
-        		+ "        <a href=\"https://mydonation.co.in/#/thank-you/letter/"+donationDetails.getReceiptNumber()
+        		+ "        <a href=\"https://mydonation.in/#/thank-you/receipt?receiptNo="+donationDetails.getReceiptNumber()
         		+ "           style=\"background-color:#4CAF50; color:#ffffff; text-decoration:none; padding:12px 25px; border-radius:6px; font-weight:bold; display:inline-block;\">\r\n"
         		+ "          Download Receipt\r\n"
         		+ "        </a>\r\n"

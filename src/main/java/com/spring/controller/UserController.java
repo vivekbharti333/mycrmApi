@@ -165,8 +165,8 @@ public class UserController {
 //		pdfThankYouLatter.pdf();
 		
 
-//		return new ModelAndView("home");
-		return new ModelAndView("camera");
+		return new ModelAndView("home");
+//		return new ModelAndView("camera");
 	}
 	
 	

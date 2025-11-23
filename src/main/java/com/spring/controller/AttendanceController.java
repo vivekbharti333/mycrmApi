@@ -28,6 +28,8 @@ public class AttendanceController {
 	public Response<AttendanceRequestObject>addDonation(@RequestBody Request<AttendanceRequestObject> attendanceRequestObject, HttpServletRequest request)
 	{
 		GenricResponse<AttendanceRequestObject> responseObj = new GenricResponse<AttendanceRequestObject>();
+		
+		System.out.println("Enter");
 		try {
 			AttendanceRequestObject responce =  attendenceService.markAttendance(attendanceRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
