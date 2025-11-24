@@ -2,6 +2,13 @@ package com.spring.helper;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,6 +24,7 @@ import com.spring.dao.AttendanceDetailsDao;
 import com.spring.entities.AttendanceDetails;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.AttendanceRequestObject;
+import com.spring.object.response.AttendanceStatusResponse;
 
 @Component
 public class AttendanceHelper {
@@ -82,4 +90,83 @@ public class AttendanceHelper {
 		attendanceDetailsDao.update(attendanceDetails);
 		return attendanceDetails;
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<AttendanceStatusResponse> getAttendanceReport(AttendanceRequestObject req) {
+
+	    List<AttendanceStatusResponse> finalList = new ArrayList<>();
+
+	    try {
+
+	        // Convert Date → LocalDate
+	        LocalDate start = req.getPunchInDateTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+	        LocalDate end = req.getUpdatedAt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+	        // 1. Fetch present attendance rows
+	        List<AttendanceDetails> presentList = attendanceDetailsDao.getEntityManager()
+	                .createQuery("SELECT AD FROM AttendanceDetails AD WHERE AD.createdBy = :createdBy AND AD.attendanceDate BETWEEN :startDate AND :endDate ORDER BY AD.attendanceDate ASC")
+	                .setParameter("createdBy", req.getCreatedBy())
+	                .setParameter("startDate", start)
+	                .setParameter("endDate", end)
+	                .getResultList();
+
+	        // Convert list to map for faster lookup
+	        Map<LocalDate, AttendanceDetails> map = new HashMap<>();
+	        for (AttendanceDetails ad : presentList) {
+	            map.put(ad.getAttendanceDate(), ad);
+	        }
+
+	        // 2. Use Calendar to loop through all dates
+	        Calendar cal = Calendar.getInstance();
+	        cal.setTime(req.getPunchInDateTime());
+
+	        Calendar endCal = Calendar.getInstance();
+	        endCal.setTime(req.getUpdatedAt());
+
+	        while (!cal.after(endCal)) {
+
+	            Date current = cal.getTime();
+	            LocalDate currentLocal = current.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+	            AttendanceStatusResponse res = new AttendanceStatusResponse();
+	            res.setDate(current);
+
+	            AttendanceDetails ad = map.get(currentLocal);
+
+	            if (ad == null) {
+	                // Absent record
+	                res.setStatus("Absent");
+	            } else {
+	                // Present record
+	                res.setStatus("Present");
+	                res.setPunchInTime(ad.getPunchInTime() != null ? ad.getPunchInTime().toString() : null);
+	                res.setPunchOutTime(ad.getPunchOutTime() != null ? ad.getPunchOutTime().toString() : null);
+	                res.setPunchInLocation(ad.getPunchInLocation());
+	                res.setPunchOutLocation(ad.getPunchOutLocation());
+	            }
+
+	            finalList.add(res);
+
+	            // move next date
+	            cal.add(Calendar.DATE, 1);
+	        }
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
+
+	    return finalList;
+	}
+
+	
 }
+
+
+
