@@ -45,6 +45,9 @@ public class UserService {
 	@Autowired
 	private CurrencyHelper currencyHelper;
 	
+	@Autowired
+	private LoginAttemptService loginAttemptService;
+	
 	
 	public UserRequestObject updateUserSubscription(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
@@ -97,67 +100,145 @@ public class UserService {
 		
 	}
 
-	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
-		UserRequestObject userRequest = userRequestObject.getPayload();
-		userHelper.validateUserRequest(userRequest);
-		
-		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
-		if (userDetails != null) {
-			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
-				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
+//		UserRequestObject userRequest = userRequestObject.getPayload();
+//		userHelper.validateUserRequest(userRequest);
+//		
+//		UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
+//		if (userDetails != null) {
+//			if(userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+//				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//				userRequest.setRespMesg(Constant.INACTIVE_USER);
+//				return userRequest;
+//			}
+//
+//			boolean isValid = userHelper.checkValidityOfUser(userDetails.getValidityExpireOn());
+//
+//			if (isValid) {
+//
+//				if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
+//					logger.info("Login Successfully: " + userRequest);
+//
+//					// generate secret key.
+//					String secretKey = jwtTokenUtil.generateSecureSecretKey();
+//
+//					// update secret key in UserDetails.
+//					userDetails.setSecretKey(secretKey);
+//					userHelper.UpdateUserDetails(userDetails);
+//
+//					String token = jwtTokenUtil.generateAccessToken(userDetails);
+//
+//					userRequest.setLoginId(userDetails.getLoginId());
+//					userRequest.setPassword(null);
+//
+//					userRequest.setFirstName(userDetails.getFirstName());
+//					userRequest.setLastName(userDetails.getLastName());
+//					userRequest.setService(userDetails.getService());
+////					userRequest.setUserPicture(userDetails.getUserPicture());
+//					userRequest.setPermissions(userDetails.getPermissions());
+//					userRequest.setRoleType(userDetails.getRoleType());
+//					userRequest.setSuperadminId(userDetails.getSuperadminId());
+//					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
+//					userRequest.setTeamLeaderId(userDetails.getCreatedBy());
+//					userRequest.setToken(token);
+//					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
+//					
+//					userRequest.setRespCode(Constant.SUCCESS_CODE);
+//					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
+//					return userRequest;
+//				} else {
+//					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//					userRequest.setRespMesg(Constant.INVALID_LOGIN);
+//					return userRequest;
+//				}
+//			} else {
+//				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//				userRequest.setRespMesg(Constant.EXPIRED_LOGIN);
+//				return userRequest;
+//			}
+//		} else {
+//			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//			userRequest.setRespMesg(Constant.INVALID_LOGIN);
+//			return userRequest;
+//		}
+//	}
+	
+	public UserRequestObject doLogin(Request<UserRequestObject> userRequestObject, String ip)
+	        throws BizException, Exception {
+
+	    UserRequestObject userRequest = userRequestObject.getPayload();
+	    userHelper.validateUserRequest(userRequest);
+
+	    UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
+
+	    if (userDetails != null) {
+
+	        if (userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+	        	userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				userRequest.setRespMesg(Constant.INACTIVE_USER);
 				return userRequest;
-			}
+	        }
 
-			boolean isValid = userHelper.checkValidityOfUser(userDetails.getValidityExpireOn());
+	        boolean isValid = userHelper.checkValidityOfUser(userDetails.getValidityExpireOn());
 
-			if (isValid) {
-
-				if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
-					logger.info("Login Successfully: " + userRequest);
-
-					// generate secret key.
-					String secretKey = jwtTokenUtil.generateSecureSecretKey();
-
-					// update secret key in UserDetails.
-					userDetails.setSecretKey(secretKey);
-					userHelper.UpdateUserDetails(userDetails);
-
-					String token = jwtTokenUtil.generateAccessToken(userDetails);
-
-					userRequest.setLoginId(userDetails.getLoginId());
-					userRequest.setPassword(null);
-
-					userRequest.setFirstName(userDetails.getFirstName());
-					userRequest.setLastName(userDetails.getLastName());
-					userRequest.setService(userDetails.getService());
-//					userRequest.setUserPicture(userDetails.getUserPicture());
-					userRequest.setPermissions(userDetails.getPermissions());
-					userRequest.setRoleType(userDetails.getRoleType());
-					userRequest.setSuperadminId(userDetails.getSuperadminId());
-					userRequest.setIsPassChanged(userDetails.getIsPassChanged());
-					userRequest.setTeamLeaderId(userDetails.getCreatedBy());
-					userRequest.setToken(token);
-					userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
-					
-					userRequest.setRespCode(Constant.SUCCESS_CODE);
-					userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
-					return userRequest;
-				} else {
-					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-					userRequest.setRespMesg(Constant.INVALID_LOGIN);
-					return userRequest;
-				}
-			} else {
-				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+	        if (!isValid) {
+	        	userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				userRequest.setRespMesg(Constant.EXPIRED_LOGIN);
 				return userRequest;
-			}
-		} else {
-			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+	        }
+
+	        // 🔥 Check password
+	        if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
+
+	            // 🟢 SUCCESS → reset attempts
+	            loginAttemptService.loginSuccess(ip);
+
+	            logger.info("Login Successfully: " + userRequest);
+
+	            // Generate new secret key
+	            String secretKey = jwtTokenUtil.generateSecureSecretKey();
+	            userDetails.setSecretKey(secretKey);
+	            userHelper.UpdateUserDetails(userDetails);
+
+	            String token = jwtTokenUtil.generateAccessToken(userDetails);
+
+	            // Prepare response object
+	            userRequest.setLoginId(userDetails.getLoginId());
+	            userRequest.setPassword(null);
+	            userRequest.setFirstName(userDetails.getFirstName());
+	            userRequest.setLastName(userDetails.getLastName());
+	            userRequest.setService(userDetails.getService());
+	            userRequest.setPermissions(userDetails.getPermissions());
+	            userRequest.setRoleType(userDetails.getRoleType());
+	            userRequest.setSuperadminId(userDetails.getSuperadminId());
+	            userRequest.setIsPassChanged(userDetails.getIsPassChanged());
+	            userRequest.setTeamLeaderId(userDetails.getCreatedBy());
+	            userRequest.setToken(token);
+	            userRequest.setValidityExpireOn(userDetails.getValidityExpireOn());
+
+	            userRequest.setRespCode(Constant.SUCCESS_CODE);
+	            userRequest.setRespMesg(Constant.LOGIN_SUCCESS);
+
+	            return userRequest;
+	        } else {
+
+	            // ❌ FAILED → increment failed count
+	            loginAttemptService.loginFailed(ip);
+
+	            userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				userRequest.setRespMesg(Constant.INVALID_LOGIN);
+				return userRequest;
+	        }
+
+	    } else {
+
+	        // ❌ FAILED → increment failed count (username not found)
+	        loginAttemptService.loginFailed(ip);
+
+	        userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg(Constant.INVALID_LOGIN);
 			return userRequest;
-		}
+	    }
 	}
 	
 	public UserRequestObject getUserDetailsByLoginId(Request<UserRequestObject> userRequestObject) throws BizException {
