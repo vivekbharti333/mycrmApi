@@ -54,12 +54,9 @@ public class InvoiceController {
    @Autowired
    private InvoiceHelper invoiceHelper;
 
-   @RequestMapping(
-      path = {"addInvoiceHeader"},
-      method = {RequestMethod.POST}
-   )
+   @RequestMapping(path = {"addInvoiceHeader"},method = {RequestMethod.POST})
    public Response<InvoiceRequestObject> addInvoiceHeader(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request) {
-      GenricResponse responseObj = new GenricResponse();
+      GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
 
       try {
          InvoiceRequestObject responce = this.invoiceService.addInvoiceHeader(invoiceRequestObject);
@@ -77,7 +74,7 @@ public class InvoiceController {
       method = {RequestMethod.POST}
    )
    public Response<InvoiceHeaderDetails> getInvoiceHeaderList(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
-      GenricResponse response = new GenricResponse();
+      GenricResponse<InvoiceHeaderDetails> response = new GenricResponse<InvoiceHeaderDetails>();
 
       try {
          List<InvoiceHeaderDetails> invoiceDetails = this.invoiceService.getInvoiceHeaderList(invoiceRequestObject);
@@ -93,7 +90,7 @@ public class InvoiceController {
       method = {RequestMethod.POST}
    )
    public Response<InvoiceRequestObject> addCategory(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject, HttpServletRequest request) {
-      GenricResponse responseObj = new GenricResponse();
+      GenricResponse<InvoiceRequestObject> responseObj = new GenricResponse<InvoiceRequestObject>();
 
       try {
          InvoiceRequestObject responce = this.invoiceService.generateInvoice1(invoiceRequestObject);
@@ -111,7 +108,7 @@ public class InvoiceController {
       method = {RequestMethod.POST}
    )
    public Response<InvoiceNumber> getInvoiceNumber(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
-      GenricResponse response = new GenricResponse();
+      GenricResponse<InvoiceNumber> response = new GenricResponse<InvoiceNumber>();
 
       try {
          List<InvoiceNumber> invoiceNumber = this.invoiceService.getInvoiceNumberList(invoiceRequestObject);
@@ -127,7 +124,7 @@ public class InvoiceController {
       method = {RequestMethod.POST}
    )
    public Response<InvoiceDetails> getInvoiceDetailsList(@RequestBody Request<InvoiceRequestObject> invoiceRequestObject) {
-      GenricResponse response = new GenricResponse();
+      GenricResponse<InvoiceDetails> response = new GenricResponse<InvoiceDetails>();
 
       try {
          List<InvoiceDetails> invoiceDetails = this.invoiceService.getInvoiceDetailsList(invoiceRequestObject);
@@ -158,7 +155,8 @@ public class InvoiceController {
             String fileName = invoiceHeader.getCompanyFirstName() + "-invoice.pdf";
             headers.setContentDispositionFormData("attachment", fileName);
             InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(pdfStream.toByteArray()));
-            return new ResponseEntity(isr, headers, HttpStatus.OK);
+//            return new ResponseEntity(isr, headers, HttpStatus.OK);
+            return new ResponseEntity<InputStreamResource>(isr, headers, HttpStatus.OK);
          } else {
             modelAndView = new ModelAndView("message");
             modelAndView.addObject("message", "Cancelled request. Please contact admin for details.");

@@ -3,7 +3,9 @@ package com.spring.services;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
 import javax.transaction.Transactional;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
@@ -11,13 +13,14 @@ import org.springframework.stereotype.Service;
 
 import com.spring.constant.Constant;
 import com.spring.entities.AddressDetails;
-import com.spring.entities.CurrencyMaster;
+import com.spring.entities.UsageLimitConsumption;
 import com.spring.entities.UserDetails;
-import com.spring.enums.RoleType;
+import com.spring.enums.ResourceType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.AddressHelper;
 import com.spring.helper.CurrencyHelper;
+import com.spring.helper.UsageLimitConsumptionHelper;
 import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.AddressRequestObject;
@@ -47,6 +50,9 @@ public class UserService {
 	
 	@Autowired
 	private LoginAttemptService loginAttemptService;
+	
+	@Autowired
+	private UsageLimitConsumptionHelper usageLimitConsumptionHelper;
 	
 	
 	public UserRequestObject updateUserSubscription(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
@@ -277,8 +283,19 @@ public class UserService {
 //		userRequest.setPassword("test@123");
 			
 
-		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
+//		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
 //		if (isValid) {
+		
+		boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(userRequest.getSuperadminId(), ResourceType.CREATE_USER.name());
+		if (isUnderLimit) {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
+			
+			System.out.println("Enter 1");
+			return userRequest;
+		}
+		
+		System.out.println("Enter 2");
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getMobileNo(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
@@ -301,6 +318,33 @@ public class UserService {
 
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);
+				
+				
+				// add OR update limit
+				if (userRequest.getService().equals("FREE_DONATION")) {
+
+				    UsageLimitConsumption limit = usageLimitConsumptionHelper.getUsageLimitConsumptionBySuperadminIdAndResourceType(userRequest.getSuperadminId(), ResourceType.CREATE_USER.name());
+
+				    if (limit != null && limit.getStatus().equals("ACTIVE")) {
+
+				        // Check limit before increasing count
+				        if (limit.getConsume() < limit.getLimit()) {
+				            limit.setConsume(limit.getConsume() + 1);
+				            usageLimitConsumptionHelper.updateUsageLimitConsumption(limit);
+				        } else {
+				            userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				            userRequest.setRespMesg("Free Limit Exceeded! Upgrade your plan.");
+				            return userRequest;
+				        }
+				    } else {
+				        // Save default record first time
+				        UsageLimitConsumption newRecord = usageLimitConsumptionHelper.getUsageLimitConsumptionByReqObj(ResourceType.CREATE_USER.name(),"LIFE_TIME", 2,1, userRequest.getSuperadminId());
+
+				        newRecord.setStatus("ACTIVE");
+				        usageLimitConsumptionHelper.saveUsageLimitConsumption(newRecord);
+				    }
+				}
+
 				
 				// Save Address
 				if(userRequest.getRequestedFor().equalsIgnoreCase("WEB")) {

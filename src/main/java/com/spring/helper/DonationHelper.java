@@ -208,7 +208,6 @@ public class DonationHelper {
 			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(
 					SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
 			if (emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-//				nimbusEmail.sendNimbusEmail(donationDetails, emailServiceDetails);
 				zeptomail.sendZeptoEmail(donationDetails);
 			}
 		}

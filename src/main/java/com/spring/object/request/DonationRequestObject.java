@@ -1,6 +1,9 @@
 package com.spring.object.request;
 
 import java.util.Date;
+
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
@@ -66,6 +69,12 @@ public class DonationRequestObject {
 	private String saltIndex;
 	private String saltKey;
 	private String paymentGatewayPageRedirectUrl;
+	
+	//limit
+	private String resourceType;
+	private String consumptionType;
+	private int limit;
+	private int consume;
 	
 	private int respCode;
 	private String respMesg;

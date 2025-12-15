@@ -36,6 +36,19 @@ public class PaymentModeHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
+	
+	@Transactional
+	public PaymentModeMaster getPaymentModeMasterById(Long id) {
+
+		CriteriaBuilder criteriaBuilder = paymentModeMasterDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<PaymentModeMaster> criteriaQuery = criteriaBuilder.createQuery(PaymentModeMaster.class);
+		Root<PaymentModeMaster> root = criteriaQuery.from(PaymentModeMaster.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("id"), id);
+		criteriaQuery.where(restriction);
+		PaymentModeMaster optionTypeDetails = paymentModeMasterDao.getSession().createQuery(criteriaQuery)
+				.uniqueResult();
+		return optionTypeDetails;
+	}
 
 	@Transactional
 	public PaymentModeMaster getPaymentModeMasterByPaymentMode(String paymentMode) {
@@ -82,6 +95,23 @@ public class PaymentModeHelper {
 				.getResultList();
 		return results;
 	}
+	
+//	@SuppressWarnings("unchecked")
+//	public List<PaymentModeMaster> getMasterPaymentModeList(PaymentRequestObject optionRequest) {
+//		List<PaymentModeMaster> results = new ArrayList<>();
+//		if(optionRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
+//			results = paymentModeMasterDao.getEntityManager().createQuery(
+//					"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
+//					.getResultList();
+//			return results;
+//		}else {
+//			results = paymentModeMasterDao.getEntityManager().createQuery(
+//					"SELECT PM FROM PaymentModeMaster WHERE PM.status =:status PM ORDER BY PM.paymentMode ASC")
+//					.setParameter("status", Status.ACTIVE.name())
+//					.getResultList();
+//			return results;
+//		}
+//	}
 	
 	
 	@Transactional

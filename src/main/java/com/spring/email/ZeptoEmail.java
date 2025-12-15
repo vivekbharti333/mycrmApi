@@ -36,6 +36,9 @@ public class ZeptoEmail {
 
 	@Autowired
 	private DonationThankYou donationThankYou;
+	
+	@Autowired
+	private DatfuslabWelcome datfuslabWelcome;
 
 	
 	public JSONObject setParameter(DonationDetails donationDetails) {
@@ -58,10 +61,9 @@ public class ZeptoEmail {
         JSONObject emailJson = new JSONObject();
         emailJson.put("from", from);
         emailJson.put("to", toArray);
-        emailJson.put("subject", "We’re Grateful for Your Support — Download Your 80G Receipt");
+        emailJson.put("subject", "We're Grateful for Your Support Download Your 80G Receipt");
         emailJson.put("htmlbody", donationThankYou.getDonationThankYouTemplate(donationDetails));
 
-//        System.out.println(emailJson.toString(2)); // Pretty print
 		return emailJson;
     }
 

@@ -315,7 +315,6 @@ public class UserHelper {
 			return results;
 		}
 		
-		
 	}
 
 	@SuppressWarnings("unchecked")

@@ -29,8 +29,6 @@ public class CashfreeController {
 
 	private static final Logger log = Logger.getLogger(CashfreeController.class);
 
-	@Autowired
-	private DonationHelper donationHelper;
 	
 	@Autowired CashfreeService cashfreeService;
 
@@ -48,6 +46,4 @@ public class CashfreeController {
 				return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 			}
 		}
-
-
 }

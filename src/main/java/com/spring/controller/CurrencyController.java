@@ -29,12 +29,28 @@ public class CurrencyController {
 	private CurrencyService currencyService;
 	
 	
-	@RequestMapping(path = "addUpdateCurrencyMaster", method = RequestMethod.POST)
-	public Response<CurrencyRequestObject>addUpdateCurrencyMaster(@RequestBody Request<CurrencyRequestObject> currencyRequestObject, HttpServletRequest request)
+	@RequestMapping(path = "addCurrencyMaster", method = RequestMethod.POST)
+	public Response<CurrencyRequestObject>addCurrencyMaster(@RequestBody Request<CurrencyRequestObject> currencyRequestObject, HttpServletRequest request)
 	{
 		GenricResponse<CurrencyRequestObject> responseObj = new GenricResponse<CurrencyRequestObject>();
 		try {
-			CurrencyRequestObject responce =  currencyService.addUpdateCurrencyMaster(currencyRequestObject);
+			CurrencyRequestObject responce =  currencyService.addCurrencyMaster(currencyRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
+		}catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());
+		} 
+ 		catch (Exception e) {
+ 			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "updateCurrencyMaster", method = RequestMethod.POST)
+	public Response<CurrencyRequestObject>updateCurrencyMaster(@RequestBody Request<CurrencyRequestObject> currencyRequestObject, HttpServletRequest request)
+	{
+		GenricResponse<CurrencyRequestObject> responseObj = new GenricResponse<CurrencyRequestObject>();
+		try {
+			CurrencyRequestObject responce =  currencyService.updateCurrencyMaster(currencyRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		}catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE,e.getMessage());

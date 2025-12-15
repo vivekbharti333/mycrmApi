@@ -33,6 +33,7 @@ public class PaymentRequestObject {
 	private String invoiceNumber;
 
 	private String requestedFor;
+	private String roleType;
 	
 	private int respCode;
 	private String respMesg;

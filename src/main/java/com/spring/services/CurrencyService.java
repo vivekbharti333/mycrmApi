@@ -21,15 +21,15 @@ public class CurrencyService {
 
 	@Autowired
 	private CurrencyHelper currencyHelper;
-	
 
 	@Transactional
-	public CurrencyRequestObject addUpdateCurrencyMaster(Request<CurrencyRequestObject> currencyRequestObject)
+	public CurrencyRequestObject addCurrencyMaster(Request<CurrencyRequestObject> currencyRequestObject)
 			throws BizException, Exception {
 		CurrencyRequestObject currencyRequest = currencyRequestObject.getPayload();
 		currencyHelper.validateCurrencyRequest(currencyRequest);
 
-		CurrencyMaster existsCurrencyDetails = currencyHelper.getCurrencyMasterById(currencyRequest.getId());
+		CurrencyMaster existsCurrencyDetails = currencyHelper
+				.getCurrencyMasterByCurrencyCode(currencyRequest.getCurrencyCode());
 
 		if (existsCurrencyDetails == null) {
 			CurrencyMaster currencyMaster = currencyHelper.getCurrencyMasterByReqObj(currencyRequest);
@@ -37,20 +37,32 @@ public class CurrencyService {
 
 			currencyRequest.setRespCode(Constant.SUCCESS_CODE);
 			currencyRequest.setRespMesg("Successfully Register");
-			
-			return currencyRequest;
-		} else {
+		}
+		return currencyRequest;
+	}
+
+	@Transactional
+	public CurrencyRequestObject updateCurrencyMaster(Request<CurrencyRequestObject> currencyRequestObject)
+			throws BizException, Exception {
+
+		CurrencyRequestObject currencyRequest = currencyRequestObject.getPayload();
+		currencyHelper.validateCurrencyRequest(currencyRequest);
+
+		CurrencyMaster existsCurrencyDetails = currencyHelper.getCurrencyMasterById(currencyRequest.getId());
+
+		if (existsCurrencyDetails != null) {
 
 			existsCurrencyDetails = currencyHelper.getUpdateCurrencyMasterByReqObj(currencyRequest, existsCurrencyDetails);
 			existsCurrencyDetails = currencyHelper.updateCurrencyMaster(existsCurrencyDetails);
 
 			currencyRequest.setRespCode(Constant.SUCCESS_CODE);
 			currencyRequest.setRespMesg(Constant.UPDATED_SUCCESS);
-			return currencyRequest;
 		}
+		return currencyRequest;
 	}
 
-	public List<CurrencyMaster> getCurrencyDetails(Request<CurrencyRequestObject> currencyRequestObject) throws BizException, Exception {
+	public List<CurrencyMaster> getCurrencyDetails(Request<CurrencyRequestObject> currencyRequestObject)
+			throws BizException, Exception {
 		CurrencyRequestObject currencyRequest = currencyRequestObject.getPayload();
 		currencyHelper.validateCurrencyRequest(currencyRequest);
 
@@ -61,39 +73,43 @@ public class CurrencyService {
 		return currencyList;
 	}
 
-	public CurrencyRequestObject addUpdateCurrencyBySuperadmin(Request<CurrencyRequestObject> currencyRequestObject) 
+	public CurrencyRequestObject addUpdateCurrencyBySuperadmin(Request<CurrencyRequestObject> currencyRequestObject)
 			throws BizException, Exception {
 		CurrencyRequestObject currencyRequest = currencyRequestObject.getPayload();
 		currencyHelper.validateCurrencyRequest(currencyRequest);
-		
+
+		System.out.println(currencyRequest.getSuperadminId()+" , "+currencyRequest.getCurrencyMasterIds());
 		CurrencyDetailsBySuperadmin currencyBySuperadmin = currencyHelper.getCurrencyDetailsBySuperadminById(currencyRequest.getSuperadminId());
-		if(currencyBySuperadmin == null) {
-			
+		if (currencyBySuperadmin == null) {
+			System.out.println("Enter 1");
 			CurrencyDetailsBySuperadmin currencyDetailsBySuperadmin = currencyHelper.getSuperadminCurrencyByReqObj(currencyRequest);
 			currencyDetailsBySuperadmin = currencyHelper.saveSuperadminCurrencyDetails(currencyDetailsBySuperadmin);
-			
+
 			currencyRequest.setRespCode(Constant.SUCCESS_CODE);
 			currencyRequest.setRespMesg("Successfully Register");
 			return currencyRequest;
-		}else {
-			currencyBySuperadmin = currencyHelper.getUpdateSuperadminCurrencyByReqObj(currencyRequest, currencyBySuperadmin);
+		} else {
+			System.out.println("Enter 2");
+			currencyBySuperadmin = currencyHelper.getUpdateSuperadminCurrencyByReqObj(currencyRequest,
+					currencyBySuperadmin);
 			currencyBySuperadmin = currencyHelper.updateSuperadminCurrencyDetails(currencyBySuperadmin);
-			
+
 			currencyRequest.setRespCode(Constant.SUCCESS_CODE);
 			currencyRequest.setRespMesg(Constant.UPDATED_SUCCESS);
 			return currencyRequest;
 		}
 	}
-	
+
 	public List<CurrencyMaster> getCurrencyDetailsBySuperadmin(Request<CurrencyRequestObject> currencyRequestObject)
 			throws BizException, Exception {
 		CurrencyRequestObject currencyRequest = currencyRequestObject.getPayload();
 		currencyHelper.validateCurrencyRequest(currencyRequest);
-		
+
 		currencyRequest.setRequestedFor("BY_SUPERADMIN");
 		List<CurrencyMaster> currencyList = new ArrayList<>();
 
-		CurrencyDetailsBySuperadmin currencyBySuperadmin = currencyHelper.getCurrencyDetailsBySuperadminById(currencyRequest.getSuperadminId());
+		CurrencyDetailsBySuperadmin currencyBySuperadmin = currencyHelper
+				.getCurrencyDetailsBySuperadminById(currencyRequest.getSuperadminId());
 		currencyRequest.setCurrencyMasterIds(currencyBySuperadmin.getCurrencyMasterIds());
 		currencyList = currencyHelper.getCurrencyMaster(currencyRequest);
 

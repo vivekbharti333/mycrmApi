@@ -59,6 +59,7 @@ public class UserRequestObject {
 	private String superadminId;
 	
 	private String requestedFor;
+	private String servicePlan;
 	
 	private String searchParam;
 	private int respCode;

@@ -73,7 +73,7 @@ public class PaymentModeService {
 		PaymentRequestObject paymentModeRequest = paymentModeRequestObject.getPayload();
 		optionTypeHelper.validatePaymentModeRequest(paymentModeRequest);
 		
-		PaymentModeMaster paymentModeMaster = optionTypeHelper.getPaymentModeMasterByPaymentMode(paymentModeRequest.getPaymentMode());
+		PaymentModeMaster paymentModeMaster = optionTypeHelper.getPaymentModeMasterById(paymentModeRequest.getId());
 		if (paymentModeMaster != null) {
 			if(paymentModeMaster.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 				paymentModeMaster.setStatus(Status.ACTIVE.name());

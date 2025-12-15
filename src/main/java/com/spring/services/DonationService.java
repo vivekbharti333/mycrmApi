@@ -23,15 +23,18 @@ import com.spring.constant.Constant;
 import com.spring.entities.DonationDetails;
 import com.spring.entities.InvoiceHeaderDetails;
 import com.spring.entities.PaymentGatewayDetails;
+import com.spring.entities.UsageLimitConsumption;
 import com.spring.entities.UserDetails;
 import com.spring.enums.PaymentMode;
 import com.spring.enums.RequestFor;
+import com.spring.enums.ResourceType;
 import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.helper.DonationHelper;
 import com.spring.helper.InvoiceHelper;
 import com.spring.helper.PaymentGatewayHelper;
+import com.spring.helper.UsageLimitConsumptionHelper;
 import com.spring.helper.UserHelper;
 import com.spring.jwt.JwtTokenUtil;
 import com.spring.object.request.DonationRequestObject;
@@ -68,6 +71,9 @@ public class DonationService {
 
 	@Autowired
 	private PaymentGatewayHelper paymentGatewayHelper;
+	
+	@Autowired
+	private UsageLimitConsumptionHelper usageLimitConsumptionHelper;
 
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -114,11 +120,19 @@ public class DonationService {
 
 	
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
+		
 
 //		if (isValid) {
 			
 			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
+			}
+			
+			boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(donationRequest.getSuperadminId(), ResourceType.DONATION_RECEIPT.name());
+			if (!isUnderLimit) {
+				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				donationRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
+				return donationRequest;
 			}
 
 			// Validate Fields
@@ -162,8 +176,6 @@ public class DonationService {
 				DonationDetails donationDetails = donationHelper.getDonationDetailsByReqObj(donationRequest);
 				donationDetails = donationHelper.saveDonationDetails(donationDetails);
 				
-				System.out.println("Donation Successfully saved");
-
 				// increase serial number by 1
 				invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
 				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);

@@ -68,10 +68,7 @@ public class UserController {
     
     @Autowired 
     private InvoiceHelper invoiceHelper;
-    
-    @Autowired 
-    private DonationHelper donationHelper;
-    
+
     @Autowired
     private PdfInvoice pdfInvoice;
     
@@ -116,7 +113,7 @@ public class UserController {
 //		UserDetails userDetails = new UserDetails();
 //		userDetails.setFirstName("Vivek");
 //		userDetails.setLastName("Bharti");
-//		userDetails.setEmailId("info@datfuslab.com");
+//		userDetails.setEmailId("vivekbharti333@gmail.com");
 //		zeptoEmail.sendZeptoEmail(userDetails);
 		
 //		itextPdfReceipt.createReceipt();
