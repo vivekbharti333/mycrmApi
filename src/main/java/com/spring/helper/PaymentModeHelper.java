@@ -18,6 +18,7 @@ import com.spring.dao.PaymentModeBySuperadminDao;
 import com.spring.dao.PaymentModeMasterDao;
 import com.spring.entities.PaymentModeBySuperadmin;
 import com.spring.entities.PaymentModeMaster;
+import com.spring.enums.RoleType;
 import com.spring.enums.Status;
 import com.spring.exceptions.BizException;
 import com.spring.object.request.PaymentRequestObject;
@@ -87,31 +88,31 @@ public class PaymentModeHelper {
 	}
 
 
-	@SuppressWarnings("unchecked")
-	public List<PaymentModeMaster> getMasterPaymentModeList(PaymentRequestObject optionRequest) {
-		List<PaymentModeMaster> results = new ArrayList<>();
-		results = paymentModeMasterDao.getEntityManager().createQuery(
-				"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
-				.getResultList();
-		return results;
-	}
-	
 //	@SuppressWarnings("unchecked")
 //	public List<PaymentModeMaster> getMasterPaymentModeList(PaymentRequestObject optionRequest) {
 //		List<PaymentModeMaster> results = new ArrayList<>();
-//		if(optionRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
-//			results = paymentModeMasterDao.getEntityManager().createQuery(
-//					"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
-//					.getResultList();
-//			return results;
-//		}else {
-//			results = paymentModeMasterDao.getEntityManager().createQuery(
-//					"SELECT PM FROM PaymentModeMaster WHERE PM.status =:status PM ORDER BY PM.paymentMode ASC")
-//					.setParameter("status", Status.ACTIVE.name())
-//					.getResultList();
-//			return results;
-//		}
+//		results = paymentModeMasterDao.getEntityManager().createQuery(
+//				"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
+//				.getResultList();
+//		return results;
 //	}
+	
+	@SuppressWarnings("unchecked")
+	public List<PaymentModeMaster> getMasterPaymentModeList(PaymentRequestObject optionRequest) {
+		List<PaymentModeMaster> results = new ArrayList<>();
+		if(optionRequest.getRoleType().equals(RoleType.MAINADMIN.name())) {
+			results = paymentModeMasterDao.getEntityManager().createQuery(
+					"SELECT PM FROM PaymentModeMaster PM ORDER BY PM.paymentMode ASC")
+					.getResultList();
+			return results;
+		}else {
+			results = paymentModeMasterDao.getEntityManager().createQuery(
+					"SELECT PM FROM PaymentModeMaster PM WHERE PM.status = :status ORDER BY PM.paymentMode ASC")
+					.setParameter("status", Status.ACTIVE.name())
+					.getResultList();
+			return results;
+		}
+	}
 	
 	
 	@Transactional
