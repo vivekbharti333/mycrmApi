@@ -14,9 +14,10 @@ import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import com.spring.dao.SmsTemplateDetailsDao;
-import com.spring.entities.DonationDetails;
-import com.spring.entities.SmsTemplateDetails;
+
+import com.ngo.dao.SmsTemplateDetailsDao;
+import com.ngo.entities.DonationDetails;
+import com.ngo.entities.SmsTemplateDetails;
 
 
 

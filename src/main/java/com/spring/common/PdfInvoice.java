@@ -9,11 +9,11 @@ import java.text.SimpleDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.common.constant.Constant;
 import com.itextpdf.html2pdf.HtmlConverter;
-import com.spring.constant.Constant;
-import com.spring.entities.DonationDetails;
-import com.spring.entities.InvoiceHeaderDetails;
-import com.spring.helper.DonationHelper;
+import com.ngo.entities.DonationDetails;
+import com.ngo.entities.InvoiceHeaderDetails;
+import com.ngo.helper.DonationHelper;
 
 
 @Component

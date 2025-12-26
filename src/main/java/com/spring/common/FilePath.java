@@ -1,7 +1,9 @@
 package com.spring.common;
 
 import org.springframework.stereotype.Component;
-import com.spring.constant.Constant;
+
+import com.common.constant.Constant;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;

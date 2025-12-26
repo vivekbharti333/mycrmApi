@@ -1,9 +1,10 @@
 eclipse.preferences.version=1
-encoding//src/main/java/com/spring/AmazonApi/AmazonFaceCompare.java=UTF-8
-encoding//src/main/java/com/spring/AmazonApi/TextExtractor.java=UTF-8
-encoding//src/main/java/com/spring/controller/UserController.java=UTF-8
-encoding//src/main/java/com/spring/email/template/DonationThankYou.java=UTF-8
-encoding//src/main/java/com/spring/helper/APIHelper.java=UTF-8
-encoding//src/main/java/com/spring/helper/AttendanceHelper.java=UTF-8
-encoding//src/main/java/com/spring/pdf/InvoiceGenerator.java=UTF-8
+encoding//src/main/java/com/common/AmazonApi/AmazonFaceCompare.java=UTF-8
+encoding//src/main/java/com/common/AmazonApi/TextExtractor.java=UTF-8
+encoding//src/main/java/com/common/controller/UserController.java=UTF-8
+encoding//src/main/java/com/common/pdf/InvoiceGenerator.java=UTF-8
+encoding//src/main/java/com/ngo/email/template/DonationThankYou.java=UTF-8
+encoding//src/main/java/com/ngo/helper/APIHelper.java=UTF-8
+encoding//src/main/java/com/ngo/helper/AttendanceHelper.java=UTF-8
+encoding//src/main/java/com/school/controller/StudentController.java=UTF-8
 encoding//src/main/webapp/WEB-INF/views/camera.jsp=UTF-8
