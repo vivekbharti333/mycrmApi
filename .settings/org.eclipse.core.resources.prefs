@@ -6,5 +6,6 @@ encoding//src/main/java/com/common/pdf/InvoiceGenerator.java=UTF-8
 encoding//src/main/java/com/ngo/email/template/DonationThankYou.java=UTF-8
 encoding//src/main/java/com/ngo/helper/APIHelper.java=UTF-8
 encoding//src/main/java/com/ngo/helper/AttendanceHelper.java=UTF-8
+encoding//src/main/java/com/school/controller/ReceiptController.java=UTF-8
 encoding//src/main/java/com/school/controller/StudentController.java=UTF-8
 encoding//src/main/webapp/WEB-INF/views/camera.jsp=UTF-8

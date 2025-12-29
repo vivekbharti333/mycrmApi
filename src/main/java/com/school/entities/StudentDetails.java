@@ -75,8 +75,8 @@ public class StudentDetails {
 	@Column(name = "permanent_education_number")
 	private String permanentEducationNumber;
 
-	@Column(name = "eshiksha_id")
-	private String eShikshaId;
+	@Column(name = "shiksha_id")
+	private String shikshaId;
 
 	@Column(name = "session_name")
 	private String sessionName;

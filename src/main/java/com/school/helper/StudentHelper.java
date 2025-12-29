@@ -32,6 +32,18 @@ public class StudentHelper {
 		}
 	}
 
+	@Transactional
+	public StudentDetails getStudentDetailsById(Long id) {
+
+		CriteriaBuilder criteriaBuilder = studentDetailsDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<StudentDetails> criteriaQuery = criteriaBuilder.createQuery(StudentDetails.class);
+		Root<StudentDetails> root = criteriaQuery.from(StudentDetails.class);
+		Predicate restriction1 = criteriaBuilder.equal(root.get("id"), id);
+		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
+		criteriaQuery.where(restriction1, restriction2);
+		StudentDetails userDetails = studentDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return userDetails;
+	}
 
 	@Transactional
 	public StudentDetails getStudentDetailsByAdmissionNumber(String admissionNo) {
@@ -70,7 +82,7 @@ public class StudentHelper {
 	    studentDetails.setAadharNumber(studentRequest.getAadharNumber());
 	    studentDetails.setBirthCertificateNumber(studentRequest.getBirthCertificateNumber());
 	    studentDetails.setPermanentEducationNumber(studentRequest.getPermanentEducationNumber());
-	    studentDetails.setEShikshaId(studentRequest.getEShikshaId());
+	    studentDetails.setShikshaId(studentRequest.getShikshaId());
 	    studentDetails.setSessionName(studentRequest.getSessionName());
 	    studentDetails.setSiblingAdmissionNumber(studentRequest.getSiblingAdmissionNumber());
 
@@ -110,6 +122,70 @@ public class StudentHelper {
 	@Transactional
 	public StudentDetails saveStudentDetails(StudentDetails studentDetails) {
 		studentDetailsDao.persist(studentDetails);
+		return studentDetails;
+	}
+	
+	public StudentDetails getUpdatedStudentDetailsByReqObj(StudentRequestObject studentRequest, StudentDetails studentDetails) {
+
+	    // Student Basic Details
+	    studentDetails.setAdmissionNo(studentRequest.getAdmissionNo());
+	    studentDetails.setRollNumber(studentRequest.getRollNumber());
+	    studentDetails.setStudentPicture(studentRequest.getStudentPicture());
+	    studentDetails.setGrade(studentRequest.getGrade());
+	    studentDetails.setGradeSection(studentRequest.getGradeSection());
+	    studentDetails.setFirstName(studentRequest.getFirstName());
+	    studentDetails.setMiddleName(studentRequest.getMiddleName());
+	    studentDetails.setLastName(studentRequest.getLastName());
+	    studentDetails.setDob(studentRequest.getDob());
+	    studentDetails.setDobPlace(studentRequest.getDobPlace());
+	    studentDetails.setGender(studentRequest.getGender());
+	    studentDetails.setBloodGroup(studentRequest.getBloodGroup());
+	    studentDetails.setNationality(studentRequest.getNationality());
+	    studentDetails.setCategory(studentRequest.getCategory());
+	    studentDetails.setReligion(studentRequest.getReligion());
+	    studentDetails.setAadharNumber(studentRequest.getAadharNumber());
+	    studentDetails.setBirthCertificateNumber(studentRequest.getBirthCertificateNumber());
+	    studentDetails.setPermanentEducationNumber(studentRequest.getPermanentEducationNumber());
+	    studentDetails.setShikshaId(studentRequest.getShikshaId());
+	    studentDetails.setSessionName(studentRequest.getSessionName());
+	    studentDetails.setSiblingAdmissionNumber(studentRequest.getSiblingAdmissionNumber());
+
+	    // Parent Details
+	    studentDetails.setFatherName(studentRequest.getFatherName());
+	    studentDetails.setFatherMobileNo(studentRequest.getFatherMobileNo());
+	    studentDetails.setMotherName(studentRequest.getMotherName());
+	    studentDetails.setMotherMobileNo(studentRequest.getMotherMobileNo());
+
+	    // Current Address
+	    studentDetails.setCurrentAddress(studentRequest.getCurrentAddress());
+	    studentDetails.setCurrentCity(studentRequest.getCurrentCity());
+	    studentDetails.setCurrentState(studentRequest.getCurrentState());
+	    studentDetails.setCurrentPin(studentRequest.getCurrentPin());
+
+	    // Permanent Address
+	    studentDetails.setPermanentAddress(studentRequest.getPermanentAddress());
+	    studentDetails.setPermanentCity(studentRequest.getPermanentCity());
+	    studentDetails.setPermanentState(studentRequest.getPermanentState());
+	    studentDetails.setPermanentPin(studentRequest.getPermanentPin());
+
+	    // Previous School Details
+	    studentDetails.setPreviousSchool(studentRequest.getPreviousSchool());
+	    studentDetails.setReasonForChange(studentRequest.getReasonForChange());
+	    studentDetails.setLastClassAttended(studentRequest.getLastClassAttended());
+
+	    // Audit Fields
+//	    studentDetails.setStatus(Status.ACTIVE.name());
+//	    studentDetails.setCreatedAt(new Date());
+//	    studentDetails.setCreatedBy(studentRequest.getCreatedBy());
+//	    studentDetails.setCreatedByName(studentRequest.getCreatedByName());
+//	    studentDetails.setSuperadminId(studentRequest.getSuperadminId());
+
+	    return studentDetails;
+	}
+
+	@Transactional
+	public StudentDetails updateStudentDetails(StudentDetails studentDetails) {
+		studentDetailsDao.update(studentDetails);
 		return studentDetails;
 	}
 

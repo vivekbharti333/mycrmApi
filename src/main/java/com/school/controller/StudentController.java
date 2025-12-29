@@ -36,10 +36,24 @@ public class StudentController {
 	@RequestMapping(path = "addStudent", method = RequestMethod.POST)
 	public Response<StudentRequestObject> addStudent(@RequestBody Request<StudentRequestObject> studentRequestObject,
 			HttpServletRequest request) {
-		System.out.println("Enter");
 		GenricResponse<StudentRequestObject> responseObj = new GenricResponse<StudentRequestObject>();
 		try {
 			StudentRequestObject response = studentService.addStudent(studentRequestObject);
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "updateStudent", method = RequestMethod.POST)
+	public Response<StudentRequestObject> updateStudent(@RequestBody Request<StudentRequestObject> studentRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<StudentRequestObject> responseObj = new GenricResponse<StudentRequestObject>();
+		try {
+			StudentRequestObject response = studentService.updateStudent(studentRequestObject);
 			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());

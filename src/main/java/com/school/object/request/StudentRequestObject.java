@@ -27,7 +27,7 @@ public class StudentRequestObject {
 	private String aadharNumber;
 	private String birthCertificateNumber;
 	private String permanentEducationNumber;
-	private String eShikshaId;
+	private String shikshaId;
 	private String sessionName;
 	private String siblingAdmissionNumber;
 	

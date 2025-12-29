@@ -39,6 +39,25 @@ public class StudentService {
 			return studentRequest;
 		}
 	}
+	
+	public StudentRequestObject updateStudent(Request<StudentRequestObject> studentRequestObject) throws BizException {
+		StudentRequestObject studentRequest = studentRequestObject.getPayload();
+		studentHelper.validateStudentRequest(studentRequest);
+
+		StudentDetails studentDetails = studentHelper.getStudentDetailsById(studentRequest.getId());
+		if (studentDetails != null) {
+			studentDetails = studentHelper.getUpdatedStudentDetailsByReqObj(studentRequest, studentDetails);
+			studentDetails = studentHelper.saveStudentDetails(studentDetails);
+
+			studentRequest.setRespCode(Constant.SUCCESS_CODE);
+			studentRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return studentRequest;
+		} else {
+			studentRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			studentRequest.setRespMesg(Constant.DATA_NOT_FOUND);
+			return studentRequest;
+		}
+	}
 
 	public List<StudentDetails> getStudentDetails(Request<StudentRequestObject> studentRequestObject) {
 		StudentRequestObject studentRequest = studentRequestObject.getPayload();
