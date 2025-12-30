@@ -18,7 +18,6 @@ public class GenricResponse <T> {
         if(responseCode != null){
             response.setResponseCode(responseCode);
         }
-        
         response.setResponseMessage(Status.SUCCESS.name());
         return  response;
     }
@@ -36,7 +35,6 @@ public class GenricResponse <T> {
         	response.setResponseCode(Constant.NO_CONTENT_CODE);
         	response.setResponseMessage(Constant.DATA_NOT_FOUND);
         }
-        
         return  response;
     }
 	
@@ -56,7 +54,7 @@ public class GenricResponse <T> {
 	}
 	
     @SuppressWarnings({ "unchecked", "rawtypes" })
-	public  Response<T> createErrorResponse(Integer errorCode,String errorMessage) 
+	public Response<T> createErrorResponse(Integer errorCode,String errorMessage) 
     {
         Response response = new Response();
         response.setResponseMessage(errorMessage);

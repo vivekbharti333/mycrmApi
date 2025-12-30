@@ -17,10 +17,8 @@ import com.common.exceptions.BizException;
 import com.common.object.request.Request;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
-import com.school.entities.StudentDetails;
 import com.school.object.request.SchoolReceiptRequest;
 import com.school.services.ReceiptService;
-import com.school.services.StudentService;
 
 
 @CrossOrigin(origins = "*")
@@ -63,17 +61,17 @@ public class ReceiptController {
 //			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 //		}
 //	}
-//	
-//	
-//	@RequestMapping(path = "getStudentDetails", method = RequestMethod.POST)
-//	public Response<StudentDetails> getStudentDetails(@RequestBody Request<SchoolReceiptRequest> SchoolReceiptRequest) {
-//		GenricResponse<StudentDetails> response = new GenricResponse<StudentDetails>();
-//		try {
-//			List<StudentDetails> studentList = studentService.getStudentDetails(SchoolReceiptRequest);
-//			return response.createListResponse(studentList, 200, String.valueOf(studentList.size()));
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
-//		}
-//	}
+
+	
+	@RequestMapping(path = "getReceiptDetails", method = RequestMethod.POST)
+	public Response<SchoolReceiptRequest> getReceiptDetails(@RequestBody Request<SchoolReceiptRequest> SchoolReceiptRequest) {
+		GenricResponse<SchoolReceiptRequest> response = new GenricResponse<SchoolReceiptRequest>();
+		try {
+			List<SchoolReceiptRequest> receiptList = receiptService.getReceiptDetails(SchoolReceiptRequest);
+			return response.createListResponse(receiptList, 200, String.valueOf(receiptList.size()));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		}
+	}
 }
