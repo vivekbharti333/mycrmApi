@@ -3,10 +3,12 @@ package com.school.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,7 +19,14 @@ import com.common.exceptions.BizException;
 import com.common.object.request.Request;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
 import com.school.object.request.SchoolReceiptRequest;
+import com.school.pdf.AdmissionFormPdf;
+import com.school.pdf.FeeReceiptPdf;
 import com.school.services.ReceiptService;
 
 
@@ -29,6 +38,12 @@ public class ReceiptController {
 
 	@Autowired
 	private	ReceiptService receiptService;
+	
+	@Autowired
+	private FeeReceiptPdf feeReceiptPdf;
+	
+	@Autowired
+	private AdmissionFormPdf admissionFormPdf;
 	
 
 
@@ -74,4 +89,28 @@ public class ReceiptController {
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		}
 	}
+	
+	@GetMapping("downloadReceipt")
+	public void downloadReceiptPdf(HttpServletResponse response) throws Exception {
+
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+	    PdfWriter writer = new PdfWriter(baos);
+	    PdfDocument pdf = new PdfDocument(writer);
+	    Document document = new Document(pdf, PageSize.A4);
+
+//	    feeReceiptPdf.generate(document);
+	    admissionFormPdf.generate(document);
+	    
+	    
+
+	    document.close();
+
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-Disposition", "attachment; filename=Fee_Receipt.pdf");
+
+	    response.getOutputStream().write(baos.toByteArray());
+	    response.getOutputStream().flush();
+	}
+
 }

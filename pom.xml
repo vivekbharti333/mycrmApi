@@ -27,7 +27,8 @@
 			<version>1.18.30</version>
 			<scope>provided</scope>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-rekognition -->
+		<!--
+		https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk-rekognition -->
 		<dependency>
 			<groupId>com.amazonaws</groupId>
 			<artifactId>aws-java-sdk-rekognition</artifactId>
@@ -102,7 +103,8 @@
 		</dependency>
 
 
-		<!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
+		<!--
+		https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
 		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
@@ -113,7 +115,8 @@
 			<artifactId>log4j-core</artifactId>
 			<version>2.16.0</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+		<!--
+		https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-core</artifactId>
@@ -160,12 +163,20 @@
 			<version>0.9.1</version>
 		</dependency>
 
-		<dependency>
+		<!--<dependency>
 			<groupId>com.itextpdf</groupId>
 			<artifactId>itext7-core</artifactId>
 			<version>7.1.9</version>
 			<type>pom</type>
+		</dependency>-->
+
+		<dependency>
+			<groupId>com.itextpdf</groupId>
+			<artifactId>itext7-core</artifactId>
+			<version>8.0.2</version>
+			<type>pom</type>
 		</dependency>
+
 
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
@@ -192,8 +203,6 @@
 			<artifactId>log4j-api</artifactId>
 			<version>2.23.1</version>
 		</dependency> -->
-
-
 
 
 		<!-- iText pdfHTML add-on -->
@@ -263,7 +272,8 @@
 			<artifactId>spring-security-config</artifactId>
 			<version>4.2.12.RELEASE</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+		<!--
+		https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
@@ -302,10 +312,12 @@
 			<version>7.0.2.Final</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>com.itextpdf</groupId> <artifactId>html2pdf</artifactId> 
+		<!-- <dependency> <groupId>com.itextpdf</groupId>
+		<artifactId>html2pdf</artifactId> 
 			<version>2.1.6</version> </dependency> -->
 
-		<!-- https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf-itext5 -->
+		<!--
+		https://mvnrepository.com/artifact/org.xhtmlrenderer/flying-saucer-pdf-itext5 -->
 		<dependency>
 			<groupId>org.xhtmlrenderer</groupId>
 			<artifactId>flying-saucer-pdf-itext5</artifactId>
@@ -332,7 +344,8 @@
 		<repository>
 			<id>springsource-milestones</id>
 			<name>SpringSource Milestones Proxy</name>
-			<url>https://oss.sonatype.org/content/repositories/springsource-milestones</url>
+			<url>
+				https://oss.sonatype.org/content/repositories/springsource-milestones</url>
 		</repository>
 	</repositories>
 
