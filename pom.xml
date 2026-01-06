@@ -19,6 +19,21 @@
 	</properties>
 
 	<dependencies>
+	
+	<!-- OkHttp -->
+<!--<dependency>
+    <groupId>com.squareup.okhttp3</groupId>
+    <artifactId>okhttp</artifactId>
+    <version>4.12.0</version>
+</dependency>-->
+
+<!-- Okio (MUST match OkHttp) -->
+<dependency>
+    <groupId>com.squareup.okio</groupId>
+    <artifactId>okio</artifactId>
+    <version>3.6.0</version>
+</dependency>
+
 
 		<!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
 		<dependency>

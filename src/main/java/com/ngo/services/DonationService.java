@@ -37,6 +37,7 @@ import com.ngo.helper.PaymentGatewayHelper;
 import com.ngo.object.request.DonationRequestObject;
 import com.ngo.paymentgateway.CashfreePaymentGateway;
 import com.ngo.paymentgateway.PhonePePaymentGateway;
+import com.ngo.whatsapp.SendWhatsappMsg;
 import com.spring.common.PdfInvoice;
 import com.spring.common.ShortUrl;
 
@@ -66,6 +67,9 @@ public class DonationService {
 	
 	@Autowired
 	private PdfInvoice pdfInvoice;
+	
+	@Autowired
+	private SendWhatsappMsg sendWhatsAppMsg;
 
 	@Autowired
 	private PaymentGatewayHelper paymentGatewayHelper;
@@ -126,12 +130,12 @@ public class DonationService {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
 			}
 			
-			boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(donationRequest.getSuperadminId(), ResourceType.DONATION_RECEIPT.name());
-			if (!isUnderLimit) {
-				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				donationRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
-				return donationRequest;
-			}
+//			boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(donationRequest.getSuperadminId(), ResourceType.DONATION_RECEIPT.name());
+//			if (!isUnderLimit) {
+//				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+//				donationRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
+//				return donationRequest;
+//			}
 
 			// Validate Fields
 			donationHelper.validateDonationRequestFields(donationRequest);
@@ -193,6 +197,10 @@ public class DonationService {
 				
 				// whats app
 //				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
+				if(donationDetails.getSuperadminId().equalsIgnoreCase("9220208888") || donationDetails.getSuperadminId().equalsIgnoreCase("9029400401")) {
+					sendWhatsAppMsg.sendFixedWhatsAppMesageMessage(donationDetails);
+				}
+				
 				
 				
 				//Delete Invoice
