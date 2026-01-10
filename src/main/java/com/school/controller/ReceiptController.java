@@ -100,7 +100,7 @@ public class ReceiptController {
 	    Document document = new Document(pdf, PageSize.A4);
 
 //	    feeReceiptPdf.generate(document);
-	    admissionFormPdf.generate(document);
+//	    admissionFormPdf.generate(document);
 	    
 	    
 

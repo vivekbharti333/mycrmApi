@@ -18,11 +18,11 @@ import com.ngo.entities.PaymentGatewayResponseDetails;
 import com.ngo.helper.PaymentGatewayResponseHelper;
 import com.ngo.helper.PhonePePgHelper;
 import com.ngo.object.request.DonationRequestObject;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
+//import com.squareup.okhttp.MediaType;
+//import com.squareup.okhttp.OkHttpClient;
+//import com.squareup.okhttp.Request;
+//import com.squareup.okhttp.RequestBody;
+//import com.squareup.okhttp.Response;
 
 @Component
 public class PhonePePaymentGateway {
@@ -116,43 +116,45 @@ public class PhonePePaymentGateway {
 		String encodedString = Base64.getEncoder().encodeToString(param.getBytes());
 		String xVeryfy = getSha256(encodedString, paymentGatewayDetails.getSaltKey());
 
-		OkHttpClient client = new OkHttpClient();
-
-		JSONObject requestedParam = new JSONObject();
-		requestedParam.put("request", encodedString);
-
-		// Build the request body with JSON content
-		RequestBody body = RequestBody.create(MediaType.parse("application/json"), requestedParam.toString());
-
-		// Build the request
-		Request request = new Request.Builder()
-				.url("https://api.phonepe.com/apis/hermes/pg/v1/pay").post(body)
-				.addHeader("accept", "application/json")
-				.addHeader("Content-Type", "application/json")
-				.addHeader("X-VERIFY", xVeryfy + "###" + paymentGatewayDetails.getSaltIndex())
-				.build();
+//		OkHttpClient client = new OkHttpClient();
+//
+//		JSONObject requestedParam = new JSONObject();
+//		requestedParam.put("request", encodedString);
+//
+//		// Build the request body with JSON content
+//		RequestBody body = RequestBody.create(MediaType.parse("application/json"), requestedParam.toString());
+//
+//		// Build the request
+//		Request request = new Request.Builder()
+//				.url("https://api.phonepe.com/apis/hermes/pg/v1/pay").post(body)
+//				.addHeader("accept", "application/json")
+//				.addHeader("Content-Type", "application/json")
+//				.addHeader("X-VERIFY", xVeryfy + "###" + paymentGatewayDetails.getSaltIndex())
+//				.build();
 		
 
 		// Execute the request
-		Response response = null;
-		try {
-			response = client.newCall(request).execute();
-			if (response.isSuccessful()) {
-				result = response.body().string();
-				return result;
-			} else {
-				System.out.println("Unexpected response code: " + response);
-				result = response.body().string();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		finally {
-            if (response != null) {
-                response.body().close();
-            }
-        }
+//		Response response = null;
+//		try {
+//			response = client.newCall(request).execute();
+//			if (response.isSuccessful()) {
+//				result = response.body().string();
+//				return result;
+//			} else {
+//				System.out.println("Unexpected response code: " + response);
+//				result = response.body().string();
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		finally {
+//            if (response != null) {
+//                response.body().close();
+//            }
+//        }
 		return result;
 	}
+	
+	
 
 }

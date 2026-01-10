@@ -25,6 +25,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -33,6 +35,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.ResponseEntity.BodyBuilder;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -137,41 +140,75 @@ public class InvoiceController {
    }
 
    @RequestMapping(
-      value = {"/donationinvoice/{reffNo}"},
-      method = {RequestMethod.GET}
-   )
-   public Object donationinvoice(@PathVariable String reffNo) throws IOException {
-      DonationDetails donationDetails = this.donationHelper.getDonationDetailsByReferenceNo(reffNo);
-      ModelAndView modelAndView;
-      if (donationDetails != null) {
-         if (!donationDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
-            InvoiceHeaderDetails invoiceHeader = this.invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
-            ByteArrayOutputStream pdfStream = this.pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
-            headers.add("Pragma", "no-cache");
-            headers.add("Expires", "0");
-            headers.setContentLength((long)pdfStream.size());
-            String fileName = invoiceHeader.getCompanyFirstName() + "-invoice.pdf";
-            headers.setContentDispositionFormData("attachment", fileName);
-            InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(pdfStream.toByteArray()));
-//            return new ResponseEntity(isr, headers, HttpStatus.OK);
-            return new ResponseEntity<InputStreamResource>(isr, headers, HttpStatus.OK);
-         } else {
-            modelAndView = new ModelAndView("message");
-            modelAndView.addObject("message", "Cancelled request. Please contact admin for details.");
-            modelAndView.setViewName("message");
-            return modelAndView;
-         }
-      } else {
-         modelAndView = new ModelAndView("message");
-         modelAndView.addObject("message", "Invalid request. Please contact admin for details.");
-         modelAndView.setViewName("message");
-         return modelAndView;
-      }
-   }
+		      value = {"/donationinvoice/{reffNo}"},
+		      method = {RequestMethod.GET}
+		   )
+		   public Object donationinvoice(@PathVariable String reffNo) throws IOException {
+		      DonationDetails donationDetails = this.donationHelper.getDonationDetailsByReferenceNo(reffNo);
+		      ModelAndView modelAndView;
+		      if (donationDetails != null) {
+		         if (!donationDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+		            InvoiceHeaderDetails invoiceHeader = this.invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
+		            ByteArrayOutputStream pdfStream = this.pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+		            HttpHeaders headers = new HttpHeaders();
+		            headers.setContentType(MediaType.APPLICATION_PDF);
+		            headers.add("Cache-Control", "no-cache, no-store, must-revalidate");
+		            headers.add("Pragma", "no-cache");
+		            headers.add("Expires", "0");
+		            headers.setContentLength((long)pdfStream.size());
+		            String fileName = invoiceHeader.getCompanyFirstName() + "-invoice.pdf";
+		            headers.setContentDispositionFormData("attachment", fileName);
+		            InputStreamResource isr = new InputStreamResource(new ByteArrayInputStream(pdfStream.toByteArray()));
+		            return new ResponseEntity(isr, headers, HttpStatus.OK);
+		         } else {
+		            modelAndView = new ModelAndView("message");
+		            modelAndView.addObject("message", "Cancelled request. Please contact admin for details.");
+		            modelAndView.setViewName("message");
+		            return modelAndView;
+		         }
+		      } else {
+		         modelAndView = new ModelAndView("message");
+		         modelAndView.addObject("message", "Invalid request. Please contact admin for details.");
+		         modelAndView.setViewName("message");
+		         return modelAndView;
+		      }
+		   }
 
+//   @GetMapping("/donationinvoice/{reffNo}")
+//   public void donationinvoice(
+//           @PathVariable("reffNo") String reffNo,
+//           HttpServletResponse response) throws Exception {
+//
+//       DonationDetails donationDetails =
+//               donationHelper.getDonationDetailsByReferenceNo(reffNo);
+//
+//       if (donationDetails == null ||
+//           Status.INACTIVE.name().equalsIgnoreCase(donationDetails.getStatus())) {
+//
+//           response.sendError(HttpServletResponse.SC_NOT_FOUND);
+//           return;
+//       }
+//
+//       InvoiceHeaderDetails invoiceHeader =
+//               invoiceHelper.getInvoiceHeaderById(
+//                       donationDetails.getInvoiceHeaderDetailsId());
+//
+//       ByteArrayOutputStream pdfStream =
+//               pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
+//
+//       response.reset();
+//       response.setContentType("application/pdf");
+//       response.setHeader("Content-Disposition",
+//               "attachment; filename=\"" +
+//               invoiceHeader.getCompanyFirstName() + "-invoice.pdf\"");
+//
+//       response.setContentLength(pdfStream.size());
+//
+//       pdfStream.writeTo(response.getOutputStream());
+//       response.getOutputStream().flush();
+//   }
+
+   
    @RequestMapping({"/getreceipt"})
    public ResponseEntity<?> getPdf(@RequestParam String fileName) {
       try {
