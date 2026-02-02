@@ -194,7 +194,6 @@ public class StudentHelper {
 		
 		List<StudentDetails> results = new ArrayList<>();
 		String sqlQuery = "SELECT sd FROM StudentDetails sd WHERE sd.superadminId = :superadminId";
-
 		results = studentDetailsDao.getEntityManager().createQuery(sqlQuery,StudentDetails.class)
 	        .setParameter("superadminId", studentRequest.getSuperadminId())
 	        .getResultList();

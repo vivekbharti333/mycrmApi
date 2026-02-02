@@ -292,8 +292,6 @@ public class UserService {
 		if (isUnderLimit) {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
-			
-			System.out.println("Enter 1");
 			return userRequest;
 		}
 		

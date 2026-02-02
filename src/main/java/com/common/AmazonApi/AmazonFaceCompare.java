@@ -20,7 +20,6 @@ import com.common.enums.Status;
 import com.ngo.entities.ApiDetails;
 import com.ngo.helper.APIHelper;
 import com.ngo.object.request.AttendanceRequestObject;
-import com.spring.common.Base64Image;
 
 @Component
 public class AmazonFaceCompare {
@@ -28,8 +27,6 @@ public class AmazonFaceCompare {
 	@Autowired
 	private APIHelper apiHelper;
 	
-	@Autowired
-	private Base64Image base64Image;
 
 	public AttendanceRequestObject amazonFaceCompare(AttendanceRequestObject attendanceRequest) {
 //	    Map<String, Object> resultMap = new HashMap<>();
