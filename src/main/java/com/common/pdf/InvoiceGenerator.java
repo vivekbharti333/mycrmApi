@@ -13,8 +13,8 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 //import com.itextpdf.layout.border.*;
 import com.itextpdf.layout.element.*;
-import com.itextpdf.layout.properties.TextAlignment;
-import com.itextpdf.layout.properties.UnitValue;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
 import com.itextpdf.text.Font;
 import com.itextpdf.text.FontFactory;
 
@@ -106,7 +106,7 @@ public class InvoiceGenerator {
                             .setMinHeight(25)
                     .setBorder(Border.NO_BORDER)
                     .setTextAlignment(TextAlignment.RIGHT)
-                    .setVerticalAlignment(com.itextpdf.layout.properties.VerticalAlignment.MIDDLE);
+                    .setVerticalAlignment(com.itextpdf.layout.property.VerticalAlignment.MIDDLE);
            
 
             header.addCell(companyInfo);

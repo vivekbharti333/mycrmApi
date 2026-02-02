@@ -360,7 +360,7 @@
 				<version>2.0.2</version>
 				<configuration>
 					<source>${java.version}</source>
-					<target>9.0</target>
+					<target>${java.version}</target>
 				</configuration>
 			</plugin>
 		</plugins>
