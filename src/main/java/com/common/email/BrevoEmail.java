@@ -1,34 +1,9 @@
 package com.common.email;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
 import java.util.Date;
 import java.util.Properties;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import javax.transaction.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.common.enums.Status;
-import com.ngo.dao.SmsTemplateDetailsDao;
-import com.ngo.entities.DonationDetails;
-import com.ngo.entities.EmailServiceDetails;
-import com.ngo.entities.InvoiceHeaderDetails;
-import com.ngo.entities.SmsTemplateDetails;
-import com.ngo.helper.DonationHelper;
-import com.ngo.helper.InvoiceHelper;
-import com.ngo.services.InvoiceService;
-import com.spring.common.PdfInvoice;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -39,12 +14,26 @@ import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.mail.util.ByteArrayDataSource;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.common.entities.InvoiceHeaderDetails;
+import com.ngo.dao.SmsTemplateDetailsDao;
+import com.ngo.entities.DonationDetails;
+import com.ngo.entities.EmailServiceDetails;
+import com.ngo.entities.SmsTemplateDetails;
+import com.spring.common.PdfInvoice;
 
 @Component
 public class BrevoEmail {
@@ -55,15 +44,7 @@ public class BrevoEmail {
 
 	@Autowired
 	private PdfInvoice pdfInvoice;
-	
-	@Autowired
-	private InvoiceService invoiceService;
 
-	@Autowired
-	private static DonationHelper donationHelper;
-
-	@Autowired
-	private static InvoiceHelper invoiceHelper;
 	
 //	StringUtils.substring(RandomStringUtils.random(64, false, true), 0,6)
 

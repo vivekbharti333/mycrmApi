@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.constant.Constant;
+import com.common.entities.InvoiceHeaderDetails;
 import com.common.entities.UserDetails;
 import com.common.enums.PaymentMode;
 import com.common.enums.RequestFor;
@@ -24,15 +25,15 @@ import com.common.enums.ResourceType;
 import com.common.enums.RoleType;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
+import com.common.helper.InvoiceHeaderHelper;
 import com.common.helper.UsageLimitConsumptionHelper;
 import com.common.helper.UserHelper;
 import com.common.jwt.JwtTokenUtil;
 import com.common.object.request.Request;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.InvoiceHeaderDetails;
 import com.ngo.entities.PaymentGatewayDetails;
 import com.ngo.helper.DonationHelper;
-import com.ngo.helper.InvoiceHelper;
+
 import com.ngo.helper.PaymentGatewayHelper;
 import com.ngo.object.request.DonationRequestObject;
 import com.ngo.paymentgateway.CashfreePaymentGateway;
@@ -57,7 +58,7 @@ public class DonationService {
 	private UserHelper userHelper;
 
 	@Autowired
-	private InvoiceHelper invoiceHelper;
+	private InvoiceHeaderHelper invoiceHelper;
 
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;

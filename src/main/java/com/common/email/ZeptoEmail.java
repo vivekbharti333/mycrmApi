@@ -26,8 +26,6 @@ import com.ngo.email.template.DonationThankYou;
 import com.ngo.entities.DonationDetails;
 import com.ngo.entities.SmsTemplateDetails;
 import com.ngo.helper.DonationHelper;
-import com.ngo.helper.InvoiceHelper;
-import com.ngo.services.InvoiceService;
 import com.spring.common.PdfInvoice;
 
 @Component

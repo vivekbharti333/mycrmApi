@@ -28,7 +28,6 @@ import com.ngo.dao.SmsTemplateDetailsDao;
 import com.ngo.dao.WhatsAppDetailsDao;
 import com.ngo.entities.CustomerDetails;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.InvoiceHeaderDetails;
 import com.ngo.entities.SmsTemplateDetails;
 import com.ngo.entities.WhatsAppDetails;
 import com.ngo.object.request.CustomerRequestObject;

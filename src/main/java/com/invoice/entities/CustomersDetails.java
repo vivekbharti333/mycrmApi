@@ -44,5 +44,11 @@ public class CustomersDetails {
 
     @Column(name = "created_at", updatable = false)
     private Date createdAt;
+    
+    @Column(name = "created_by", updatable = false)
+    private Date createdBy;
+    
+    @Column(name = "superadmin_id", updatable = false)
+    private Date superadminId;
 
 }

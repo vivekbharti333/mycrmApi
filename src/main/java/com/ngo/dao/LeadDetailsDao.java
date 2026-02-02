@@ -1,8 +1,7 @@
 package com.ngo.dao;
 
 import org.springframework.stereotype.Repository;
-
-import com.ngo.entities.EnquiryDetails;
+import com.common.dao.BaseDao;
 import com.ngo.entities.LeadDetails;
 
 @Repository

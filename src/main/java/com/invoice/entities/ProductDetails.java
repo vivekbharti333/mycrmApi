@@ -1,7 +1,7 @@
 package com.invoice.entities;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,12 +27,15 @@ public class ProductDetails {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    @Column(name = "unit_price", precision = 10, scale = 2, nullable = false)
-    private BigDecimal unitPrice;
-
-    @Column(name = "tax_id")
-    private Long taxId;
+    @Column(name = "rate", precision = 10, scale = 2, nullable = false)
+    private BigDecimal rate;
 
     @Column(name = "created_at", updatable = false)
-    private Date createdAt;
+    private LocalDate createdAt;
+    
+    @Column(name = "created_by", updatable = false)
+    private String createdBy;
+    
+    @Column(name = "superadmin_id", updatable = false)
+    private String superadminId;
 }

@@ -24,15 +24,15 @@ import com.common.AmazonApi.AmazonFaceCompare;
 import com.common.constant.Constant;
 import com.common.email.NimbusEmail;
 import com.common.email.ZeptoEmail;
+import com.common.entities.InvoiceHeaderDetails;
 import com.common.entities.UserDetails;
 import com.common.exceptions.BizException;
+import com.common.helper.InvoiceHeaderHelper;
 import com.common.helper.TestHelper;
 import com.ngo.entities.AddressDetails;
-import com.ngo.entities.InvoiceHeaderDetails;
 import com.ngo.helper.DonationHelper;
 import com.ngo.helper.EmailHelper;
 import com.ngo.helper.FaceRecognitionHelper;
-import com.ngo.helper.InvoiceHelper;
 import com.ngo.object.request.AttendanceRequestObject;
 import com.ngo.object.request.DonationRequestObject;
 import com.ngo.services.LoginAttemptService;
@@ -67,7 +67,7 @@ public class UserController {
 	
     
     @Autowired 
-    private InvoiceHelper invoiceHelper;
+    private InvoiceHeaderHelper invoiceHelper;
 
     @Autowired
     private PdfInvoice pdfInvoice;

@@ -10,10 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
-import com.itextpdf.html2pdf.ConverterProperties;
+import com.common.entities.InvoiceHeaderDetails;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.InvoiceHeaderDetails;
 import com.ngo.helper.DonationHelper;
 
 
@@ -123,59 +122,29 @@ public class PdfInvoice {
 	
 	
 
-//	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
-//			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
-//
-//		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
-//
-//		donationDetails.setInvoiceDownloadStatus("YES");
-//		donationHelper.updateDonationDetails(donationDetails);
-//
-//		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
-//
-//		// Convert HTML to PDF and write it to the output stream
-//		HtmlConverter.convertToPdf(htmlContent, pdfStream);
-//
-//		//Coment it if dont want to save in local storage
-//		try (FileOutputStream fileOutputStream = new FileOutputStream(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf")) {
-//	        pdfStream.writeTo(fileOutputStream);
-//	        
-//	        System.out.println("Pdf Done");
-//	        
-//	    }
-//			
-//		return pdfStream;
-//	}
-	
-	public ByteArrayOutputStream generatePdfInvoice(
-	        DonationDetails donationDetails,
-	        InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
+	public ByteArrayOutputStream generatePdfInvoice(DonationDetails donationDetails,
+			InvoiceHeaderDetails invoiceHeaderDetails) throws IOException {
 
-	    ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
+		ByteArrayOutputStream pdfStream = new ByteArrayOutputStream();
 
-	    String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
+		donationDetails.setInvoiceDownloadStatus("YES");
+		donationHelper.updateDonationDetails(donationDetails);
 
-	    ConverterProperties props = new ConverterProperties();
-	    props.setCharset("UTF-8");
+		String htmlContent = htmlInvoice(donationDetails, invoiceHeaderDetails);
 
-	    HtmlConverter.convertToPdf(htmlContent, pdfStream, props);
+		// Convert HTML to PDF and write it to the output stream
+		HtmlConverter.convertToPdf(htmlContent, pdfStream);
 
-	    // Update DB only after success
-	    donationDetails.setInvoiceDownloadStatus("YES");
-	    donationHelper.updateDonationDetails(donationDetails);
-
-	    // Optional local save
-	    try (FileOutputStream fos = new FileOutputStream(
-	            Constant.baseDocLocation +
-	            Constant.receipt +
-	            donationDetails.getReceiptNumber() + ".pdf")) {
-
-	        pdfStream.writeTo(fos);
+		//Coment it if dont want to save in local storage
+		try (FileOutputStream fileOutputStream = new FileOutputStream(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf")) {
+	        pdfStream.writeTo(fileOutputStream);
+	        
+	        System.out.println("Pdf Done");
+	        
 	    }
-
-	    return pdfStream;
+			
+		return pdfStream;
 	}
-
 	
 	public boolean deleteInvoiceFile(DonationDetails donationDetails) {
 	    File file = new File(Constant.baseDocLocation+Constant.receipt+donationDetails.getReceiptNumber().toString()+".pdf");
