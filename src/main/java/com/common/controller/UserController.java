@@ -81,8 +81,6 @@ public class UserController {
     @Autowired
     private ItextPdfReceipt itextPdfReceipt;
     
-    @Autowired
-    private InvoiceGenerator invoiceGenerator;
     
     @Autowired
     private ZeptoEmail zeptoEmail;
@@ -95,16 +93,6 @@ public class UserController {
     
     
     
-    @GetMapping("/download/invoice")
-    public ResponseEntity<byte[]> downloadInvoice() throws IOException {
-        byte[] pdf = invoiceGenerator.generateInvoice();
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Invoice_DEF-10_002.pdf")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(pdf);
-    }
-     
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException, MessagingException {

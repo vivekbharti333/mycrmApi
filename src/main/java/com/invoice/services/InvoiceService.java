@@ -133,4 +133,11 @@ public class InvoiceService {
 		return invoiceList;
 	}
 
+	public List<InvoiceRequestObject> downloadInvoice(Request<InvoiceRequestObject> invoiceRequestObject)
+			throws Exception {
+		InvoiceRequestObject request = invoiceRequestObject.getPayload();
+		
+				return null;
+		
+	}
 }

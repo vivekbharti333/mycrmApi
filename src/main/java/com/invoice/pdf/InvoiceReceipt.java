@@ -113,12 +113,14 @@ public class InvoiceReceipt {
         companyCell.addElement(new Paragraph(" "));
 
         Paragraph company = new Paragraph();
-        company.add(new Chunk(invoiceHeaderDetails.getCompanyFirstName()+" "+invoiceHeaderDetails.getCompanyLastName()+"\n", bold));
-        company.add("GSTIN : 09AAKCD5557C1ZJ\n");
-        company.add("1507-B12, Sector-16B, Greater Noida\n");
-        company.add("Website : https://datfuslab.com\n");
-        company.add("Email : info@datfuslab.com\n");
-        company.add("Mobile : +91-7004063385\n");
+
+        company.add(new Chunk(invoiceHeaderDetails.getCompanyFirstName() + " " + invoiceHeaderDetails.getCompanyLastName() + "\n", bold));
+
+        company.add(new Chunk("GSTIN : 09AAKCD5557C1ZJ\n", normal));
+        company.add(new Chunk("1507-B12, Sector-16B, Greater Noida\n", normal));
+        company.add(new Chunk("Website : https://datfuslab.com\n", normal));
+        company.add(new Chunk("Email : info@datfuslab.com\n", normal));
+        company.add(new Chunk("Mobile : +91-7004063385\n", normal));
 
         companyCell.addElement(company);
 
