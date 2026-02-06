@@ -57,81 +57,29 @@ public class InvoiceService {
 		return invoiceRequest;
 	}
 
-//	public List<InvoiceNumber> getInvoiceNumberList(Request<InvoiceRequestObject> invoiceRequestObject) {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<InvoiceNumber> invoiceNumList = invoiceHelper.getInvoiceNumberList(invoiceRequest);
-//		return invoiceNumList;
-//	}
 
-//	public List<InvoiceDetails> getInvoiceDetailsList(Request<InvoiceRequestObject> invoiceRequestObject) {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsList(invoiceRequest);
-//		return invoiceDetails;
-//	}
-
-//	public List<Object[]> getInvoiceWithDetails(Request<InvoiceRequestObject> invoiceRequestObject) throws BizException, Exception {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<Object[]> rows= invoiceHelper.getInvoiceWithDetails(invoiceRequest);
-//		System.out.println("Row : "+rows);
-//		for (Object[] row : rows) {
-//		    InvoiceNumber invoiceNumber = (InvoiceNumber) row[0];
-//		    InvoiceDetails invoiceDetails = (InvoiceDetails) row[1];
+//	@SuppressWarnings("static-access")
+//	public List<InvoiceRequestObject> getInvoiceWithDetails(Request<InvoiceRequestObject> invoiceRequestObject)
+//			throws Exception {
 //
-//		    System.out.println(invoiceNumber.getInvoiceNumber());
-//		    System.out.println(invoiceDetails.getProductName());
-//		}
-//		return rows;
-//	}
-
-//	public List<InvoiceDetails> getInvoiceDetailsList(Request<InvoiceRequestObject> invoiceRequestObject) {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsList(invoiceRequest);
-//		return invoiceDetails;
-//	}
-
-//	public List<InvoiceRequestObject> getInvoiceWithDetails(Request<InvoiceRequestObject> invoiceRequestObject) {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<InvoiceRequestObject> invoiceRequestList = invoiceHelper.getInvoiceDetailsNumber(invoiceRequest);
-//		for(invoiceRequest.getItems() item : invoiceRequestList) {
-//			List<InvoiceRequestObject> invoicDetailsList = invoiceHelper.getInvoiceDetails(invoiceRequest);
-//		}
-//		List<InvoiceRequestObject> invoicDetailsList = invoiceHelper.getInvoiceDetails(invoiceRequest);
-//		invoiceRequestList.add(invoicDetailsList);
-//		return invoiceRequestList;
-//	}
-
-//	public List<InvoiceRequestObject> getInvoiceWithDetails(Request<InvoiceRequestObject> invoiceRequestObject) {
-//	    InvoiceRequestObject request = invoiceRequestObject.getPayload();
-//	    List<InvoiceRequestObject> invoiceList = invoiceHelper.getInvoiceWithDetails(request);
-//	    
-//	    String path = "C://invoices/abcde.pdf";
+//		InvoiceRequestObject request = invoiceRequestObject.getPayload();
+//		List<InvoiceRequestObject> invoiceList = invoiceHelper.getInvoiceWithDetails(request);
 //
-//	    invoiceReceipt.generateInvoicePdf(invoiceList, path);
-//	    return invoiceList;
+//		InvoiceHeaderDetails invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderById(invoiceList.get(0).getCompanyId());
+//
+//		// ensure directory exists
+//		String basePath = "C://invoices/";
+//		new File(basePath).mkdirs();
+//
+//		// generate PDF for each invoice
+//		for (InvoiceRequestObject invoice : invoiceList) {
+//
+//			String path = basePath + invoice.getInvoiceNumber() + ".pdf";
+//
+//			invoiceReceipt.generateInvoicePdf(invoice, path, invoiceHeaderDetails);
+//		}
+//		return invoiceList;
 //	}
-
-	@SuppressWarnings("static-access")
-	public List<InvoiceRequestObject> getInvoiceWithDetails(Request<InvoiceRequestObject> invoiceRequestObject)
-			throws Exception {
-
-		InvoiceRequestObject request = invoiceRequestObject.getPayload();
-		List<InvoiceRequestObject> invoiceList = invoiceHelper.getInvoiceWithDetails(request);
-
-		InvoiceHeaderDetails invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderById(invoiceList.get(0).getCompanyId());
-
-		// ensure directory exists
-		String basePath = "C://invoices/";
-		new File(basePath).mkdirs();
-
-		// generate PDF for each invoice
-		for (InvoiceRequestObject invoice : invoiceList) {
-
-			String path = basePath + invoice.getInvoiceNumber() + ".pdf";
-
-			invoiceReceipt.generateInvoicePdf(invoice, path, invoiceHeaderDetails);
-		}
-		return invoiceList;
-	}
 
 	public List<InvoiceRequestObject> downloadInvoice(Request<InvoiceRequestObject> invoiceRequestObject)
 			throws Exception {

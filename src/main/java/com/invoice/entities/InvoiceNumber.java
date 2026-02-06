@@ -1,8 +1,8 @@
 package com.invoice.entities;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,10 +25,27 @@ public class InvoiceNumber {
 
     @Column(name = "company_id", nullable = false)
     private Long companyId;
+    
+    // Customer Details
+    @Column(name = "customer_name", length = 200, nullable = false)
+    private String customerName;
 
-    @Column(name = "customer_id", nullable = false)
-    private Long customerId;
+    @Column(name = "email", length = 150)
+    private String email;
 
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Column(name = "gst_number", length = 20)
+    private String gstNumber;
+
+    @Column(name = "billing_address", columnDefinition = "TEXT")
+    private String billingAddress;
+    
+    @Column(name = "delivery_address", columnDefinition = "TEXT")
+    private String deliveryAddresses;
+    
+    // Invoice Number Details
     @Column(name = "invoice_number", length = 50, nullable = false, unique = true)
     private String invoiceNumber;
 
@@ -41,6 +58,24 @@ public class InvoiceNumber {
 
     @Column(name = "discount", precision = 12, scale = 2)
     private BigDecimal discount;
+    
+    @Column(name = "cgst_rate")
+	private int cgstRate;
+    
+    @Column(name = "cgst_amount")
+	private BigDecimal cgstAmount;
+    
+    @Column(name = "sgst_rate")
+	private int sgstRate;
+    
+    @Column(name = "sgst_amount")
+	private BigDecimal sgstAmount;
+    
+    @Column(name = "igst_rate")
+	private int igstRate;
+    
+    @Column(name = "igst_amount")
+	private BigDecimal igstAmount;
 
     @Column(name = "total_amount", precision = 12, scale = 2, nullable = false)
     private BigDecimal totalAmount;

@@ -213,9 +213,6 @@ public class InvoiceHeaderHelper {
 		invoiceHeaderDetails.setBranchName(invoiceRequest.getBranchName());
 
 		invoiceHeaderDetails.setUpdatedAt(new Date());
-//		invoiceHeaderDetails.setCreatedBy(invoiceRequest.getCreatedBy());
-//		invoiceHeaderDetails.setSuperadminId(invoiceRequest.getSuperadminId());
-
 		return invoiceHeaderDetails;
 	}
 
@@ -227,19 +224,20 @@ public class InvoiceHeaderHelper {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<InvoiceHeaderDetails> getInvoiceHeaderList(InvoiceHeaderRequestObject invoiceRequest) {
-		if(invoiceRequest.getRequestFor().equalsIgnoreCase("BYSUPERADMINID")) {
+//	public List<InvoiceHeaderDetails> getInvoiceHeaderList(InvoiceHeaderRequestObject invoiceRequest) {
+		public List<InvoiceHeaderDetails> getInvoiceHeaderList(String superadminId, String requestFor, Long id) {
+		if(requestFor.equalsIgnoreCase("BYSUPERADMINID")) {
 			List<InvoiceHeaderDetails> results = invoiceHeaderDetailsDao.getEntityManager()
 					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.superadminId =:superadminId AND status =:status")
-					.setParameter("superadminId", invoiceRequest.getSuperadminId())
+					.setParameter("superadminId", superadminId)
 					.setParameter("status", Status.ACTIVE.name())
 					.getResultList();
 			return results;
 			
-		}else if(invoiceRequest.getRequestFor().equalsIgnoreCase("BYID")) {
+		}else if(requestFor.equalsIgnoreCase("BYID")) {
 			List<InvoiceHeaderDetails> results = invoiceHeaderDetailsDao.getEntityManager()
 					.createQuery("SELECT IH FROM InvoiceHeaderDetails IH WHERE IH.id =:id")
-					.setParameter("id", invoiceRequest.getId())
+					.setParameter("id", id)
 					.getResultList();
 			return results;
 		}

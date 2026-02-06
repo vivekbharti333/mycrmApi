@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import com.common.constant.Constant;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
-import com.common.object.request.Request;
 import com.invoice.dao.InvoiceDetailsDao;
 import com.invoice.dao.InvoiceNumberDao;
 import com.invoice.entities.InvoiceDetails;
@@ -43,11 +42,26 @@ public class InvoiceHelper {
 		InvoiceNumber invoiceNumber = new InvoiceNumber();
 
 		invoiceNumber.setCompanyId(invoiceRequest.getCompanyId());
-		invoiceNumber.setCustomerId(invoiceRequest.getCustomerId());
+		
+		invoiceNumber.setCustomerName(invoiceRequest.getCustomerName());
+		invoiceNumber.setEmail(invoiceRequest.getEmail());
+		invoiceNumber.setPhone(invoiceRequest.getPhone());
+		invoiceNumber.setGstNumber(invoiceRequest.getGstNumber());
+		invoiceNumber.setBillingAddress(invoiceRequest.getBillingAddress());
+		invoiceNumber.setDeliveryAddresses(invoiceRequest.getDeliveryAddresses());
+		
 		invoiceNumber.setInvoiceNumber(invoiceRequest.getInvoiceNumber());
 		invoiceNumber.setDueDate(invoiceRequest.getDueDate());
 		invoiceNumber.setSubtotal(invoiceRequest.getSubtotal());
 		invoiceNumber.setDiscount(invoiceRequest.getDiscount());
+		
+		invoiceNumber.setCgstRate(invoiceRequest.getCgstRate());
+		invoiceNumber.setCgstAmount(invoiceRequest.getCgstAmount());
+		invoiceNumber.setSgstRate(invoiceRequest.getSgstRate());
+		invoiceNumber.setSgstAmount(invoiceRequest.getSgstAmount());
+		invoiceNumber.setIgstRate(invoiceRequest.getIgstRate());
+		invoiceNumber.setIgstAmount(invoiceRequest.getIgstAmount());
+		
 		invoiceNumber.setTotalAmount(invoiceRequest.getTotalAmount());
 		invoiceNumber.setStatus(Status.ACTIVE.name());
 		invoiceNumber.setPaymentMode(invoiceRequest.getPaymentMode());
@@ -177,8 +191,113 @@ public class InvoiceHelper {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<InvoiceRequestObject> getInvoiceWithDetails(
-	        InvoiceRequestObject invoiceRequest) {
+//	public List<InvoiceRequestObject> getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
+//	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
+//
+//	    String jpql;
+//
+//	    boolean fetchAll =
+//	            invoiceRequest.getRequestFor() == null ||
+//	            invoiceRequest.getRequestFor().equalsIgnoreCase("ALL");
+//
+//	    if (fetchAll) {
+//	        jpql =
+//	            "SELECT n, d FROM InvoiceNumber n LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber AND d.superadminId = :superadminId "
+//	            + "WHERE n.superadminId = :superadminId ORDER BY n.invoiceNumber";
+//	    } else {
+//	        jpql =
+//	            "SELECT n, d FROM InvoiceNumber n LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber AND d.superadminId = :superadminId "
+//	            + "WHERE n.superadminId = :superadminId AND n.invoiceNumber = :invoiceNumber ORDER BY n.invoiceNumber";
+//	    }
+//
+//	    var query = invoiceNumberDao.getEntityManager().createQuery(jpql)
+//	            .setParameter("superadminId", invoiceRequest.getSuperadminId());
+//
+//	    if (!fetchAll) {
+//	        query.setParameter("invoiceNumber", invoiceRequest.getInvoiceNumber());
+//	    }
+//
+//	    List<Object[]> rows = query.getResultList();
+//
+//	    if (rows == null || rows.isEmpty()) {
+//	        return new Array<>();
+//	    }
+//
+//	    Map<String, InvoiceRequestObject> invoiceMap = new LinkedHashMap<>();
+//
+//	    for (Object[] row : rows) {
+//
+//	        InvoiceNumber header = (InvoiceNumber) row[0];
+//	        InvoiceDetails detail = (InvoiceDetails) row[1];
+//
+//	        InvoiceRequestObject invoice =
+//	                invoiceMap.get(header.getInvoiceNumber());
+//
+//	        if (invoice == null) {
+//	            invoice = new InvoiceRequestObject();
+//	            invoice.setCompanyId(header.getCompanyId());
+//	            
+//	            invoice.setInvoiceNumber(header.getInvoiceNumber());
+//	            invoice.setInvoiceDate(header.getCreatedAt());
+//	            invoice.setDueDate(header.getDueDate());
+//	            invoice.setSubtotal(header.getSubtotal());
+//	            invoice.setDiscount(header.getDiscount());
+//	            invoice.setTotalAmount(header.getTotalAmount());
+//	            invoice.setStatus(header.getStatus());
+//	            invoice.setPaymentMode(header.getPaymentMode());
+//	            invoice.setTransactionId(header.getTransactionId());
+//	            invoice.setPaymentStatus(header.getPaymentStatus());
+//	            invoice.setInvoiceStatus(header.getInvoiceStatus());
+//	            invoice.setCreatedAt(header.getCreatedAt());
+//	            invoice.setSuperadminId(header.getSuperadminId());
+//	            invoice.setCreatedBy(header.getCreatedBy());
+//	            
+//	         // ✅ Add customer details
+//	            invoice.setCustomerName(header.getCustomerName());
+//	            invoice.setEmail(header.getEmail());
+//	            invoice.setPhone(header.getPhone());
+//	            invoice.setGstNumber(header.getGstNumber());
+//	            invoice.setBillingAddress(header.getBillingAddress());
+//	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
+//	            
+//	         // ✅ GST details
+//	            invoice.setCgstRate(header.getCgstRate());
+//	            invoice.setCgstAmount(header.getCgstAmount());
+//
+//	            invoice.setSgstRate(header.getSgstRate());
+//	            invoice.setSgstAmount(header.getSgstAmount());
+//
+//	            invoice.setIgstRate(header.getIgstRate());
+//	            invoice.setIgstAmount(header.getIgstAmount());
+//
+//	            
+//	            invoice.setItems(new ArrayList<>());
+//	            invoice.setRespCode(200);
+//	            invoice.setRespMesg("Invoice fetched successfully");
+//
+//	            invoiceMap.put(header.getInvoiceNumber(), invoice);
+//	        }
+//
+//	        // add item if present
+//	        if (detail != null) {
+//	            InvoiceItemRequest item = new InvoiceItemRequest();
+//	            item.setProductName(detail.getProductName());
+//	            item.setDescription(detail.getDescription());
+//	            item.setRate(detail.getRate());
+//	            item.setQuantity(detail.getQuantity());
+//	            item.setAmount(detail.getAmount());
+//	            item.setStatus(detail.getStatus());
+//
+//	            invoice.getItems().add(item);
+//	        }
+//	    }
+//
+//	    return new Array<>(invoiceMap.values());
+//	}
+
+	
+
+	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
 
 	    String jpql;
 
@@ -188,15 +307,23 @@ public class InvoiceHelper {
 
 	    if (fetchAll) {
 	        jpql =
-	            "SELECT n, d FROM InvoiceNumber n LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber AND d.superadminId = :superadminId "
-	            + "WHERE n.superadminId = :superadminId ORDER BY n.invoiceNumber";
+	            "SELECT n, d FROM InvoiceNumber n " +
+	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
+	            "AND d.superadminId = :superadminId " +
+	            "WHERE n.superadminId = :superadminId " +
+	            "ORDER BY n.invoiceNumber";
 	    } else {
 	        jpql =
-	            "SELECT n, d FROM InvoiceNumber n LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber AND d.superadminId = :superadminId "
-	            + "WHERE n.superadminId = :superadminId AND n.invoiceNumber = :invoiceNumber ORDER BY n.invoiceNumber";
+	            "SELECT n, d FROM InvoiceNumber n " +
+	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
+	            "AND d.superadminId = :superadminId " +
+	            "WHERE n.superadminId = :superadminId " +
+	            "AND n.invoiceNumber = :invoiceNumber " +
+	            "ORDER BY n.invoiceNumber";
 	    }
 
-	    var query = invoiceNumberDao.getEntityManager().createQuery(jpql)
+	    var query = invoiceNumberDao.getEntityManager()
+	            .createQuery(jpql, Object[].class)
 	            .setParameter("superadminId", invoiceRequest.getSuperadminId());
 
 	    if (!fetchAll) {
@@ -206,7 +333,7 @@ public class InvoiceHelper {
 	    List<Object[]> rows = query.getResultList();
 
 	    if (rows == null || rows.isEmpty()) {
-	        return new ArrayList<>();
+	        return null;
 	    }
 
 	    Map<String, InvoiceRequestObject> invoiceMap = new LinkedHashMap<>();
@@ -221,8 +348,9 @@ public class InvoiceHelper {
 
 	        if (invoice == null) {
 	            invoice = new InvoiceRequestObject();
+
+	            // Header
 	            invoice.setCompanyId(header.getCompanyId());
-	            invoice.setCustomerId(header.getCustomerId());
 	            invoice.setInvoiceNumber(header.getInvoiceNumber());
 	            invoice.setInvoiceDate(header.getCreatedAt());
 	            invoice.setDueDate(header.getDueDate());
@@ -237,6 +365,23 @@ public class InvoiceHelper {
 	            invoice.setCreatedAt(header.getCreatedAt());
 	            invoice.setSuperadminId(header.getSuperadminId());
 	            invoice.setCreatedBy(header.getCreatedBy());
+
+	            // Customer
+	            invoice.setCustomerName(header.getCustomerName());
+	            invoice.setEmail(header.getEmail());
+	            invoice.setPhone(header.getPhone());
+	            invoice.setGstNumber(header.getGstNumber());
+	            invoice.setBillingAddress(header.getBillingAddress());
+	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
+
+	            // GST
+	            invoice.setCgstRate(header.getCgstRate());
+	            invoice.setCgstAmount(header.getCgstAmount());
+	            invoice.setSgstRate(header.getSgstRate());
+	            invoice.setSgstAmount(header.getSgstAmount());
+	            invoice.setIgstRate(header.getIgstRate());
+	            invoice.setIgstAmount(header.getIgstAmount());
+
 	            invoice.setItems(new ArrayList<>());
 	            invoice.setRespCode(200);
 	            invoice.setRespMesg("Invoice fetched successfully");
@@ -244,7 +389,7 @@ public class InvoiceHelper {
 	            invoiceMap.put(header.getInvoiceNumber(), invoice);
 	        }
 
-	        // add item if present
+	        // Items
 	        if (detail != null) {
 	            InvoiceItemRequest item = new InvoiceItemRequest();
 	            item.setProductName(detail.getProductName());
@@ -258,7 +403,8 @@ public class InvoiceHelper {
 	        }
 	    }
 
-	    return new ArrayList<>(invoiceMap.values());
+	    // ✅ Return only ONE invoice
+	    return invoiceMap.values().iterator().next();
 	}
 
 

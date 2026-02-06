@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class AmountToWordsConverter {
 
-	@SuppressWarnings("unused")
 	public String amountInWords(long number) {
 
 	    if (number == 0) return "Zero";

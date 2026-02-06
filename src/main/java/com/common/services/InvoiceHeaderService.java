@@ -14,51 +14,41 @@ import com.common.helper.InvoiceHeaderHelper;
 import com.common.jwt.JwtTokenUtil;
 import com.common.object.request.Request;
 import com.ngo.entities.DonationDetails;
-import com.ngo.helper.CustomerHelper;
 import com.ngo.helper.DonationHelper;
 import com.ngo.object.request.InvoiceHeaderRequestObject;
-import com.ngo.services.AddressService;
 import com.spring.common.PdfInvoice;
-
 
 @Service
 public class InvoiceHeaderService {
-	
+
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
-	
+
 	@Autowired
 	private InvoiceHeaderHelper invoiceHelper;
-	
+
 	@Autowired
 	private PdfInvoice pdfInvoice;
-	
+
 	@Autowired
 	private DonationHelper donationHelper;
-	
-	@Autowired
-	private CustomerHelper customerHelper;
-	
-	@Autowired
-	private AddressService addressService;
-	
+
 	@Autowired
 	private JwtTokenUtil jwtTokenUtil;
-	
-	
+
 	public String generateInvoiceNumber(InvoiceHeaderRequestObject invoiceRequest, InvoiceHeaderDetails invoiceHeader) {
 
 		LocalDate currentdate = LocalDate.now();
 
 		invoiceRequest.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
 
-		String invoiceNo = invoiceHeader.getInvoiceInitial()+"/" + currentdate.getYear()+"/" + currentdate.getMonthValue()+"00"+invoiceRequest.getSerialNumber();
+		String invoiceNo = invoiceHeader.getInvoiceInitial() + "/" + currentdate.getYear() + "/"
+				+ currentdate.getMonthValue() + "00" + invoiceRequest.getSerialNumber();
 		invoiceRequest.setInvoiceNo(invoiceNo);
 
 		return invoiceNo;
 
 	}
-	
-	
+
 //	public InvoiceRequestObject addInvoiceHeaderType(Request<InvoiceRequestObject> invoiceRequestObject) throws BizException, Exception {
 //		
 //		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
@@ -85,42 +75,43 @@ public class InvoiceHeaderService {
 //		return invoicetypeList;
 //	}
 
-	
-	public InvoiceHeaderRequestObject addInvoiceHeader(Request<InvoiceHeaderRequestObject> invoiceRequestObject) 
+	public InvoiceHeaderRequestObject addInvoiceHeader(Request<InvoiceHeaderRequestObject> invoiceRequestObject)
 			throws BizException, Exception {
-		
+
 		InvoiceHeaderRequestObject invoiceRequest = invoiceRequestObject.getPayload();
 		invoiceHelper.validateInvoiceRequest(invoiceRequest);
-		
+
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
 //		if (!isValid) {
-			
-			InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderByNameAndSuperAdminId(invoiceRequest.getCompanyFirstName(),invoiceRequest.getCompanyLastName(),
-					invoiceRequest.getSuperadminId());
-			if(existsInvoiceHeader == null) {
-				
-				InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
-				invoiceHeaderDetails = invoiceHelper.saveInvoiceHeaderDetails(invoiceHeaderDetails);
-				
-				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
-				invoiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
-				return invoiceRequest;
-				
-			}else {
-				existsInvoiceHeader = invoiceHelper.getUpdatedInvoiceHeaderDetailsByReqObj(invoiceRequest, existsInvoiceHeader);
-				invoiceHelper.updateInvoiceHeaderDetails(existsInvoiceHeader);
-				
-				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
-				invoiceRequest.setRespMesg(Constant.UPDATED_SUCCESS);
-				return invoiceRequest;
-			}
+
+		InvoiceHeaderDetails existsInvoiceHeader = invoiceHelper.getInvoiceHeaderByNameAndSuperAdminId(
+				invoiceRequest.getCompanyFirstName(), invoiceRequest.getCompanyLastName(),
+				invoiceRequest.getSuperadminId());
+		if (existsInvoiceHeader == null) {
+
+			InvoiceHeaderDetails invoiceHeaderDetails = invoiceHelper.getInvoiceHeaderDetailsByReqObj(invoiceRequest);
+			invoiceHeaderDetails = invoiceHelper.saveInvoiceHeaderDetails(invoiceHeaderDetails);
+
+			invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+			invoiceRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
+			return invoiceRequest;
+
+		} else {
+			existsInvoiceHeader = invoiceHelper.getUpdatedInvoiceHeaderDetailsByReqObj(invoiceRequest,
+					existsInvoiceHeader);
+			invoiceHelper.updateInvoiceHeaderDetails(existsInvoiceHeader);
+
+			invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+			invoiceRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			return invoiceRequest;
+		}
 //		} else {
 //			invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
 //			invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
 //			return invoiceRequest;
 //		}
 	}
-	
+
 //	public InvoiceRequestObject updateInvoiceHeader(Request<InvoiceRequestObject> invoiceRequestObject) 
 //		throws BizException, Exception {
 //			
@@ -151,8 +142,7 @@ public class InvoiceHeaderService {
 //				return invoiceRequest;
 //			}
 //		}
-	
-	
+
 	public InvoiceHeaderRequestObject generateInvoice1(Request<InvoiceHeaderRequestObject> invoiceRequestObject)
 			throws BizException, Exception {
 
@@ -162,20 +152,21 @@ public class InvoiceHeaderService {
 		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
 		logger.info("Invoice generate Request Is valid? : " + invoiceRequest.getCreatedBy() + " is " + isValid);
 
-
 		if (!isValid) {
 
-			DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(invoiceRequest.getId(), invoiceRequest.getSuperadminId());
-			
-			if(donationDetails != null) {
-				
-				InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
+			DonationDetails donationDetails = donationHelper
+					.getDonationDetailsByIdAndSuperadminId(invoiceRequest.getId(), invoiceRequest.getSuperadminId());
+
+			if (donationDetails != null) {
+
+				InvoiceHeaderDetails invoiceHeader = invoiceHelper
+						.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
 				if (invoiceHeader != null) {
 					String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
 
 					donationDetails.setInvoiceNumber(invoiceSrNo);
 					donationHelper.updateDonationDetails(donationDetails);
-					
+
 					pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
 
 					// Invoice Number
@@ -191,12 +182,10 @@ public class InvoiceHeaderService {
 					invoiceRequest.setRespMesg("Please add invoice header first");
 					return invoiceRequest;
 				}
-				
-			}else {
+
+			} else {
 				// not found
 			}
-			
-			
 		} else {
 			invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
 			invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
@@ -204,97 +193,12 @@ public class InvoiceHeaderService {
 		}
 		return invoiceRequest;
 	}
-	
-	
-	
-
-//	@SuppressWarnings("unused")
-//	public InvoiceRequestObject generateInvoice(Request<InvoiceRequestObject> invoiceRequestObject)
-//			throws BizException, Exception {
-//
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		invoiceHelper.validateInvoiceRequest(invoiceRequest);
-//
-//		Boolean isValid = jwtTokenUtil.validateJwtToken(invoiceRequest.getCreatedBy(), invoiceRequest.getToken());
-//		logger.info("Invoice generate Request Is valid? : " + invoiceRequest.getCreatedBy() + " is " + isValid);
-//
-//		if (isValid) {
-//
-//			InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
-//			if (invoiceHeader != null) {
-//				String invoiceSrNo = this.generateInvoiceNumber(invoiceRequest, invoiceHeader);
-//
-//
-//				// Invoice Number
-//				InvoiceNumber invoiceNumber = invoiceHelper.getInvoiceNumberByReqObj(invoiceRequest);
-//				invoiceNumber = invoiceHelper.saveInvoiceNumber(invoiceNumber);
-//
-//				// Invoice Details
-//				int totalItem = 0;
-//				int totalAmount = 0;
-//				for (InvoiceDetails invoice : invoiceRequest.getItemDetails()) {
-//
-//					invoice.setAmount(invoice.getRate() * invoice.getQuantity());
-//
-//					InvoiceDetails invoiceDetails = invoiceHelper.getInvoiceDetailsByReqObj(invoice, invoiceRequest);
-//					invoiceDetails = invoiceHelper.saveInvoiceDetails(invoiceDetails);
-//
-//					totalItem += 1;
-//					totalAmount += invoice.getAmount();
-//				}
-//
-//				// Update InvoiceNumber
-//				invoiceNumber.setTotalItem(totalItem);
-//				invoiceNumber.setTotalAmount(totalAmount);
-//				invoiceHelper.updateInvoiceNumber(invoiceNumber);
-//
-//				// Update SrNo
-//				invoiceHeader.setSerialNumber(invoiceRequest.getSerialNumber());
-//				invoiceHelper.updateInvoiceHeaderDetails(invoiceHeader);
-//
-//				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
-//				invoiceRequest.setRespMesg(Constant.INVOICE_GEN_SUCCESS);
-//				return invoiceRequest;
-//
-//			} else {
-//				invoiceRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-//				invoiceRequest.setRespMesg("Please add invoice header first");
-//				return invoiceRequest;
-//			}
-//		} else {
-//			invoiceRequest.setRespCode(Constant.INVALID_TOKEN_CODE);
-//			invoiceRequest.setRespMesg(Constant.INVALID_TOKEN);
-//			return invoiceRequest;
-//		}
-//	}
-//	
-//
-//	public List<InvoiceNumber> getInvoiceNumberList(Request<InvoiceRequestObject> invoiceRequestObject) {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<InvoiceNumber> invoiceNumList = invoiceHelper.getInvoiceNumberList(invoiceRequest);
-//		return invoiceNumList;
-//	}
-//
-//
-//	public List<InvoiceDetails> getInvoiceDetailsList(Request<InvoiceRequestObject> invoiceRequestObject) {
-//		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-//		List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsList(invoiceRequest);
-//		return invoiceDetails;
-//	}
-
 
 	public List<InvoiceHeaderDetails> getInvoiceHeaderList(Request<InvoiceHeaderRequestObject> invoiceRequestObject) {
 		InvoiceHeaderRequestObject invoiceRequest = invoiceRequestObject.getPayload();
-		List<InvoiceHeaderDetails> invoiceHeader = invoiceHelper.getInvoiceHeaderList(invoiceRequest);
+		List<InvoiceHeaderDetails> invoiceHeader = invoiceHelper.getInvoiceHeaderList(invoiceRequest.getSuperadminId(),
+				invoiceRequest.getRequestFor(), invoiceRequest.getId());
 		return invoiceHeader;
 	}
 
-
-
-
-
-
-
-
 }
-

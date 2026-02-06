@@ -2,6 +2,9 @@ package com.common.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.math.RoundingMode;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Component;
 import com.common.entities.InvoiceHeaderDetails;
 import com.common.utility.AmountToWordsConverter;
 import com.invoice.entities.InvoiceNumber;
+import com.invoice.object.request.InvoiceItemRequest;
+import com.invoice.object.request.InvoiceRequestObject;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageDataFactory;
 import com.itextpdf.kernel.colors.ColorConstants;
@@ -38,9 +43,10 @@ public class InvoiceGenerator {
 	@Autowired
 	private AmountToWordsConverter amountToWordsConverter;
 
-    public byte[] generateInvoice(InvoiceHeaderDetails invoiceHeaderDetails, InvoiceNumber invoiceNumber) {
+    public byte[] generateInvoice(InvoiceHeaderDetails invoiceHeaderDetails, InvoiceRequestObject invoiceDetails) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
+        	SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         	// Fonts
             PdfFont font = PdfFontFactory.createFont(StandardFonts.HELVETICA);
             PdfFont bold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
@@ -76,7 +82,7 @@ public class InvoiceGenerator {
             	            .setFont(bold)
             	            .setFontSize(15)
             	            .setTextAlignment(TextAlignment.RIGHT))
-            	    .add(new Paragraph("# DEF-10/002")
+            	    .add(new Paragraph("#"+invoiceDetails.getInvoiceNumber())
             	            .setFont(font)
             	            .setFontSize(10)
             	            .setTextAlignment(TextAlignment.RIGHT))
@@ -93,41 +99,65 @@ public class InvoiceGenerator {
             header.setWidth(UnitValue.createPercentValue(100));
 
             // Company Info (Left side)
+//            Cell companyInfo = new Cell()
+//                    // Company Name
+//                    .add(new Paragraph("DATFUSLAB TECHNOLOGIES PVT. LTD")
+//                            .setFont(bold)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("GSTIN : 09AAKCD5557C1ZJ")
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("1507-B12, Sector-16B, Greater Noida")
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("Website : https://datfuslab.com")
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("Email : info@datfuslab.com")
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("Mobile : +91-7004063385")
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .setBorder(Border.NO_BORDER)
+//                    .setTextAlignment(TextAlignment.LEFT);
+            
             Cell companyInfo = new Cell()
                     // Company Name
-                    .add(new Paragraph("Datfuslab Technologies Pvt. Ltd")
+                    .add(new Paragraph(invoiceHeaderDetails.getCompanyFirstName()+ " "+invoiceHeaderDetails.getCompanyLastName())
                             .setFont(bold)
                             .setFontSize(9))
-                    .add(new Paragraph("GSTIN : 09AAKCD5557C1ZJ")
+                    .add(new Paragraph("GSTIN : "+invoiceHeaderDetails.getGstNumber())
                             .setFont(font)
                             .setFontSize(9))
-                    .add(new Paragraph("1507-B12, Sector-16B, Greater Noida")
+                    .add(new Paragraph(invoiceHeaderDetails.getOfficeAddress())
                             .setFont(font)
                             .setFontSize(9))
-                    .add(new Paragraph("Website : https://datfuslab.com")
+                    .add(new Paragraph("Website : "+invoiceHeaderDetails.getWebsite())
                             .setFont(font)
                             .setFontSize(9))
-                    .add(new Paragraph("Email : info@datfuslab.com")
+                    .add(new Paragraph("Email : "+invoiceHeaderDetails.getEmailId())
                             .setFont(font)
                             .setFontSize(9))
-                    .add(new Paragraph("Mobile : +91-7004063385")
+                    .add(new Paragraph("Mobile : "+invoiceHeaderDetails.getMobileNo())
                             .setFont(font)
                             .setFontSize(9))
                     .setBorder(Border.NO_BORDER)
                     .setTextAlignment(TextAlignment.LEFT);
 
 
+
             // Invoice Title + Number (Right side)
             Cell invoiceInfoHeading = new Cell()
-                    .add(new Paragraph("Date :   17-Oct-2025")
+                    .add(new Paragraph("Date :   "+sdf.format(invoiceDetails.getCreatedAt()))
                             .setFont(font)
                             .setFontSize(10)
                             .setTextAlignment(TextAlignment.RIGHT))
-                    .add(new Paragraph("Due Date :   17-Oct-2025")
+                    .add(new Paragraph("Due Date :   "+sdf.format(invoiceDetails.getDueDate()))
                             .setFont(font)
                             .setFontSize(10)
                             .setTextAlignment(TextAlignment.RIGHT))
-                    .add(new Paragraph("Balance Due :   Rs 30000").setBackgroundColor(new DeviceRgb(240, 240, 240))
+                    .add(new Paragraph("Balance Due :  "+invoiceDetails.getTotalAmount()).setBackgroundColor(new DeviceRgb(240, 240, 240))
                             .setFont(bold)
                             .setFontSize(10)
                             .setPadding(6)) // adds inner spacing
@@ -152,46 +182,37 @@ public class InvoiceGenerator {
 
             // Bill To
             Cell billToCell = new Cell().setBorder(Border.NO_BORDER);
-            billToCell.add(new Paragraph("Bill To:")
-            		.setFont(font).setFontColor(greyText)
-                    .setFontSize(9));
+            billToCell.add(new Paragraph("Bill To:").setFont(font).setFontColor(greyText).setFontSize(9));
 
             // Client Name (slightly bigger / bold if you want)
-            billToCell.add(new Paragraph("Childrens Educare Foundation")
-                    .setFont(bold)
-                    .setFontSize(9));
+            billToCell.add(new Paragraph(invoiceDetails.getCustomerName()).setFont(bold).setFontSize(9));
+            
+            String billing = invoiceDetails.getBillingAddress();
+            if (billing != null && !billing.trim().isEmpty()) {
+                billToCell.add(new Paragraph("Address.: "+billing).setFont(font).setFontSize(9));
+            }
 
-            // Client Address (smaller)
-            billToCell.add(new Paragraph("4WS8B, 4th floor West Block, Mani Casadona, Action area 2 New town, Rajarhat")
-                    .setFont(font)
-                    .setFontSize(9));
-            billToCell.add(new Paragraph("Kolkata - 7000156")
-                    .setFont(font)
-                    .setFontSize(9));
+            String gst = invoiceDetails.getGstNumber();
+            if (gst != null && !gst.trim().isEmpty()) {
+                billToCell.add(new Paragraph("GSTIN: " + gst).setFont(font).setFontSize(9));
+            }
 
 
             addressTable.addCell(billToCell);
 
             // Delivery Address
-            Cell deliveryCell = new Cell().setBorder(Border.NO_BORDER);
-            deliveryCell.add(new Paragraph("Delivery Address:")
-                    .setFont(font).setFontColor(greyText)
-                    .setFontSize(9));
+            String delivery = invoiceDetails.getDeliveryAddresses();
+            if (delivery != null && !delivery.trim().isEmpty()) {
+            	Cell deliveryCell = new Cell().setBorder(Border.NO_BORDER);
+                deliveryCell.add(new Paragraph("Delivery Address:").setFont(font).setFontColor(greyText).setFontSize(9));
+                deliveryCell.add(new Paragraph("Delivery Name").setFont(bold).setFontSize(9));
+                deliveryCell.add(new Paragraph( "Delivery Street Address City, State - Pincode").setFont(font).setFontSize(9));
+                addressTable.addCell(deliveryCell);
 
-            // Name (slightly bigger / bold if you like)
-            deliveryCell.add(new Paragraph("Delivery Name")
-                    .setFont(bold)
-                    .setFontSize(9));
-
-            // Address (smaller)
-            deliveryCell.add(new Paragraph( "Delivery Street Address City, State - Pincode")
-                    .setFont(font)
-                    .setFontSize(9));
-
-            addressTable.addCell(deliveryCell);
-
+            }
+            
+            
             doc.add(addressTable);
-
 
 
             // ======= ITEM TABLE =======            
@@ -211,62 +232,109 @@ public class InvoiceGenerator {
                         .setTextAlignment(TextAlignment.CENTER)
                         .setBorder(Border.NO_BORDER)); // ✅ remove border
             }
-           
-            // Row 1
-            table.addCell(new Cell().add(new Paragraph("1").setFont(font_grey)).setFontSize(10).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine)); 
-            table.addCell(new Cell().add(new Paragraph("Annual subscription for My Donation App\n" +
-                    "(includes hosting, support, updates, and maintenance)").setFont(font_grey)).setFontSize(9).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-            table.addCell(new Cell().add(new Paragraph("1").setFont(font_grey).setFontSize(10).setTextAlignment(TextAlignment.CENTER))
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-            table.addCell(new Cell().add(new Paragraph("25,000.00").setFont(font_grey).setFontSize(9).setTextAlignment(TextAlignment.RIGHT))
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-            table.addCell(new Cell().add(new Paragraph("25,000.00").setFont(font_grey).setFontSize(9).setTextAlignment(TextAlignment.RIGHT))
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
             
+            
+            int i = 1;
+            for (InvoiceItemRequest itemDetails : invoiceDetails.getItems()) {
+
+                String desc = itemDetails.getDescription() == null ? "" : itemDetails.getDescription();
+
+                // Sr No
+                table.addCell(new Cell()
+                        .add(new Paragraph(String.valueOf(i++)).setFont(font_grey))
+                        .setFontSize(10)
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setBorder(Border.NO_BORDER)
+                        .setBorderBottom(lightGreyLine));
+
+                // Item + Description (same cell)
+                Cell itemCell = new Cell()
+                        .setBorder(Border.NO_BORDER)
+                        .setBorderBottom(lightGreyLine);
+
+                itemCell.add(new Paragraph(itemDetails.getProductName())
+                        .setFont(font_grey)
+                        .setFontSize(9));
+
+                itemCell.add(new Paragraph("(" + desc + ")")
+                        .setFont(font_grey)
+                        .setFontSize(8)
+                        .setFontColor(greyText));
+
+                table.addCell(itemCell);
+
+                // Quantity
+                table.addCell(new Cell()
+                        .add(new Paragraph(String.valueOf(itemDetails.getQuantity()))
+                                .setFont(font_grey)
+                                .setFontSize(10))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setBorder(Border.NO_BORDER)
+                        .setBorderBottom(lightGreyLine));
+
+                // Rate
+                table.addCell(new Cell()
+                        .add(new Paragraph(itemDetails.getRate().toPlainString())
+                                .setFont(font_grey)
+                                .setFontSize(9))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setBorder(Border.NO_BORDER)
+                        .setBorderBottom(lightGreyLine));
+
+                // Amount
+                table.addCell(new Cell()
+                        .add(new Paragraph(itemDetails.getAmount().toPlainString())
+                                .setFont(font_grey)
+                                .setFontSize(9))
+                        .setTextAlignment(TextAlignment.CENTER)
+                        .setBorder(Border.NO_BORDER)
+                        .setBorderBottom(lightGreyLine));
+            }
+
+//            for(InvoiceItemRequest itemDetails : invoiceDetails.getItems()) {
+//            	
+//            table.addCell(new Cell().add(new Paragraph(String.valueOf(i++)).setFont(font_grey)).setFontSize(10).setTextAlignment(TextAlignment.CENTER)
+//            		.setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine)); 
+//            table.addCell(new Cell()
+//            		.add(new Paragraph(itemDetails.getProductName()).setFont(font_grey)).setFontSize(9).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
+//            .add(new Paragraph("("+itemDetails.getDescription()+")").setFont(font_grey)).setFontSize(9).setFontColor(greyText).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
+//            table.addCell(new Cell().add(new Paragraph(String.valueOf(itemDetails.getQuantity())).setFont(font_grey).setFontSize(10).setTextAlignment(TextAlignment.CENTER))
+//                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
+//            table.addCell(new Cell().add(new Paragraph(String.valueOf(itemDetails.getRate())).setFont(font_grey).setFontSize(9).setTextAlignment(TextAlignment.RIGHT))
+//                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
+//            table.addCell(new Cell().add(new Paragraph(String.valueOf(itemDetails.getAmount())).setFont(font_grey).setFontSize(9).setTextAlignment(TextAlignment.RIGHT))
+//                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
+//            }
             // Row 2
-         // Row 2 (no border bottom)
-            table.addCell(new Cell().add(new Paragraph("2").setFont(font_grey)).setFontSize(10).setTextAlignment(TextAlignment.CENTER)
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
 
-            table.addCell(new Cell().add(new Paragraph("Annual subscription for My Donation App\n" +
-                    "(includes hosting, support, updates, and maintenance)").setFont(font_grey)).setFontSize(9)
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-
-            table.addCell(new Cell().add(new Paragraph("1").setFont(font_grey))
-                    .setFontSize(10)
-                    .setTextAlignment(TextAlignment.CENTER)
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-
-            table.addCell(new Cell().add(new Paragraph("25,000.00").setFont(font_grey))
-                    .setFontSize(9)
-                    .setTextAlignment(TextAlignment.RIGHT)
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-
-            table.addCell(new Cell().add(new Paragraph("25,000.00").setFont(font_grey))
-                    .setFontSize(9)
-                    .setTextAlignment(TextAlignment.RIGHT)
-                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
 
             doc.add(table);
 
 
             // ======= TOTALS =======
-            doc.add(new Paragraph("\nSubtotal:    Rs. 33,000.00")
-                    .setTextAlignment(TextAlignment.RIGHT)
-                    .setFont(font).setFontSize(9));
-            doc.add(new Paragraph("Tax (18%):    Rs. 5,940.00")
-                    .setTextAlignment(TextAlignment.RIGHT)
-                    .setFont(font).setFontSize(9));
-            doc.add(new Paragraph("Total:    Rs. 38,940.00")
-                    .setFont(bold).setFontSize(9)
-                    .setTextAlignment(TextAlignment.RIGHT));
+            doc.add(new Paragraph("\nSubtotal:    "+invoiceDetails.getSubtotal()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+            
+         // CGST
+            if ( invoiceDetails.getCgstRate() > 0) {
+                doc.add(new Paragraph("CGST (" + invoiceDetails.getCgstRate() + "%):    " +invoiceDetails.getCgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+            }
+            // SGST
+            if (invoiceDetails.getSgstRate() > 0) {
+                doc.add(new Paragraph("SGST (" + invoiceDetails.getSgstRate() + "%):    " +invoiceDetails.getSgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+            }
+            // IGST
+            if (invoiceDetails.getIgstRate() > 0) {
+                doc.add(new Paragraph("IGST (" + invoiceDetails.getIgstRate() + "%):    " +invoiceDetails.getIgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+            }
+
+            
+            
+            doc.add(new Paragraph("Total:    "+invoiceDetails.getTotalAmount()).setTextAlignment(TextAlignment.RIGHT).setFont(bold).setFontSize(9));
             
             doc.add(new Paragraph()
                     .add(new Text("Amount in Words: ").setFont(font).setFontSize(9).setFontColor(greyText))
-                    .add(new Text("Indian Rupees " + amountToWordsConverter.amountInWords(38940) + " Only.")
-                            .setFont(bold).setFontSize(9))
-                    .setTextAlignment(TextAlignment.RIGHT));
-
+                    .add(new Text("Indian Rupees " + amountToWordsConverter.amountInWords(invoiceDetails.getTotalAmount().longValue()) + " Only.")
+                    		.setFont(bold).setFontSize(9)).setTextAlignment(TextAlignment.RIGHT));
 
             // ======= NOTES =======
             doc.add(new Paragraph("\n\n\nNotes:")
@@ -286,7 +354,7 @@ public class InvoiceGenerator {
             
             
          // QR content (put whatever you want here)
-            String qrText = "Invoice No: DEF-10/002 | Amount: 38940";
+            String qrText = "Invoice No: "+invoiceDetails.getInvoiceNumber()+"| Client Name: "+invoiceDetails.getCustomerName()+" | Amount: "+invoiceDetails.getTotalAmount();
 
             // Create QR
             BarcodeQRCode qrCode = new BarcodeQRCode(qrText);

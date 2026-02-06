@@ -1,21 +1,33 @@
 package com.invoice.object.request;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
-
 import lombok.Data;
 
 @Data
 public class InvoiceRequestObject {
 
 	private Long companyId;
-	private Long customerId;
+
+    private String customerName;
+    private String email;
+    private String phone;
+    private String gstNumber;
+    private String billingAddress;
+    private String deliveryAddresses;
+	
 	private String invoiceNumber;
 	private Date invoiceDate;
 	private Date dueDate;
 
+	private int cgstRate;
+	private BigDecimal cgstAmount;
+	private int sgstRate;
+	private BigDecimal sgstAmount;
+	private int igstRate;
+	private BigDecimal igstAmount;
+	
 	private BigDecimal subtotal;
 	private BigDecimal discount;
 	private BigDecimal totalAmount;
