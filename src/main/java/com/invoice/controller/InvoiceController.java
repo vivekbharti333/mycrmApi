@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.entities.InvoiceHeaderDetails;
@@ -104,24 +105,47 @@ public class InvoiceController {
 //		}
 //	}
 	
-    @GetMapping("/download/invoice")
-    public ResponseEntity<byte[]> downloadInvoice() throws IOException {
-    	
-    	InvoiceRequestObject invoiceRequest = new InvoiceRequestObject();
-    	
-    	invoiceRequest.setRequestFor("NOT ALL");
-    	invoiceRequest.setInvoiceNumber("DFL-02/0102");
-    	invoiceRequest.setSuperadminId("6202203047");
-    	
-    	InvoiceRequestObject invoiceDetails = invoiceHelper.getInvoiceWithDetails(invoiceRequest);
-    	List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(invoiceRequest.getSuperadminId(), "BYID", 1L);
-    	
-        byte[] pdf = invoiceGenerator.generateInvoice(invoiceHeaderDetails.get(0), invoiceDetails);
+//    @GetMapping("/download/invoice")
+//    public ResponseEntity<byte[]> downloadInvoice() throws IOException {
+//    	
+//    	InvoiceRequestObject invoiceRequest = new InvoiceRequestObject();
+//    	
+//    	invoiceRequest.setRequestFor("NOT ALL");
+//    	invoiceRequest.setInvoiceNumber("DFL-02/0104");
+//    	invoiceRequest.setSuperadminId("6202203047");
+//    	
+//    	InvoiceRequestObject invoiceDetails = invoiceHelper.getInvoiceWithDetails(invoiceRequest);
+//    	List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(invoiceRequest.getSuperadminId(), "BYID", 1L);
+//    	
+//        byte[] pdf = invoiceGenerator.generateInvoice(invoiceHeaderDetails.get(0), invoiceDetails);
+//
+//        return ResponseEntity.ok()
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Invoice_"+invoiceDetails.getInvoiceNumber()+".pdf")
+//                .contentType(MediaType.APPLICATION_PDF)
+//                .body(pdf);
+//    }
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=Invoice_"+invoiceDetails.getInvoiceNumber()+".pdf")
-                .contentType(MediaType.APPLICATION_PDF)
-                .body(pdf);
-    }
+	@GetMapping("/download/invoice")
+	public ResponseEntity<byte[]> downloadInvoice(
+	        @RequestParam String invoiceNumber,
+	        @RequestParam String superadminId) throws IOException {
+
+	    InvoiceRequestObject invoiceRequest = new InvoiceRequestObject();
+	    invoiceRequest.setRequestFor("NOT ALL");
+	    invoiceRequest.setInvoiceNumber(invoiceNumber);
+	    invoiceRequest.setSuperadminId(superadminId);
+
+	    InvoiceRequestObject invoiceDetails = invoiceHelper.getInvoiceWithDetails(invoiceRequest);
+
+	    List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(superadminId, "BYID", 1L);
+
+	    byte[] pdf = invoiceGenerator.generateInvoice(invoiceHeaderDetails.get(0), invoiceDetails);
+
+	    return ResponseEntity.ok()
+	        .header(HttpHeaders.CONTENT_DISPOSITION,
+	            "inline; filename=Invoice_" + invoiceNumber + ".pdf")
+	        .contentType(MediaType.APPLICATION_PDF)
+	        .body(pdf);
+	}
 
 }
