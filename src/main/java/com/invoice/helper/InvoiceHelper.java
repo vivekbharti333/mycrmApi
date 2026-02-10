@@ -43,10 +43,20 @@ public class InvoiceHelper {
 
 		invoiceNumber.setCompanyId(invoiceRequest.getCompanyId());
 		
-		invoiceNumber.setCustomerName(invoiceRequest.getCustomerName());
-		invoiceNumber.setEmail(invoiceRequest.getEmail());
-		invoiceNumber.setPhone(invoiceRequest.getPhone());
+		invoiceNumber.setCompanyLogo(invoiceRequest.getCompanyLogo());
+		invoiceNumber.setCompanyName(invoiceRequest.getCompanyName());
+		invoiceNumber.setOfficeAddress(invoiceRequest.getOfficeAddress());
+		invoiceNumber.setRegAddress(invoiceRequest.getRegAddress());
+		invoiceNumber.setMobileNo(invoiceRequest.getMobileNo());
+		invoiceNumber.setEmailId(invoiceRequest.getEmailId());
+		invoiceNumber.setWebsite(invoiceRequest.getWebsite());
 		invoiceNumber.setGstNumber(invoiceRequest.getGstNumber());
+		invoiceNumber.setPanNumber(invoiceRequest.getPanNumber());
+		
+		invoiceNumber.setCustomerName(invoiceRequest.getCustomerName());
+		invoiceNumber.setCustomerEmail(invoiceRequest.getCustomerEmail());
+		invoiceNumber.setCustomerPhone(invoiceRequest.getCustomerPhone());
+		invoiceNumber.setCustomerGstNumber(invoiceRequest.getCustomerGstNumber());
 		invoiceNumber.setBillingAddress(invoiceRequest.getBillingAddress());
 		invoiceNumber.setDeliveryAddresses(invoiceRequest.getDeliveryAddresses());
 		
@@ -368,9 +378,9 @@ public class InvoiceHelper {
 
 	            // Customer
 	            invoice.setCustomerName(header.getCustomerName());
-	            invoice.setEmail(header.getEmail());
-	            invoice.setPhone(header.getPhone());
-	            invoice.setGstNumber(header.getGstNumber());
+	            invoice.setCustomerEmail(invoiceRequest.getCustomerEmail());
+	    		invoice.setCustomerPhone(invoiceRequest.getCustomerPhone());
+	    		invoice.setCustomerGstNumber(invoiceRequest.getCustomerGstNumber());
 	            invoice.setBillingAddress(header.getBillingAddress());
 	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
 

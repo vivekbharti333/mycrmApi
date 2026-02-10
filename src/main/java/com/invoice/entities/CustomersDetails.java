@@ -46,9 +46,9 @@ public class CustomersDetails {
     private Date createdAt;
     
     @Column(name = "created_by", updatable = false)
-    private Date createdBy;
+    private String createdBy;
     
     @Column(name = "superadmin_id", updatable = false)
-    private Date superadminId;
+    private String superadminId;
 
 }

@@ -192,7 +192,7 @@ public class InvoiceGenerator {
                 billToCell.add(new Paragraph("Address.: "+billing).setFont(font).setFontSize(9));
             }
 
-            String gst = invoiceDetails.getGstNumber();
+            String gst = invoiceDetails.getCustomerGstNumber();
             if (gst != null && !gst.trim().isEmpty()) {
                 billToCell.add(new Paragraph("GSTIN: " + gst).setFont(font).setFontSize(9));
             }

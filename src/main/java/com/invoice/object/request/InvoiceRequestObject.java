@@ -3,17 +3,32 @@ package com.invoice.object.request;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Column;
+
 import lombok.Data;
 
 @Data
 public class InvoiceRequestObject {
 
 	private Long companyId;
+	
+	//Company Details
+	private String companyLogo;
+	private String companyName;
+	private String officeAddress;
+	private String regAddress;
+	private String mobileNo;
+	private String emailId;
+	private String website;
+	private String gstNumber;
+	private String panNumber;
 
+	//Customer Details
     private String customerName;
-    private String email;
-    private String phone;
-    private String gstNumber;
+    private String customerEmail;
+    private String customerPhone;
+    private String customerGstNumber;
     private String billingAddress;
     private String deliveryAddresses;
 	

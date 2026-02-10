@@ -8,20 +8,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
-import com.common.entities.UserDetails;
-import com.common.enums.RoleType;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
-import com.common.object.request.UserRequestObject;
-import com.ngo.dao.CustomerDetailsDao;
 import com.ngo.dao.SmsTemplateDetailsDao;
-import com.ngo.entities.CustomerDetails;
 import com.ngo.entities.SmsTemplateDetails;
-import com.ngo.object.request.CustomerRequestObject;
 import com.ngo.object.request.SmsTemplateRequestObject;
 
 @Component

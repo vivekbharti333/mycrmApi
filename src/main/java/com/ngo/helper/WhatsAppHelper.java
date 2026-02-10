@@ -1,8 +1,5 @@
 package com.ngo.helper;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.List;
 
@@ -12,31 +9,18 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.common.constant.Constant;
-import com.common.entities.UserDetails;
-import com.common.enums.RoleType;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
-import com.common.object.request.UserRequestObject;
-import com.ngo.dao.CustomerDetailsDao;
-import com.ngo.dao.SmsTemplateDetailsDao;
 import com.ngo.dao.WhatsAppDetailsDao;
-import com.ngo.entities.CustomerDetails;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.SmsTemplateDetails;
 import com.ngo.entities.WhatsAppDetails;
-import com.ngo.object.request.CustomerRequestObject;
 import com.ngo.object.request.SmsTemplateRequestObject;
 import com.ngo.object.request.WhatsAppRequestObject;
-
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 @Component
 public class WhatsAppHelper {

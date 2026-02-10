@@ -29,8 +29,6 @@ public class InvoiceService {
 	@Autowired
 	private InvoiceHeaderHelper invoiceHeaderHelper;
 
-	@Autowired
-	private InvoiceReceipt invoiceReceipt;
 
 	@Transactional
 	public InvoiceRequestObject generateInvoice(Request<InvoiceRequestObject> invoiceRequestObject)
@@ -81,11 +79,5 @@ public class InvoiceService {
 //		return invoiceList;
 //	}
 
-	public List<InvoiceRequestObject> downloadInvoice(Request<InvoiceRequestObject> invoiceRequestObject)
-			throws Exception {
-		InvoiceRequestObject request = invoiceRequestObject.getPayload();
-		
-				return null;
-		
-	}
+	
 }

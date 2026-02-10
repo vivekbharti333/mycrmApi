@@ -2,28 +2,17 @@ package com.ngo.services;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.transaction.Transactional;
-import org.apache.log4j.Logger;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 
 import com.common.constant.Constant;
-import com.common.entities.UserDetails;
-import com.common.enums.RoleType;
 import com.common.exceptions.BizException;
-import com.common.helper.AddressHelper;
-import com.common.helper.UserHelper;
 import com.common.jwt.JwtTokenUtil;
-import com.ngo.entities.AddressDetails;
-import com.ngo.entities.CustomerDetails;
+import com.common.object.request.Request;
 import com.ngo.entities.SmsTemplateDetails;
 import com.ngo.helper.SmsTemplateHelper;
-import com.ngo.object.request.AddressRequestObject;
-import com.ngo.object.request.CustomerRequestObject;
-import com.common.object.request.Request;
-import com.common.object.request.UserRequestObject;
 import com.ngo.object.request.SmsTemplateRequestObject;
 
 

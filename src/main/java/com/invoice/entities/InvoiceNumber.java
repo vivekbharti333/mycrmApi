@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -26,18 +27,47 @@ public class InvoiceNumber {
     @Column(name = "company_id", nullable = false)
     private Long companyId;
     
+    // Company Details
+	@Column(name = "company_logo")
+	private String companyLogo;
+	
+	@Column(name = "company_name")
+	private String companyName;
+
+	@Column(name = "office_address")
+	private String officeAddress;
+	
+	@Column(name = "reg_address")
+	private String regAddress;
+	
+	@Column(name = "mobile_no")
+	private String mobileNo;
+	
+	@Column(name = "email_id")
+	private String emailId;
+	
+	@Column(name = "website")
+	private String website;
+	
+	@Column(name = "gst_number")
+	private String gstNumber;
+	
+	@Column(name = "pan_number")
+	private String panNumber;
+    
+    
     // Customer Details
     @Column(name = "customer_name", length = 200, nullable = false)
     private String customerName;
 
-    @Column(name = "email", length = 150)
-    private String email;
+    @Column(name = "customer_email", length = 150)
+    private String customerEmail;
 
-    @Column(name = "phone", length = 20)
-    private String phone;
+    @Column(name = "customer_phone", length = 20)
+    private String customerPhone;
 
-    @Column(name = "gst_number", length = 20)
-    private String gstNumber;
+    @Column(name = "customer_gst_number", length = 20)
+    private String customerGstNumber;
 
     @Column(name = "billing_address", columnDefinition = "TEXT")
     private String billingAddress;
