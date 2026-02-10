@@ -55,8 +55,8 @@ public class CustomerHelper {
 
 		customersDetails.setCompanyId(invoiceRequest.getCompanyId());
 		customersDetails.setCustomerName(invoiceRequest.getCustomerName());
-		customersDetails.setEmail(invoiceRequest.getEmail());
-		customersDetails.setPhone(invoiceRequest.getPhone());
+		customersDetails.setEmail(invoiceRequest.getCustomerEmail());
+		customersDetails.setPhone(invoiceRequest.getCustomerPhone());
 		customersDetails.setGstNumber(invoiceRequest.getGstNumber());
 		customersDetails.setBillingAddress(invoiceRequest.getBillingAddress());
 		customersDetails.setDeliveryAddresses(invoiceRequest.getDeliveryAddresses());
