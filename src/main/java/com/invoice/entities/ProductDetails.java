@@ -2,6 +2,7 @@ package com.invoice.entities;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,9 +30,15 @@ public class ProductDetails {
 
     @Column(name = "rate", precision = 10, scale = 2, nullable = false)
     private BigDecimal rate;
+    
+    @Column(name = "quantityType", precision = 10, scale = 2, nullable = false)
+    private String quantityType;
+    
+    @Column(name = "quantity", precision = 10, scale = 2, nullable = false)
+    private Long quantity;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDate createdAt;
+    private Date createdAt;
     
     @Column(name = "created_by", updatable = false)
     private String createdBy;

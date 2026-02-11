@@ -327,8 +327,6 @@ public class InvoiceGenerator {
                 doc.add(new Paragraph("IGST (" + invoiceDetails.getIgstRate() + "%):    " +invoiceDetails.getIgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
             }
 
-            
-            
             doc.add(new Paragraph("Total:    "+invoiceDetails.getTotalAmount()).setTextAlignment(TextAlignment.RIGHT).setFont(bold).setFontSize(9));
             
             doc.add(new Paragraph()
@@ -337,19 +335,13 @@ public class InvoiceGenerator {
                     		.setFont(bold).setFontSize(9)).setTextAlignment(TextAlignment.RIGHT));
 
             // ======= NOTES =======
-            doc.add(new Paragraph("\n\n\nNotes:")
-                    .setFont(bold).setMarginBottom(0).setFontSize(9)
-                    .setMarginTop(7));
-            doc.add(new Paragraph("Thank you for your business. Please review all details carefully. " +
-                    "For any discrepancies, contact us.")
+            doc.add(new Paragraph("\n\n\nNotes:").setFont(bold).setMarginBottom(0).setFontSize(9).setMarginTop(7));
+            doc.add(new Paragraph("Thank you for your business. Please review all details carefully. For any discrepancies, contact us.")
                     .setFont(font).setMarginTop(0).setFontSize(8));
 
             // ======= TERMS =======
-            doc.add(new Paragraph("Terms:")
-                    .setFont(bold)
-                    .setFontSize(9).setMarginBottom(0));
-            doc.add(new Paragraph("Please visit our website for Terms & Conditions: " +
-                    "https://datfuslab.com/terms.html")
+            doc.add(new Paragraph("Terms:").setFont(bold).setFontSize(9).setMarginBottom(0));
+            doc.add(new Paragraph("Please visit our website for Terms & Conditions: https://datfuslab.com/terms.html")
                     .setFont(font).setMarginTop(0).setFontSize(8));
             
             
