@@ -2,9 +2,11 @@ package com.common.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -216,12 +218,12 @@ public class InvoiceGenerator {
 
 
             // ======= ITEM TABLE =======            
-            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 8, 2, 2, 2}));
+            Table table = new Table(UnitValue.createPercentArray(new float[]{1, 8, 2, 2, 2, 2}));
             table.setWidth(UnitValue.createPercentValue(100));
             table.setMarginTop(15);
 
             // Header row (black background, white text, no border)
-            String[] headers = {"#", "Item", "Quantity", "Rate", "Amount"};
+            String[] headers = {"#", "Item", "Quantity", "Rate", "Tax", "Amount"};
             for (String h : headers) {
                 table.addHeaderCell(new Cell()
                         .add(new Paragraph(h)
@@ -241,91 +243,81 @@ public class InvoiceGenerator {
 
                 // Sr No
                 table.addCell(new Cell()
-                        .add(new Paragraph(String.valueOf(i++)).setFont(font_grey))
-                        .setFontSize(10)
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setBorder(Border.NO_BORDER)
-                        .setBorderBottom(lightGreyLine));
+                        .add(new Paragraph(String.valueOf(i++)).setFont(font_grey)).setFontSize(10)
+                        .setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
 
                 // Item + Description (same cell)
-                Cell itemCell = new Cell()
-                        .setBorder(Border.NO_BORDER)
-                        .setBorderBottom(lightGreyLine);
+                Cell itemCell = new Cell().setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine);
 
-                itemCell.add(new Paragraph(itemDetails.getProductName())
-                        .setFont(font_grey)
-                        .setFontSize(9));
-
-                itemCell.add(new Paragraph("(" + desc + ")")
-                        .setFont(font_grey)
-                        .setFontSize(8)
-                        .setFontColor(greyText));
+                itemCell.add(new Paragraph(itemDetails.getProductName()).setFont(font_grey).setFontSize(9));
+                itemCell.add(new Paragraph("(" + desc + ")").setFont(font_grey).setFontSize(8).setFontColor(greyText));
 
                 table.addCell(itemCell);
 
                 // Quantity
                 table.addCell(new Cell()
-                        .add(new Paragraph(String.valueOf(itemDetails.getQuantity()))
-                                .setFont(font_grey)
-                                .setFontSize(10))
+                        .add(new Paragraph(String.valueOf(itemDetails.getQuantity())).setFont(font_grey).setFontSize(10))
                         .setTextAlignment(TextAlignment.CENTER)
                         .setBorder(Border.NO_BORDER)
                         .setBorderBottom(lightGreyLine));
 
                 // Rate
                 table.addCell(new Cell()
-                        .add(new Paragraph(itemDetails.getRate().toPlainString())
-                                .setFont(font_grey)
-                                .setFontSize(9))
-                        .setTextAlignment(TextAlignment.CENTER)
-                        .setBorder(Border.NO_BORDER)
+                        .add(new Paragraph(itemDetails.getRate().toPlainString()).setFont(font_grey).setFontSize(9))
+                        .setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER)
                         .setBorderBottom(lightGreyLine));
+                // GST Tax
+                Cell taxCell = new Cell().setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine);
+                if (itemDetails.getCgstRate() > 0 || itemDetails.getSgstRate() > 0) {
+
+                    BigDecimal cgst = Optional.ofNullable(itemDetails.getCgstAmount()).orElse(BigDecimal.ZERO);
+                    BigDecimal sgst = Optional.ofNullable(itemDetails.getSgstAmount()).orElse(BigDecimal.ZERO);
+
+                    BigDecimal totalTax = cgst.add(sgst);
+
+                    taxCell.add(
+                        new Paragraph(totalTax.setScale(2, RoundingMode.HALF_UP).toPlainString())
+                            .setFont(font_grey)
+                            .setFontSize(9)
+                    );
+
+                    taxCell.add(new Paragraph("(CGST" 
+                            + itemDetails.getCgstRate() + "% + "+"SGST"  + itemDetails.getSgstRate() + "%)")
+                            .setFont(font_grey).setFontSize(8).setFontColor(greyText)
+                    );
+                }
+                
+                if ( itemDetails.getIgstRate() > 0) {
+                	taxCell.add(new Paragraph(itemDetails.getIgstAmount().toPlainString()).setFont(font_grey).setFontSize(9));
+                    taxCell.add(new Paragraph("(IGST" + itemDetails.getIgstRate() + "%)").setFont(font_grey).setFontSize(8).setFontColor(greyText));
+                }
+                table.addCell(taxCell);
 
                 // Amount
                 table.addCell(new Cell()
-                        .add(new Paragraph(itemDetails.getAmount().toPlainString())
-                                .setFont(font_grey)
-                                .setFontSize(9))
+                        .add(new Paragraph(itemDetails.getAmount().toPlainString()).setFont(font_grey).setFontSize(9))
                         .setTextAlignment(TextAlignment.CENTER)
                         .setBorder(Border.NO_BORDER)
                         .setBorderBottom(lightGreyLine));
             }
-
-//            for(InvoiceItemRequest itemDetails : invoiceDetails.getItems()) {
-//            	
-//            table.addCell(new Cell().add(new Paragraph(String.valueOf(i++)).setFont(font_grey)).setFontSize(10).setTextAlignment(TextAlignment.CENTER)
-//            		.setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine)); 
-//            table.addCell(new Cell()
-//            		.add(new Paragraph(itemDetails.getProductName()).setFont(font_grey)).setFontSize(9).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-//            .add(new Paragraph("("+itemDetails.getDescription()+")").setFont(font_grey)).setFontSize(9).setFontColor(greyText).setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-//            table.addCell(new Cell().add(new Paragraph(String.valueOf(itemDetails.getQuantity())).setFont(font_grey).setFontSize(10).setTextAlignment(TextAlignment.CENTER))
-//                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-//            table.addCell(new Cell().add(new Paragraph(String.valueOf(itemDetails.getRate())).setFont(font_grey).setFontSize(9).setTextAlignment(TextAlignment.RIGHT))
-//                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-//            table.addCell(new Cell().add(new Paragraph(String.valueOf(itemDetails.getAmount())).setFont(font_grey).setFontSize(9).setTextAlignment(TextAlignment.RIGHT))
-//                    .setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine));
-//            }
-            // Row 2
-
-
             doc.add(table);
 
 
             // ======= TOTALS =======
             doc.add(new Paragraph("\nSubtotal:    "+invoiceDetails.getSubtotal()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
             
-         // CGST
-            if ( invoiceDetails.getCgstRate() > 0) {
-                doc.add(new Paragraph("CGST (" + invoiceDetails.getCgstRate() + "%):    " +invoiceDetails.getCgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
-            }
-            // SGST
-            if (invoiceDetails.getSgstRate() > 0) {
-                doc.add(new Paragraph("SGST (" + invoiceDetails.getSgstRate() + "%):    " +invoiceDetails.getSgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
-            }
-            // IGST
-            if (invoiceDetails.getIgstRate() > 0) {
-                doc.add(new Paragraph("IGST (" + invoiceDetails.getIgstRate() + "%):    " +invoiceDetails.getIgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
-            }
+//         // CGST
+//            if ( invoiceDetails.getCgstRate() > 0) {
+//                doc.add(new Paragraph("CGST (" + invoiceDetails.getCgstRate() + "%):    " +invoiceDetails.getCgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+//            }
+//            // SGST
+//            if (invoiceDetails.getSgstRate() > 0) {
+//                doc.add(new Paragraph("SGST (" + invoiceDetails.getSgstRate() + "%):    " +invoiceDetails.getSgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+//            }
+//            // IGST
+//            if (invoiceDetails.getIgstRate() > 0) {
+//                doc.add(new Paragraph("IGST (" + invoiceDetails.getIgstRate() + "%):    " +invoiceDetails.getIgstAmount().toPlainString()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+//            }
 
             doc.add(new Paragraph("Total:    "+invoiceDetails.getTotalAmount()).setTextAlignment(TextAlignment.RIGHT).setFont(bold).setFontSize(9));
             

@@ -35,16 +35,10 @@ public class InvoiceRequestObject {
 	private String invoiceNumber;
 	private Date invoiceDate;
 	private Date dueDate;
-
-	private int cgstRate;
-	private BigDecimal cgstAmount;
-	private int sgstRate;
-	private BigDecimal sgstAmount;
-	private int igstRate;
-	private BigDecimal igstAmount;
 	
 	private BigDecimal subtotal;
 	private BigDecimal discount;
+	private BigDecimal taxAmount;
 	private BigDecimal totalAmount;
 
 	private String status;

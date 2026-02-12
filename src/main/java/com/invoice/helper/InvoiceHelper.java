@@ -65,12 +65,12 @@ public class InvoiceHelper {
 		invoiceNumber.setSubtotal(invoiceRequest.getSubtotal());
 		invoiceNumber.setDiscount(invoiceRequest.getDiscount());
 		
-		invoiceNumber.setCgstRate(invoiceRequest.getCgstRate());
-		invoiceNumber.setCgstAmount(invoiceRequest.getCgstAmount());
-		invoiceNumber.setSgstRate(invoiceRequest.getSgstRate());
-		invoiceNumber.setSgstAmount(invoiceRequest.getSgstAmount());
-		invoiceNumber.setIgstRate(invoiceRequest.getIgstRate());
-		invoiceNumber.setIgstAmount(invoiceRequest.getIgstAmount());
+//		invoiceNumber.setCgstRate(invoiceRequest.getCgstRate());
+//		invoiceNumber.setCgstAmount(invoiceRequest.getCgstAmount());
+//		invoiceNumber.setSgstRate(invoiceRequest.getSgstRate());
+//		invoiceNumber.setSgstAmount(invoiceRequest.getSgstAmount());
+//		invoiceNumber.setIgstRate(invoiceRequest.getIgstRate());
+//		invoiceNumber.setIgstAmount(invoiceRequest.getIgstAmount());
 		
 		invoiceNumber.setTotalAmount(invoiceRequest.getTotalAmount());
 		invoiceNumber.setStatus(Status.ACTIVE.name());
@@ -124,6 +124,14 @@ public class InvoiceHelper {
 	        d.setDescription(item.getDescription());
 	        d.setRate(item.getRate());
 	        d.setQuantity(item.getQuantity());
+	        
+	        d.setCgstRate(item.getCgstRate());
+			d.setCgstAmount(item.getCgstAmount());
+			d.setSgstRate(item.getSgstRate());
+			d.setSgstAmount(item.getSgstAmount());
+			d.setIgstRate(item.getIgstRate());
+			d.setIgstAmount(item.getIgstAmount());
+	        
 	        d.setAmount(item.getAmount());
 	        d.setStatus(Status.ACTIVE.name());
 	        d.setCreatedAt(new Date());
@@ -385,12 +393,12 @@ public class InvoiceHelper {
 	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
 
 	            // GST
-	            invoice.setCgstRate(header.getCgstRate());
-	            invoice.setCgstAmount(header.getCgstAmount());
-	            invoice.setSgstRate(header.getSgstRate());
-	            invoice.setSgstAmount(header.getSgstAmount());
-	            invoice.setIgstRate(header.getIgstRate());
-	            invoice.setIgstAmount(header.getIgstAmount());
+//	            invoice.setCgstRate(header.getCgstRate());
+//	            invoice.setCgstAmount(header.getCgstAmount());
+//	            invoice.setSgstRate(header.getSgstRate());
+//	            invoice.setSgstAmount(header.getSgstAmount());
+//	            invoice.setIgstRate(header.getIgstRate());
+//	            invoice.setIgstAmount(header.getIgstAmount());
 
 	            invoice.setItems(new ArrayList<>());
 	            invoice.setRespCode(200);
@@ -406,6 +414,12 @@ public class InvoiceHelper {
 	            item.setDescription(detail.getDescription());
 	            item.setRate(detail.getRate());
 	            item.setQuantity(detail.getQuantity());
+	            item.setCgstRate(detail.getCgstRate());
+	            item.setCgstAmount(detail.getCgstAmount());
+	            item.setSgstRate(detail.getSgstRate());
+	            item.setSgstAmount(detail.getSgstAmount());
+	            item.setIgstRate(detail.getIgstRate());
+	            item.setIgstAmount(detail.getIgstAmount());
 	            item.setAmount(detail.getAmount());
 	            item.setStatus(detail.getStatus());
 

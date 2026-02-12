@@ -175,13 +175,14 @@ public class InvoiceReceipt {
         // ===================== ITEMS TABLE =====================
         PdfPTable items = new PdfPTable(5);
         items.setWidthPercentage(100);
-        items.setWidths(new int[]{10, 50, 10, 15, 15});
+        items.setWidths(new int[]{10, 50, 10, 20, 15, 15});
 
         // ===== BLACK HEADER ROW =====
         addBlackHeader(items, "S. No.", headerWhite);
         addBlackHeader(items, "Item", headerWhite);
         addBlackHeader(items, "Qty", headerWhite);
         addBlackHeader(items, "Rate", headerWhite);
+        addBlackHeader(items, "Tax", headerWhite);
         addBlackHeader(items, "Amount", headerWhite);
 
 
@@ -209,6 +210,7 @@ public class InvoiceReceipt {
             items.addCell(itemCell);
 
             items.addCell(noBorderCell(String.valueOf(item.getQuantity()), Element.ALIGN_CENTER, normal));
+            items.addCell(noBorderCell("₹ " + item.getRate(), Element.ALIGN_CENTER, normal));
             items.addCell(noBorderCell("₹ " + item.getRate(), Element.ALIGN_CENTER, normal));
             items.addCell(noBorderCell("₹ " + item.getAmount(), Element.ALIGN_CENTER, normal));
 

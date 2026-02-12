@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -89,23 +88,23 @@ public class InvoiceNumber {
     @Column(name = "discount", precision = 12, scale = 2)
     private BigDecimal discount;
     
-    @Column(name = "cgst_rate")
-	private int cgstRate;
-    
-    @Column(name = "cgst_amount")
-	private BigDecimal cgstAmount;
-    
-    @Column(name = "sgst_rate")
-	private int sgstRate;
-    
-    @Column(name = "sgst_amount")
-	private BigDecimal sgstAmount;
-    
-    @Column(name = "igst_rate")
-	private int igstRate;
-    
-    @Column(name = "igst_amount")
-	private BigDecimal igstAmount;
+//    @Column(name = "cgst_rate")
+//	private int cgstRate;
+//    
+//    @Column(name = "cgst_amount")
+//	private BigDecimal cgstAmount;
+//    
+//    @Column(name = "sgst_rate")
+//	private int sgstRate;
+//    
+//    @Column(name = "sgst_amount")
+//	private BigDecimal sgstAmount;
+//    
+//    @Column(name = "igst_rate")
+//	private int igstRate;
+//    
+//    @Column(name = "igst_amount")
+//	private BigDecimal igstAmount;
 
     @Column(name = "total_amount", precision = 12, scale = 2, nullable = false)
     private BigDecimal totalAmount;

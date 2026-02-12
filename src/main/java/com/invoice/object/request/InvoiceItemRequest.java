@@ -11,6 +11,12 @@ public class InvoiceItemRequest {
 	private String productName;
 	private String description;
 	private BigDecimal rate;
+	private int cgstRate;
+	private BigDecimal cgstAmount;
+	private int sgstRate;
+	private BigDecimal sgstAmount;
+	private int igstRate;
+	private BigDecimal igstAmount;
 	private int quantity;
 	private BigDecimal amount;
 	private String status;

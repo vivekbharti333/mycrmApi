@@ -123,25 +123,31 @@ public class InvoiceController {
 //                .body(pdf);
 //    }
 
+//	@GetMapping("/download/invoice")
+//	public ResponseEntity<byte[]> downloadInvoice(
+//	        @RequestParam String invoiceNumber,
+//	        @RequestParam String superadminId) throws IOException {
+	
 	@GetMapping("/download/invoice")
 	public ResponseEntity<byte[]> downloadInvoice(
-	        @RequestParam String invoiceNumber,
-	        @RequestParam String superadminId) throws IOException {
+	       ) throws IOException {
+
 
 	    InvoiceRequestObject invoiceRequest = new InvoiceRequestObject();
 	    invoiceRequest.setRequestFor("NOT ALL");
-	    invoiceRequest.setInvoiceNumber(invoiceNumber);
-	    invoiceRequest.setSuperadminId(superadminId);
+//	    invoiceRequest.setInvoiceNumber(invoiceNumber);
+//	    invoiceRequest.setSuperadminId(superadminId);
+	    invoiceRequest.setInvoiceNumber("DFL-02/0102");
+	    invoiceRequest.setSuperadminId("6202203047");
 
 	    InvoiceRequestObject invoiceDetails = invoiceHelper.getInvoiceWithDetails(invoiceRequest);
 
-	    List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(superadminId, "BYID", 1L);
+	    List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(invoiceRequest.getSuperadminId(), "BYID", 1L);
 
 	    byte[] pdf = invoiceGenerator.generateInvoice(invoiceHeaderDetails.get(0), invoiceDetails);
 
 	    return ResponseEntity.ok()
-	        .header(HttpHeaders.CONTENT_DISPOSITION,
-	            "inline; filename=Invoice_" + invoiceNumber + ".pdf")
+	        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=Invoice_" + invoiceRequest.getInvoiceNumber() + ".pdf")
 	        .contentType(MediaType.APPLICATION_PDF)
 	        .body(pdf);
 	}
