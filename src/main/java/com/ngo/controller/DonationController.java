@@ -34,7 +34,7 @@ public class DonationController {
 	@Autowired
 	private DonationReceiptPdf donationReceiptPdf;
 	
-	@GetMapping("/download-donation-receipt") 
+	@GetMapping("download-donation-receipt") 
 	public ResponseEntity<byte[]> downloadReceipt() throws Exception {
 
 
