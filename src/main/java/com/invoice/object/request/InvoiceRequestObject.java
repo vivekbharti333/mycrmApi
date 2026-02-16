@@ -38,7 +38,7 @@ public class InvoiceRequestObject {
 	
 	private BigDecimal subtotal;
 	private BigDecimal discount;
-	private BigDecimal taxAmount;
+    private BigDecimal totalTaxAmount;
 	private BigDecimal totalAmount;
 
 	private String status;

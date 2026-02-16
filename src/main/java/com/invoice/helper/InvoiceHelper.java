@@ -65,13 +65,7 @@ public class InvoiceHelper {
 		invoiceNumber.setSubtotal(invoiceRequest.getSubtotal());
 		invoiceNumber.setDiscount(invoiceRequest.getDiscount());
 		
-//		invoiceNumber.setCgstRate(invoiceRequest.getCgstRate());
-//		invoiceNumber.setCgstAmount(invoiceRequest.getCgstAmount());
-//		invoiceNumber.setSgstRate(invoiceRequest.getSgstRate());
-//		invoiceNumber.setSgstAmount(invoiceRequest.getSgstAmount());
-//		invoiceNumber.setIgstRate(invoiceRequest.getIgstRate());
-//		invoiceNumber.setIgstAmount(invoiceRequest.getIgstAmount());
-		
+		invoiceNumber.setTotalTaxAmount(invoiceRequest.getTotalTaxAmount());
 		invoiceNumber.setTotalAmount(invoiceRequest.getTotalAmount());
 		invoiceNumber.setStatus(Status.ACTIVE.name());
 		invoiceNumber.setPaymentMode(invoiceRequest.getPaymentMode());
