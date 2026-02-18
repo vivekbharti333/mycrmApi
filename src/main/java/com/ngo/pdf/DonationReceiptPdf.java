@@ -184,7 +184,6 @@ public class DonationReceiptPdf {
 
                         .setBorder(Border.NO_BORDER)
                         .setPadding(0)   // 👈 VERY IMPORTANT
-                        
                         .add(new Paragraph("\n"))
         );
 
