@@ -188,7 +188,6 @@ public class DonationReceiptPdf {
                         .add(new Paragraph("\n"))
         );
 
-
         headerTable.addCell(
                 new Cell()
                         .add(new Paragraph("RECEIPT")
