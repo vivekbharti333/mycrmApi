@@ -128,15 +128,13 @@ public class InvoiceController {
 //	        @RequestParam String invoiceNumber,
 //	        @RequestParam String superadminId) throws IOException {
 	
-	@GetMapping("/download/invoice")
+	@GetMapping("download-tax-invoice")
 	public ResponseEntity<byte[]> downloadInvoice(
 	       ) throws IOException {
 
 
 	    InvoiceRequestObject invoiceRequest = new InvoiceRequestObject();
 	    invoiceRequest.setRequestFor("NOT ALL");
-//	    invoiceRequest.setInvoiceNumber(invoiceNumber);
-//	    invoiceRequest.setSuperadminId(superadminId);
 	    invoiceRequest.setInvoiceNumber("DFL-02/0102");
 	    invoiceRequest.setSuperadminId("6202203047");
 

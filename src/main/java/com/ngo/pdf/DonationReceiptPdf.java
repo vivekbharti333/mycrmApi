@@ -61,7 +61,8 @@ public class DonationReceiptPdf {
                 .setPadding(15);
 
         Image logo = new Image(ImageDataFactory.create(
-                "C:\\Users\\HP\\Downloads\\download.png"))
+                "C:\\Users\\HP\\Downloads\\logo.png"))
+//        	"C:\\Users\\HP\\Downloads\\download.png"))
                 .setWidth(90).setHeight(80);
 
         Table headerTable = new Table(UnitValue.createPercentArray(new float[]{2, 5, 3}))
@@ -70,64 +71,19 @@ public class DonationReceiptPdf {
         headerTable.addCell(new Cell().add(logo)
                 .setBorder(Border.NO_BORDER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE));
-        
-//        .add(
-//              new Paragraph()
-//                      .add(new Text("Aarine ")
-//                              .setFont(googleBold)
-//                              .setFontSize(20)
-//                              .setFontColor(new DeviceRgb(236, 38, 143)))
-//                      .add(new Text("Foundation")
-//                              .setFont(googleBold)
-//                              .setFontSize(20)
-//                              .setFontColor(ColorConstants.BLACK))
-//                      .setMarginBottom(0)
-//      )
-//
-//      // Registration No
-//      .add(new Paragraph("Registration No.: E-34254(M)")
-//              .setFont(googleRegular)
-//              .setFontSize(10)
-//              .setFontColor(ColorConstants.DARK_GRAY)
-//              .setMargin(0)
-//              .setFixedLeading(11))
-//
-
-//        headerTable.addCell(
-//                new Cell()
-//                        .add(new Paragraph()
-//                                .add(new Text("Aarine ").setFont(bold).setFontSize(20).setFontColor(new DeviceRgb(236, 38, 143)))
-//                                .add(new Text("Foundation").setFont(bold).setFontSize(20)))
-//                        .add(new Paragraph("Registration No.: E-34254(M)")
-//                                .setFont(regular).setFontSize(10)
-//                                .setFontColor(ColorConstants.DARK_GRAY)
-//                                .setMargin(0))
-//                        .add(new Paragraph("PAN No.: AAHTA5687L")
-//                                .setFont(regular).setFontSize(10)
-//                                .setFontColor(ColorConstants.DARK_GRAY)
-//                                .setMargin(0))
-//                        .add(new Paragraph("Off. Add: 102 First floor Gaondevi Krupa Building,")
-//                                .setFont(regular).setFontSize(10)
-//                                .setFontColor(ColorConstants.DARK_GRAY)
-//                                .setMargin(0))
-//                        .add(new Paragraph("Opposite Ghansoli Post Office, Navi Mumbai - 400701")
-//                                .setFont(regular).setFontSize(10)
-//                                .setFontColor(ColorConstants.DARK_GRAY)
-//                                .setMargin(0))
-//                        .setBorder(Border.NO_BORDER)
-//        );
-        
+         
         headerTable.addCell(
                 new Cell()
                         // NGO Name
                         .add(new Paragraph()
-                                .add(new Text("Aarine ")
+                                .add(new Text("Datfuslab ")
                                         .setFont(bold)
-                                        .setFontSize(22)
-                                        .setFontColor(new DeviceRgb(236, 38, 143)))
-                                .add(new Text("Foundation")
+                                        .setFontSize(18)
+//                                        .setFontColor(new DeviceRgb(236, 38, 143))
+                                        )
+                                .add(new Text("Technologies")
                                         .setFont(bold)
-                                        .setFontSize(22))
+                                        .setFontSize(18))
                                 .setMarginTop(0)
                                 .setMarginBottom(4)      // small gap after title
                                 .setFixedLeading(12))    // tighter than default
@@ -151,12 +107,12 @@ public class DonationReceiptPdf {
                                 .setTextAlignment(TextAlignment.CENTER))
 
                         // Office Address
-                        .add(new Paragraph("Off. Add: 102 First floor Gaondevi Krupa Building, Opposite Ghansoli Post Office, Navi Mumbai - 400701")
-                                .setFont(regular)
-                                .setFontSize(10)
-                                .setFontColor(ColorConstants.DARK_GRAY)
-                                .setMargin(0)
-                                .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
+//                        .add(new Paragraph("Off. Add: 102 First floor Gaondevi Krupa Building, Opposite Ghansoli Post Office, Navi Mumbai - 400701")
+//                                .setFont(regular)
+//                                .setFontSize(10)
+//                                .setFontColor(ColorConstants.DARK_GRAY)
+//                                .setMargin(0)
+//                                .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
 
                      // Registered Address
                       .add(new Paragraph("Reg. Add: C-6/1, Transit Camp, Kokari Agar, Navi Mumbai - 400701")
@@ -167,7 +123,7 @@ public class DonationReceiptPdf {
                               .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
                       
                    // Mobile No.
-                      .add(new Paragraph("Mobile No : +91 1234567890, +91 9999999999")
+                      .add(new Paragraph("Mobile No : +91 8800689752, +91 7004063385")
                               .setFont(regular)
                               .setFontSize(10)
                               .setFontColor(ColorConstants.DARK_GRAY)
@@ -175,7 +131,7 @@ public class DonationReceiptPdf {
                               .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
                       
                    // Mobile No.
-                      .add(new Paragraph("info@aarine.in, | https://aarine.in")
+                      .add(new Paragraph("info@datfuslab.com, | https://datfuslab.com")
                               .setFont(regular)
                               .setFontSize(10)
                               .setFontColor(ColorConstants.DARK_GRAY)
@@ -193,7 +149,8 @@ public class DonationReceiptPdf {
                                 .setFont(bold).setFontSize(22))
                         .add(new Paragraph("PZ/80G/E/0226/42739")
                                 .setFont(regular).setFontSize(12)
-                                .setFontColor(ColorConstants.DARK_GRAY))
+                                .setFontColor(ColorConstants.DARK_GRAY)
+                                )
                         .add(new Paragraph()
                                 .add(new Text("Date: ").setFont(bold))
                                 .add(new Text("16/02/2026").setFont(regular)))
@@ -211,22 +168,22 @@ public class DonationReceiptPdf {
         // =====================================================
         Cell bodyCell = new Cell()
                 .setBorder(Border.NO_BORDER)
-                .setBackgroundColor(new DeviceRgb(255, 240, 246))
+//                .setBackgroundColor(new DeviceRgb(255, 240, 246))
                 .setPadding(15);
 
         bodyCell.add(new Paragraph()
-                .add(new Text("Aarine Foundation ")
+                .add(new Text("Datfuslab Technologies ")
                         .setFont(bold).setFontSize(11))
                 .add(new Text("gratefully acknowledges the generous contribution received from:")
                         .setFont(regular).setFontSize(11)));
 
-        bodyCell.add(new Paragraph("Mr. Aashtik Aakash Jadav")
+        bodyCell.add(new Paragraph("Mr. Vivek Bharti")
                 .setFont(bold).setFontSize(11));
         
         bodyCell.add(new Paragraph("Address.: XXXX")
                 .setFont(regular).setFontSize(11));
 
-        bodyCell.add(new Paragraph("Contact No.: 8421159692")
+        bodyCell.add(new Paragraph("Contact No.: 8800689752")
                 .setFont(regular).setFontSize(12));
         
         bodyCell.add(new Paragraph("Email Id.: XXXX")
@@ -260,7 +217,7 @@ public class DonationReceiptPdf {
                 .setFontColor(ColorConstants.DARK_GRAY)
                 .setTextAlignment(TextAlignment.RIGHT));
 
-        BarcodeQRCode qr = new BarcodeQRCode("https://aarine.in/verify-receipt/1545/yuuu");
+        BarcodeQRCode qr = new BarcodeQRCode("https://datfuslab.com/verify-receipt/coming-soon");
         Image qrImg = new Image(qr.createFormXObject(ColorConstants.BLACK, pdf))
                 .setWidth(80).setHeight(80)
                 .setHorizontalAlignment(HorizontalAlignment.RIGHT);
@@ -269,39 +226,37 @@ public class DonationReceiptPdf {
         bodyCell.add(qrImg);
         
 
-        bodyCell.add(new LineSeparator(new SolidLine(1)));
-
-//        bodyCell.add(new Paragraph("Thank You Letter")
-          bodyCell.add(new Paragraph("Acknowledgment")
-                .setFont(bold).setFontSize(12)
-                .setTextAlignment(TextAlignment.CENTER));
-        
-        bodyCell.add(
-    	        new Paragraph(
-    	                "Aarine Foundation is a Government Registered organization working for the welfare of Women & Children since 2017. "
-    	              + "We are continuously supporting initiatives in Education, Health, Youth, Poverty, Livelihood and "
-    	              + "Community Development.\n"
-    	              + "We are enclosing a receipt against your donation along with this letter. "
-    	              + "We look forward to a long-term relationship and your continued support.\n"
-    	              + "Thank you for your generosity and trust.")
-    	                .setFont(regular)
-    	                .setFontColor(ColorConstants.DARK_GRAY)
-    	                .setFontSize(10)
-    	                .setMarginTop(0)
-    	                .setMarginBottom(0)
-    	                .setMultipliedLeading(1.1f)   // tight line spacing
-    	);
-        
-        bodyCell.add(new Paragraph("\n"));
-        bodyCell.add(new LineSeparator(new SolidLine(1)));
-        bodyCell.add(new Paragraph("\n"))
-        		.add(
-	              new Paragraph("Your donation is eligible for 50% tax benefit under section 80G of the Income Tax Act.")
-	                      .setFont(bold).setTextAlignment(TextAlignment.CENTER)
-	                      .setFontSize(10)
-	                      .setMarginBottom(0)
-	                      .setFixedLeading(11)
-	      );
+//        bodyCell.add(new LineSeparator(new SolidLine(1)));
+//          bodyCell.add(new Paragraph("Acknowledgment")
+//                .setFont(bold).setFontSize(12)
+//                .setTextAlignment(TextAlignment.CENTER));
+//        
+//        bodyCell.add(
+//    	        new Paragraph(
+//    	                "Aarine Foundation is a Government Registered organization working for the welfare of Women & Children since 2017. "
+//    	              + "We are continuously supporting initiatives in Education, Health, Youth, Poverty, Livelihood and "
+//    	              + "Community Development.\n"
+//    	              + "We are enclosing a receipt against your donation along with this letter. "
+//    	              + "We look forward to a long-term relationship and your continued support.\n"
+//    	              + "Thank you for your generosity and trust.")
+//    	                .setFont(regular)
+//    	                .setFontColor(ColorConstants.DARK_GRAY)
+//    	                .setFontSize(10)
+//    	                .setMarginTop(0)
+//    	                .setMarginBottom(0)
+//    	                .setMultipliedLeading(1.1f)   // tight line spacing
+//    	);
+//        
+//        bodyCell.add(new Paragraph("\n"));
+//        bodyCell.add(new LineSeparator(new SolidLine(1)));
+//        bodyCell.add(new Paragraph("\n"))
+//        		.add(
+//	              new Paragraph("Your donation is eligible for 50% tax benefit under section 80G of the Income Tax Act.")
+//	                      .setFont(bold).setTextAlignment(TextAlignment.CENTER)
+//	                      .setFontSize(10)
+//	                      .setMarginBottom(0)
+//	                      .setFixedLeading(11)
+//	      );
         
         outerCell.add(bodyCell);
 
