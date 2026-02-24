@@ -105,6 +105,10 @@ public class InvoiceNumber {
     
     @Column(name = "payment_status", length = 20)
     private String paymentStatus;
+    
+    @Temporal(TemporalType.DATE)
+    @Column(name = "payment_date")
+    private Date paymentDate;
 
     @Column(name = "invoice_status", length = 20)
     private String invoiceStatus;
