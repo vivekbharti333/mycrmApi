@@ -123,20 +123,25 @@ public class InvoiceController {
 //                .body(pdf);
 //    }
 
-//	@GetMapping("/download/invoice")
-//	public ResponseEntity<byte[]> downloadInvoice(
-//	        @RequestParam String invoiceNumber,
-//	        @RequestParam String superadminId) throws IOException {
-	
-	@GetMapping("download-tax-invoice")
+	@GetMapping("/download/invoice")
 	public ResponseEntity<byte[]> downloadInvoice(
-	       ) throws IOException {
+	        @RequestParam String invoiceNumber,
+	        @RequestParam String superadminId) throws IOException {
+	
+//	@GetMapping("download-tax-invoice")
+//	public ResponseEntity<byte[]> downloadInvoice(
+//	       ) throws IOException {
 
 
 	    InvoiceRequestObject invoiceRequest = new InvoiceRequestObject();
+	    
 	    invoiceRequest.setRequestFor("NOT ALL");
-	    invoiceRequest.setInvoiceNumber("DFL-02/0102");
-	    invoiceRequest.setSuperadminId("6202203047");
+	    invoiceRequest.setInvoiceNumber(invoiceNumber);
+	    invoiceRequest.setSuperadminId(superadminId);
+	    
+//	    invoiceRequest.setRequestFor("NOT ALL");
+//	    invoiceRequest.setInvoiceNumber("DFL-02/0102");
+//	    invoiceRequest.setSuperadminId("88");
 
 	    InvoiceRequestObject invoiceDetails = invoiceHelper.getInvoiceWithDetails(invoiceRequest);
 

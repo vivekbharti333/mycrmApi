@@ -150,23 +150,56 @@ public class InvoiceGenerator {
 
 
             // Invoice Title + Number (Right side)
+//            Cell invoiceInfoHeading = new Cell()
+//                    .add(new Paragraph("Date :   "+sdf.format(invoiceDetails.getCreatedAt()))
+//                            .setFont(font)
+//                            .setFontSize(10)
+//                            .setTextAlignment(TextAlignment.RIGHT))
+//                    .add(new Paragraph("Due Date :   "+sdf.format(invoiceDetails.getDueDate()))
+//                            .setFont(font)
+//                            .setFontSize(10)
+//                            .setTextAlignment(TextAlignment.RIGHT))
+//                    .add(new Paragraph("Balance Due :  "+invoiceDetails.getTotalAmount()).setBackgroundColor(new DeviceRgb(240, 240, 240))
+//                            .setFont(bold)
+//                            .setFontSize(10)
+//                            .setPadding(6)) // adds inner spacing
+//                            .setMinHeight(25)
+//                    .setBorder(Border.NO_BORDER)
+//                    .setTextAlignment(TextAlignment.RIGHT)
+//                    .setVerticalAlignment(com.itextpdf.layout.property.VerticalAlignment.MIDDLE);
+            
             Cell invoiceInfoHeading = new Cell()
-                    .add(new Paragraph("Date :   "+sdf.format(invoiceDetails.getCreatedAt()))
-                            .setFont(font)
-                            .setFontSize(10)
-                            .setTextAlignment(TextAlignment.RIGHT))
-                    .add(new Paragraph("Due Date :   "+sdf.format(invoiceDetails.getDueDate()))
-                            .setFont(font)
-                            .setFontSize(10)
-                            .setTextAlignment(TextAlignment.RIGHT))
-                    .add(new Paragraph("Balance Due :  "+invoiceDetails.getTotalAmount()).setBackgroundColor(new DeviceRgb(240, 240, 240))
-                            .setFont(bold)
-                            .setFontSize(10)
-                            .setPadding(6)) // adds inner spacing
-                            .setMinHeight(25)
                     .setBorder(Border.NO_BORDER)
                     .setTextAlignment(TextAlignment.RIGHT)
-                    .setVerticalAlignment(com.itextpdf.layout.property.VerticalAlignment.MIDDLE);
+                    .setVerticalAlignment(
+                            com.itextpdf.layout.property.VerticalAlignment.MIDDLE
+                    );
+
+            // Date (always print)
+            invoiceInfoHeading.add(
+                    new Paragraph("Date :   " + sdf.format(invoiceDetails.getCreatedAt()))
+                            .setFont(font)
+                            .setFontSize(10)
+            );
+
+            // Due Date (print only if not null)
+            if (invoiceDetails.getDueDate() != null) {
+                invoiceInfoHeading.add(
+                        new Paragraph("Due Date :   " + sdf.format(invoiceDetails.getDueDate()))
+                                .setFont(font)
+                                .setFontSize(10)
+                );
+            }
+
+            // Balance Due (always print)
+            invoiceInfoHeading.add(
+                    new Paragraph("Balance Due :  " + invoiceDetails.getTotalAmount())
+                            .setBackgroundColor(new DeviceRgb(240, 240, 240))
+                            .setFont(bold)
+                            .setFontSize(10)
+                            .setPadding(6)
+            )
+            .setMinHeight(25);
            
 
             header.addCell(companyInfo);

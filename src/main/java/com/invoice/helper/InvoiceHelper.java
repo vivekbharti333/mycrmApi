@@ -7,12 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
+import com.common.entities.InvoiceHeaderDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
 import com.invoice.dao.InvoiceDetailsDao;
@@ -35,6 +40,18 @@ public class InvoiceHelper {
 		if (invoiceRequestObject == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
+	}
+	
+	@Transactional
+	public InvoiceNumber getInvoiceByInvoiceNumber(String invoiceNumber) {
+
+		CriteriaBuilder criteriaBuilder = invoiceNumberDao.getSession().getCriteriaBuilder();
+		CriteriaQuery<InvoiceNumber> criteriaQuery = criteriaBuilder.createQuery(InvoiceNumber.class);
+		Root<InvoiceNumber> root = criteriaQuery.from(InvoiceNumber.class);
+		Predicate restriction = criteriaBuilder.equal(root.get("invoiceNumber"), invoiceNumber);
+		criteriaQuery.where(restriction);
+		InvoiceNumber invoice = invoiceNumberDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return invoice;
 	}
 	
 	public InvoiceNumber getInvoiceNumberByReqObj(InvoiceRequestObject invoiceRequest) {

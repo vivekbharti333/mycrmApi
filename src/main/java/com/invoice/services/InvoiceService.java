@@ -37,24 +37,31 @@ public class InvoiceService {
 		InvoiceRequestObject invoiceRequest = invoiceRequestObject.getPayload();
 		invoiceHelper.validateInvoiceRequest(invoiceRequest);
 
-		InvoiceHeaderDetails invoiceHeader = invoiceHeaderHelper.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
+		InvoiceHeaderDetails invoiceHeader = invoiceHeaderHelper
+				.getInvoiceHeaderBySuperAdminId(invoiceRequest.getSuperadminId());
 		if (invoiceHeader != null) {
 
-			InvoiceNumber invoiceNumber = invoiceHelper.getInvoiceNumberByReqObj(invoiceRequest);
-			invoiceNumber = invoiceHelper.saveInvoiceNumber(invoiceNumber);
+			InvoiceNumber invoice = invoiceHelper.getInvoiceByInvoiceNumber(invoiceRequest.getInvoiceNumber());
+			if (invoice == null) {
+				InvoiceNumber invoiceNumber = invoiceHelper.getInvoiceNumberByReqObj(invoiceRequest);
+				invoiceNumber = invoiceHelper.saveInvoiceNumber(invoiceNumber);
 
-			List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsByReqObj(invoiceRequest);
-			invoiceHelper.saveInvoiceDetails(invoiceDetails);
+				List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsByReqObj(invoiceRequest);
+				invoiceHelper.saveInvoiceDetails(invoiceDetails);
 
-			invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
-			invoiceRequest.setRespMesg(Constant.INVOICE_GEN_SUCCESS);
-			return invoiceRequest;
+				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
+				invoiceRequest.setRespMesg(Constant.INVOICE_GEN_SUCCESS);
+				return invoiceRequest;
+			} else {
+				invoiceRequest.setRespCode(404);
+				invoiceRequest.setRespMesg("Invoice Number Already Exists");
+				return invoiceRequest;
+			}
 		}
 		invoiceRequest.setRespCode(404);
 		invoiceRequest.setRespMesg("Invoice Header Not Found");
 		return invoiceRequest;
 	}
-
 
 //	@SuppressWarnings("static-access")
 //	public List<InvoiceRequestObject> getInvoiceWithDetails(Request<InvoiceRequestObject> invoiceRequestObject)
