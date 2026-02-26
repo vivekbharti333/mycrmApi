@@ -219,7 +219,131 @@ public class InvoiceHelper {
 			return results;
 	}
 	
-	@SuppressWarnings("unchecked")
+	
+	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
+
+	    String jpql;
+
+	    boolean fetchAll =
+	            invoiceRequest.getRequestFor() == null ||
+	            invoiceRequest.getRequestFor().equalsIgnoreCase("ALL");
+
+	    if (fetchAll) {
+	        jpql =
+	            "SELECT n, d FROM InvoiceNumber n " +
+	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
+	            "AND d.superadminId = :superadminId " +
+	            "WHERE n.superadminId = :superadminId " +
+	            "ORDER BY n.invoiceNumber";
+	    } else {
+	        jpql =
+	            "SELECT n, d FROM InvoiceNumber n " +
+	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
+	            "AND d.superadminId = :superadminId " +
+	            "WHERE n.superadminId = :superadminId " +
+	            "AND n.invoiceNumber = :invoiceNumber " +
+	            "ORDER BY n.invoiceNumber";
+	    }
+
+	    var query = invoiceNumberDao.getEntityManager()
+	            .createQuery(jpql, Object[].class)
+	            .setParameter("superadminId", invoiceRequest.getSuperadminId());
+
+	    if (!fetchAll) {
+	        query.setParameter("invoiceNumber", invoiceRequest.getInvoiceNumber());
+	    }
+
+	    List<Object[]> rows = query.getResultList();
+
+	    if (rows == null || rows.isEmpty()) {
+	        return null;
+	    }
+
+	    Map<String, InvoiceRequestObject> invoiceMap = new LinkedHashMap<>();
+
+	    for (Object[] row : rows) {
+
+	        InvoiceNumber header = (InvoiceNumber) row[0];
+	        InvoiceDetails detail = (InvoiceDetails) row[1];
+
+	        InvoiceRequestObject invoice =
+	                invoiceMap.get(header.getInvoiceNumber());
+
+	        if (invoice == null) {
+
+	            invoice = new InvoiceRequestObject();
+
+	            // ================= COMPANY DETAILS =================
+	            invoice.setCompanyId(header.getCompanyId());
+	            invoice.setCompanyLogo(header.getCompanyLogo());
+	            invoice.setCompanyName(header.getCompanyName());
+	            invoice.setOfficeAddress(header.getOfficeAddress());
+	            invoice.setRegAddress(header.getRegAddress());
+	            invoice.setMobileNo(header.getMobileNo());
+	            invoice.setEmailId(header.getEmailId());
+	            invoice.setWebsite(header.getWebsite());
+	            invoice.setGstNumber(header.getGstNumber());
+	            invoice.setPanNumber(header.getPanNumber());
+
+	            // ================= CUSTOMER DETAILS =================
+	            invoice.setCustomerName(header.getCustomerName());
+	            invoice.setCustomerEmail(header.getCustomerEmail());
+	            invoice.setCustomerPhone(header.getCustomerPhone());
+	            invoice.setCustomerGstNumber(header.getCustomerGstNumber());
+	            invoice.setBillingAddress(header.getBillingAddress());
+	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
+
+	            // ================= INVOICE DETAILS =================
+	            invoice.setInvoiceNumber(header.getInvoiceNumber());
+	            invoice.setInvoiceDate(header.getCreatedAt());
+	            invoice.setDueDate(header.getDueDate());
+	            invoice.setSubtotal(header.getSubtotal());
+	            invoice.setDiscount(header.getDiscount());
+	            invoice.setTotalTaxAmount(header.getTotalTaxAmount());
+	            invoice.setTotalAmount(header.getTotalAmount());
+	            invoice.setStatus(header.getStatus());
+	            invoice.setPaymentMode(header.getPaymentMode());
+	            invoice.setTransactionId(header.getTransactionId());
+	            invoice.setPaymentStatus(header.getPaymentStatus());
+	            invoice.setInvoiceStatus(header.getInvoiceStatus());
+	            invoice.setCreatedAt(header.getCreatedAt());
+	            invoice.setCreatedBy(header.getCreatedBy());
+	            invoice.setSuperadminId(header.getSuperadminId());
+
+	            invoice.setItems(new ArrayList<>());
+	            invoice.setRespCode(200);
+	            invoice.setRespMesg("Invoice fetched successfully");
+
+	            invoiceMap.put(header.getInvoiceNumber(), invoice);
+	        }
+
+	        // ================= ITEM DETAILS =================
+	        if (detail != null) {
+
+	            InvoiceItemRequest item = new InvoiceItemRequest();
+
+	            item.setProductName(detail.getProductName());
+	            item.setDescription(detail.getDescription());
+	            item.setRate(detail.getRate());
+	            item.setQuantity(detail.getQuantity());
+	            item.setCgstRate(detail.getCgstRate());
+	            item.setCgstAmount(detail.getCgstAmount());
+	            item.setSgstRate(detail.getSgstRate());
+	            item.setSgstAmount(detail.getSgstAmount());
+	            item.setIgstRate(detail.getIgstRate());
+	            item.setIgstAmount(detail.getIgstAmount());
+	            item.setAmount(detail.getAmount());
+	            item.setStatus(detail.getStatus());
+
+	            invoice.getItems().add(item);
+	        }
+	    }
+
+	    // Return only one invoice
+	    return invoiceMap.values().iterator().next();
+	}
+	
+//	@SuppressWarnings("unchecked")
 //	public List<InvoiceRequestObject> getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
 //	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
 //
@@ -326,121 +450,124 @@ public class InvoiceHelper {
 
 	
 
-	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
-
-	    String jpql;
-
-	    boolean fetchAll =
-	            invoiceRequest.getRequestFor() == null ||
-	            invoiceRequest.getRequestFor().equalsIgnoreCase("ALL");
-
-	    if (fetchAll) {
-	        jpql =
-	            "SELECT n, d FROM InvoiceNumber n " +
-	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
-	            "AND d.superadminId = :superadminId " +
-	            "WHERE n.superadminId = :superadminId " +
-	            "ORDER BY n.invoiceNumber";
-	    } else {
-	        jpql =
-	            "SELECT n, d FROM InvoiceNumber n " +
-	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
-	            "AND d.superadminId = :superadminId " +
-	            "WHERE n.superadminId = :superadminId " +
-	            "AND n.invoiceNumber = :invoiceNumber " +
-	            "ORDER BY n.invoiceNumber";
-	    }
-
-	    var query = invoiceNumberDao.getEntityManager()
-	            .createQuery(jpql, Object[].class)
-	            .setParameter("superadminId", invoiceRequest.getSuperadminId());
-
-	    if (!fetchAll) {
-	        query.setParameter("invoiceNumber", invoiceRequest.getInvoiceNumber());
-	    }
-
-	    List<Object[]> rows = query.getResultList();
-
-	    if (rows == null || rows.isEmpty()) {
-	        return null;
-	    }
-
-	    Map<String, InvoiceRequestObject> invoiceMap = new LinkedHashMap<>();
-
-	    for (Object[] row : rows) {
-
-	        InvoiceNumber header = (InvoiceNumber) row[0];
-	        InvoiceDetails detail = (InvoiceDetails) row[1];
-
-	        InvoiceRequestObject invoice =
-	                invoiceMap.get(header.getInvoiceNumber());
-
-	        if (invoice == null) {
-	            invoice = new InvoiceRequestObject();
-
-	            // Header
-	            invoice.setCompanyId(header.getCompanyId());
-	            invoice.setInvoiceNumber(header.getInvoiceNumber());
-	            invoice.setInvoiceDate(header.getCreatedAt());
-	            invoice.setDueDate(header.getDueDate());
-	            invoice.setSubtotal(header.getSubtotal());
-	            invoice.setDiscount(header.getDiscount());
-	            invoice.setTotalAmount(header.getTotalAmount());
-	            invoice.setStatus(header.getStatus());
-	            invoice.setPaymentMode(header.getPaymentMode());
-	            invoice.setTransactionId(header.getTransactionId());
-	            invoice.setPaymentStatus(header.getPaymentStatus());
-	            invoice.setInvoiceStatus(header.getInvoiceStatus());
-	            invoice.setCreatedAt(header.getCreatedAt());
-	            invoice.setSuperadminId(header.getSuperadminId());
-	            invoice.setCreatedBy(header.getCreatedBy());
-
-	            // Customer
-	            invoice.setCustomerName(header.getCustomerName());
-	            invoice.setCustomerEmail(invoiceRequest.getCustomerEmail());
-	    		invoice.setCustomerPhone(invoiceRequest.getCustomerPhone());
-	    		invoice.setCustomerGstNumber(invoiceRequest.getCustomerGstNumber());
-	            invoice.setBillingAddress(header.getBillingAddress());
-	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
-
-	            // GST
-//	            invoice.setCgstRate(header.getCgstRate());
-//	            invoice.setCgstAmount(header.getCgstAmount());
-//	            invoice.setSgstRate(header.getSgstRate());
-//	            invoice.setSgstAmount(header.getSgstAmount());
-//	            invoice.setIgstRate(header.getIgstRate());
-//	            invoice.setIgstAmount(header.getIgstAmount());
-
-	            invoice.setItems(new ArrayList<>());
-	            invoice.setRespCode(200);
-	            invoice.setRespMesg("Invoice fetched successfully");
-
-	            invoiceMap.put(header.getInvoiceNumber(), invoice);
-	        }
-
-	        // Items
-	        if (detail != null) {
-	            InvoiceItemRequest item = new InvoiceItemRequest();
-	            item.setProductName(detail.getProductName());
-	            item.setDescription(detail.getDescription());
-	            item.setRate(detail.getRate());
-	            item.setQuantity(detail.getQuantity());
-	            item.setCgstRate(detail.getCgstRate());
-	            item.setCgstAmount(detail.getCgstAmount());
-	            item.setSgstRate(detail.getSgstRate());
-	            item.setSgstAmount(detail.getSgstAmount());
-	            item.setIgstRate(detail.getIgstRate());
-	            item.setIgstAmount(detail.getIgstAmount());
-	            item.setAmount(detail.getAmount());
-	            item.setStatus(detail.getStatus());
-
-	            invoice.getItems().add(item);
-	        }
-	    }
-
-	    // ✅ Return only ONE invoice
-	    return invoiceMap.values().iterator().next();
-	}
+//	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
+//
+//	    String jpql;
+//
+//	    boolean fetchAll =
+//	            invoiceRequest.getRequestFor() == null ||
+//	            invoiceRequest.getRequestFor().equalsIgnoreCase("ALL");
+//
+//	    if (fetchAll) {
+//	        jpql =
+//	            "SELECT n, d FROM InvoiceNumber n " +
+//	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
+//	            "AND d.superadminId = :superadminId " +
+//	            "WHERE n.superadminId = :superadminId " +
+//	            "ORDER BY n.invoiceNumber";
+//	    } else {
+//	        jpql =
+//	            "SELECT n, d FROM InvoiceNumber n " +
+//	            "LEFT JOIN InvoiceDetails d ON n.invoiceNumber = d.invoiceNumber " +
+//	            "AND d.superadminId = :superadminId " +
+//	            "WHERE n.superadminId = :superadminId " +
+//	            "AND n.invoiceNumber = :invoiceNumber " +
+//	            "ORDER BY n.invoiceNumber";
+//	    }
+//
+//	    var query = invoiceNumberDao.getEntityManager()
+//	            .createQuery(jpql, Object[].class)
+//	            .setParameter("superadminId", invoiceRequest.getSuperadminId());
+//
+//	    if (!fetchAll) {
+//	        query.setParameter("invoiceNumber", invoiceRequest.getInvoiceNumber());
+//	    }
+//
+//	    List<Object[]> rows = query.getResultList();
+//
+//	    if (rows == null || rows.isEmpty()) {
+//	        return null;
+//	    }
+//
+//	    Map<String, InvoiceRequestObject> invoiceMap = new LinkedHashMap<>();
+//
+//	    for (Object[] row : rows) {
+//
+//	        InvoiceNumber header = (InvoiceNumber) row[0];
+//	        InvoiceDetails detail = (InvoiceDetails) row[1];
+//
+//	        InvoiceRequestObject invoice =
+//	                invoiceMap.get(header.getInvoiceNumber());
+//
+//	        if (invoice == null) {
+//	            invoice = new InvoiceRequestObject();
+//
+//	            // ================= COMPANY DETAILS =================
+//	            invoice.setCompanyId(header.getCompanyId());
+//	            invoice.setCompanyLogo(header.getCompanyLogo());
+//	            invoice.setCompanyName(header.getCompanyName());
+//	            invoice.setOfficeAddress(header.getOfficeAddress());
+//	            invoice.setRegAddress(header.getRegAddress());
+//	            invoice.setMobileNo(header.getMobileNo());
+//	            invoice.setEmailId(header.getEmailId());
+//	            invoice.setWebsite(header.getWebsite());
+//	            invoice.setGstNumber(header.getGstNumber());
+//	            invoice.setPanNumber(header.getPanNumber());
+//
+//	            // ================= CUSTOMER DETAILS =================
+//	            invoice.setCustomerName(header.getCustomerName());
+//	            invoice.setCustomerEmail(header.getCustomerEmail());
+//	            invoice.setCustomerPhone(header.getCustomerPhone());
+//	            invoice.setCustomerGstNumber(header.getCustomerGstNumber());
+//	            invoice.setBillingAddress(header.getBillingAddress());
+//	            invoice.setDeliveryAddresses(header.getDeliveryAddresses());
+//
+//	            // ================= INVOICE DETAILS =================
+//	            invoice.setInvoiceNumber(header.getInvoiceNumber());
+//	            invoice.setInvoiceDate(header.getCreatedAt());
+//	            invoice.setDueDate(header.getDueDate());
+//	            invoice.setSubtotal(header.getSubtotal());
+//	            invoice.setDiscount(header.getDiscount());
+//	            invoice.setTotalTaxAmount(header.getTotalTaxAmount());
+//	            invoice.setTotalAmount(header.getTotalAmount());
+//	            invoice.setStatus(header.getStatus());
+//	            invoice.setPaymentMode(header.getPaymentMode());
+//	            invoice.setTransactionId(header.getTransactionId());
+//	            invoice.setPaymentStatus(header.getPaymentStatus());
+//	            invoice.setInvoiceStatus(header.getInvoiceStatus());
+//	            invoice.setCreatedAt(header.getCreatedAt());
+//	            invoice.setCreatedBy(header.getCreatedBy());
+//	            invoice.setSuperadminId(header.getSuperadminId());
+//
+//	            invoice.setItems(new ArrayList<>());
+//	            invoice.setRespCode(200);
+//	            invoice.setRespMesg("Invoice fetched successfully");
+//
+//	            invoiceMap.put(header.getInvoiceNumber(), invoice);
+//	        }
+//	        // Items
+//	        if (detail != null) {
+//	            InvoiceItemRequest item = new InvoiceItemRequest();
+//	            item.setProductName(detail.getProductName());
+//	            item.setDescription(detail.getDescription());
+//	            item.setRate(detail.getRate());
+//	            item.setQuantity(detail.getQuantity());
+//	            item.setCgstRate(detail.getCgstRate());
+//	            item.setCgstAmount(detail.getCgstAmount());
+//	            item.setSgstRate(detail.getSgstRate());
+//	            item.setSgstAmount(detail.getSgstAmount());
+//	            item.setIgstRate(detail.getIgstRate());
+//	            item.setIgstAmount(detail.getIgstAmount());
+//	            item.setAmount(detail.getAmount());
+//	            item.setStatus(detail.getStatus());
+//
+//	            invoice.getItems().add(item);
+//	        }
+//	    }
+//
+//	    // ✅ Return only ONE invoice
+//	    return invoiceMap.values().iterator().next();
+//	}
 
 
 

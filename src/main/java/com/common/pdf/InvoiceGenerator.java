@@ -45,7 +45,7 @@ public class InvoiceGenerator {
 	@Autowired
 	private AmountToWordsConverter amountToWordsConverter;
 
-    public byte[] generateInvoice(InvoiceHeaderDetails invoiceHeaderDetails, InvoiceRequestObject invoiceDetails) {
+    public byte[] generateInvoice(InvoiceHeaderDetails invoiceHeaderDetails12, InvoiceRequestObject invoiceDetails) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
         	SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
@@ -124,29 +124,82 @@ public class InvoiceGenerator {
 //                    .setBorder(Border.NO_BORDER)
 //                    .setTextAlignment(TextAlignment.LEFT);
             
-            Cell companyInfo = new Cell()
-                    // Company Name
-                    .add(new Paragraph(invoiceHeaderDetails.getCompanyFirstName()+ " "+invoiceHeaderDetails.getCompanyLastName())
-                            .setFont(bold)
-                            .setFontSize(9))
-                    .add(new Paragraph("GSTIN : "+invoiceHeaderDetails.getGstNumber())
-                            .setFont(font)
-                            .setFontSize(9))
-                    .add(new Paragraph(invoiceHeaderDetails.getOfficeAddress())
-                            .setFont(font)
-                            .setFontSize(9))
-                    .add(new Paragraph("Website : "+invoiceHeaderDetails.getWebsite())
-                            .setFont(font)
-                            .setFontSize(9))
-                    .add(new Paragraph("Email : "+invoiceHeaderDetails.getEmailId())
-                            .setFont(font)
-                            .setFontSize(9))
-                    .add(new Paragraph("Mobile : "+invoiceHeaderDetails.getMobileNo())
-                            .setFont(font)
-                            .setFontSize(9))
-                    .setBorder(Border.NO_BORDER)
-                    .setTextAlignment(TextAlignment.LEFT);
+//            Cell companyInfo = new Cell()
+//                    // Company Name
+//                    .add(new Paragraph(invoiceDetails.getCompanyName())
+//                            .setFont(bold)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("GSTIN : "+invoiceDetails.getGstNumber())
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph(invoiceDetails.getOfficeAddress())
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("Website : "+invoiceDetails.getWebsite())
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("Email : "+invoiceDetails.getEmailId())
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .add(new Paragraph("Mobile : "+invoiceDetails.getMobileNo())
+//                            .setFont(font)
+//                            .setFontSize(9))
+//                    .setBorder(Border.NO_BORDER)
+//                    .setTextAlignment(TextAlignment.LEFT);
 
+            Cell companyInfo = new Cell();
+
+            if (invoiceDetails.getCompanyName() != null && !invoiceDetails.getCompanyName().trim().isEmpty()) {
+                companyInfo.add(
+                    new Paragraph(invoiceDetails.getCompanyName())
+                        .setFont(bold)
+                        .setFontSize(10)
+                );
+            }
+
+            if (invoiceDetails.getGstNumber() != null && !invoiceDetails.getGstNumber().trim().isEmpty()) {
+                companyInfo.add(
+                    new Paragraph("GSTIN : " + invoiceDetails.getGstNumber())
+                        .setFont(font)
+                        .setFontSize(9)
+                );
+            }
+
+            if (invoiceDetails.getOfficeAddress() != null && !invoiceDetails.getOfficeAddress().trim().isEmpty()) {
+                companyInfo.add(
+                    new Paragraph(invoiceDetails.getOfficeAddress())
+                        .setFont(font)
+                        .setFontSize(9)
+                );
+            }
+
+            if (invoiceDetails.getWebsite() != null && !invoiceDetails.getWebsite().trim().isEmpty()) {
+                companyInfo.add(
+                    new Paragraph("Website : " + invoiceDetails.getWebsite())
+                        .setFont(font)
+                        .setFontSize(9)
+                );
+            }
+
+            if (invoiceDetails.getEmailId() != null && !invoiceDetails.getEmailId().trim().isEmpty()) {
+                companyInfo.add(
+                    new Paragraph("Email : " + invoiceDetails.getEmailId())
+                        .setFont(font)
+                        .setFontSize(9)
+                );
+            }
+
+            if (invoiceDetails.getMobileNo() != null && !invoiceDetails.getMobileNo().trim().isEmpty()) {
+                companyInfo.add(
+                    new Paragraph("Mobile : " + invoiceDetails.getMobileNo())
+                        .setFont(font)
+                        .setFontSize(9)
+                );
+            }
+
+            companyInfo
+                .setBorder(Border.NO_BORDER)
+                .setTextAlignment(TextAlignment.LEFT);
 
 
             // Invoice Title + Number (Right side)
@@ -241,7 +294,7 @@ public class InvoiceGenerator {
             	Cell deliveryCell = new Cell().setBorder(Border.NO_BORDER);
                 deliveryCell.add(new Paragraph("Delivery Address:").setFont(font).setFontColor(greyText).setFontSize(9));
                 deliveryCell.add(new Paragraph("Delivery Name").setFont(bold).setFontSize(9));
-                deliveryCell.add(new Paragraph( "Delivery Street Address City, State - Pincode").setFont(font).setFontSize(9));
+                deliveryCell.add(new Paragraph("Delivery Street Address City, State - Pincode").setFont(font).setFontSize(9));
                 addressTable.addCell(deliveryCell);
 
             }
@@ -283,7 +336,7 @@ public class InvoiceGenerator {
                 Cell itemCell = new Cell().setBorder(Border.NO_BORDER).setBorderBottom(lightGreyLine);
 
                 itemCell.add(new Paragraph(itemDetails.getProductName()).setFont(font_grey).setFontSize(9));
-                itemCell.add(new Paragraph("(" + desc + ")").setFont(font_grey).setFontSize(8).setFontColor(greyText));
+                itemCell.add(new Paragraph( desc ).setFont(font_grey).setFontSize(8).setFontColor(greyText));
 
                 table.addCell(itemCell);
 
@@ -338,6 +391,7 @@ public class InvoiceGenerator {
 
             // ======= TOTALS =======
             doc.add(new Paragraph("\nSubtotal:    "+invoiceDetails.getSubtotal()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+            doc.add(new Paragraph("\nTax Amount:    "+invoiceDetails.getTotalTaxAmount()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
             
 //         // CGST
 //            if ( invoiceDetails.getCgstRate() > 0) {
