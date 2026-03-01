@@ -342,7 +342,8 @@ public class InvoiceHelper {
 	    // Return only one invoice
 	    return invoiceMap.values().iterator().next();
 	}
-	
+
+
 //	@SuppressWarnings("unchecked")
 //	public List<InvoiceRequestObject> getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {
 //	public InvoiceRequestObject getInvoiceWithDetails(InvoiceRequestObject invoiceRequest) {

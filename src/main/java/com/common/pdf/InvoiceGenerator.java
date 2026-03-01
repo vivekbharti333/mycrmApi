@@ -45,7 +45,7 @@ public class InvoiceGenerator {
 	@Autowired
 	private AmountToWordsConverter amountToWordsConverter;
 
-    public byte[] generateInvoice(InvoiceHeaderDetails invoiceHeaderDetails12, InvoiceRequestObject invoiceDetails) {
+    public byte[] generateInvoice(InvoiceRequestObject invoiceDetails) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
 
         	SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
@@ -369,13 +369,13 @@ public class InvoiceGenerator {
 
                     taxCell.add(new Paragraph("(CGST" 
                             + itemDetails.getCgstRate() + "% + "+"SGST"  + itemDetails.getSgstRate() + "%)")
-                            .setFont(font_grey).setFontSize(8).setFontColor(greyText)
+                            .setFont(font_grey).setFontSize(8).setTextAlignment(TextAlignment.CENTER).setFontColor(greyText)
                     );
                 }
                 
                 if ( itemDetails.getIgstRate() > 0) {
-                	taxCell.add(new Paragraph(itemDetails.getIgstAmount().toPlainString()).setFont(font_grey).setFontSize(9));
-                    taxCell.add(new Paragraph("(IGST" + itemDetails.getIgstRate() + "%)").setFont(font_grey).setFontSize(8).setFontColor(greyText));
+                	taxCell.add(new Paragraph(itemDetails.getIgstAmount().toPlainString()).setTextAlignment(TextAlignment.CENTER).setFont(font_grey).setFontSize(9));
+                    taxCell.add(new Paragraph("(IGST" + itemDetails.getIgstRate() + "%)").setTextAlignment(TextAlignment.CENTER).setFont(font_grey).setFontSize(8).setFontColor(greyText));
                 }
                 table.addCell(taxCell);
 
@@ -391,7 +391,7 @@ public class InvoiceGenerator {
 
             // ======= TOTALS =======
             doc.add(new Paragraph("\nSubtotal:    "+invoiceDetails.getSubtotal()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
-            doc.add(new Paragraph("\nTax Amount:    "+invoiceDetails.getTotalTaxAmount()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(9));
+            doc.add(new Paragraph("Tax Amount:    "+invoiceDetails.getTotalTaxAmount()).setTextAlignment(TextAlignment.RIGHT).setFont(font).setFontSize(10));
             
 //         // CGST
 //            if ( invoiceDetails.getCgstRate() > 0) {
@@ -420,12 +420,12 @@ public class InvoiceGenerator {
 
             // ======= TERMS =======
             doc.add(new Paragraph("Terms:").setFont(bold).setFontSize(9).setMarginBottom(0));
-            doc.add(new Paragraph("Please visit our website for Terms & Conditions: https://datfuslab.com/terms.html")
+            doc.add(new Paragraph("Please visit our website for Terms & Conditions: https://datfuslab.com/terms-conditions")
                     .setFont(font).setMarginTop(0).setFontSize(8));
             
             
          // QR content (put whatever you want here)
-            String qrText = "Invoice No: "+invoiceDetails.getInvoiceNumber()+"| Client Name: "+invoiceDetails.getCustomerName()+" | Amount: "+invoiceDetails.getTotalAmount();
+            String qrText = "Invoice No: "+invoiceDetails.getInvoiceNumber()+"  \nClient Name: "+invoiceDetails.getCustomerName()+"  \nAmount: \u20B9" + invoiceDetails.getTotalAmount();
 
             // Create QR
             BarcodeQRCode qrCode = new BarcodeQRCode(qrText);

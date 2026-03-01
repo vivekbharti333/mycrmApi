@@ -28,6 +28,8 @@ public class InvoiceService {
 
 	@Autowired
 	private InvoiceHeaderHelper invoiceHeaderHelper;
+	
+	
 
 
 	@Transactional
@@ -48,6 +50,10 @@ public class InvoiceService {
 
 				List<InvoiceDetails> invoiceDetails = invoiceHelper.getInvoiceDetailsByReqObj(invoiceRequest);
 				invoiceHelper.saveInvoiceDetails(invoiceDetails);
+				
+				// increase serial number by 1
+				invoiceHeader.setSerialNumber(invoiceHeader.getSerialNumber() + 1);
+				invoiceHeaderHelper.updateInvoiceHeaderDetails(invoiceHeader);
 
 				invoiceRequest.setRespCode(Constant.SUCCESS_CODE);
 				invoiceRequest.setRespMesg(Constant.INVOICE_GEN_SUCCESS);

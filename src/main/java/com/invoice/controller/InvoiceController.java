@@ -145,9 +145,9 @@ public class InvoiceController {
 
 	    InvoiceRequestObject invoiceDetails = invoiceHelper.getInvoiceWithDetails(invoiceRequest);
 
-	    List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(invoiceRequest.getSuperadminId(), "BYID", 1L);
+//	    List<InvoiceHeaderDetails> invoiceHeaderDetails = invoiceHeaderHelper.getInvoiceHeaderList(invoiceRequest.getSuperadminId(), "BYID", 1L);
 
-	    byte[] pdf = invoiceGenerator.generateInvoice(invoiceHeaderDetails.get(0), invoiceDetails);
+	    byte[] pdf = invoiceGenerator.generateInvoice(invoiceDetails);
 
 	    return ResponseEntity.ok()
 	        .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=Invoice_" + invoiceRequest.getInvoiceNumber() + ".pdf")

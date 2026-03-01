@@ -54,7 +54,7 @@ public class CustomerHelper {
 		CustomersDetails customersDetails = new CustomersDetails();
 
 		customersDetails.setCompanyId(invoiceRequest.getCompanyId());
-		customersDetails.setCustomerName(invoiceRequest.getCustomerName());
+		customersDetails.setCustomerName(invoiceRequest.getCustomerName().toUpperCase());
 		customersDetails.setEmail(invoiceRequest.getCustomerEmail());
 		customersDetails.setPhone(invoiceRequest.getCustomerPhone());
 		customersDetails.setGstNumber(invoiceRequest.getGstNumber());
