@@ -80,8 +80,7 @@ public class ZeptoEmail {
 	            conn.setRequestMethod("POST");
 	            conn.setRequestProperty("Content-Type", "application/json");
 	            conn.setRequestProperty("Accept", "application/json");
-	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1bQ73u2GJ+pxFV7KXuEJOiMt4s/OIyLgYS5NlGWPcLSk1T+t8tx2Dm+Rh4V/dDHaGcwIthubzP5rnRdm/oYD1LVGqyqK3sx/VYSPOZsbq6x00fsFgbf0bZVITpcdBq1yXVv9zYNA==");
-//	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
+	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r0OF7/ujW4p8BMD5fa/EsCjYIgoqO1j");
 //	            JSONObject object = new JSONObject(this.setParameter());
 	            OutputStream os = conn.getOutputStream();
 	            os.write(this.setParameter(donationDetails).toString().getBytes());

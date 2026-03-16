@@ -269,9 +269,14 @@ public class UserService {
 //			System.out.println("(userRequest.setMobileNo : "+(userRequest.getMobileNo()));
 			
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg("Fetch Suceesfully");
+			return userRequest;
+		} else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg("User Not Found");
 			return userRequest;
 		}
-		return userRequest;
+
 	}
 	
 
@@ -280,9 +285,6 @@ public class UserService {
 			throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
-
-//		String password = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 10);
-//		userRequest.setPassword("test@123");
 			
 
 //		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
@@ -291,7 +293,7 @@ public class UserService {
 		boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(userRequest.getSuperadminId(), ResourceType.CREATE_USER.name());
 		if (isUnderLimit) {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			userRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
+			userRequest.setRespMesg("Limit Exceeded. Please Upgrade Plan.");
 			return userRequest;
 		}
 		

@@ -20,11 +20,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-//@ComponentScan(basePackages = {"com.spring.*"})
-@ComponentScan(basePackages = {"com.spring.*", "com.spring.helper"})
-
-
-
 public class DataSourceConfig {
 	
 	 @Autowired

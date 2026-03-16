@@ -96,68 +96,13 @@ public class UserController {
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException, MessagingException {
-		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
-		
-//		UserDetails userDetails = new UserDetails();
-//		userDetails.setFirstName("Vivek");
-//		userDetails.setLastName("Bharti");
-//		userDetails.setEmailId("vivekbharti333@gmail.com");
-//		zeptoEmail.sendZeptoEmail(userDetails);
-		
-//		itextPdfReceipt.createReceipt();
-		
-//		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
-//		
-//		ByteArrayOutputStream pdfContent = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
-//		
-//		System.out.println("hujhj : "+pdfContent);
-		
-//		nimbusEmail.sendNimbusEmail(donationDetails);
-		
-		
-		
-//		pdfThankYouLatter.pdf();
-		
-
 		return new ModelAndView("home");
-//		return new ModelAndView("camera");
 	}
 	
 	
 	@RequestMapping(value = "version")
 	public String version(HttpServletResponse response) throws Exception {
-		
-		DonationRequestObject donationRequest = new DonationRequestObject();
-		
-		donationRequest.setSuperadminId("6289639160");
-		donationRequest.setRequestedFor("YESTERDAY");
-		donationRequest.setRoleType("SUPERADMIN");
-		donationRequest.setCreatedBy("6289639160");
-		
-		emailHelper.sendeMail();
-//		emailHelper.SMTPBrevoEmailSender ();
-		
-//		testHelper.checkIt(donationRequest);
-//		faceRecognitionHelper.compareFace();
-		
 		return "1.3";
-	}
-	
-
-//	@Scheduled(fixedDelay = 5000)
-	@RequestMapping(path = "test", method = RequestMethod.GET)
-	public String test() throws Exception {
-
-		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For")
-				: request.getRemoteAddr();
-
-//		String param = phonePePaymentGateway.getPaymetGatewayParam();
-//		phonePePaymentGateway.paymentPageTest(param);
-
-		AttendanceRequestObject attendanceRequest = new AttendanceRequestObject();
-		amazonFaceCompare.amazonFaceCompare(attendanceRequest);
-
-		return "Working : " + clientIp;
 	}
 
 	@RequestMapping(path = "updateUserSubscription", method = RequestMethod.POST)
