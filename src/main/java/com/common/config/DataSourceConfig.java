@@ -57,7 +57,7 @@ public class DataSourceConfig {
 		private DataSource getDataSource(String dbName) {
 			Properties props = createDatasourceProperty(dbName);
 			HikariConfig config = new HikariConfig(props);
-			config.setMaximumPoolSize(50);
+			config.setMaximumPoolSize(30);
 			config.setConnectionTimeout(3 * 4000);
 			config.setAutoCommit(false);
 			config.setIdleTimeout(2 * 60 * 1000);
