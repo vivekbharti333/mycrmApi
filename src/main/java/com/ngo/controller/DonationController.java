@@ -4,18 +4,25 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.common.constant.Constant;
+import com.common.entities.InvoiceHeaderDetails;
+import com.common.enums.Status;
 import com.common.exceptions.BizException;
+import com.common.helper.InvoiceHeaderHelper;
 import com.ngo.entities.DonationDetails;
+import com.ngo.helper.DonationHelper;
 import com.ngo.object.request.DonationRequestObject;
 import com.ngo.pdf.DonationReceiptPdf;
 import com.ngo.services.DonationService;
@@ -34,16 +41,55 @@ public class DonationController {
 	@Autowired
 	private DonationReceiptPdf donationReceiptPdf;
 	
-	@GetMapping("download-donation-receipt") 
-	public ResponseEntity<byte[]> downloadReceipt() throws Exception {
+	@Autowired
+	private DonationHelper donationHelper;
+	
+   @Autowired
+   private InvoiceHeaderHelper invoiceHelper;
+	
+//	@GetMapping("download-donation-receipt") 
+//	public ResponseEntity<byte[]> downloadReceipt() throws Exception {
+//
+//
+//	    byte[] data = donationReceiptPdf.generateInvoice();
+//
+//	    return ResponseEntity.ok()
+//	            .header("Content-Disposition", "attachment; filename=donation-receipt.pdf")
+//	            .contentType(MediaType.APPLICATION_PDF)
+//	            .body(data);
+//	}
+	
+	@GetMapping("/download-donation-receipt/{refNo}")
+	public Object downloadReceipt(@PathVariable String refNo) throws Exception {
 
+	    DonationDetails donationDetails = donationHelper.getDonationDetailsByReferenceNo(refNo);
 
-	    byte[] data = donationReceiptPdf.generateInvoice();
+	    ModelAndView modelAndView;
 
-	    return ResponseEntity.ok()
-	            .header("Content-Disposition", "attachment; filename=donation-receipt.pdf")
-	            .contentType(MediaType.APPLICATION_PDF)
-	            .body(data);
+	    if (donationDetails != null) {
+
+	        if (!donationDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+	        	InvoiceHeaderDetails invoiceHeader = this.invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
+	            // ✅ KEEP YOUR EXISTING METHOD (NO CHANGE)
+	            byte[] data = donationReceiptPdf.generateInvoice(donationDetails, invoiceHeader);
+
+	            return ResponseEntity.ok()
+	                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=donation-receipt.pdf")
+	                    .contentType(MediaType.APPLICATION_PDF)
+	                    .contentLength(data.length)
+	                    .body(data);
+
+	        } else {
+	            modelAndView = new ModelAndView("message");
+	            modelAndView.addObject("message", "Cancelled request. Please contact admin for details.");
+	            return modelAndView;
+	        }
+
+	    } else {
+	        modelAndView = new ModelAndView("message");
+	        modelAndView.addObject("message", "Invalid request. Please contact admin for details.");
+	        return modelAndView;
+	    }
 	}
 
 	

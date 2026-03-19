@@ -2,9 +2,14 @@ package com.ngo.pdf;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import com.ngo.helper.DonationHelper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.common.entities.InvoiceHeaderDetails;
+import com.common.utility.AmountToWordsConverter;
 import com.itextpdf.barcodes.BarcodeQRCode;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
@@ -21,12 +26,26 @@ import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.*;
+import com.ngo.entities.DonationDetails;
 
 @Component
 public class DonationReceiptPdf {
+	
+	@Autowired
+	private AmountToWordsConverter amountToWordsConverter;
 
-    public byte[] generateInvoice() throws Exception {
+    private final DonationHelper donationHelper;
 
+    DonationReceiptPdf(DonationHelper donationHelper) {
+        this.donationHelper = donationHelper;
+    }
+
+    public byte[] generateInvoice(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) throws Exception {
+    	
+    	String pattern = "dd/MM/yyyy";
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+		String date = simpleDateFormat.format(donationDetails.getCreatedAt());
+    	
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         PdfDocument pdf = new PdfDocument(new PdfWriter(baos));
         Document document = new Document(pdf);
@@ -35,15 +54,20 @@ public class DonationReceiptPdf {
         // ================= LOAD FONTS =================
         PdfFont regular;
         PdfFont bold;
+        PdfFont italic;
 
         try (
                 InputStream r = getClass().getClassLoader()
                         .getResourceAsStream("fonts/google/NotoSans-Regular.ttf");
                 InputStream b = getClass().getClassLoader()
-                        .getResourceAsStream("fonts/google/NotoSans-Bold.ttf")
+                        .getResourceAsStream("fonts/google/NotoSans-Bold.ttf");
+        		InputStream c = getClass().getClassLoader()
+                        .getResourceAsStream("fonts/google/NotoSans-Italic.ttf")
+                       
         ) {
             regular = PdfFontFactory.createFont(r.readAllBytes(), PdfEncodings.IDENTITY_H, true);
             bold = PdfFontFactory.createFont(b.readAllBytes(), PdfEncodings.IDENTITY_H, true);
+            italic = PdfFontFactory.createFont(c.readAllBytes(), PdfEncodings.IDENTITY_H, true);
         }
 
         // ================= OUTER BORDER ONLY =================
@@ -60,203 +84,282 @@ public class DonationReceiptPdf {
                 .setBackgroundColor(ColorConstants.WHITE)
                 .setPadding(15);
 
+        // Logo
         Image logo = new Image(ImageDataFactory.create(
                 "C:\\Users\\HP\\Downloads\\logo.png"))
-//        	"C:\\Users\\HP\\Downloads\\download.png"))
                 .setWidth(90).setHeight(80);
 
-        Table headerTable = new Table(UnitValue.createPercentArray(new float[]{2, 5, 3}))
+        Table headerTable = new Table(UnitValue.createPercentArray(new float[]{2, 5, 2}))
                 .useAllAvailableWidth();
 
+        // Logo Cell
         headerTable.addCell(new Cell().add(logo)
                 .setBorder(Border.NO_BORDER)
                 .setVerticalAlignment(VerticalAlignment.MIDDLE));
-         
-        headerTable.addCell(
-                new Cell()
-                        // NGO Name
-                        .add(new Paragraph()
-                                .add(new Text("Datfuslab ")
-                                        .setFont(bold)
-                                        .setFontSize(18)
-//                                        .setFontColor(new DeviceRgb(236, 38, 143))
-                                        )
-                                .add(new Text("Technologies")
-                                        .setFont(bold)
-                                        .setFontSize(18))
-                                .setMarginTop(0)
-                                .setMarginBottom(4)      // small gap after title
-                                .setFixedLeading(12))    // tighter than default
-                        		.setTextAlignment(TextAlignment.CENTER)
-                        // Registration No
-                        .add(new Paragraph("Registration No.: E-34254(M)")
-                                .setFont(regular)
-                                .setFontSize(10)
-                                .setFontColor(ColorConstants.DARK_GRAY)
-                                .setMargin(0)
-                                .setFixedLeading(11.8f)
-                                .setTextAlignment(TextAlignment.CENTER))
 
-                        // PAN No
-                        .add(new Paragraph("PAN No.: AAHTA5687L")
-                                .setFont(regular)
-                                .setFontSize(10)
-                                .setFontColor(ColorConstants.DARK_GRAY)
-                                .setMargin(0)
-                                .setFixedLeading(11.8f)
-                                .setTextAlignment(TextAlignment.CENTER))
+        // ================= HEADER CONTENT =================
+        Cell centerCell = new Cell().setBorder(Border.NO_BORDER);
 
-                        // Office Address
-//                        .add(new Paragraph("Off. Add: 102 First floor Gaondevi Krupa Building, Opposite Ghansoli Post Office, Navi Mumbai - 400701")
-//                                .setFont(regular)
-//                                .setFontSize(10)
-//                                .setFontColor(ColorConstants.DARK_GRAY)
-//                                .setMargin(0)
-//                                .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
-
-                     // Registered Address
-                      .add(new Paragraph("Reg. Add: C-6/1, Transit Camp, Kokari Agar, Navi Mumbai - 400701")
-                              .setFont(regular)
-                              .setFontSize(10)
-                              .setFontColor(ColorConstants.DARK_GRAY)
-                              .setMargin(0)
-                              .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
-                      
-                   // Mobile No.
-                      .add(new Paragraph("Mobile No : +91 8800689752, +91 7004063385")
-                              .setFont(regular)
-                              .setFontSize(10)
-                              .setFontColor(ColorConstants.DARK_GRAY)
-                              .setMargin(0)
-                              .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
-                      
-                   // Mobile No.
-                      .add(new Paragraph("info@datfuslab.com, | https://datfuslab.com")
-                              .setFont(regular)
-                              .setFontSize(10)
-                              .setFontColor(ColorConstants.DARK_GRAY)
-                              .setMargin(0)
-                              .setFixedLeading(11.8f).setTextAlignment(TextAlignment.CENTER))
-
-                        .setBorder(Border.NO_BORDER)
-                        .setPadding(0)   // 👈 VERY IMPORTANT
-                        .add(new Paragraph("\n"))
+        // NGO Name
+        centerCell.add(
+            new Paragraph()
+                .add(new Text(invoiceHeader.getCompanyFirstName() + " ")
+                        .setFont(bold).setFontSize(16))
+                .add(new Text(invoiceHeader.getCompanyLastName())
+                        .setFont(bold).setFontSize(16))
+                .setMarginTop(0)
+                .setMarginBottom(4)
+                .setFixedLeading(12)
+                .setTextAlignment(TextAlignment.CENTER)
         );
 
+        // Registration No (GST)
+        String gst = invoiceHeader.getGstNumber();
+        if (gst != null && !gst.isBlank() && !"null".equalsIgnoreCase(gst)) {
+            centerCell.add(
+                new Paragraph("Registration No.: " + gst)
+                    .setFont(regular).setFontSize(9)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMargin(0)
+                    .setFixedLeading(11.8f)
+                    .setTextAlignment(TextAlignment.CENTER)
+            );
+        }
+
+        // PAN
+        String pan = invoiceHeader.getPanNumber();
+        if (pan != null && !pan.isBlank() && !"null".equalsIgnoreCase(pan)) {
+            centerCell.add(
+                new Paragraph("PAN No.: " + pan)
+                    .setFont(regular).setFontSize(9)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMargin(0)
+                    .setFixedLeading(11.8f)
+                    .setTextAlignment(TextAlignment.CENTER)
+            );
+        }
+
+        // Office Address
+        String office = invoiceHeader.getOfficeAddress();
+        if (office != null && !office.isBlank() && !"null".equalsIgnoreCase(office)) {
+            centerCell.add(
+                new Paragraph("Off. Add: " + office)
+                    .setFont(regular).setFontSize(10)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMargin(0)
+                    .setFixedLeading(11.8f)
+                    .setTextAlignment(TextAlignment.CENTER)
+            );
+        }
+
+        // Registered Address
+        String reg = invoiceHeader.getRegAddress();
+        if (reg != null && !reg.isBlank() && !"null".equalsIgnoreCase(reg)) {
+            centerCell.add(
+                new Paragraph("Reg. Add: " + reg)
+                    .setFont(regular).setFontSize(9)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMargin(0)
+                    .setFixedLeading(11.8f)
+                    .setTextAlignment(TextAlignment.CENTER)
+            );
+        }
+
+        // Mobile
+        String mobile = invoiceHeader.getMobileNo();
+        String altMobile = invoiceHeader.getAlternateMobile();
+
+        String mobileText = "";
+        if (mobile != null && !mobile.isBlank()) {
+            mobileText += mobile;
+        }
+        if (altMobile != null && !altMobile.isBlank()) {
+            if (!mobileText.isEmpty()) mobileText += ", ";
+            mobileText += altMobile;
+        }
+
+        if (!mobileText.isEmpty()) {
+            centerCell.add(
+                new Paragraph("Mobile No : " + mobileText)
+                    .setFont(regular).setFontSize(9)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMargin(0)
+                    .setFixedLeading(11.8f)
+                    .setTextAlignment(TextAlignment.CENTER)
+            );
+        }
+
+        // Email + Website
+        String email = invoiceHeader.getEmailId();
+        String website = invoiceHeader.getWebsite();
+
+        String contact = "";
+        if (email != null && !email.isBlank()) {
+            contact += email;
+        }
+        if (website != null && !website.isBlank()) {
+            if (!contact.isEmpty()) contact += " | ";
+            contact += website;
+        }
+
+        if (!contact.isEmpty()) {
+            centerCell.add(
+                new Paragraph(contact)
+                    .setFont(regular).setFontSize(9)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMargin(0)
+                    .setFixedLeading(11.8f)
+                    .setTextAlignment(TextAlignment.CENTER)
+            );
+        }
+
+        centerCell.add(new Paragraph("\n"));
+        headerTable.addCell(centerCell);
+
+        // ================= RIGHT SIDE =================
         headerTable.addCell(
-                new Cell()
-                        .add(new Paragraph("RECEIPT")
-                                .setFont(bold).setFontSize(22))
-                        .add(new Paragraph("PZ/80G/E/0226/42739")
-                                .setFont(regular).setFontSize(12)
-                                .setFontColor(ColorConstants.DARK_GRAY)
-                                )
-                        .add(new Paragraph()
-                                .add(new Text("Date: ").setFont(bold))
-                                .add(new Text("16/02/2026").setFont(regular)))
-                        .setTextAlignment(TextAlignment.RIGHT)
-                        .setBorder(Border.NO_BORDER)
-                        
+            new Cell()
+                .add(new Paragraph("RECEIPT")
+                        .setFont(bold).setFontSize(12))
+                .add(new Paragraph(donationDetails.getInvoiceNumber())
+                        .setFont(regular).setFontSize(9))
+                .add(new Paragraph()
+                        .add(new Text("Date: ").setFont(regular).setFontSize(10))
+                        .add(new Text(date).setFont(regular).setFontSize(10)))
+                .setTextAlignment(TextAlignment.RIGHT)
+                .setBorder(Border.NO_BORDER)
         );
 
+        // ================= FINAL =================
         headerCell.add(headerTable);
         headerCell.add(new LineSeparator(new SolidLine(1)));
-        outerCell.add(headerCell);
 
+        outerCell.add(headerCell);
+        
+        
         // =====================================================
         // ================= BODY (LIGHT PINK) =================
         // =====================================================
         Cell bodyCell = new Cell()
                 .setBorder(Border.NO_BORDER)
 //                .setBackgroundColor(new DeviceRgb(255, 240, 246))
-                .setPadding(15);
+                .setPadding(15);     
 
+        // Header line
         bodyCell.add(new Paragraph()
-                .add(new Text("Datfuslab Technologies ")
-                        .setFont(bold).setFontSize(11))
-                .add(new Text("gratefully acknowledges the generous contribution received from:")
-                        .setFont(regular).setFontSize(11)));
+                .add(new Text(invoiceHeader.getCompanyFirstName() + " " + invoiceHeader.getCompanyLastName())
+                        .setFont(bold).setFontSize(9))
+                .add(new Text(" gratefully acknowledges the generous contribution received from: ")
+                        .setFont(regular).setFontSize(9))
+        );
 
-        bodyCell.add(new Paragraph("Mr. Vivek Bharti")
-                .setFont(bold).setFontSize(11));
-        
-        bodyCell.add(new Paragraph("Address.: XXXX")
-                .setFont(regular).setFontSize(11));
+        // Donor Name
+        bodyCell.add(new Paragraph("Mr./Miss " + safeValue(donationDetails.getDonorName()))
+                .setFont(regular).setFontSize(9));
 
-        bodyCell.add(new Paragraph("Contact No.: 8800689752")
-                .setFont(regular).setFontSize(12));
-        
-        bodyCell.add(new Paragraph("Email Id.: XXXX")
-                .setFont(regular).setFontSize(12));
-        
-        bodyCell.add(new Paragraph("PAN.: XXXX")
-                .setFont(regular).setFontSize(11));
+        // Address
+        bodyCell.add(new Paragraph("Address.: " + safeValue(donationDetails.getAddress()))
+                .setFont(regular).setFontSize(9));
 
+        // Contact No
+        bodyCell.add(new Paragraph("Contact No.: " + safeValue(donationDetails.getMobileNumber()))
+                .setFont(regular).setFontSize(9));
+
+        // Email
+        bodyCell.add(new Paragraph("Email Id.: " + safeValue(donationDetails.getEmailId()))
+                .setFont(regular).setFontSize(9));
+
+        // PAN
+        bodyCell.add(new Paragraph("PAN.: " + safeValue(donationDetails.getPanNumber()))
+                .setFont(regular).setFontSize(9));
+
+        // Amount line
         bodyCell.add(new Paragraph()
                 .add(new Text("We sincerely thank you for your kind donation of ")
-                        .setFont(regular))
-                .add(new Text("₹100")
-                        .setFont(bold).setFontSize(11))
-                .add(new Text("/- (Rupees One Hundred Only).")
-                        .setFont(regular)));
-
+                        .setFont(regular).setFontSize(9))
+                .add(new Text("₹" + donationDetails.getAmount())
+                        .setFont(bold).setFontSize(9))
+                .add(new Text("/- (" +
+                        amountToWordsConverter.amountInWords(donationDetails.getAmount().longValue()) +
+                        " Rupees Only/-).")
+                        .setFont(regular).setFontSize(9))
+        );
         bodyCell.add(new Paragraph(
                 "Your generous support will help us continue our efforts towards social welfare and community development."
                + "We truly appreciate your commitment to making a positive difference in the lives of those in need.")
-                .setFont(regular).setFontSize(11));
+                .setFont(regular).setFontSize(9));
 
         bodyCell.add(new Paragraph("\n\n"));
         
-        bodyCell.add(new Paragraph("Authorised Sign.")
-                .setTextAlignment(TextAlignment.RIGHT)
-                .setFont(regular));
 
-        bodyCell.add(new Paragraph(
-                "This is a system-generated receipt and does not require a physical signature.")
-                .setFont(regular).setFontSize(8)
-                .setFontColor(ColorConstants.DARK_GRAY)
-                .setTextAlignment(TextAlignment.RIGHT));
-
+       
         BarcodeQRCode qr = new BarcodeQRCode("https://datfuslab.com/verify-receipt/coming-soon");
         Image qrImg = new Image(qr.createFormXObject(ColorConstants.BLACK, pdf))
                 .setWidth(80).setHeight(80)
                 .setHorizontalAlignment(HorizontalAlignment.RIGHT);
-
-//        bodyCell.add(new Paragraph("\n"));
         bodyCell.add(qrImg);
         
+        bodyCell.add(new Paragraph(
+                "This is a system-generated receipt and does not require a physical signature.")
+                .setFont(regular).setFontSize(7)
+                .setFontColor(ColorConstants.DARK_GRAY)
+                .setTextAlignment(TextAlignment.RIGHT));
 
-//        bodyCell.add(new LineSeparator(new SolidLine(1)));
-//          bodyCell.add(new Paragraph("Acknowledgment")
-//                .setFont(bold).setFontSize(12)
-//                .setTextAlignment(TextAlignment.CENTER));
-//        
+      bodyCell.add(new Paragraph("\n"));
+
+        bodyCell.add(new LineSeparator(new SolidLine(1)));
+          bodyCell.add(new Paragraph("Acknowledgment")
+                .setFont(bold).setFontSize(10)
+                .setTextAlignment(TextAlignment.CENTER));
+        
 //        bodyCell.add(
-//    	        new Paragraph(
-//    	                "Aarine Foundation is a Government Registered organization working for the welfare of Women & Children since 2017. "
-//    	              + "We are continuously supporting initiatives in Education, Health, Youth, Poverty, Livelihood and "
-//    	              + "Community Development.\n"
-//    	              + "We are enclosing a receipt against your donation along with this letter. "
-//    	              + "We look forward to a long-term relationship and your continued support.\n"
-//    	              + "Thank you for your generosity and trust.")
+//    	        new Paragraph(donationDetails.getNotes())
 //    	                .setFont(regular)
 //    	                .setFontColor(ColorConstants.DARK_GRAY)
-//    	                .setFontSize(10)
+//    	                .setFontSize(8)
 //    	                .setMarginTop(0)
 //    	                .setMarginBottom(0)
 //    	                .setMultipliedLeading(1.1f)   // tight line spacing
 //    	);
-//        
-//        bodyCell.add(new Paragraph("\n"));
-//        bodyCell.add(new LineSeparator(new SolidLine(1)));
-//        bodyCell.add(new Paragraph("\n"))
-//        		.add(
-//	              new Paragraph("Your donation is eligible for 50% tax benefit under section 80G of the Income Tax Act.")
-//	                      .setFont(bold).setTextAlignment(TextAlignment.CENTER)
-//	                      .setFontSize(10)
-//	                      .setMarginBottom(0)
-//	                      .setFixedLeading(11)
-//	      );
+          
+       // remove HTML tags
+       // replace strong with markers
+          String notes = invoiceHeader.getThankYouNote().replace("<strong>", "##BOLD_START##")
+                       .replace("</strong>", "##BOLD_END##");
+
+          // remove other HTML
+          notes = notes.replaceAll("<[^>]+>", "");
+
+          Paragraph paragraph = new Paragraph().setFontSize(9);
+
+          String[] parts = notes.split("##BOLD_START##");
+
+          for (String part : parts) {
+              if (part.contains("##BOLD_END##")) {
+                  String[] boldParts = part.split("##BOLD_END##");
+
+                  paragraph.add(new Text(boldParts[0]).setBold());
+                  if (boldParts.length > 1) {
+                      paragraph.add(new Text(boldParts[1]));
+                  }
+              } else {
+                  paragraph.add(new Text(part));
+              }
+          }
+
+          bodyCell.add(paragraph.setFont(regular).setFontColor(ColorConstants.DARK_GRAY));
+          
+        
+        bodyCell.add(new Paragraph("\n"));
+        bodyCell.add(new LineSeparator(new SolidLine(1)));
+        bodyCell.add(new Paragraph("\n"))
+        
+        		.add(new Paragraph(invoiceHeader.getFooter())
+	                      .setFont(bold).setTextAlignment(TextAlignment.CENTER)
+	                      .setFontSize(10)
+	                      .setMarginBottom(0)
+	                      .setFixedLeading(11)
+	      );
         
         outerCell.add(bodyCell);
 
@@ -265,11 +368,19 @@ public class DonationReceiptPdf {
         document.add(outerTable);
 
         document.add(new Paragraph("Powered by Datfuslab Technologies Pvt. Ltd.")
-                .setFont(regular).setFontSize(9)
+                .setFont(italic).setFontSize(8)
                 .setFontColor(ColorConstants.GRAY));
 
         document.close();
         return baos.toByteArray();
+    }
+    
+    
+    private String safeValue(String value) {
+        if (value == null || value.isBlank() || "null".equalsIgnoreCase(value)) {
+            return "XXXX";
+        }
+        return value;
     }
 }
 
