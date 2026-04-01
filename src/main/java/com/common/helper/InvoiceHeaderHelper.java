@@ -142,7 +142,7 @@ public class InvoiceHeaderHelper {
 
 		invoiceHeaderDetails.setLoginId(invoiceRequest.getCreatedBy());
 		invoiceHeaderDetails.setStatus(Status.ACTIVE.name());
-//		invoiceHeaderDetails.setReceiptDownloadUrl(invoiceRequest.getReceiptDownloadUrl());
+		invoiceHeaderDetails.setReceiptDownloadUrl(invoiceRequest.getReceiptDownloadUrl());
 		invoiceHeaderDetails.setInvoiceInitial(invoiceRequest.getInvoiceInitial());
 		invoiceHeaderDetails.setSerialNumber(0L);
 		invoiceHeaderDetails.setCompanyLogo(invoiceRequest.getCompanyLogo());
@@ -168,6 +168,10 @@ public class InvoiceHeaderHelper {
 		invoiceHeaderDetails.setIfscCode(invoiceRequest.getIfscCode());
 		invoiceHeaderDetails.setBankName(invoiceRequest.getBankName());
 		invoiceHeaderDetails.setBranchName(invoiceRequest.getBranchName());
+		
+		invoiceHeaderDetails.setInvoiceEmail(invoiceRequest.getInvoiceEmail());
+		invoiceHeaderDetails.setInvoiceSms(invoiceRequest.getInvoiceSms());
+		invoiceHeaderDetails.setInvoiceWhatsApp(invoiceRequest.getInvoiceWhatsApp());
 
 		invoiceHeaderDetails.setCreatedAt(new Date());
 		invoiceHeaderDetails.setCreatedBy(invoiceRequest.getCreatedBy());
@@ -211,6 +215,10 @@ public class InvoiceHeaderHelper {
 		invoiceHeaderDetails.setIfscCode(invoiceRequest.getIfscCode());
 		invoiceHeaderDetails.setBankName(invoiceRequest.getBankName());
 		invoiceHeaderDetails.setBranchName(invoiceRequest.getBranchName());
+		
+		invoiceHeaderDetails.setInvoiceEmail(invoiceRequest.getInvoiceEmail());
+		invoiceHeaderDetails.setInvoiceSms(invoiceRequest.getInvoiceSms());
+		invoiceHeaderDetails.setInvoiceWhatsApp(invoiceRequest.getInvoiceWhatsApp());
 
 		invoiceHeaderDetails.setUpdatedAt(new Date());
 		return invoiceHeaderDetails;

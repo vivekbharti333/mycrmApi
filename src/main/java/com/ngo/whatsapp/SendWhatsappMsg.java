@@ -43,8 +43,8 @@ public class SendWhatsappMsg {
 
 		Response response = client.newCall(request).execute();
 
-		System.out.println("Response Code : " + response.code());
-		System.out.println("Response Body : " + response.body().string());
+//		System.out.println("Response Code : " + response.code());
+//		System.out.println("Response Body : " + response.body().string());
 	}
 
 	

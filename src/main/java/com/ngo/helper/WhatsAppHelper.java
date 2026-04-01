@@ -14,16 +14,29 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.common.constant.Constant;
+import com.common.entities.InvoiceHeaderDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
+import com.ngo.controller.LeadDetailsController;
 import com.ngo.dao.WhatsAppDetailsDao;
 import com.ngo.entities.DonationDetails;
 import com.ngo.entities.WhatsAppDetails;
 import com.ngo.object.request.SmsTemplateRequestObject;
 import com.ngo.object.request.WhatsAppRequestObject;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 @Component
 public class WhatsAppHelper {
+
+    private final LeadDetailsController leadDetailsController;
 
 //	@Autowired
 //	private CustomerDetailsDao customerDetailsDao;
@@ -36,6 +49,10 @@ public class WhatsAppHelper {
 	
 	@Autowired
 	private DonationHelper donationHelper;
+
+    WhatsAppHelper(LeadDetailsController leadDetailsController) {
+        this.leadDetailsController = leadDetailsController;
+    }
 	
 	public void validateSmsTemplateRequest(WhatsAppRequestObject whatsAppRequestObject) throws BizException {
 		if (whatsAppRequestObject == null) {
@@ -44,86 +61,67 @@ public class WhatsAppHelper {
 	}
 	
 	
-//	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
-//        try {
-//            // Construct the message
-////            String message = "We have received a donation of Rs " + donationDetails.getAmount() + ". Please click to download your receipt " 
-////                    + whatsAppDetails.getReceiptDownloadUrl() + " " + donationDetails.getReceiptNumber();
-//        	
-//        	String message = "We have received a donation of Rs " + donationDetails.getAmount() + "."
-//        			+ " Please click below url to download your receipt. https://mydonation.in/#/thank-you/letter/" + donationDetails.getReceiptNumber();
-//        	
-////        	String message = "We have received a donation of Rs " + donationDetails.getAmount() + "."
-////        			+ " Please click below url to download your receipt. "+whatsAppDetails.getReceiptDownloadUrl() + donationDetails.getReceiptNumber();
-//
-//            // URL encode the message
-//            String encodedMessage = URLEncoder.encode(message, StandardCharsets.UTF_8.toString());
-//
-//            // Construct the URL
-////            String url = "https://demo.digitalsms.biz/api?apikey=ca505488be2a82c0853eeaf2bfb5026c&mobile="+donationDetails.getMobileNumber()+"&msg=" + encodedMessage;
-//            String url = whatsAppDetails.getWhatsappUrl()+whatsAppDetails.getApiKey()+"&mobile="+donationDetails.getMobileNumber()+"&msg=" + encodedMessage;
-//
-//            // Send the request using RestTemplate (GET request)
-//            String response = restTemplate.getForObject(url, String.class);
-//
-//            // Log the response
-//            System.out.println(response);
-//
-//            return response;
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//            return "Error encoding message: " + e.getMessage();
-//        }
-//    }
-	
-	public String sendWhatsAppMessage(DonationDetails donationDetails, WhatsAppDetails whatsAppDetails) {
-	    try {
-	    	 String url = "";
 
-	    	if (donationDetails.getProgramName().equalsIgnoreCase("Sale")) {
-	    		url = "https://demo.digitalsms.biz/api?apikey="+whatsAppDetails.getApiKey()
-                + "&mobile=" + donationDetails.getMobileNumber()+ "&msg=" + "We have received Rs " + donationDetails.getAmount() + " through receipt no "+ donationDetails.getInvoiceNumber()+ " For Receipt mail on help@mydonation.in - Mydonation ";
-	    	}else {
-	    		url = "https://demo.digitalsms.biz/api?apikey=" + whatsAppDetails.getApiKey() + "&mobile=" + donationDetails.getMobileNumber() + "&msg=" + "Thank You for Your kind Donation. This is Your Donation Receipt" + "&pdf=https://datfuslab.in/drmapinew/getPdfreceipt/" + donationDetails.getReceiptNumber() + ".pdf";
-	    	}
-	    	
-	        // Send the GET request using RestTemplate
-	        RestTemplate restTemplate = new RestTemplate();
-	        String response = restTemplate.getForObject(url, String.class);
-	        
-	        
-	        // JSON string
-//	        String response = "{\"status\":0,\"errormsg\":\"Invalid API Key\",\"statuscode\":403}";
 
-	        // Parse JSON
-//	        JSONObject jsonObject = new JSONObject(response);
-//
-//	        // Extract values
-//	        int status = jsonObject.getInt("status");
-//	        int statusCode = jsonObject.getInt("statuscode");
-//	        
-//	        if(statusCode == 200) {
-//	        	donationDetails.setInvoiceDownloadStatus("YES");
-//				donationHelper.updateDonationDetails(donationDetails);
-//	        } else {
-//	        	donationDetails.setInvoiceDownloadStatus("NO");
-//				donationHelper.updateDonationDetails(donationDetails);
-//	        }
+	public String buildWhatsAppPayload(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
 
-//	        System.out.println("Status: " + status);
-//	        System.out.println("StatusCode: " + statusCode);
-	        
-            
+	    JSONObject root = new JSONObject();
+	    root.put("messaging_product", "whatsapp");
+	    root.put("to", donationDetails.getMobileNumber());
+	    root.put("type", "template");
 
-	        // Log the response
-	        System.out.println("Response : "+response);
+	    JSONObject template = new JSONObject();
+	    template.put("name", "donation_receipt_global");
 
-	        return response;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return "Error sending WhatsApp message: " + e.getMessage();
-	    }
+	    JSONObject language = new JSONObject();
+	    language.put("code", "en");
+	    template.put("language", language);
+
+	    JSONArray components = new JSONArray();
+	    JSONObject body = new JSONObject();
+	    body.put("type", "body");
+
+	    JSONArray parameters = new JSONArray();
+
+	    parameters.put(new JSONObject().put("type", "text").put("text", donationDetails.getDonorName()));
+	    parameters.put(new JSONObject().put("type", "text").put("text", donationDetails.getAmount()));
+	    parameters.put(new JSONObject().put("type", "text").put("text", invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName()));
+	    parameters.put(new JSONObject().put("type", "text").put("text", invoiceHeader.getReceiptDownloadUrl()));
+
+	    body.put("parameters", parameters);
+	    components.put(body);
+
+	    template.put("components", components);
+	    root.put("template", template);
+
+	    return root.toString();
 	}
+	
+
+
+	public String sendWhatsAppMessage(String payload, WhatsAppDetails whatsAppDetails) throws Exception {
+
+		System.out.println("Payload : "+payload);
+		System.out.println(whatsAppDetails.toString());
+	    OkHttpClient client = new OkHttpClient();
+	    
+
+	    MediaType mediaType = MediaType.parse("application/json");
+	    RequestBody body = RequestBody.create( payload , mediaType);
+
+	    Request request = new Request.Builder()
+	            .url("https://graph.facebook.com/"+whatsAppDetails.getVersion()+"/"+whatsAppDetails.getPhoneNumberId()+"/messages")
+	            .post(body)
+	            .addHeader("Content-Type", "application/json")
+	            .addHeader("Authorization", "Bearer "+whatsAppDetails.getUserAccessToken())
+	            .build();
+
+	    Response response = client.newCall(request).execute();
+
+	    System.out.println("Response : "+response);
+	    return response.body() != null ? response.body().string() : null;
+	}
+	
 	
 	@Transactional
 	public WhatsAppDetails getWhatsAppBySuperadminId(String superadminId) {
@@ -143,13 +141,17 @@ public class WhatsAppHelper {
 
 		WhatsAppDetails whatsAppDetails = new WhatsAppDetails();
 
-		whatsAppDetails.setWhatsappUrl(whatsAppRequest.getWhatsappUrl());
-		whatsAppDetails.setApiKey(whatsAppRequest.getApiKey());
+		whatsAppDetails.setServiceProvider(whatsAppRequest.getServiceProvider());
+		whatsAppDetails.setType(whatsAppRequest.getType());
+		whatsAppDetails.setPhoneNumberId(whatsAppRequest.getPhoneNumberId());
+		whatsAppDetails.setVersion(whatsAppRequest.getVersion());
+		whatsAppDetails.setUserAccessToken(whatsAppRequest.getUserAccessToken());
+		
 		whatsAppDetails.setWhatsAppNumber(whatsAppRequest.getWhatsAppNumber());
 		whatsAppDetails.setReceiptDownloadUrl(whatsAppRequest.getReceiptDownloadUrl());
 		whatsAppDetails.setStatus(Status.ACTIVE.name());
 		whatsAppDetails.setSuperadminId(whatsAppRequest.getSuperadminId());
-		whatsAppDetails.setUpdatedBy(whatsAppRequest.getUpdatedBy());
+		whatsAppDetails.setCreatedBy(whatsAppRequest.getCreatedBy());
 		whatsAppDetails.setCreatedAt(new Date());
 		whatsAppDetails.setUpdatedAt(new Date());
 		return whatsAppDetails;
@@ -165,8 +167,13 @@ public class WhatsAppHelper {
 
 		public WhatsAppDetails getUpdatedWhatsAppDetailsByReqObj(WhatsAppRequestObject whatsAppRequest, WhatsAppDetails whatsAppDetails) {
 
-			whatsAppDetails.setWhatsappUrl(whatsAppRequest.getWhatsappUrl());
-			whatsAppDetails.setApiKey(whatsAppRequest.getApiKey());
+			whatsAppDetails.setServiceProvider(whatsAppRequest.getServiceProvider());
+			whatsAppDetails.setType(whatsAppRequest.getType());
+			
+			whatsAppDetails.setPhoneNumberId(whatsAppRequest.getPhoneNumberId());
+			whatsAppDetails.setVersion(whatsAppRequest.getVersion());
+			whatsAppDetails.setUserAccessToken(whatsAppRequest.getUserAccessToken());
+			
 			whatsAppDetails.setWhatsAppNumber(whatsAppRequest.getWhatsAppNumber());
 			whatsAppDetails.setStatus(Status.ACTIVE.name());
 			whatsAppDetails.setUpdatedAt(new Date());

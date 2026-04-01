@@ -189,19 +189,50 @@ public class DonationHelper {
 		}
 
 	}
-
+	
 	public void sendDonationInvoiceWhatsApp(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
-			throws MessagingException, IOException {
+			throws Exception {
 
 		if (donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
-			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
 
-			if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+			if (invoiceHeader.getInvoiceWhatsApp().equalsIgnoreCase("NO")) {
+				// Do not send link
+			} else if (invoiceHeader.getInvoiceWhatsApp().equalsIgnoreCase("GLOBAL")) {
+				System.out.println(1);
+				// send Datfuslab Header
+				WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(Constant.GLOBAL_SUPERADMIN_ID);
+				System.out.println(2);
+				String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+				System.out.println(3);
+				whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
+				System.out.println(4);
 
-				whatsAppHelper.sendWhatsAppMessage(donationDetails, whatsAppDetails);
+			} else if (invoiceHeader.getInvoiceWhatsApp().equalsIgnoreCase("INDIVITUAL")) {
+				WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
+
+				if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+
+					String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+					whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
+				}
 			}
+
 		}
 	}
+
+//	public void sendDonationInvoiceWhatsApp1(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
+//			throws Exception {
+//
+//		if (donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
+//			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
+//
+//			if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+//
+//				String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+//				whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
+//			}
+//		}
+//	}
 
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
 			throws MessagingException, IOException {

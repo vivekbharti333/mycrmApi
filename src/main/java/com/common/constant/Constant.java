@@ -50,6 +50,9 @@ public class Constant {
 	 public static final String REMOVED_SUCCESS = "Removed Successfully";
 	 public static final String DATA_NOT_FOUND ="Data Not Available";
 	 
+	 
+	 public static final String GLOBAL_SUPERADMIN_ID = "1234567890";
+	 
 }
 
 

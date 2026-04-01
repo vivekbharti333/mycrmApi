@@ -3,6 +3,7 @@ package com.ngo.object.request;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 
 import lombok.Data;
 
@@ -33,6 +34,7 @@ public class InvoiceHeaderRequestObject {
 	private Long invoiceHeaderDetailsId;
 	private String invoiceHeaderName;
 	private String invoiceInitial;
+	private String invoiceUrl;
 	private Long serialNumber;
 	private String companyLogo;
 	private String companyStamp;
@@ -58,6 +60,10 @@ public class InvoiceHeaderRequestObject {
 	private String ifscCode;
 	private String bankName;
 	private String branchName;
+	
+	private String invoiceEmail;
+	private String invoiceSms;
+	private String invoiceWhatsApp;
 	
 	//customer details;
 	private CustomerRequestObject customerRequestObject;

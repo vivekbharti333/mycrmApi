@@ -24,6 +24,9 @@ public class InvoiceHeaderDetails {
 	@Column(name = "sms_type")
 	private String smsType;
 	
+	@Column(name = "receipt_download_url")
+	private String receiptDownloadUrl;
+	
 	@Column(name = "login_id")
 	private String loginId;
 	
@@ -118,5 +121,14 @@ public class InvoiceHeaderDetails {
 	@Column(name = "superadmin_id")
 	private String superadminId;
 	
+	
+	@Column(name = "invoice_email")
+	private String invoiceEmail;
+	
+	@Column(name = "invoice_sms")
+	private String invoiceSms;
+	
+	@Column(name = "invoice_whats_app")
+	private String invoiceWhatsApp;
 	
 }
