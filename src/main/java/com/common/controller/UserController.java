@@ -27,11 +27,11 @@ import com.common.email.ZeptoEmail;
 import com.common.entities.InvoiceHeaderDetails;
 import com.common.entities.UserDetails;
 import com.common.exceptions.BizException;
+import com.common.helper.EmailHelper;
 import com.common.helper.InvoiceHeaderHelper;
 import com.common.helper.TestHelper;
 import com.ngo.entities.AddressDetails;
 import com.ngo.helper.DonationHelper;
-import com.ngo.helper.EmailHelper;
 import com.ngo.helper.FaceRecognitionHelper;
 import com.ngo.object.request.AttendanceRequestObject;
 import com.ngo.object.request.DonationRequestObject;
@@ -177,6 +177,21 @@ public class UserController {
 			
 			UserRequestObject response = userService.getUserDetailsByLoginId(userRequestObject);
 			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "addUserDirectWeb", method = RequestMethod.POST)
+	public Response<UserRequestObject> addUserDirectWeb(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject responce = userService.addUserDirectWeb(userRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		} catch (Exception e) {

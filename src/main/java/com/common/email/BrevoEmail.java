@@ -28,10 +28,10 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.common.entities.EmailServiceDetails;
 import com.common.entities.InvoiceHeaderDetails;
 import com.ngo.dao.SmsTemplateDetailsDao;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.EmailServiceDetails;
 import com.ngo.entities.SmsTemplateDetails;
 import com.spring.common.PdfInvoice;
 

@@ -1,4 +1,4 @@
-package com.ngo.helper;
+package com.common.helper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,10 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
+import com.common.dao.EmailServiceDetailsDao;
+import com.common.entities.EmailServiceDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
-import com.ngo.dao.EmailServiceDetailsDao;
-import com.ngo.entities.EmailServiceDetails;
 import com.ngo.object.request.EmailServiceRequestObject;
 
 import javax.mail.*;

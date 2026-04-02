@@ -1,4 +1,4 @@
-package com.ngo.helper;
+package com.common.helper;
 
 import java.util.Date;
 import java.util.List;
@@ -14,13 +14,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.common.constant.Constant;
+import com.common.dao.WhatsAppDetailsDao;
 import com.common.entities.InvoiceHeaderDetails;
+import com.common.entities.WhatsAppDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
 import com.ngo.controller.LeadDetailsController;
-import com.ngo.dao.WhatsAppDetailsDao;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.WhatsAppDetails;
+import com.ngo.helper.DonationHelper;
 import com.ngo.object.request.SmsTemplateRequestObject;
 import com.ngo.object.request.WhatsAppRequestObject;
 

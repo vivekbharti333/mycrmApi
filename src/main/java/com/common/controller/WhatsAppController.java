@@ -1,4 +1,4 @@
-package com.ngo.controller;
+package com.common.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,8 +15,8 @@ import com.common.exceptions.BizException;
 import com.common.object.request.Request;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
+import com.common.services.WhatsAppService;
 import com.ngo.object.request.WhatsAppRequestObject;
-import com.ngo.services.WhatsAppService;
 
 @CrossOrigin(origins = "*")
 @RestController

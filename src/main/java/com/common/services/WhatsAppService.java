@@ -1,14 +1,14 @@
-package com.ngo.services;
+package com.common.services;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.constant.Constant;
+import com.common.entities.WhatsAppDetails;
 import com.common.exceptions.BizException;
+import com.common.helper.WhatsAppHelper;
 import com.common.object.request.Request;
-import com.ngo.entities.WhatsAppDetails;
-import com.ngo.helper.WhatsAppHelper;
 import com.ngo.object.request.WhatsAppRequestObject;
 
 

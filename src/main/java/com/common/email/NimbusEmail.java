@@ -15,8 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
+import com.common.entities.EmailServiceDetails;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.EmailServiceDetails;
 import com.spring.common.PdfInvoice;
 
 @Component

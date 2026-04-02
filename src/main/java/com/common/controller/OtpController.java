@@ -1,4 +1,4 @@
-package com.ngo.controller;
+package com.common.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.common.constant.Constant;
 import com.common.exceptions.BizException;
-import com.ngo.services.OtpService;
 import com.common.object.request.Request;
 import com.common.object.request.UserRequestObject;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
+import com.common.services.OtpService;
 
 @CrossOrigin(origins = "*")
 @RestController

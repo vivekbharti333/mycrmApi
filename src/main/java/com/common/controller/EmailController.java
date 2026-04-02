@@ -1,4 +1,4 @@
-package com.ngo.controller;
+package com.common.controller;
 
 import java.util.List;
 
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.constant.Constant;
+import com.common.entities.EmailServiceDetails;
 import com.common.exceptions.BizException;
-import com.ngo.entities.EmailServiceDetails;
 import com.ngo.object.request.EmailServiceRequestObject;
-import com.ngo.services.EmailService;
 import com.common.object.request.Request;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
+import com.common.services.EmailService;
 
 
 @CrossOrigin(origins = "*")

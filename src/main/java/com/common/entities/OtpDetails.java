@@ -1,4 +1,4 @@
-package com.ngo.entities;
+package com.common.entities;
 
 import java.util.Date;
 import javax.persistence.Column;
