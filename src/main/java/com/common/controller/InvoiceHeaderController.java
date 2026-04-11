@@ -97,6 +97,7 @@ public class InvoiceHeaderController {
       DonationDetails donationDetails = this.donationHelper.getDonationDetailsByReferenceNo(reffNo);
       ModelAndView modelAndView;
       if (donationDetails != null) {
+    	  System.out.println("iihi");
          if (!donationDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
             InvoiceHeaderDetails invoiceHeader = this.invoiceHelper.getInvoiceHeaderById(donationDetails.getInvoiceHeaderDetailsId());
             ByteArrayOutputStream pdfStream = this.pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);

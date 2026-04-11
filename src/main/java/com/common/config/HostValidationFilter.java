@@ -28,10 +28,11 @@ public class HostValidationFilter implements Filter {
 
         String host = req.getHeader("host");
 
-        if (!"datfuslab.in".equals(host) && !"www.datfuslab.in".equals(host) && !"localhost".equals(host)) {
-            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
-            return;
-        }
+//        if (!"datfuslab.in".equals(host) && !"www.datfuslab.in".equals(host) && !"localhost".equals(host) && !"donexia.in".equals(host) && !"www.donexia.in".equals(host)
+//        		&& !"api.donexia.in".equals(host) && !"46.62.199.48".equals(host)) {
+//            res.sendError(HttpServletResponse.SC_FORBIDDEN, "Forbidden");
+//            return;
+//        }
 
         chain.doFilter(request, response);
     }

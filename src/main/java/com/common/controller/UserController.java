@@ -98,27 +98,6 @@ public class UserController {
 	public ModelAndView test(HttpServletResponse response) throws IOException, MessagingException {
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
 		
-//		UserDetails userDetails = new UserDetails();
-//		userDetails.setFirstName("Vivek");
-//		userDetails.setLastName("Bharti");
-//		userDetails.setEmailId("vivekbharti333@gmail.com");
-//		zeptoEmail.sendZeptoEmail(userDetails);
-		
-//		itextPdfReceipt.createReceipt();
-		
-//		DonationDetails donationDetails = donationHelper.getDonationDetailsByIdAndSuperadminId(999L, "");
-//		
-//		ByteArrayOutputStream pdfContent = pdfInvoice.generatePdfInvoice(donationDetails, invoiceHeader);
-//		
-//		System.out.println("hujhj : "+pdfContent);
-		
-//		nimbusEmail.sendNimbusEmail(donationDetails);
-		
-		
-		
-//		pdfThankYouLatter.pdf();
-		
-
 		return new ModelAndView("home");
 //		return new ModelAndView("camera");
 	}
@@ -176,53 +155,53 @@ public class UserController {
 	}
 	
 	
-//	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
-//	public Response<UserRequestObject> doLogin(@RequestBody Request<UserRequestObject> userRequestObject,
-//			HttpServletRequest request) {
-//		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
-//		try {
-//			UserRequestObject response = userService.doLogin(userRequestObject);
-//			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
-//		} catch (BizException e) {
-//			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
-//		}
-//	}
+	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
+	public Response<UserRequestObject> doLogin(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject response = userService.doLogin(userRequestObject, "");
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
 	
 
 
-	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
-	public Response<UserRequestObject> doLogin(@RequestBody Request<UserRequestObject> userRequestObject,
-	                                           HttpServletRequest request) {
-
-	    GenricResponse<UserRequestObject> responseObj = new GenricResponse<>();
-
-	    String ip = request.getRemoteAddr(); // client IP
-
-	    try {
-	        // ❌ Check brute-force block
-	        if (loginAttemptService.isBlocked(ip)) {
-	            return responseObj.createErrorResponse(
-	                    Constant.BAD_REQUEST_CODE,
-	                    "Too many failed attempts. Try again after 10 minutes."
-	            );
-	        }
-
-	        // Pass IP to service method
-	        UserRequestObject response = userService.doLogin(userRequestObject, ip);
-
-	        return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
-
-	    } catch (BizException e) {
-	        return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
-
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
-	    }
-	}
+//	@RequestMapping(path = "doLogin", method = RequestMethod.POST)
+//	public Response<UserRequestObject> doLogin(@RequestBody Request<UserRequestObject> userRequestObject,
+//	                                           HttpServletRequest request) {
+//
+//	    GenricResponse<UserRequestObject> responseObj = new GenricResponse<>();
+//
+//	    String ip = request.getRemoteAddr(); // client IP
+//
+//	    try {
+//	        // ❌ Check brute-force block
+//	        if (loginAttemptService.isBlocked(ip)) {
+//	            return responseObj.createErrorResponse(
+//	                    Constant.BAD_REQUEST_CODE,
+//	                    "Too many failed attempts. Try again after 10 minutes."
+//	            );
+//	        }
+//
+//	        // Pass IP to service method
+//	        UserRequestObject response = userService.doLogin(userRequestObject, ip);
+//
+//	        return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+//
+//	    } catch (BizException e) {
+//	        return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+//
+//	    } catch (Exception e) {
+//	        e.printStackTrace();
+//	        return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//	    }
+//	}
 
 	
 	@RequestMapping(path = "getUserDetailsByLoginId", method = RequestMethod.POST)
@@ -245,6 +224,7 @@ public class UserController {
 			HttpServletRequest request) {
 		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
 		try {
+			System.out.println("Enter in userRegistration");
 			UserRequestObject responce = userService.userRegistration(userRequestObject);
 			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {

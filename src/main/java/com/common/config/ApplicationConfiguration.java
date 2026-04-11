@@ -3,6 +3,7 @@ package com.common.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -14,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
-@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*","com.invoice.*","com.whatsapp.*"})
+@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*","com.invoice.*"})
 @EnableWebMvc
 public class ApplicationConfiguration implements WebMvcConfigurer {
 

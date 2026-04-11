@@ -21,7 +21,9 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
 //@ComponentScan(basePackages = {"com.spring.*"})
-@ComponentScan(basePackages = {"com.spring.*", "com.spring.helper"})
+//@ComponentScan(basePackages = {"com.spring.*", "com.spring.helper"})
+
+//@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*","com.invoice.*","com.whatsapp.*"})
 
 
 

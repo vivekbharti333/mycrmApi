@@ -199,7 +199,7 @@ public class UserService {
 	        if (BCrypt.checkpw(userRequest.getPassword(), userDetails.getPassword())) {
 
 	            // 🟢 SUCCESS → reset attempts
-	            loginAttemptService.loginSuccess(ip);
+//	            loginAttemptService.loginSuccess(ip);
 
 	            logger.info("Login Successfully: " + userRequest);
 
@@ -231,7 +231,7 @@ public class UserService {
 	        } else {
 
 	            // ❌ FAILED → increment failed count
-	            loginAttemptService.loginFailed(ip);
+//	            loginAttemptService.loginFailed(ip);
 
 	            userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				userRequest.setRespMesg(Constant.INVALID_LOGIN);
@@ -241,7 +241,7 @@ public class UserService {
 	    } else {
 
 	        // ❌ FAILED → increment failed count (username not found)
-	        loginAttemptService.loginFailed(ip);
+//	        loginAttemptService.loginFailed(ip);
 
 	        userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 			userRequest.setRespMesg(Constant.INVALID_LOGIN);
@@ -347,17 +347,17 @@ public class UserService {
 
 				
 				// Save Address
-				if(userRequest.getRequestedFor().equalsIgnoreCase("WEB")) {
-					for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
-						addressRequest.setUserType(userRequest.getRoleType());
-						addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
-					}
-				}else {
-					AddressRequestObject addressRequestObj = addressHelper.setAddressRequestObjectByUserReqObj(userRequest);
-					
-					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequestObj, userDetails.getId(), userDetails.getSuperadminId());
-					addressHelper.saveAddressDetails(addressDetails);
-				}
+//				if(userRequest.getRequestedFor().equalsIgnoreCase("WEB")) {
+//					for (AddressRequestObject addressRequest : userRequest.getAddressList()) {
+//						addressRequest.setUserType(userRequest.getRoleType());
+//						addressService.saveAddressDetailsByRequest(addressRequest, userDetails.getId(), userRequest.getSuperadminId());
+//					}
+//				}else {
+//					AddressRequestObject addressRequestObj = addressHelper.setAddressRequestObjectByUserReqObj(userRequest);
+//					
+//					AddressDetails addressDetails = addressHelper.getAddressDetailsByReqObj(addressRequestObj, userDetails.getId(), userDetails.getSuperadminId());
+//					addressHelper.saveAddressDetails(addressDetails);
+//				}
 				// send sms
 
 				userRequest.setRespCode(Constant.SUCCESS_CODE);

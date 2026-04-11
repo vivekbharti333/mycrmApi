@@ -12,9 +12,11 @@ import javax.persistence.Table;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.lang.NonNull;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
+@AllArgsConstructor
 @Entity
 @Table(name = "user_details")
 public class UserDetails {
