@@ -20,13 +20,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-//@ComponentScan(basePackages = {"com.spring.*"})
-//@ComponentScan(basePackages = {"com.spring.*", "com.spring.helper"})
-
-//@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*","com.invoice.*","com.whatsapp.*"})
-
-
-
 public class DataSourceConfig {
 	
 	 @Autowired
@@ -64,7 +57,7 @@ public class DataSourceConfig {
 		private DataSource getDataSource(String dbName) {
 			Properties props = createDatasourceProperty(dbName);
 			HikariConfig config = new HikariConfig(props);
-			config.setMaximumPoolSize(50);
+			config.setMaximumPoolSize(30);
 			config.setConnectionTimeout(3 * 4000);
 			config.setAutoCommit(false);
 			config.setIdleTimeout(2 * 60 * 1000);

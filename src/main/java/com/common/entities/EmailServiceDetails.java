@@ -1,4 +1,4 @@
-package com.ngo.entities;
+package com.common.entities;
 
 import java.util.Date;
 
@@ -46,9 +46,6 @@ public class EmailServiceDetails {
 	
 	@Column(name = "subject")
 	private String subject;
-	
-	@Column(name = "receipt_url")
-	private String receiptUrl;
 	
 	@Lob
 	@Column(name = "email_body")

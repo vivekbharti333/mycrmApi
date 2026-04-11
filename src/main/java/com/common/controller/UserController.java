@@ -27,11 +27,11 @@ import com.common.email.ZeptoEmail;
 import com.common.entities.InvoiceHeaderDetails;
 import com.common.entities.UserDetails;
 import com.common.exceptions.BizException;
+import com.common.helper.EmailHelper;
 import com.common.helper.InvoiceHeaderHelper;
 import com.common.helper.TestHelper;
 import com.ngo.entities.AddressDetails;
 import com.ngo.helper.DonationHelper;
-import com.ngo.helper.EmailHelper;
 import com.ngo.helper.FaceRecognitionHelper;
 import com.ngo.object.request.AttendanceRequestObject;
 import com.ngo.object.request.DonationRequestObject;
@@ -96,47 +96,15 @@ public class UserController {
 	
 	@RequestMapping(value = "/")
 	public ModelAndView test(HttpServletResponse response) throws IOException, MessagingException {
+
 		InvoiceHeaderDetails invoiceHeader = invoiceHelper.getInvoiceHeaderById(1L);
-		
 		return new ModelAndView("home");
-//		return new ModelAndView("camera");
 	}
 	
 	
 	@RequestMapping(value = "version")
 	public String version(HttpServletResponse response) throws Exception {
-		
-		DonationRequestObject donationRequest = new DonationRequestObject();
-		
-		donationRequest.setSuperadminId("6289639160");
-		donationRequest.setRequestedFor("YESTERDAY");
-		donationRequest.setRoleType("SUPERADMIN");
-		donationRequest.setCreatedBy("6289639160");
-		
-		emailHelper.sendeMail();
-//		emailHelper.SMTPBrevoEmailSender ();
-		
-//		testHelper.checkIt(donationRequest);
-//		faceRecognitionHelper.compareFace();
-		
 		return "1.3";
-	}
-	
-
-//	@Scheduled(fixedDelay = 5000)
-	@RequestMapping(path = "test", method = RequestMethod.GET)
-	public String test() throws Exception {
-
-		String clientIp = request.getHeader("X-Forwarded-For") != null ? request.getHeader("X-Forwarded-For")
-				: request.getRemoteAddr();
-
-//		String param = phonePePaymentGateway.getPaymetGatewayParam();
-//		phonePePaymentGateway.paymentPageTest(param);
-
-		AttendanceRequestObject attendanceRequest = new AttendanceRequestObject();
-		amazonFaceCompare.amazonFaceCompare(attendanceRequest);
-
-		return "Working : " + clientIp;
 	}
 
 	@RequestMapping(path = "updateUserSubscription", method = RequestMethod.POST)
@@ -211,6 +179,21 @@ public class UserController {
 			
 			UserRequestObject response = userService.getUserDetailsByLoginId(userRequestObject);
 			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
+	@RequestMapping(path = "addUserDirectWeb", method = RequestMethod.POST)
+	public Response<UserRequestObject> addUserDirectWeb(@RequestBody Request<UserRequestObject> userRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<UserRequestObject> responseObj = new GenricResponse<UserRequestObject>();
+		try {
+			UserRequestObject responce = userService.addUserDirectWeb(userRequestObject);
+			return responseObj.createSuccessResponse(responce, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		} catch (Exception e) {

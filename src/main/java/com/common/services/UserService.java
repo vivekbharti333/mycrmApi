@@ -54,6 +54,9 @@ public class UserService {
 	private LoginAttemptService loginAttemptService;
 	
 	@Autowired
+	private OtpService otpService;
+	
+	@Autowired
 	private UsageLimitConsumptionHelper usageLimitConsumptionHelper;
 	
 	
@@ -181,7 +184,8 @@ public class UserService {
 
 	    if (userDetails != null) {
 
-	        if (userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
+	        if (Status.INACTIVE.name().equalsIgnoreCase(userDetails.getStatus())) {
+//	        	if (userDetails.getStatus().equalsIgnoreCase(Status.INACTIVE.name())) {
 	        	userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
 				userRequest.setRespMesg(Constant.INACTIVE_USER);
 				return userRequest;
@@ -269,9 +273,70 @@ public class UserService {
 //			System.out.println("(userRequest.setMobileNo : "+(userRequest.getMobileNo()));
 			
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg("Fetch Suceesfully");
+			return userRequest;
+		} else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg("User Not Found");
 			return userRequest;
 		}
-		return userRequest;
+
+	}
+	
+	
+	
+	@Transactional
+	public UserRequestObject addUserDirectWeb(Request<UserRequestObject> userRequestObject)
+			throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+		
+		UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getMobileNo());
+		
+		if(existsUserDetails == null) {
+			
+			UserRequestObject otpDetails = otpService.verifyOtp(userRequestObject);
+			if(otpDetails.getRespCode() != Constant.SUCCESS_CODE) {
+
+				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+				userRequest.setRespMesg("Wrong OTP");
+				return userRequest;
+				
+			} else {
+				
+				if(userRequest.getFirstName() == null || userRequest.getFirstName().equalsIgnoreCase("")) {
+					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					userRequest.setRespMesg("Enter First Name");
+					return userRequest;
+				}
+				
+				if(userRequest.getLastName() == null || userRequest.getLastName().equalsIgnoreCase("")) {
+					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+					userRequest.setRespMesg("Enter Last Name");
+					return userRequest;
+				}
+			}
+			
+			// add user
+			
+			userRequest.setPassword("12345");
+
+			String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
+			userRequest.setPassword(password);
+			
+			UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
+			userDetails = userHelper.saveUserDetails(userDetails);
+			
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
+			return userRequest;
+			
+		} else {
+			// already exists
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg(Constant.USER_EXIST);
+			return userRequest;
+		}
 	}
 	
 
@@ -280,18 +345,12 @@ public class UserService {
 			throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
 		userHelper.validateUserRequest(userRequest);
-
-//		String password = userHelper.generateRandomChars("ABCD145pqrs678abcdef90EF9GHxyzIJKL5MNOPQRghijS1234560TUVWXYlmnoZ1234567tuvw890", 10);
-//		userRequest.setPassword("test@123");
 			
-
-//		Boolean isValid = jwtTokenUtil.validateJwtToken(userRequest.getCreatedBy(), userRequest.getToken());
-//		if (isValid) {
 		
 		boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(userRequest.getSuperadminId(), ResourceType.CREATE_USER.name());
 		if (isUnderLimit) {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			userRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
+			userRequest.setRespMesg("Limit Exceeded. Please Upgrade Plan.");
 			return userRequest;
 		}
 		
@@ -573,6 +632,8 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
+
 
 
 	

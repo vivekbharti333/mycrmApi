@@ -101,17 +101,47 @@ public class UserHelper {
 		return userDetails;
 	}
 
+//	@Transactional
+//	public UserDetails getUserDetailsByLoginIdAndStatus(String loginId) {
+//
+//		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
+//		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
+//		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
+//		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
+//		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
+//		criteriaQuery.where(restriction1, restriction2);
+//		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+//		return userDetails;
+//	}
+	
+	
 	@Transactional
 	public UserDetails getUserDetailsByLoginIdAndStatus(String loginId) {
 
-		CriteriaBuilder criteriaBuilder = userDetailsDao.getSession().getCriteriaBuilder();
-		CriteriaQuery<UserDetails> criteriaQuery = criteriaBuilder.createQuery(UserDetails.class);
-		Root<UserDetails> root = criteriaQuery.from(UserDetails.class);
-		Predicate restriction1 = criteriaBuilder.equal(root.get("loginId"), loginId);
-		Predicate restriction2 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
-		criteriaQuery.where(restriction1, restriction2);
-		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
-		return userDetails;
+	    CriteriaBuilder cb = userDetailsDao.getSession().getCriteriaBuilder();
+	    CriteriaQuery<UserDetails> cq = cb.createQuery(UserDetails.class);
+	    Root<UserDetails> root = cq.from(UserDetails.class);
+
+	    cq.multiselect(
+	    	    root.get("loginId"),
+	    	    root.get("password"),
+	    	    root.get("firstName"),
+	    	    root.get("lastName"),
+	    	    root.get("service"),
+	    	    root.get("permissions"),
+	    	    root.get("roleType"),
+	    	    root.get("superadminId"),
+	    	    root.get("isPassChanged"),
+	    	    root.get("createdBy"),
+	    	    root.get("validityExpireOn")
+	    	);
+
+	    Predicate p1 = cb.equal(root.get("loginId"), loginId);
+	    Predicate p2 = cb.notEqual(root.get("status"), Status.REMOVED.name());
+
+	    cq.where(p1, p2);
+
+	    return userDetailsDao.getSession().createQuery(cq).uniqueResult();
 	}
 
 	@Transactional

@@ -19,6 +19,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.common.entities.EmailServiceDetails;
+import com.common.entities.InvoiceHeaderDetails;
 import com.common.entities.UserDetails;
 import com.ngo.dao.SmsTemplateDetailsDao;
 import com.ngo.email.template.DatfuslabWelcome;
@@ -39,16 +41,19 @@ public class ZeptoEmail {
 	private DatfuslabWelcome datfuslabWelcome;
 
 	
-	public JSONObject setParameter(DonationDetails donationDetails) {
+	public String setJsonParameter(EmailServiceDetails emailService, DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
+		
+		String subject = emailService.getSubject();
+		if("GLOBAL".equalsIgnoreCase(invoiceHeader.getInvoiceEmail())) {
+			subject = "Your Contribution Receipt - "+invoiceHeader.getCompanyFirstName()+" "+invoiceHeader.getCompanyLastName();
+		}
+		
         JSONObject from = new JSONObject();
-        from.put("address", "noreply@cefinternational.org");
-        from.put("name", "Cef International");
-//        from.put("address", "noreply@datfuslab.com");
-//        from.put("name", "Datfuslab Technologies ");
+        from.put("address", emailService.getEmailFrom());
+        from.put("name", emailService.getRegards());
 
         JSONObject toEmailAddress = new JSONObject();
         toEmailAddress.put("address", donationDetails.getEmailId());
-//        toEmailAddress.put("name", "Datfuslab");
 
         JSONObject toObj = new JSONObject();
         toObj.put("email_address", toEmailAddress);
@@ -59,32 +64,32 @@ public class ZeptoEmail {
         JSONObject emailJson = new JSONObject();
         emailJson.put("from", from);
         emailJson.put("to", toArray);
-        emailJson.put("subject", "We're Grateful for Your Support Download Your 80G Receipt");
-        emailJson.put("htmlbody", donationThankYou.getDonationThankYouTemplate(donationDetails));
+        emailJson.put("subject", subject);
+        emailJson.put("htmlbody", donationThankYou.getDonationThankYouTemplate(invoiceHeader, donationDetails));
 
-		return emailJson;
+		return emailJson.toString();
     }
 
 
-	public void sendZeptoEmail(DonationDetails donationDetails) throws MessagingException, IOException {
+	@SuppressWarnings("deprecation")
+	public void sendZeptoEmail(EmailServiceDetails emailService, String jsonParameter) throws MessagingException, IOException {
 
-	        String postUrl = "https://api.zeptomail.in/v1.1/email";
+//	        String postUrl = "https://api.zeptomail.in/v1.1/email";
 	        BufferedReader br = null;
 	        HttpURLConnection conn = null;
 	        String output = null;
 	        StringBuffer sb = new StringBuffer();
 	        try {
-	            URL url = new URL(postUrl);
+	            URL url = new URL(emailService.getHost());
 	            conn = (HttpURLConnection) url.openConnection();
 	            conn.setDoOutput(true);
 	            conn.setRequestMethod("POST");
 	            conn.setRequestProperty("Content-Type", "application/json");
 	            conn.setRequestProperty("Accept", "application/json");
-	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1bQ73u2GJ+pxFV7KXuEJOiMt4s/OIyLgYS5NlGWPcLSk1T+t8tx2Dm+Rh4V/dDHaGcwIthubzP5rnRdm/oYD1LVGqyqK3sx/VYSPOZsbq6x00fsFgbf0bZVITpcdBq1yXVv9zYNA==");
-//	            conn.setRequestProperty("Authorization", "Zoho-enczapikey PHtE6r1cQb+4jjMto0MA5/bpFMH1NY4q+LlhJQkRs4tKDvJXHU1Vr9svlze0qBYvUfhLHKXPwdpos+mf5rmHd2zpM2cdWGqyqK3sx/VYSPOZsbq6x00etF0bdk3cUoPqc9Jr0y3WvNfdNA==");
+	            conn.setRequestProperty("Authorization", "Zoho-enczapikey "+emailService.getEmailPassword());
 //	            JSONObject object = new JSONObject(this.setParameter());
 	            OutputStream os = conn.getOutputStream();
-	            os.write(this.setParameter(donationDetails).toString().getBytes());
+	            os.write(jsonParameter.toString().getBytes());
 	            os.flush();
 	            br = new BufferedReader(new InputStreamReader((conn.getInputStream())));
 	            while ((output = br.readLine()) != null) {

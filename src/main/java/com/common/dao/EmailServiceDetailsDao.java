@@ -1,8 +1,8 @@
-package com.ngo.dao;
+package com.common.dao;
 
 import org.springframework.stereotype.Repository;
-import com.common.dao.BaseDao;
-import com.ngo.entities.EmailServiceDetails;
+
+import com.common.entities.EmailServiceDetails;
 
 @Repository
 public class EmailServiceDetailsDao extends BaseDao<EmailServiceDetails> {

@@ -15,7 +15,18 @@ import org.springframework.web.client.RestTemplate;
 
 
 @Configuration
-@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*","com.invoice.*"})
+//@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*"})
+//@ComponentScan({"com.spring.*","com.ngo.*","com.common.*","com.school.*","com.invoice.*","com.whatsapp.*"})
+
+@ComponentScan({
+    "com.spring",
+    "com.ngo",
+    "com.common",
+    "com.school",
+    "com.invoice",
+    "com.whatsapp"
+})
+
 @EnableWebMvc
 public class ApplicationConfiguration implements WebMvcConfigurer {
 

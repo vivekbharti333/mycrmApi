@@ -28,19 +28,21 @@ import org.springframework.stereotype.Component;
 import com.common.constant.Constant;
 import com.common.email.NimbusEmail;
 import com.common.email.ZeptoEmail;
+import com.common.entities.EmailServiceDetails;
 import com.common.entities.InvoiceHeaderDetails;
 import com.common.entities.UserDetails;
+import com.common.entities.WhatsAppDetails;
 import com.common.enums.RequestFor;
 import com.common.enums.RoleType;
 import com.common.enums.SmsType;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
+import com.common.helper.EmailHelper;
 import com.common.helper.UserHelper;
+import com.common.helper.WhatsAppHelper;
 import com.ngo.dao.DonationDetailsDao;
 import com.ngo.entities.DonationDetails;
-import com.ngo.entities.EmailServiceDetails;
 import com.ngo.entities.SmsTemplateDetails;
-import com.ngo.entities.WhatsAppDetails;
 import com.ngo.object.request.DonationRequestObject;
 import com.spring.common.PdfInvoice;
 import com.spring.common.SendEmailHelper;
@@ -189,30 +191,86 @@ public class DonationHelper {
 		}
 
 	}
-
+	
 	public void sendDonationInvoiceWhatsApp(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
-			throws MessagingException, IOException {
+			throws Exception {
 
 		if (donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
-			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
 
-			if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+			if (invoiceHeader.getInvoiceWhatsApp().equalsIgnoreCase("NO")) {
+				// Do not send link
+			} else if (invoiceHeader.getInvoiceWhatsApp().equalsIgnoreCase("GLOBAL")) {
+				
+				// send Datfuslab Header
+				WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(Constant.GLOBAL_SUPERADMIN_ID);
+				
+				String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+				whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
 
-				whatsAppHelper.sendWhatsAppMessage(donationDetails, whatsAppDetails);
+
+			} else if (invoiceHeader.getInvoiceWhatsApp().equalsIgnoreCase("INDIVITUAL")) {
+				WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
+
+				if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+
+					String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+					whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
+				}
 			}
+
 		}
 	}
-
+	
+	
 	public void sendDonationInvoiceEmail(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
 			throws MessagingException, IOException {
 		if (donationDetails.getEmailId() != null && !donationDetails.getEmailId().equalsIgnoreCase("")) {
-			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(
-					SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
-			if (emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
-				zeptomail.sendZeptoEmail(donationDetails);
+			
+			if (invoiceHeader.getInvoiceEmail().equalsIgnoreCase("NO")) {
+				
+			} else if (invoiceHeader.getInvoiceEmail().equalsIgnoreCase("GLOBAL")) {
+				
+				EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), Constant.GLOBAL_SUPERADMIN_ID);
+				
+				String jsonParameter = zeptomail.setJsonParameter(emailServiceDetails, donationDetails, invoiceHeader);
+				zeptomail.sendZeptoEmail(emailServiceDetails, jsonParameter);
+				
+			} else if (invoiceHeader.getInvoiceEmail().equalsIgnoreCase("INDIVITUAL")) {
+				
+				EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
+				if (emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+					String jsonParameter = zeptomail.setJsonParameter(emailServiceDetails, donationDetails, invoiceHeader);
+					zeptomail.sendZeptoEmail(emailServiceDetails, jsonParameter);
+				}
 			}
 		}
 	}
+	
+
+//	public void sendDonationInvoiceWhatsApp1(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
+//			throws Exception {
+//
+//		if (donationDetails.getMobileNumber() != null && !donationDetails.getMobileNumber().equalsIgnoreCase("")) {
+//			WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(donationDetails.getSuperadminId());
+//
+//			if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+//
+//				String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+//				whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
+//			}
+//		}
+//	}
+
+//	public void sendDonationInvoiceEmail1(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader)
+//			throws MessagingException, IOException {
+//		if (donationDetails.getEmailId() != null && !donationDetails.getEmailId().equalsIgnoreCase("")) {
+//			EmailServiceDetails emailServiceDetails = emailHelper.getEmailDetailsByEmailTypeAndSuperadinId(
+//					SmsType.DONATION_RECEIPT.name(), donationDetails.getSuperadminId());
+//			if (emailServiceDetails != null && emailServiceDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
+//				zeptomail.sendZeptoEmail(donationDetails);
+//			}
+//		}
+//	}
 
 	public DonationRequestObject getTeamLeaderIdOfDonation(DonationRequestObject donationRequest) {
 

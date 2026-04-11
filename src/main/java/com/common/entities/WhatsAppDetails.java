@@ -1,4 +1,4 @@
-package com.ngo.entities;
+package com.common.entities;
 
 import java.util.Date;
 
@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.Table;
 
 import lombok.Data;
@@ -21,17 +22,29 @@ public class WhatsAppDetails {
 	@Column(name = "id")
 	private Long id;
 	
-	@Column(name = "whatsapp_url")
-	private String whatsappUrl;
+	@Column(name = "type")
+	private String type;
 	
-	@Column(name = "api_key")
-	private String apiKey;
+	@Column(name = "service_provider")
+	private String serviceProvider;
 	
 	@Column(name = "whats_app_number")
 	private String whatsAppNumber;
 	
 	@Column(name = "receipt_download_url")
 	private String receiptDownloadUrl;
+	
+	//Start new field
+	@Column(name = "phone_number_id")
+	private String phoneNumberId;
+	
+	@Column(name = "version")
+	private String version;
+	
+	@Lob
+	@Column(name = "user_access_token")
+	private String userAccessToken;
+	//End
 	
 	@Column(name = "status")
 	private String status;	
@@ -45,8 +58,8 @@ public class WhatsAppDetails {
 	@Column(name = "updated_at")
 	private Date updatedAt;
 	
-	@Column(name = "updated_by")
-	private String updatedBy;
+	@Column(name = "created_by")
+	private String createdBy;
 	
 	
 }

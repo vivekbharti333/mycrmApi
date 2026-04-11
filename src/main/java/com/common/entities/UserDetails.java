@@ -15,6 +15,7 @@ import org.springframework.lang.NonNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+//@AllArgsConstructor
 @Data
 @AllArgsConstructor
 @Entity
@@ -106,5 +107,31 @@ public class UserDetails {
         
     }
 	
+	
+	public UserDetails(
+	        String loginId,
+	        String password,
+	        String firstName,
+	        String lastName,
+	        String service,
+	        String permissions,
+	        String roleType,
+	        String superadminId,
+	        String isPassChanged,
+	        String createdBy,
+	        Date validityExpireOn
+	) {
+	    this.loginId = loginId;
+	    this.password = password;
+	    this.firstName = firstName;
+	    this.lastName = lastName;
+	    this.service = service;
+	    this.permissions = permissions;
+	    this.roleType = roleType;
+	    this.superadminId = superadminId;
+	    this.isPassChanged = isPassChanged;
+	    this.createdBy = createdBy;
+	    this.validityExpireOn = validityExpireOn;
+	}
 	
 }

@@ -1,4 +1,4 @@
-package com.ngo.services;
+package com.common.services;
 
 import java.util.Date;
 
@@ -9,12 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.constant.Constant;
+import com.common.entities.OtpDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
+import com.common.helper.OtpHelper;
 import com.common.helper.UserHelper;
 import com.common.jwt.JwtTokenUtil;
-import com.ngo.entities.OtpDetails;
-import com.ngo.helper.OtpHelper;
 import com.common.object.request.Request;
 import com.common.object.request.UserRequestObject;
 
@@ -76,39 +76,47 @@ public class OtpService {
 	
 	
 	public UserRequestObject verifyOtp(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
-		UserRequestObject userRequest = userRequestObject.getPayload();
-		otpHelper.validateOtpRequest(userRequest);
-		OtpDetails existsOtpDetails = otpHelper.getOtpDetailsByMobileNo(userRequest.getMobileNo());
-		if (existsOtpDetails != null) {
 
-			Long dbTime = existsOtpDetails.getUpdatedAt().getTime();
-			Long nowTime = new Date().getTime();
-			Long diffTime = nowTime - dbTime;
+	    UserRequestObject userRequest = userRequestObject.getPayload();
+	    otpHelper.validateOtpRequest(userRequest);
 
-			if (existsOtpDetails.getUpdatedAt() == new Date() && (diffTime <= 300000)) {
-				if (existsOtpDetails.getOtp().equalsIgnoreCase(userRequest.getOtp())) {
+	    OtpDetails existsOtpDetails = otpHelper.getOtpDetailsByMobileNo(userRequest.getMobileNo());
 
-					existsOtpDetails.setStatus(Status.VERIFIED.name());
-					otpHelper.updateOtpDetails(existsOtpDetails); 
+	    if (existsOtpDetails != null) {
 
-					userRequest.setRespCode(Constant.SUCCESS_CODE);
-					userRequest.setRespMesg("OTP Verified");
-					return userRequest;
-				} else {
-					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-					userRequest.setRespMesg("Wrong OTP");
-					return userRequest;
-				}
-			}else {
-				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				userRequest.setRespMesg("OTP Expired");
-				return userRequest;
-			}
-		} else {
-			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-			userRequest.setRespMesg("Wrong OTP");
-			return userRequest;
-		}
+	        Long dbTime = existsOtpDetails.getUpdatedAt().getTime();
+	        Long nowTime = new Date().getTime();
+	        Long diffTime = nowTime - dbTime;
+
+	        System.out.println(existsOtpDetails.getOtp() + " , " + userRequest.getOtp() + " , " + diffTime);
+
+	        // ✅ Only check expiry (5 min = 300000 ms)
+	        if (diffTime <= 300000) {
+
+	            if (existsOtpDetails.getOtp().equalsIgnoreCase(userRequest.getOtp())) {
+
+	                existsOtpDetails.setStatus(Status.VERIFIED.name());
+	                otpHelper.updateOtpDetails(existsOtpDetails);
+
+	                userRequest.setRespCode(Constant.SUCCESS_CODE);
+	                userRequest.setRespMesg("OTP Verified");
+
+	            } else {
+	                userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+	                userRequest.setRespMesg("Wrong OTP");
+	            }
+
+	        } else {
+	            userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+	            userRequest.setRespMesg("OTP Expired");
+	        }
+
+	    } else {
+	        userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+	        userRequest.setRespMesg("Wrong OTP");
+	    }
+
+	    return userRequest;
 	}
 
 

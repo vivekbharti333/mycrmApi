@@ -1,4 +1,4 @@
-package com.ngo.helper;
+package com.common.helper;
 
 import java.util.Date;
 import java.util.Random;
@@ -13,11 +13,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
+import com.common.dao.OtpDetailsDao;
+import com.common.entities.OtpDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
 import com.common.object.request.UserRequestObject;
-import com.ngo.dao.OtpDetailsDao;
-import com.ngo.entities.OtpDetails;
 import com.ngo.object.request.DonationRequestObject;
 
 @Component

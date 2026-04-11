@@ -1,4 +1,4 @@
-package com.ngo.services;
+package com.common.services;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.constant.Constant;
+import com.common.entities.EmailServiceDetails;
 import com.common.exceptions.BizException;
-import com.ngo.entities.EmailServiceDetails;
-import com.ngo.helper.EmailHelper;
+import com.common.helper.EmailHelper;
 import com.ngo.object.request.EmailServiceRequestObject;
 import com.common.object.request.Request;
 

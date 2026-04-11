@@ -112,31 +112,11 @@ public class DonationService {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
 
-//		UserDetails userDetails1 = userHelper.getUserDetailsByLoginIdAndStatus(donationRequest.getCreatedBy());
-//		boolean isValid = userHelper.checkValidityOfUser(userDetails1.getValidityExpireOn());
-//
-//		if (!isValid) {
-//			donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-//			donationRequest.setRespMesg(Constant.EXPIRED_LOGIN);
-//			return donationRequest;
-//		}
-
-	
-//		Boolean isValid = jwtTokenUtil.validateJwtToken(donationRequest.getLoginId(), donationRequest.getToken());
-		
-
-//		if (isValid) {
 			
 			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
 			}
 			
-//			boolean isUnderLimit = usageLimitConsumptionHelper.isUnderUsageLimit(donationRequest.getSuperadminId(), ResourceType.DONATION_RECEIPT.name());
-//			if (!isUnderLimit) {
-//				donationRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-//				donationRequest.setRespMesg("Free Limit Exceeded. Please Upgrade Plan.");
-//				return donationRequest;
-//			}
 
 			// Validate Fields
 			donationHelper.validateDonationRequestFields(donationRequest);
@@ -195,12 +175,13 @@ public class DonationService {
 				// send email
 				donationHelper.sendDonationInvoiceEmail(donationDetails, invoiceHeader);
 				
+				// send whats app
+				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
 				
 				// whats app
-//				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
-				if(donationDetails.getSuperadminId().equalsIgnoreCase("9220208888") || donationDetails.getSuperadminId().equalsIgnoreCase("9029400401")) {
-					sendWhatsAppMsg.sendFixedWhatsAppMesageMessage(donationDetails);
-				}
+//				if(donationDetails.getSuperadminId().equalsIgnoreCase("9220208888") || donationDetails.getSuperadminId().equalsIgnoreCase("9029400401")) {
+//					sendWhatsAppMsg.sendFixedWhatsAppMesageMessage(donationDetails);
+//				}
 				
 				
 				

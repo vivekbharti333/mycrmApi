@@ -27,7 +27,7 @@ public class SendWhatsappMsg {
 	    return json.toString();
 	}
 
-	public void sendFixedWhatsAppMesageMessage(DonationDetails donationDetails) throws IOException {
+	public void sendFixedWhatsAppMesageMessage(DonationDetails donationDetails) throws IOException { 
 
 		OkHttpClient client = new OkHttpClient().newBuilder().build();
 		MediaType mediaType = MediaType.parse("application/json");
@@ -43,8 +43,8 @@ public class SendWhatsappMsg {
 
 		Response response = client.newCall(request).execute();
 
-		System.out.println("Response Code : " + response.code());
-		System.out.println("Response Body : " + response.body().string());
+//		System.out.println("Response Code : " + response.code());
+//		System.out.println("Response Body : " + response.body().string());
 	}
 
 	
