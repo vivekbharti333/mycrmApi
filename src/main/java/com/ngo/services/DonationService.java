@@ -179,9 +179,9 @@ public class DonationService {
 				donationHelper.sendDonationInvoiceWhatsApp(donationDetails, invoiceHeader);
 				
 				// whats app
-//				if(donationDetails.getSuperadminId().equalsIgnoreCase("9220208888") || donationDetails.getSuperadminId().equalsIgnoreCase("9029400401")) {
-//					sendWhatsAppMsg.sendFixedWhatsAppMesageMessage(donationDetails);
-//				}
+				if(donationDetails.getSuperadminId().equalsIgnoreCase("9220208888") || donationDetails.getSuperadminId().equalsIgnoreCase("9029400401")) {
+					sendWhatsAppMsg.sendFixedWhatsAppMesageMessage(donationDetails);
+				}
 				
 				
 				

@@ -47,7 +47,7 @@ public class ReceiptController {
 	
 
 
-	@RequestMapping(path = "addReceipt", method = RequestMethod.POST)
+	@RequestMapping(path = "submitReceipt", method = RequestMethod.POST)
 	public Response<SchoolReceiptRequest> addStudent(@RequestBody Request<SchoolReceiptRequest> SchoolReceiptRequest,
 			HttpServletRequest request) {
 		GenricResponse<SchoolReceiptRequest> responseObj = new GenricResponse<SchoolReceiptRequest>();
@@ -99,8 +99,8 @@ public class ReceiptController {
 	    PdfDocument pdf = new PdfDocument(writer);
 	    Document document = new Document(pdf, PageSize.A4);
 
-//	    feeReceiptPdf.generate(document);
-	    admissionFormPdf.generate(document);
+	    feeReceiptPdf.generate(document);
+//	    admissionFormPdf.generate(document);
 	    
 	    
 

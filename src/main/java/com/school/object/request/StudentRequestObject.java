@@ -60,6 +60,9 @@ public class StudentRequestObject {
 	private String createdBy;
 	private String createdByName;
     private String superadminId; 
+    
+    //
+    private String requestFor;
 	
 	private int respCode;
 	private String respMesg;

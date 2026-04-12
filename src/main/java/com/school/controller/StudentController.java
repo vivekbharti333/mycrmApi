@@ -3,13 +3,17 @@ package com.school.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.common.constant.Constant;
@@ -17,8 +21,15 @@ import com.common.exceptions.BizException;
 import com.common.object.request.Request;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
+import com.itextpdf.io.source.ByteArrayOutputStream;
+import com.itextpdf.kernel.geom.PageSize;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
 import com.school.entities.StudentDetails;
+import com.school.helper.StudentHelper;
 import com.school.object.request.StudentRequestObject;
+import com.school.pdf.AdmissionFormPdf;
 import com.school.services.StudentService;
 
 
@@ -30,6 +41,12 @@ public class StudentController {
 
 	@Autowired
 	private	StudentService studentService;
+	
+	@Autowired
+	private StudentHelper studentHelper;
+	
+	@Autowired
+	private AdmissionFormPdf admissionFormPdf;
 	
 
 
@@ -75,4 +92,28 @@ public class StudentController {
 			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		}
 	}
+	
+	
+	@GetMapping("downloadAdmissionForm")
+	public void downloadReceiptPdf(
+	        @RequestParam("id") Long id,
+	        HttpServletResponse response) throws Exception {
+
+	    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+	    PdfWriter writer = new PdfWriter(baos);
+	    PdfDocument pdf = new PdfDocument(writer);
+	    Document document = new Document(pdf, PageSize.A4);
+
+	    StudentDetails studentDetails = studentHelper.getStudentDetailsById(id);
+	    admissionFormPdf.generate(document, studentDetails);
+	    document.close();
+
+	    response.setContentType("application/pdf");
+	    response.setHeader("Content-Disposition", "attachment; filename=Addmission_Form.pdf");
+
+	    response.getOutputStream().write(baos.toByteArray());
+	    response.getOutputStream().flush();
+	}
+
 }

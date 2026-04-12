@@ -1,6 +1,7 @@
 package com.school.pdf;
 
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,7 @@ import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.HorizontalAlignment;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.VerticalAlignment;
+import com.school.entities.StudentDetails;
 
 @Component
 public class AdmissionFormPdf {
@@ -23,8 +25,10 @@ public class AdmissionFormPdf {
     // =====================================================
     // MAIN METHOD
     // =====================================================
-    public void generate(Document document) {
+    public void generate(Document document, StudentDetails studentDetails) {
 
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    	
         // ===== HEADER =====
         addSchoolHeader(document);
 
@@ -41,26 +45,26 @@ public class AdmissionFormPdf {
         // --- Student details table (LEFT) ---
         Table studentTable = new Table(4).useAllAvailableWidth();
 
-        addCell(studentTable, "Admission No");    addCell(studentTable, "2");
-        addCell(studentTable, "Admission Date"); addCell(studentTable, "08-Feb-2024");
+        addCell(studentTable, "Admission No");    addCell(studentTable, studentDetails.getAdmissionNo());
+        addCell(studentTable, "Admission Date"); addCell(studentTable, sdf.format(studentDetails.getCreatedAt()));
 
-        addCell(studentTable, "Student Name");   addCell(studentTable, "PARI KUMARI");
-        addCell(studentTable, "Roll No");        addCell(studentTable, "6");
+        addCell(studentTable, "Student Name");   addCell(studentTable, studentDetails.getFirstName()+" "+studentDetails.getMiddleName()+" "+studentDetails.getLastName());
+        addCell(studentTable, "Roll No");        addCell(studentTable, studentDetails.getRollNumber());
 
-        addCell(studentTable, "Class");          addCell(studentTable, "SECOND");
-        addCell(studentTable, "Section");        addCell(studentTable, "A");
+        addCell(studentTable, "Class");          addCell(studentTable, studentDetails.getGrade());
+        addCell(studentTable, "Section");        addCell(studentTable, studentDetails.getGradeSection());
 
-        addCell(studentTable, "Date of Birth");  addCell(studentTable, "01-Jan-2019");
-        addCell(studentTable, "Gender");         addCell(studentTable, "GIRL");
+        addCell(studentTable, "Date of Birth");  addCell(studentTable, studentDetails.getDob());
+        addCell(studentTable, "Gender");         addCell(studentTable, studentDetails.getGender());
 
-        addCell(studentTable, "Category");       addCell(studentTable, "OBC");
-        addCell(studentTable, "Religion");       addCell(studentTable, "HINDU");
+        addCell(studentTable, "Category");       addCell(studentTable, studentDetails.getCategory());
+        addCell(studentTable, "Religion");       addCell(studentTable, studentDetails.getReligion());
 
-        addCell(studentTable, "Nationality");    addCell(studentTable, "INDIAN");
-        addCell(studentTable, "Blood Group");    addCell(studentTable, "NA");
+        addCell(studentTable, "Nationality");    addCell(studentTable, studentDetails.getNationality());
+        addCell(studentTable, "Blood Group");    addCell(studentTable, studentDetails.getBloodGroup());
 
-        addCell(studentTable, "Aadhaar No");     addCell(studentTable, "111111111111");
-        addCell(studentTable, "Birth Place");    addCell(studentTable, "-");
+        addCell(studentTable, "Aadhaar No");     addCell(studentTable, studentDetails.getAadharNumber());
+        addCell(studentTable, "Birth Place");    addCell(studentTable, studentDetails.getDobPlace());
 
         // --- Wrapper table: details + photo ---
         Table studentSection = new Table(new float[]{75, 25})
@@ -79,10 +83,10 @@ public class AdmissionFormPdf {
 
         Table parentTable = new Table(2).useAllAvailableWidth();
 
-        addCell(parentTable, "Father's Name");  addCell(parentTable, "NIRANJAN KUMAR");
-        addCell(parentTable, "Mother's Name");  addCell(parentTable, "KHUSHBOO KUMAR");
-        addCell(parentTable, "Mobile Number");  addCell(parentTable, "9507003539");
-        addCell(parentTable, "Address");        addCell(parentTable, "AIGARI MATH");
+        addCell(parentTable, "Father's Name");  addCell(parentTable, studentDetails.getFatherName());
+        addCell(parentTable, "Mother's Name");  addCell(parentTable, studentDetails.getMotherName());
+        addCell(parentTable, "Mobile Number");  addCell(parentTable, studentDetails.getFatherMobileNo());
+        addCell(parentTable, "Address");        addCell(parentTable, studentDetails.getCurrentAddress());
 
         document.add(parentTable);
 
@@ -95,11 +99,12 @@ public class AdmissionFormPdf {
                 .setFontSize(9));
 
         // ===== SIGNATURES =====
-        Table signTable = new Table(3)
+        Table signTable = new Table(4)
                 .useAllAvailableWidth()
                 .setMarginTop(20);
 
-        signTable.addCell(signCell("Parent / Guardian Signature"));
+        signTable.addCell(signCell("Student Photograph"));
+        signTable.addCell(signCell("Guardian Signature"));
         signTable.addCell(signCell("Student Signature"));
         signTable.addCell(signCell("Principal Signature\nWith Seal"));
 
@@ -214,7 +219,7 @@ public class AdmissionFormPdf {
                 .add(new Paragraph("\n\n" + text)
                         .setFontSize(9)
                         .setTextAlignment(TextAlignment.CENTER))
-                .setHeight(80)
+                .setHeight(110)
                 .setBorder(new SolidBorder(0.8f));
     }
 }

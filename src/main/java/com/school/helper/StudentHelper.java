@@ -193,10 +193,22 @@ public class StudentHelper {
 	public List<StudentDetails> getStudentDetails(StudentRequestObject studentRequest) {
 		
 		List<StudentDetails> results = new ArrayList<>();
-		String sqlQuery = "SELECT sd FROM StudentDetails sd WHERE sd.superadminId = :superadminId";
-		results = studentDetailsDao.getEntityManager().createQuery(sqlQuery,StudentDetails.class)
-	        .setParameter("superadminId", studentRequest.getSuperadminId())
-	        .getResultList();
+		if("ALL".equalsIgnoreCase(studentRequest.getRequestFor())) {
+			String sqlQuery = "SELECT sd FROM StudentDetails sd WHERE sd.superadminId = :superadminId";
+			results = studentDetailsDao.getEntityManager().createQuery(sqlQuery,StudentDetails.class)
+		        .setParameter("superadminId", studentRequest.getSuperadminId())
+		        .getResultList();
+		}
+		if("FOR_FEE".equalsIgnoreCase(studentRequest.getRequestFor())) {
+			String sqlQuery = "SELECT sd FROM StudentDetails sd WHERE sd.superadminId = :superadminId AND sd.grade = :grade AND gradeSection = :sd.gradeSection";
+			results = studentDetailsDao.getEntityManager().createQuery(sqlQuery,StudentDetails.class)
+		        .setParameter("superadminId", studentRequest.getSuperadminId())
+		        .setParameter("grade", studentRequest.getGrade())
+		        .setParameter("gradeSection", studentRequest.getGradeSection())
+		        .getResultList();
+		}
+		
+		
 		
 		return results;
 	}
