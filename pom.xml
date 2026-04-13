@@ -55,6 +55,12 @@
 		</dependency>
 
 		<dependency>
+			<groupId>net.sourceforge.tess4j</groupId>
+			<artifactId>tess4j</artifactId>
+			<version>5.4.0</version>
+		</dependency>
+
+		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>2.0.27</version> <!-- Use the latest version available -->
@@ -80,7 +86,7 @@
     <version>4.12.0</version>
 </dependency>
 
-<!-- Okio REQUIRED -->
+		<!-- Okio REQUIRED -->
 <dependency>
     <groupId>com.squareup.okio</groupId>
     <artifactId>okio</artifactId>
@@ -207,8 +213,6 @@
 			<artifactId>log4j-api</artifactId>
 			<version>2.23.1</version>
 		</dependency> -->
-
-
 
 
 		<!-- iText pdfHTML add-on -->
