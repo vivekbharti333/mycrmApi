@@ -204,7 +204,7 @@ public class DonationHelper {
 				// send Datfuslab Header
 				WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(Constant.GLOBAL_SUPERADMIN_ID);
 				
-				String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+				String payload = whatsAppHelper.setParamForDonationReceipt(donationDetails, invoiceHeader);
 				whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
 
 
@@ -213,7 +213,7 @@ public class DonationHelper {
 
 				if (whatsAppDetails != null && whatsAppDetails.getStatus().equalsIgnoreCase(Status.ACTIVE.name())) {
 
-					String payload = whatsAppHelper.buildWhatsAppPayload(donationDetails, invoiceHeader);
+					String payload = whatsAppHelper.setParamForDonationReceipt(donationDetails, invoiceHeader);
 					whatsAppHelper.sendWhatsAppMessage(payload, whatsAppDetails);
 				}
 			}
@@ -585,7 +585,7 @@ public class DonationHelper {
 					"SELECT DD.createdbyName, DD.currency, COUNT(DD.id) AS count, SUM(DD.amount) AS amount " +
 					"FROM DonationDetails DD " +
 					"WHERE DD.createdAt BETWEEN :firstDate AND :lastDate " +
-					"AND DD.superadminId = :superadminId AND DD.teamLeaderId = :teamLeaderId" +
+					"AND DD.teamLeaderId = :teamLeaderId" +
 					"AND DD.status = :status " +
 					"GROUP BY DD.createdbyName, DD.currency")
 					

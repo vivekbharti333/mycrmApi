@@ -60,11 +60,8 @@ public class WhatsAppHelper {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
 		}
 	}
-	
-	
 
-
-	public String buildWhatsAppPayload(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
+	public String setParamForDonationReceipt(DonationDetails donationDetails, InvoiceHeaderDetails invoiceHeader) {
 
 	    JSONObject root = new JSONObject();
 	    root.put("messaging_product", "whatsapp");
