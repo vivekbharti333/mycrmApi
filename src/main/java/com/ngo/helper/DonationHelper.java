@@ -585,7 +585,7 @@ public class DonationHelper {
 					"SELECT DD.createdbyName, DD.currency, COUNT(DD.id) AS count, SUM(DD.amount) AS amount " +
 					"FROM DonationDetails DD " +
 					"WHERE DD.createdAt BETWEEN :firstDate AND :lastDate " +
-					"AND DD.teamLeaderId = :teamLeaderId" +
+					"AND DD.teamLeaderId = :teamLeaderId " +
 					"AND DD.status = :status " +
 					"GROUP BY DD.createdbyName, DD.currency")
 					
