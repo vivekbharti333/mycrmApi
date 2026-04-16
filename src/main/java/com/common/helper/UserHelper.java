@@ -221,7 +221,7 @@ public class UserHelper {
 		userDetails.setMobileNo(userRequest.getMobileNo());
 		userDetails.setAlternateMobile(userRequest.getAlternateMobile());
 		userDetails.setEmailId(userRequest.getEmailId());
-		userDetails.setPermissions(userRequest.getPermissions());
+//		userDetails.setPermissions(userRequest.getPermissions());
 		userDetails.setCreatedBy(userRequest.getCreatedBy());
 		userDetails.setUpdatedAt(new Date());
 
