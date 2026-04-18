@@ -69,7 +69,7 @@ public class OCRController {
     	
     	System.out.println("Enter Hai ");
 
-        String imagePath = "C:\\Users\\HP\\Documents\\test.png";
+        String imagePath = "C:\\Users\\lenovo\\Music\\images.png";
 
         // Step 1: Preprocess Image
         BufferedImage processedImage = preprocessImage(imagePath);
@@ -94,11 +94,11 @@ public class OCRController {
     public static String doOCR(File file) {
         ITesseract tesseract = new Tesseract();
 
-        // Change path if needed
-        tesseract.setDatapath("C:\\Users\\HP\\AppData\\Local\\Programs\\Tesseract-OCR\\tessdata\\eng.traineddata");
-
-        // Language
+        tesseract.setDatapath("C:\\Program Files\\Tesseract-OCR\\tessdata");
         tesseract.setLanguage("eng");
+
+        tesseract.setPageSegMode(6);
+        tesseract.setOcrEngineMode(1);
 
         try {
             return tesseract.doOCR(file);
@@ -106,7 +106,6 @@ public class OCRController {
             throw new RuntimeException(e);
         }
     }
-
     // ================= IMAGE PREPROCESSING =================
     public static BufferedImage preprocessImage(String path) throws Exception {
 

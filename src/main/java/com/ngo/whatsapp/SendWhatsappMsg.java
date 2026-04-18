@@ -21,7 +21,7 @@ public class SendWhatsappMsg {
 	    json.put("template_name", "donation_receipt1");
 	    json.put("template_language", "en_US");
 	    json.put("template_media_type", "image");
-	    json.put("url", "https://login.mart2meta.com/MART2META_logo.png");
+	    json.put("url", "https://www.aarine.in/images/logo_aarine.png");
 	    json.put("parameters", "{"+donationDetails.getDonorName()+"},{"+donationDetails.getAmount()+"},{"+donationDetails.getReceiptNumber()+"}");
 
 	    return json.toString();
@@ -37,7 +37,7 @@ public class SendWhatsappMsg {
 		Request request = new Request.Builder()
 				.url("https://login.mart2meta.com/api/007012a1-a35e-4adf-9e7e-a3e807782a48/contact/send-template")
 				.post(body)
-				.addHeader("Authorization", "Bearer 6u1fEqhENLICM2yxncGUdv94BcVpRAfL0OjUp5fBM9sUfQcOyLTdNv4fJvGBOYCV")
+				.addHeader("Authorization", "Bearer tiZKfkkDebJxs0eIzQPiApRp6tZVUiyyyBfOGuLpKCWFuevE73vb8NNfUvLtVo7u")
 				.addHeader("Content-Type", "application/json")
 				.addHeader("Cookie", "PHPSESSID=58d22578124db1cc9a112104bfd0ad80").build();
 

@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 
 import com.common.constant.Constant;
 import com.common.entities.OtpDetails;
+import com.common.entities.WhatsAppDetails;
 import com.common.enums.Status;
 import com.common.exceptions.BizException;
 import com.common.helper.OtpHelper;
 import com.common.helper.UserHelper;
+import com.common.helper.WhatsAppHelper;
 import com.common.jwt.JwtTokenUtil;
 import com.common.object.request.Request;
 import com.common.object.request.UserRequestObject;
@@ -25,9 +27,11 @@ public class OtpService {
 	@Autowired
 	private OtpHelper otpHelper;
 	
-	
 	@Autowired
 	private UserHelper userHelper;
+	
+	@Autowired
+	private WhatsAppHelper whatsAppHelper;
 	
 	
 	
@@ -46,11 +50,17 @@ public class OtpService {
 
 		OtpDetails existsOtpDetails = otpHelper.getOtpDetailsByMobileNo(userRequest.getMobileNo());
 		if (existsOtpDetails != null) {
-			if (existsOtpDetails.getUpdatedAt() == new Date() && existsOtpDetails.getCount() >= 2) {
+			Date now = new Date();
 
-				userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-				userRequest.setRespMesg("Contact to admin");
-				return userRequest;
+			long diff = now.getTime() - existsOtpDetails.getUpdatedAt().getTime();
+
+			// 1 day = 24 * 60 * 60 * 1000 ms
+			long oneDayMs = 24L * 60 * 60 * 1000;
+
+			if (diff < oneDayMs && existsOtpDetails.getCount() >= 2) {
+			    userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			    userRequest.setRespMesg("Too many OTP requests in 24 hours. Contact admin.");
+			    return userRequest;
 			} else {
 				existsOtpDetails.setOtp(otp);
 				existsOtpDetails.setStatus(Status.INIT.name());
@@ -58,6 +68,10 @@ public class OtpService {
 				existsOtpDetails.setUpdatedAt(new Date());
 
 				// Send sms
+				WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(Constant.GLOBAL_SUPERADMIN_ID);
+				String otpParam = whatsAppHelper.setParamForSendOtp(otp, userRequest.getMobileNo());
+				whatsAppHelper.sendWhatsAppMessage(otpParam, whatsAppDetails);
+				
 				userRequest.setRespCode(Constant.SUCCESS_CODE);
 				userRequest.setRespMesg("OTP Send on " + userRequest.getMobileNo());
 				return userRequest;

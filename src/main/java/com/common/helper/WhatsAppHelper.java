@@ -95,12 +95,63 @@ public class WhatsAppHelper {
 	    return root.toString();
 	}
 	
+	public String setParamForSendOtp(String otp, String mobileNo) {
+
+	    JSONObject root = new JSONObject();
+	    root.put("messaging_product", "whatsapp");
+	    root.put("to", "+91"+mobileNo);
+	    root.put("type", "template");
+
+	    JSONObject template = new JSONObject();
+	    template.put("name", "send_otp");
+
+	    // ✅ FIX language (must be en_US, not en)
+	    JSONObject language = new JSONObject();
+	    language.put("code", "en");
+	    template.put("language", language);
+
+	    JSONArray components = new JSONArray();
+
+	    /* ================= BODY ================= */
+	    JSONObject body = new JSONObject();
+	    body.put("type", "body");
+
+	    JSONArray bodyParams = new JSONArray();
+	    bodyParams.put(new JSONObject()
+	            .put("type", "text")
+	            .put("text", otp));   // OTP
+
+	    body.put("parameters", bodyParams);
+	    components.put(body);
+
+	    /* ================= BUTTON (IMPORTANT FIX) ================= */
+	    JSONObject button = new JSONObject();
+	    button.put("type", "button");
+	    button.put("sub_type", "url");   // must match template
+	    button.put("index", "0");
+
+	    JSONArray buttonParams = new JSONArray();
+	    buttonParams.put(new JSONObject()
+	            .put("type", "text")
+	            .put("text", "123456")); // same OTP
+
+	    button.put("parameters", buttonParams);
+	    components.put(button);
+
+	    /* ================= FINAL ================= */
+	    template.put("components", components);
+	    root.put("template", template);
+
+	    return root.toString();
+	}
+
+	
 
 
 	public String sendWhatsAppMessage(String payload, WhatsAppDetails whatsAppDetails) throws Exception {
 
-		System.out.println("Payload : "+payload);
-		System.out.println(whatsAppDetails.toString());
+//		System.out.println("Payload : "+payload);
+//		System.out.println(whatsAppDetails.toString());
 	    OkHttpClient client = new OkHttpClient();
 	    
 
