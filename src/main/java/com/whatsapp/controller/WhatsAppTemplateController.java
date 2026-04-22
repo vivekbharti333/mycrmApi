@@ -73,11 +73,11 @@ public class WhatsAppTemplateController {
 //	}
     
     @RequestMapping(path = "deleteWhatsAppTemplateByName", method = RequestMethod.POST)
-	public Response<SendWaMessageResponse> deleteWhatsAppTemplateByName(@RequestBody Request<TemplateRequestObject> templateRequestObject,
+	public Response<TemplateRequestObject> deleteWhatsAppTemplateByName(@RequestBody Request<TemplateRequestObject> templateRequestObject,
 			HttpServletRequest request) {
-		GenricResponse<SendWaMessageResponse> responseObj = new GenricResponse<SendWaMessageResponse>();
+		GenricResponse<TemplateRequestObject> responseObj = new GenricResponse<TemplateRequestObject>();
 		try {
-			SendWaMessageResponse response = templateServices.deleteWhatsAppTemplateByName1(templateRequestObject);
+			TemplateRequestObject response = templateServices.deleteWhatsAppTemplateByName(templateRequestObject);
 			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
 		} catch (BizException e) {
 			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());

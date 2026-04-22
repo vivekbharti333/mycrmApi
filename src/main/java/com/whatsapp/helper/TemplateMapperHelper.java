@@ -182,7 +182,7 @@ public class TemplateMapperHelper {
 	    String encodedTemplateName = java.net.URLEncoder.encode(templateName, java.nio.charset.StandardCharsets.UTF_8);
 
 //	    String url = "https://graph.facebook.com/v24.0/" + wabaId +"/message_templates?name=" + encodedTemplateName;
-	    String url = Constant.WHATS_APP_BASE_URL+whatsAppDetails.getVersion()+"/" + whatsAppDetails.getPhoneNumberId() +"/message_templates?name=" + encodedTemplateName;
+	    String url = Constant.WHATS_APP_BASE_URL+whatsAppDetails.getVersion()+"/1580519719664370/message_templates?name=" + encodedTemplateName;
 
 	    RequestBody body = RequestBody.create("", MediaType.parse("text/plain"));
 
