@@ -150,8 +150,6 @@ public class WhatsAppHelper {
 
 	public String sendWhatsAppMessage(String payload, WhatsAppDetails whatsAppDetails) throws Exception {
 
-//		System.out.println("Payload : "+payload);
-//		System.out.println(whatsAppDetails.toString());
 	    OkHttpClient client = new OkHttpClient();
 	    
 
@@ -159,7 +157,7 @@ public class WhatsAppHelper {
 	    RequestBody body = RequestBody.create( payload , mediaType);
 
 	    Request request = new Request.Builder()
-	            .url("https://graph.facebook.com/"+whatsAppDetails.getVersion()+"/"+whatsAppDetails.getPhoneNumberId()+"/messages")
+	            .url(Constant.WHATS_APP_BASE_URL+whatsAppDetails.getVersion()+"/"+whatsAppDetails.getPhoneNumberId()+"/messages")
 	            .post(body)
 	            .addHeader("Content-Type", "application/json")
 	            .addHeader("Authorization", "Bearer "+whatsAppDetails.getUserAccessToken())

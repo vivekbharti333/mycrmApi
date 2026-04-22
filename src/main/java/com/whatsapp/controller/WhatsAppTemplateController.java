@@ -50,11 +50,43 @@ public class WhatsAppTemplateController {
 		try {
 			List<TemplateRequestObject> donationList = templateServices.getWhatsAppTemplate(templateRequestObject);
 			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
+		} catch (BizException e) {
+			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
 	}
+    
+//    @RequestMapping(path = "deleteWhatsAppTemplateByName", method = RequestMethod.POST)
+//	public Response<TemplateRequestObject> deleteWhatsAppTemplateByName(@RequestBody Request<TemplateRequestObject> templateRequestObject) {
+//		GenricResponse<TemplateRequestObject> response = new GenricResponse<TemplateRequestObject>();
+//		try {
+//			List<TemplateRequestObject> donationList = templateServices.deleteWhatsAppTemplateByName(templateRequestObject);
+//			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
+//		} catch (BizException e) {
+//			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+//		}
+//	}
+    
+    @RequestMapping(path = "deleteWhatsAppTemplateByName", method = RequestMethod.POST)
+	public Response<SendWaMessageResponse> deleteWhatsAppTemplateByName(@RequestBody Request<TemplateRequestObject> templateRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<SendWaMessageResponse> responseObj = new GenricResponse<SendWaMessageResponse>();
+		try {
+			SendWaMessageResponse response = templateServices.deleteWhatsAppTemplateByName1(templateRequestObject);
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
+	
     
    
 }

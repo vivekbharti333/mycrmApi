@@ -6,9 +6,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
+import com.common.entities.WhatsAppDetails;
 import com.common.exceptions.BizException;
 import com.common.object.request.UserRequestObject;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -16,9 +18,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsapp.object.request.TemplateRequestObject;
 import com.whatsapp.object.request.TemplateVaribaleRequest;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import okhttp3.*;
 
 @Component
 public class TemplateMapperHelper {
@@ -41,10 +41,7 @@ public class TemplateMapperHelper {
 	 */
 	public List<TemplateRequestObject> getTemplates(TemplateRequestObject request) throws IOException {
 
-		System.out.println("Enter 1");
-
 		String jsonResponse = fetchTemplatesFromWhatsApp(request);
-		System.out.println("Enter 2");
 
 		ObjectMapper mapper = new ObjectMapper();
 		JsonNode rootNode = mapper.readTree(jsonResponse);
@@ -83,8 +80,6 @@ public class TemplateMapperHelper {
 			}
 
 			url = SINGLE_TEMPLATE_BASE_URL+ "1580519719664370/message_templates?name=" +request.getTemplateName();
-			
-			System.out.println(url);
 
 		} else {
 			throw new IllegalArgumentException("Invalid requestFor value: " + request.getRequestFor());
@@ -177,5 +172,35 @@ public class TemplateMapperHelper {
 		}
 
 		return result;
+	}
+	
+	
+	public String deleteTemplate(String templateName, WhatsAppDetails whatsAppDetails) throws Exception {
+
+	    OkHttpClient client = new OkHttpClient();
+
+	    String encodedTemplateName = java.net.URLEncoder.encode(templateName, java.nio.charset.StandardCharsets.UTF_8);
+
+//	    String url = "https://graph.facebook.com/v24.0/" + wabaId +"/message_templates?name=" + encodedTemplateName;
+	    String url = Constant.WHATS_APP_BASE_URL+whatsAppDetails.getVersion()+"/" + whatsAppDetails.getPhoneNumberId() +"/message_templates?name=" + encodedTemplateName;
+
+	    RequestBody body = RequestBody.create("", MediaType.parse("text/plain"));
+
+	    Request request = new Request.Builder()
+	            .url(url)
+	            .delete(body)
+	            .addHeader("Authorization", "Bearer " + whatsAppDetails.getUserAccessToken())
+	            .build();
+
+	    Response response = client.newCall(request).execute();
+
+	    String responseBody = response.body() != null ? response.body().string() : null;
+
+	    System.out.println("Status Code: " + response.code());
+	    System.out.println("Raw Response: " + responseBody);
+
+	    
+
+	    return responseBody;
 	}
 }

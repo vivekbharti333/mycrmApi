@@ -52,6 +52,7 @@ public class Constant {
 	 
 	 
 	 public static final String GLOBAL_SUPERADMIN_ID = "1234567890";
+	 public static final String WHATS_APP_BASE_URL = "https://graph.facebook.com/";
 	 
 }
 

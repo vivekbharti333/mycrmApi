@@ -27,6 +27,10 @@ public class TemplateRequestObject {
 	
 	private String toWhatsAppNumber;
 	
+    // Response
+    private int respCode;
+    private String respMesg;
+	
 
 
 }

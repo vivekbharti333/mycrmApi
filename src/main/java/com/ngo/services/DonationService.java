@@ -111,12 +111,10 @@ public class DonationService {
 			throws BizException, Exception {
 		DonationRequestObject donationRequest = donationRequestObject.getPayload();
 		donationHelper.validateDonationRequest(donationRequest);
-
-			
+	
 			if(donationRequest.getCreatedBy().equalsIgnoreCase("N/A")) {
 				donationRequest.setCreatedBy(donationRequest.getLoginId());
 			}
-			
 
 			// Validate Fields
 			donationHelper.validateDonationRequestFields(donationRequest);

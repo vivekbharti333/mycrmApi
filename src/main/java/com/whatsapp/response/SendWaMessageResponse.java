@@ -15,4 +15,8 @@ public class SendWaMessageResponse {
 	private String errorType;
 	private int errorCode;
 	private int errorSubcode;
+	
+    // Response
+    private int respCode;
+    private String respMesg;
 }
