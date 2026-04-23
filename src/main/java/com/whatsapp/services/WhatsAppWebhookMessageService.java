@@ -1,4 +1,4 @@
-package com.common.services;
+package com.whatsapp.services;
 
 import javax.transaction.Transactional;
 
@@ -7,19 +7,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.common.entities.WhatsAppMessage;
-import com.common.helper.WhatsAppMessageHelper;
+import com.common.helper.WhatsAppWebhookMessageHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ngo.object.request.WhatsAppRequestObject;
 
 
 @Service
-public class WhatsAppMessageService {
+public class WhatsAppWebhookMessageService {
 	
 	private final Logger logger = Logger.getLogger(this.getClass().getName());
 
 	@Autowired
-	private WhatsAppMessageHelper whatsAppMessageHelper;
+	private WhatsAppWebhookMessageHelper whatsAppWebhookMessageHelper;
 
 	@Transactional
 	public void processWebhook(String json) {
@@ -40,28 +40,12 @@ public class WhatsAppMessageService {
 	            JsonNode messageNode = value.path("messages").get(0);
 
 	            // Convert to Request Object
-	            WhatsAppRequestObject req = whatsAppMessageHelper.parseMessage(value, messageNode, json);
-
+	            WhatsAppRequestObject req = whatsAppWebhookMessageHelper.parseMessage(value, messageNode, json);
 	            // Save
-	            WhatsAppMessage whatsAppMessage = whatsAppMessageHelper.getWhatsAppMessageByReqObject(req);
-	            whatsAppMessage = whatsAppMessageHelper.saveWhatsAppMessage(whatsAppMessage);
-
-	            // 🔁 Duplicate check
-//	            WhatsAppMessage existing = whatsAppMessageDao.findByMessageId(req.getMessageId());
-//	            if (existing != null) {
-//	                return;
-//	            }
-
-//	            whatsAppMessageDao.persist(entity);
-
-	            // 🚀 Optional: Auto reply
-	            // autoReplyService.handle(req);
+	            WhatsAppMessage whatsAppMessage = whatsAppWebhookMessageHelper.getWhatsAppMessageByReqObject(req);
+	            whatsAppMessage = whatsAppWebhookMessageHelper.saveWhatsAppMessage(whatsAppMessage);
+	            
 	        }
-
-	        // 🔹 Handle Status Updates
-//	        if (value.has("statuses")) {
-//	        	whatsAppMessageHelper.updateStatus(value);
-//	        }
 
 	    } catch (Exception e) {
 	        e.printStackTrace();

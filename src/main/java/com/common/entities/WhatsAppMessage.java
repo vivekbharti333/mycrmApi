@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 @Data
@@ -20,6 +22,15 @@ public class WhatsAppMessage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id")
 	private Long id;
+	
+	@Column(name = "phone_number_id")
+	private String phoneNumberId;
+	
+	@Column(name = "message_from")
+	private String messageFrom;
+	
+	@Column(name = "message_to")
+	private String messageTo; 
 
 	// 👤 User / Conversation
 	@Column(name = "wa_id", nullable = false)
@@ -82,6 +93,7 @@ public class WhatsAppMessage {
 	private String rawJson;
 
 	// 📅 System timestamps
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	@Column(name = "created_at")
 	private LocalDateTime createdAt = LocalDateTime.now();
 

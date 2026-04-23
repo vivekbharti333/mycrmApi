@@ -3,7 +3,7 @@ package com.whatsapp.response;
 import lombok.Data;
 
 @Data
-public class SendWaMessageResponse {
+public class WhatsAppMessageResponse {
 	
 	private String messagingProduct;
 	private String sendTo;

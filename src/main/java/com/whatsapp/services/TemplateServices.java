@@ -16,7 +16,7 @@ import com.common.object.request.Request;
 import com.whatsapp.helper.SendTextMessageHelper;
 import com.whatsapp.helper.TemplateMapperHelper;
 import com.whatsapp.object.request.TemplateRequestObject;
-import com.whatsapp.response.SendWaMessageResponse;
+import com.whatsapp.response.WhatsAppMessageResponse;
 
 @Service
 public class TemplateServices {
@@ -30,17 +30,6 @@ public class TemplateServices {
 	@Autowired WhatsAppHelper whatsAppHelper;
 	
 	
-
-	public SendWaMessageResponse sendTextMessage(Request<TemplateRequestObject> templateRequestObject)
-			throws BizException, Exception {
-		TemplateRequestObject templateRequest = templateRequestObject.getPayload();
-		templateMapperHelper.validateTemplateRequest(templateRequest);
-		
-		String templateParameter = sendTextMessageHelper.getTextTemplateParameter(templateRequest);
-		SendWaMessageResponse sendMessageResponse =  sendTextMessageHelper.callSendTemplateTextMessage(templateParameter);
-
-		return sendMessageResponse;
-	}
 
 	public List<TemplateRequestObject> getWhatsAppTemplate(Request<TemplateRequestObject> templateRequestObject)
 			throws IOException, BizException {

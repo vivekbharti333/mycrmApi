@@ -1,6 +1,5 @@
 package com.whatsapp.helper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,17 +8,19 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import com.common.constant.Constant;
+import com.common.entities.WhatsAppMessage;
 import com.common.exceptions.BizException;
+import com.common.object.request.ApplicationRequestObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsapp.object.request.TemplateRequestObject;
-import com.whatsapp.response.SendWaMessageResponse;
+import com.whatsapp.object.request.WhatsAppMessageRequestObject;
+import com.whatsapp.response.WhatsAppMessageResponse;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 
 @Component
 public class SendTextMessageHelper {
@@ -33,27 +34,40 @@ public class SendTextMessageHelper {
 	}
 
 	private static final OkHttpClient client = new OkHttpClient();
+	
 
-	public String getTextTemplateParameter(TemplateRequestObject templateRequest) throws Exception {
+	public WhatsAppMessage getSendMessageDetailsByReqObj(WhatsAppMessageRequestObject whatsAppMessageRequest) throws Exception {
+		
+		WhatsAppMessage whatsAppMessage = new WhatsAppMessage();
+		
+		whatsAppMessage.setTemplateName(whatsAppMessageRequest.getTemplateName());
+		whatsAppMessage.setTemplateLanguage(whatsAppMessageRequest.getTemplateLanguage());
+		whatsAppMessage.setMessageFrom(whatsAppMessageRequest.getMessageFrom());
+		whatsAppMessage.setMessageTo(whatsAppMessageRequest.getMessageTo());
+		
+		return whatsAppMessage;
+	}
+
+	public String getTextTemplateParameter(WhatsAppMessageRequestObject whatsAppMessageRequest) throws Exception {
 
 		Map<String, Object> root = new HashMap<>();
 		root.put("messaging_product", "whatsapp");
-		root.put("to", templateRequest.getToWhatsAppNumber());
+		root.put("to", whatsAppMessageRequest.getMessageTo());
 		root.put("type", "template");
 
 		// ---- Template ----
 		Map<String, Object> template = new HashMap<>();
-		template.put("name", templateRequest.getTemplateName());
+		template.put("name", whatsAppMessageRequest.getTemplateName());
 
 		Map<String, String> language = new HashMap<>();
-		language.put("code", templateRequest.getLanguage());
+		language.put("code", whatsAppMessageRequest.getLanguage());
 		template.put("language", language);
 
 		// ---- Body Parameters ----
 		List<Map<String, Object>> parameters = new ArrayList<>();
 
-		if (templateRequest.getMsgBodyVariable() != null) {
-			templateRequest.getMsgBodyVariable().forEach(var -> {
+		if (whatsAppMessageRequest.getMsgBodyVariable() != null) {
+			whatsAppMessageRequest.getMsgBodyVariable().forEach(var -> {
 				Map<String, Object> param = new HashMap<>();
 				param.put("type", "text");
 				param.put("text", var.getBodyVariable());
@@ -71,7 +85,7 @@ public class SendTextMessageHelper {
 		return new ObjectMapper().writeValueAsString(root);
 	}
 
-	public SendWaMessageResponse callSendTemplateTextMessage(String jsonPayload) throws Exception {
+	public WhatsAppMessageResponse callSendTemplateTextMessage(String jsonPayload) throws Exception {
 
 		MediaType mediaType = MediaType.parse("application/json");
 		RequestBody body = RequestBody.create(jsonPayload, mediaType);
@@ -85,7 +99,7 @@ public class SendTextMessageHelper {
 			String responseBody = response.body() != null ? response.body().string() : "";
 
 			ObjectMapper mapper = new ObjectMapper();
-			SendWaMessageResponse res = new SendWaMessageResponse();
+			WhatsAppMessageResponse res = new WhatsAppMessageResponse();
 
 			// ❌ ERROR CASE
 			if (!response.isSuccessful()) {

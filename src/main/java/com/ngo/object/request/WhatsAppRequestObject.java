@@ -1,10 +1,7 @@
 package com.ngo.object.request;
 
-import java.time.LocalDateTime;
+
 import java.util.Date;
-
-import javax.persistence.Column;
-
 import lombok.Data;
 
 
@@ -24,6 +21,10 @@ public class WhatsAppRequestObject {
 	private String whatsAppNumber;
 	private String receiptDownloadUrl;
 	
+	
+	private String messageFrom;
+	private String messageTo; 
+	
 	//For WhatsApp Message
 	private String waId;
 	private String userName;
@@ -41,7 +42,6 @@ public class WhatsAppRequestObject {
 	private Long messageTimestamp;
 	private String contextMessageId;
 	private String rawJson;
-	
 	
 	private String status;	
 	private String superadminId;
