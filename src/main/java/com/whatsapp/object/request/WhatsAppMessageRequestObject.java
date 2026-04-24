@@ -15,7 +15,7 @@ public class WhatsAppMessageRequestObject {
 	private String headerFormat;
 	private String headerText;
 	private String msgBodyText;
-	private List<TemplateVaribaleRequest> msgBodyVariable;
+	private List<TemplateBodyVariableRequest> msgBodyVariable;
 	private String footerText;
 	private String language;
 	private String status;

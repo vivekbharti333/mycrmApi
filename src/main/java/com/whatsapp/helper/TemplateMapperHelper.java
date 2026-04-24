@@ -16,7 +16,7 @@ import com.common.object.request.UserRequestObject;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.whatsapp.object.request.TemplateRequestObject;
-import com.whatsapp.object.request.TemplateVaribaleRequest;
+import com.whatsapp.object.request.TemplateBodyVariableRequest;
 
 import okhttp3.*;
 
@@ -134,7 +134,7 @@ public class TemplateMapperHelper {
 			obj.setCategory(templateNode.path("category").asText());
 			obj.setSub_category(templateNode.path("sub_category").asText());
 
-			List<TemplateVaribaleRequest> variables = new ArrayList<>();
+			List<TemplateBodyVariableRequest> variables = new ArrayList<>();
 
 			for (JsonNode component : templateNode.path("components")) {
 
@@ -154,7 +154,7 @@ public class TemplateMapperHelper {
 
 					if (bodyText.isArray() && bodyText.size() > 0) {
 						for (JsonNode val : bodyText.get(0)) {
-							TemplateVaribaleRequest v = new TemplateVaribaleRequest();
+							TemplateBodyVariableRequest v = new TemplateBodyVariableRequest();
 							v.setBodyVariable(val.asText());
 							variables.add(v);
 						}

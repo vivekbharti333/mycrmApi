@@ -13,23 +13,47 @@ import com.common.entities.WhatsAppDetails;
 import com.common.exceptions.BizException;
 import com.common.helper.WhatsAppHelper;
 import com.common.object.request.Request;
-import com.whatsapp.helper.SendTextMessageHelper;
 import com.whatsapp.helper.TemplateMapperHelper;
+import com.whatsapp.helper.WhatsAppTemplateHelper;
 import com.whatsapp.object.request.TemplateRequestObject;
-import com.whatsapp.response.WhatsAppMessageResponse;
 
 @Service
 public class TemplateServices {
+	
+	@Autowired
+	private WhatsAppTemplateHelper whatsAppTemplateHelper;
 
 	@Autowired
 	private TemplateMapperHelper templateMapperHelper;
 	
-	@Autowired
-	private SendTextMessageHelper sendTextMessageHelper;
+	@Autowired 
+	private WhatsAppHelper whatsAppHelper;
 	
-	@Autowired WhatsAppHelper whatsAppHelper;
-	
-	
+	public TemplateRequestObject addTemplates(Request<TemplateRequestObject> templateRequestObject) throws Exception {
+
+	    TemplateRequestObject templateRequest = templateRequestObject.getPayload();
+	    templateMapperHelper.validateTemplateRequest(templateRequest);
+
+	    WhatsAppDetails whatsAppDetails = whatsAppHelper.getWhatsAppBySuperadminId(Constant.GLOBAL_SUPERADMIN_ID);
+	    System.out.println("Whats App : "+whatsAppDetails);
+	    String parameter = whatsAppTemplateHelper.buildMarketingTemplatePayload(templateRequest);
+	    templateRequest =  whatsAppTemplateHelper.callWhatsAppApiForMarketingTemplate(whatsAppDetails, parameter);
+
+	    if (templateRequest.getRespCode() == 200) {
+	    	templateRequest.setRespCode(Constant.SUCCESS_CODE);
+	    	templateRequest.setRespMesg("Template Created");
+	        System.out.println("✅ Template Created");
+//	        System.out.println("ID: " + response.getId());
+	        System.out.println("Status: " + templateRequest.getStatus());
+	    } else {
+	    	templateRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+	    	templateRequest.setRespMesg("Template Creation Failed");
+	        System.out.println("❌ Template Creation Failed");
+	        System.out.println("Error Code: " + templateRequest.getRespCode());
+	        System.out.println("Error Message: " + templateRequest.getRespMesg());
+	    }
+	    return templateRequest;
+	}
 
 	public List<TemplateRequestObject> getWhatsAppTemplate(Request<TemplateRequestObject> templateRequestObject)
 			throws IOException, BizException {
@@ -41,12 +65,6 @@ public class TemplateServices {
 		return templateList;
 	}
 
-//	public List<TemplateRequestObject> deleteWhatsAppTemplateByName(Request<TemplateRequestObject> templateRequestObject) 
-//			
-//
-//		
-//		return null;
-//	}
 
 	public TemplateRequestObject deleteWhatsAppTemplateByName(Request<TemplateRequestObject> templateRequestObject) throws Exception {
 		TemplateRequestObject templateRequest = templateRequestObject.getPayload();
@@ -74,5 +92,7 @@ public class TemplateServices {
 	        }   }
 		return templateRequest;
 	}
+
+
 
 }

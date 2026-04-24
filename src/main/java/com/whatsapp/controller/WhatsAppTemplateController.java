@@ -17,6 +17,7 @@ import com.common.object.request.Request;
 import com.common.object.response.GenricResponse;
 import com.common.object.response.Response;
 import com.whatsapp.object.request.TemplateRequestObject;
+import com.whatsapp.object.request.WhatsAppMessageRequestObject;
 import com.whatsapp.response.WhatsAppMessageResponse;
 import com.whatsapp.services.TemplateServices;
 
@@ -27,6 +28,22 @@ public class WhatsAppTemplateController {
 	
 	@Autowired
 	private TemplateServices templateServices;
+	
+	
+	@RequestMapping(path = "addTemplates", method = RequestMethod.POST)
+	public Response<TemplateRequestObject> addTemplates(@RequestBody Request<TemplateRequestObject> templateRequestObject,
+			HttpServletRequest request) {
+		GenricResponse<TemplateRequestObject> responseObj = new GenricResponse<TemplateRequestObject>();
+		try {
+			TemplateRequestObject response = templateServices.addTemplates(templateRequestObject);
+			return responseObj.createSuccessResponse(response, Constant.SUCCESS_CODE);
+		} catch (BizException e) {
+			return responseObj.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return responseObj.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
+		}
+	}
 	
     
     @RequestMapping(path = "getWhatsAppTemplate", method = RequestMethod.POST)
@@ -42,20 +59,6 @@ public class WhatsAppTemplateController {
 			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
 		}
 	}
-    
-//    @RequestMapping(path = "deleteWhatsAppTemplateByName", method = RequestMethod.POST)
-//	public Response<TemplateRequestObject> deleteWhatsAppTemplateByName(@RequestBody Request<TemplateRequestObject> templateRequestObject) {
-//		GenricResponse<TemplateRequestObject> response = new GenricResponse<TemplateRequestObject>();
-//		try {
-//			List<TemplateRequestObject> donationList = templateServices.deleteWhatsAppTemplateByName(templateRequestObject);
-//			return response.createListResponse(donationList, Constant.SUCCESS_CODE, String.valueOf(donationList.size()));
-//		} catch (BizException e) {
-//			return response.createErrorResponse(Constant.BAD_REQUEST_CODE, e.getMessage());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//			return response.createErrorResponse(Constant.INTERNAL_SERVER_ERR, e.getMessage());
-//		}
-//	}
     
     @RequestMapping(path = "deleteWhatsAppTemplateByName", method = RequestMethod.POST)
 	public Response<TemplateRequestObject> deleteWhatsAppTemplateByName(@RequestBody Request<TemplateRequestObject> templateRequestObject,

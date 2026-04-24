@@ -12,20 +12,29 @@ public class TemplateRequestObject {
 	private String templateId;
 	private String templateName;
 	private String parameterFormat;
+	
+	private boolean headerAvailable;
 	private String headerFormat;
 	private String headerText;
+	private List<TemplateHeaderVariableRequest> headerVariable;
+	
 	private String msgBodyText;
-	private List<TemplateVaribaleRequest> msgBodyVariable;
+	private List<TemplateBodyVariableRequest> msgBodyVariable;
+	
+	private boolean footerAvailable;
 	private String footerText;
+	
 	private String language;
 	private String status;
 	private String category;
 	private String sub_category;
 	
-	
-	//make new object class and remove this value from here to that new class
-	
-	private String toWhatsAppNumber;
+	private boolean replyButtonAvailable;
+	private List<TemplateButtonVariableRequest> buttonVariable;
+	private String buttonsType;
+
+	private List<String> headerExample;
+	private List<List<String>> bodyExample;
 	
     // Response
     private int respCode;
