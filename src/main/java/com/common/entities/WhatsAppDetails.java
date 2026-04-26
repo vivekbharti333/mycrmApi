@@ -41,6 +41,9 @@ public class WhatsAppDetails {
 	@Column(name = "version")
 	private String version;
 	
+	@Column(name = "waba_id")
+	private String wabaId;
+	
 	@Lob
 	@Column(name = "user_access_token")
 	private String userAccessToken;

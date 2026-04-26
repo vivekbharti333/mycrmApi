@@ -192,6 +192,7 @@ public class WhatsAppHelper {
 		whatsAppDetails.setType(whatsAppRequest.getType());
 		whatsAppDetails.setPhoneNumberId(whatsAppRequest.getPhoneNumberId());
 		whatsAppDetails.setVersion(whatsAppRequest.getVersion());
+		whatsAppDetails.setWabaId(whatsAppRequest.getWabaId());
 		whatsAppDetails.setUserAccessToken(whatsAppRequest.getUserAccessToken());
 		
 		whatsAppDetails.setWhatsAppNumber(whatsAppRequest.getWhatsAppNumber());
@@ -219,6 +220,7 @@ public class WhatsAppHelper {
 			
 			whatsAppDetails.setPhoneNumberId(whatsAppRequest.getPhoneNumberId());
 			whatsAppDetails.setVersion(whatsAppRequest.getVersion());
+			whatsAppDetails.setWabaId(whatsAppRequest.getWabaId());
 			whatsAppDetails.setUserAccessToken(whatsAppRequest.getUserAccessToken());
 			
 			whatsAppDetails.setWhatsAppNumber(whatsAppRequest.getWhatsAppNumber());

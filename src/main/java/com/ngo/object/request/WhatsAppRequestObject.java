@@ -16,6 +16,7 @@ public class WhatsAppRequestObject {
 	private String serviceProvider;
 	private String phoneNumberId;
 	private String version;
+	private String wabaId;
 	private String userAccessToken;
 	
 	private String whatsAppNumber;
