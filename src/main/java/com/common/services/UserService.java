@@ -339,6 +339,38 @@ public class UserService {
 		}
 	}
 	
+	public UserRequestObject superAdminRegistration(Request<UserRequestObject> userRequestObject) throws BizException, Exception {
+		UserRequestObject userRequest = userRequestObject.getPayload();
+		userHelper.validateUserRequest(userRequest);
+			
+		UserDetails existsUserDetails = userHelper.getUserDetailsByLoginId(userRequest.getMobileNo());
+		if (existsUserDetails == null) {
+			userRequest.setPassword("12345");
+
+			String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
+			userRequest.setPassword(password);
+			
+			Date date = new Date();
+			Calendar calendar = Calendar.getInstance();
+			calendar.setTime(date);
+			calendar.add(Calendar.YEAR, 1);
+			Date oneYearLater = calendar.getTime();
+
+			userRequest.setValidityExpireOn(oneYearLater);
+			
+			UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
+			userDetails = userHelper.saveUserDetails(userDetails);
+			
+
+			userRequest.setRespCode(Constant.SUCCESS_CODE);
+			userRequest.setRespMesg(Constant.REGISTERED_SUCCESS);
+			return userRequest;
+		} else {
+			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
+			userRequest.setRespMesg(Constant.USER_EXIST);
+			return userRequest;
+		}
+	}
 
 	@Transactional
 	public UserRequestObject userRegistration(Request<UserRequestObject> userRequestObject)
@@ -354,7 +386,6 @@ public class UserService {
 			return userRequest;
 		}
 		
-		System.out.println("Enter 2");
 
 			UserDetails existsUserDetails = userHelper.getUserDetailsByLoginIdAndSuperadminId(userRequest.getMobileNo(), userRequest.getSuperadminId());
 			if (existsUserDetails == null) {
@@ -363,18 +394,6 @@ public class UserService {
 				String password = BCrypt.hashpw(userRequest.getPassword(), BCrypt.gensalt());
 				userRequest.setPassword(password);
 				
-				if(userRequest.getFirstName() == null || userRequest.getFirstName().equalsIgnoreCase("")) {
-					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-					userRequest.setRespMesg("Enter First Name");
-					return userRequest;
-				}
-				
-				if(userRequest.getLastName() == null || userRequest.getLastName().equalsIgnoreCase("")) {
-					userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
-					userRequest.setRespMesg("Enter Last Name");
-					return userRequest;
-				}
-
 				UserDetails userDetails = userHelper.getUserDetailsByReqObj(userRequest);
 				userDetails = userHelper.saveUserDetails(userDetails);
 				
@@ -632,6 +651,8 @@ public class UserService {
 		List<AddressDetails> addressList = userHelper.getAddressDetails(userRequest);
 		return addressList;
 	}
+
+
 
 
 

@@ -37,9 +37,21 @@ public class UserHelper {
 	@Autowired
 	private UserDetailsDao userDetailsDao;
 
-	public void validateUserRequest(UserRequestObject userRequestObject) throws BizException {
-		if (userRequestObject == null) {
+	public void validateUserRequest(UserRequestObject userRequest) throws BizException {
+		if (userRequest == null) {
 			throw new BizException(Constant.BAD_REQUEST_CODE, "Bad Request Object Null");
+		}
+		
+		if (userRequest.getMobileNo() == null || userRequest.getMobileNo().trim().isEmpty()) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Enter Mobile Number");
+		}
+		
+		if (userRequest.getFirstName() == null || userRequest.getFirstName().trim().isEmpty()) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Enter First Name");
+		}
+		
+		if (userRequest.getLastName() == null || userRequest.getLastName().trim().isEmpty()) {
+			throw new BizException(Constant.BAD_REQUEST_CODE, "Enter Last Name");
 		}
 	}
 
@@ -155,6 +167,37 @@ public class UserHelper {
 		Predicate restriction3 = criteriaBuilder.notEqual(root.get("status"), Status.REMOVED.name());
 		criteriaQuery.where(restriction1, restriction2, restriction3);
 		UserDetails userDetails = userDetailsDao.getSession().createQuery(criteriaQuery).uniqueResult();
+		return userDetails;
+	}
+	
+	public UserDetails getSuperadminDetailsByReqObj(UserRequestObject userRequest) {
+
+		UserDetails userDetails = new UserDetails();
+
+		userDetails.setUserCode(userRequest.getFirstName().substring(0, 1) + userRequest.getLastName().substring(0, 1));
+		userDetails.setLoginId(userRequest.getMobileNo().replace(" ", ""));
+		userDetails.setPassword(userRequest.getPassword());
+		userDetails.setStatus(Status.ACTIVE.name());
+		userDetails.setRoleType(RoleType.SUPERADMIN.name());
+		userDetails.setService("DONATION");
+		
+		userDetails.setFirstName(userRequest.getFirstName());
+		userDetails.setLastName(userRequest.getLastName());
+		userDetails.setMobileNo(userRequest.getMobileNo().replace(" ", ""));
+		userDetails.setEmailId(userRequest.getEmailId());
+		
+		userDetails.setCreatedBy(userRequest.getMobileNo().replace(" ", ""));
+		userDetails.setPermissions(this.getPerissionByRoleType(userRequest).getPermissions());
+
+		userDetails.setValidityExpireOn(userRequest.getValidityExpireOn());
+		userDetails.setIsPassChanged("NO");
+
+		userDetails.setCreatedAt(new Date());
+		userDetails.setUpdatedAt(new Date());
+
+
+		
+
 		return userDetails;
 	}
 
