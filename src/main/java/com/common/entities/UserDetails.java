@@ -15,7 +15,7 @@ import org.springframework.lang.NonNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-//@AllArgsConstructor
+
 @Data
 @AllArgsConstructor
 @Entity
@@ -45,7 +45,7 @@ public class UserDetails {
 	
 	@NonNull
 	@Length(min = 5, max = 20)
-	@Column(name = "login_id")
+	@Column(name = "login_id", unique = true, nullable = false)
 	private String loginId;
 	
 	@Column(name = "password")

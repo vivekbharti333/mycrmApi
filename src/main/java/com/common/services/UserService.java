@@ -178,10 +178,12 @@ public class UserService {
 	        throws BizException, Exception {
 
 	    UserRequestObject userRequest = userRequestObject.getPayload();
-	    userHelper.validateUserRequest(userRequest);
+//	    userHelper.validateUserRequest(userRequest);
+	    
+	    System.out.println("Enter 1");
 
 	    UserDetails userDetails = userHelper.getUserDetailsByLoginIdAndStatus(userRequest.getLoginId());
-
+	    System.out.println("Enter 1");
 	    if (userDetails != null) {
 
 	        if (Status.INACTIVE.name().equalsIgnoreCase(userDetails.getStatus())) {
@@ -208,9 +210,9 @@ public class UserService {
 	            logger.info("Login Successfully: " + userRequest);
 
 	            // Generate new secret key
-	            String secretKey = jwtTokenUtil.generateSecureSecretKey();
-	            userDetails.setSecretKey(secretKey);
-	            userHelper.UpdateUserDetails(userDetails);
+//	            String secretKey = jwtTokenUtil.generateSecureSecretKey();
+//	            userDetails.setSecretKey(secretKey);
+//	            userHelper.UpdateUserDetails(userDetails);
 
 	            String token = jwtTokenUtil.generateAccessToken(userDetails);
 
@@ -503,7 +505,7 @@ public class UserService {
 
 	public UserRequestObject changeUserPassword(Request<UserRequestObject> userRequestObject)throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
-		userHelper.validateUserRequest(userRequest);
+//		userHelper.validateUserRequest(userRequest);
 		
 		System.out.println(userRequest.getLoginId()+" , "+userRequest.getPassword());
 
@@ -516,7 +518,7 @@ public class UserService {
 			
 			userRequest.setStatus(userDetails.getStatus());
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
-			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			userRequest.setRespMesg("Password Change Successfully");
 			return userRequest;
 		}else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
@@ -580,7 +582,7 @@ public class UserService {
 	public UserRequestObject changeTeamLeader(Request<UserRequestObject> userRequestObject) 
 			throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
-		userHelper.validateUserRequest(userRequest);
+//		userHelper.validateUserRequest(userRequest);
 		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
@@ -589,7 +591,7 @@ public class UserService {
 			userHelper.UpdateUserDetails(userDetails);
 			
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
-			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			userRequest.setRespMesg("Team Leader Change Successfully");
 			return userRequest;
 		}else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
@@ -601,7 +603,7 @@ public class UserService {
 	public UserRequestObject changeUserRole(Request<UserRequestObject> userRequestObject) 
 			throws BizException, Exception {
 		UserRequestObject userRequest = userRequestObject.getPayload();
-		userHelper.validateUserRequest(userRequest);
+//		userHelper.validateUserRequest(userRequest);
 		
 		UserDetails userDetails = userHelper.getUserDetailsByLoginId(userRequest.getLoginId());
 		if (userDetails != null) {
@@ -611,7 +613,7 @@ public class UserService {
 			
 			userHelper.UpdateUserDetails(userDetails);
 			userRequest.setRespCode(Constant.SUCCESS_CODE);
-			userRequest.setRespMesg(Constant.UPDATED_SUCCESS);
+			userRequest.setRespMesg("User Role Change Successfully");
 			return userRequest;
 		} else {
 			userRequest.setRespCode(Constant.BAD_REQUEST_CODE);
